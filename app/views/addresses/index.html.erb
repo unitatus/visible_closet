@@ -1,0 +1,11 @@
+<%= render 'account/account_nav' %>
+<% if !@addresses || @addresses.size == 0 %>
+You do not have any addresses on file. Click <a href="/addresses/new">here</a> to add a new address.
+<% end %>
+<% @addresses.each do |address| %>
+<div class="grid_1">
+	<%= address.first_name %> <%= address.last_name %> <%= address.address_line_1 %>
+</div>
+<% end %>
+</table>
+

@@ -54,7 +54,11 @@ class AccountController < ApplicationController
     if (cart.num_items == 0)
       redirect_to :action => 'index'
     else
-      redirect_to :action => 'check_out'
+      if Address.find_by_user_id(current_user.id).nil?
+        redirect_to :action => 'new', :controller => 'addresses'
+      else
+        redirect_to :action => 'check_out'
+      end
     end
   end
 

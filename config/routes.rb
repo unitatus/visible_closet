@@ -1,10 +1,9 @@
 VisibleCloset::Application.routes.draw do
 
   resources :orders
-
   resources :products
-
   resources :boxes
+  resources :addresses
 
   devise_for :users, :path_names => { :sign_up => "beta_register" }, :controllers => { :registrations => "registrations" }
 
