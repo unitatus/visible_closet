@@ -1,11 +1,32 @@
 <%= render 'account/account_nav' %>
+<div class="grid_9">
+	<h1>Your Addresses On File</h1>
 <% if !@addresses || @addresses.size == 0 %>
 You do not have any addresses on file. Click <a href="/addresses/new">here</a> to add a new address.
-<% end %>
+<% else %>
+<% first = true %>
 <% @addresses.each do |address| %>
-<div class="grid_1">
-	<%= address.first_name %> <%= address.last_name %> <%= address.address_line_1 %>
-</div>
+    <% if !first %>
+<hr>
+    <% end %>
+	<%= address.first_name %> <%= address.last_name %> 
+	<br><%= address.address_line_1 %>
+	<% if !address.address_line_2.blank? %>
+		<br><%= address.address_line_2 %>
+	<% end %>
+	<br><%= address.city %>, <%= address.state %>
+	<br><%= address.zip %>
+	<br>Day Phone: <%= number_to_phone(address.day_phone) %>
+	<% if !address.evening_phone.blank? %>
+	<br>Evening Phone: <%= number_to_phone(address.evening_phone) %>
+	<% end %>
+	<br><%= link_to 'Edit', edit_address_path(address) %> | 
+	<%= link_to 'Destroy', address, :confirm => 'Are you sure?', :method => :delete %>
+	<p>
+<% first = false %>
 <% end %>
-</table>
-
+<p><div style="text-align: right">
+	<%= link_to 'Create New Address >>', new_address_path() %>
+	</div>
+<% end %> <!-- nil check -->
+</div>

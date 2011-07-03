@@ -2,22 +2,11 @@ class AddressesController < ApplicationController
   # GET /addresses
   # GET /addresses.xml
   def index
-    @addresses = Address.find_all_by_user_id(current_user.id)
+    @addresses = Address.find_active(current_user.id, :order => :first_name)
 
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @addresses }
-    end
-  end
-
-  # GET /addresses/1
-  # GET /addresses/1.xml
-  def show
-    @address = Address.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @address }
     end
   end
 
@@ -46,7 +35,7 @@ class AddressesController < ApplicationController
 
     respond_to do |format|
       if @address.save
-        format.html { redirect_to(@address, :notice => 'Address was successfully created.') }
+        format.html { redirect_to(addresses_url) }
         format.xml  { render :xml => @address, :status => :created, :location => @address }
       else
         format.html { render :action => "new" }
@@ -62,7 +51,7 @@ class AddressesController < ApplicationController
 
     respond_to do |format|
       if @address.update_attributes(params[:address])
-        format.html { redirect_to(@address, :notice => 'Address was successfully updated.') }
+        format.html { redirect_to(addresses_url) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -75,11 +64,12 @@ class AddressesController < ApplicationController
   # DELETE /addresses/1.xml
   def destroy
     @address = Address.find_by_id_and_user_id(params[:id], current_user.id)
-    @address.destroy
+    @address.status = 'inactive'
+    @address.save
 
     respond_to do |format|
-      format.html { redirect_to(addresses_url) }
-      format.xml  { head :ok }
+        format.html { redirect_to(addresses_url) }
+        format.xml  { head :ok }
     end
   end
 end

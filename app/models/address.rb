@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110703192540
+# Schema version: 20110703214139
 #
 # Table name: addresses
 #
@@ -18,6 +18,7 @@
 #  address_name   :string(255)
 #  user_id        :integer
 #  country        :string(255)
+#  status         :string(255)
 #
 
 class Address < ActiveRecord::Base
@@ -46,8 +47,19 @@ class Address < ActiveRecord::Base
   end
 
   # Hard coded country for now
-  def new
-    country = "US"
-    super
+  def Address.new(params=nil)
+    new_address = super(params)
+    new_address.country = "US"
+    new_address.status = "active"
+    
+    new_address
+  end
+  
+  def Address.find_by_user_id
+    raise "Do not use this method. You must specify find_active or one of the generated methods, or implement a new method"
+  end
+  
+  def Address.find_active(user_id, order=nil)
+    find_all_by_user_id_and_status(user_id, "active", order)
   end
 end
