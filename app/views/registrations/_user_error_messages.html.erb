@@ -1,0 +1,13 @@
+<% if @user.errors.any? %>
+  <tr><td colspan=2>
+  <div id="error_explanation" class="error_label">
+    Please correct the <%= pluralize(@user.errors.count, "field") %> highlighted below to complete you registration.
+    <p>Details:
+    <ul>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  </td></tr>
+<% end %>

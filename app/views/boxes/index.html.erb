@@ -1,0 +1,16 @@
+<%= render 'account/account_nav' %>
+<div class="account_center">
+<% if !@boxes || @boxes.size == 0 %>
+You do not have any boxes in storage order under management. Click <a href="/account/store_more_boxes">here</a> to start storing boxes!
+<% end %>
+<% @boxes.each do |box| %>
+  <tr>
+    <td><%= link_to 'Show', box %></td>
+    <td><%= link_to 'Edit', edit_box_path(box) %></td>
+    <td><%= link_to 'Destroy', box, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+</div>

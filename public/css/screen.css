@@ -575,6 +575,9 @@ hr.thick {
 hr.nopad {
 	padding: 0;
 }
+.error_label {
+	color: red;
+}
 
 /* clearfix in 960.css */
 

@@ -1,0 +1,24 @@
+<table class="user_list_table">
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Email</th>
+    <th>Select?</th>
+  </tr>
+<% @found_users.each do |found_user| %>
+  <tr>
+    <td>
+      <%= found_user.first_name %>
+    </td>
+    <td>
+      <%= found_user.last_name %>
+    </td>
+    <td>
+      <%= found_user.email %>
+    </td>
+    <td>
+      Select
+    </td>
+  </tr>
+<% end %>
+</table>

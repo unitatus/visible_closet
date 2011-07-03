@@ -1,0 +1,45 @@
+<div class="grid_12">
+	<h2>Welcome to your organized life!</h2>
+</div>
+<div class="grid_8">
+	<p>We're glad you're joining us. Fill out the form below to get started.</p>
+	<p>By the way, your email address is safe with us. We have a strict no-spam, no-sell policy.</p>
+</div>
+<div class="grid_7">
+	<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => "standard" }) do |f| %>
+	
+		<div class="field clearfix">
+			<%= f.label "First Name*"%>
+			<% class_name = @user.errors[:first_name].nil? ? "error" : "textbox" %>
+	   		<%= f.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (@user.errors[:first_name].empty? ? "": " error") %>
+			<%= error_messages_for_attribute(@user, :first_name) %>
+		</div><!--//field-->
+		<div class="field clearfix">
+			<%= f.label "Last Name*" %>
+			<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (@user.errors[:last_name].empty? ? "": " error") %>
+			<%= error_messages_for_attribute(@user, :last_name) %>
+		</div><!--//field-->
+		<div class="field clearfix">
+			<%= f.label "Email (username):*" %>
+			<%= f.email_field :email, :placeholder => "your@email.com", :class => "textbox" + (@user.errors[:email].empty? ? "": " error") %>
+			<%= error_messages_for_attribute(@user, :email) %>
+		</div><!--//field-->
+		<p>
+		<div class="field clearfix">
+			<%= f.label "Password:*" %>
+			<%= f.password_field :password, :placeholder => "Password", :class => "textbox" + (@user.errors[:password].empty? ? "": " error") %>
+			<%= error_messages_for_attribute(@user, :password) %>
+		</div><!--//field-->
+		<div class="field clearfix">
+			<%= f.label "Password Confirmation:*" %>
+			<%= f.password_field :password_confirmation, :placeholder => "Retype Password", :class => "textbox" + (@user.errors[:password_confirmation].empty? ? "": " error") %>
+			<%= error_messages_for_attribute(@user, :password_cofirmation) %>
+		</div><!--//field-->
+		<div class="field clearfix">
+			<%= f.submit "Submit", :class => 'button', :id => 'cf_submit' %>
+		</div><!--//field-->							
+	<% end %>
+	<p><%= render :partial => "devise/shared/links" %></p>
+</div><!--//grid_6-->
+
+

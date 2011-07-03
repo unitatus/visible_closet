@@ -1,0 +1,412 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+	<head>
+
+		<script type="text/javascript">
+function ship_same_toggle()
+		{
+		var form = document.forms[0];
+
+		var checked = form.same_as_billing_same_as_billing.checked
+		var disabled = checked || (form.shipping_address_id.selectedIndex != 0)
+
+        document.getElementById("shipping_table").setAttribute("class", ((checked) ? "hidden_div" : ""))
+
+		// should not be disabled if prev address selected
+		form.shipping_address_id.disabled = checked 
+		form.shipping_address_name.disabled = disabled
+		form.shipping_first_name.disabled = disabled
+		form.shipping_last_name.disabled = disabled
+		form.shipping_day_phone.disabled = disabled
+		form.shipping_evening_phone.disabled = disabled
+		form.shipping_address_line_1.disabled = disabled
+		form.shipping_address_line_2.disabled = disabled
+		form.shipping_city.disabled = disabled
+		form.shipping_state.disabled = disabled
+		form.shipping_zip.disabled = disabled
+		form.shipping_zip.setAttribute("class", ((checked) ? "hidden_div" : "check_out_form_fields"))
+		}
+
+		function select_address(saved_address_selected) {
+		document.forms[0].action = "/account/update_checkout_address"
+		document.forms[0].saved_address_selected.value = saved_address_selected
+		document.forms[0].submit()
+		}
+
+		window.onload=ship_same_toggle;
+		</script><%= render 'account_nav' %>
+		<title></title>
+	</head>
+	<body>
+		<div class="account_center">
+			<%= form_for @order, :url => "/account/finalize_check_out" do |f| %><% billing_addr_disabled = !@billing_address.id.blank? %><% shipping_addr_disabled = !@shipping_address.id.blank? %><%= hidden_field_tag :saved_address_selected, 'none' %>
+			<table class="check_out">
+				<tr>
+					<th>
+						Billing Information
+					</th>
+					<th>
+						Shipping Information
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						<%= check_box("same_as_billing", "same_as_billing", {:onclick=>"ship_same_toggle();", :checked => (@billing_address == @shipping_address)}) %> Same as billing address
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table>
+							<% if @addresses %>
+							<tr>
+								<td>
+									Select a previously used address
+								</td>
+								<td>
+									<%= select_tag(:billing_address_id, options_from_collection_for_select(@addresses, 'id', 'address_name', @billing_address.id), :include_blank => true, :class => "check_out_form_fields", :onchange => "select_address('billing')") %>
+								</td>
+							</tr><% end %>
+							<tr>
+								<td>
+									Address Identifier:
+								</td>
+								<td>
+									<%= text_field_tag(:billing_address_name, @billing_address.address_name, :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :address_name) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									First Name:
+								</td>
+								<td>
+									<%= text_field_tag(:billing_first_name, @billing_address.first_name, :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :first_name) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Last Name:
+								</td>
+								<td>
+									<%= text_field_tag(:billing_last_name, @billing_address.last_name, :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :last_name) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Day Time Phone:
+								</td>
+								<td>
+									<%= text_field_tag(:billing_day_phone, number_to_phone(@billing_address.day_phone), :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :day_phone) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									Format: ###-###-####
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Evening Phone:
+								</td>
+								<td>
+									<%= text_field_tag(:billing_evening_phone, number_to_phone(@billing_address.evening_phone), :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :evening_phone) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									Format: ###-###-####
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Address Line 1
+								</td>
+								<td>
+									<%= text_field_tag(:billing_address_line_1, @billing_address.address_line_1, :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :address_line_1) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Address Line 2
+								</td>
+								<td>
+									<%= text_field_tag(:billing_address_line_2, @billing_address.address_line_2, :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :address_line_2) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									City
+								</td>
+								<td>
+									<%= text_field_tag(:billing_city, @billing_address.city, :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :city) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									State
+								</td>
+								<td>
+									<%= select_tag(:billing_state, options_for_select(states_array, @billing_address.state), :include_blank => true, :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :state) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Zip
+								</td>
+								<td>
+									<%= text_field_tag(:billing_zip, @billing_address.zip, :class => "check_out_form_fields", :disabled => billing_addr_disabled) %><%= error_messages_for_attribute(@billing_address, :zip) %>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td><div id="shipping_table">
+						<!-- shipping table -->
+						<table>
+							<% if @addresses %>
+							<tr>
+								<td>
+										Select a previously used address
+								</td>
+								<td>
+									<%= select_tag(:shipping_address_id, options_from_collection_for_select(@addresses, 'id', 'address_name', @shipping_address.id), :include_blank => true, :class => "check_out_form_fields", :onchange => "select_address('shipping')") %>
+								</td>
+							</tr><% end %>
+							<tr>
+								<td>
+										Address Identifier:
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_address_name, @shipping_address.address_name, :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :address_name) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+										First Name:
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_first_name, @shipping_address.first_name, :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :first_name) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+										Last Name:
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_last_name, @shipping_address.last_name, :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :last_name) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+										Day Time Phone:
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_day_phone, number_to_phone(@shipping_address.day_phone), :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :day_phone) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									Format: ###-###-####
+								</td>
+							</tr>
+							<tr>
+								<td>
+										Evening Phone:
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_evening_phone, number_to_phone(@shipping_address.evening_phone), :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :evening_phone) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td>
+									Format: ###-###-####
+								</td>
+							</tr>
+							<tr>
+								<td>
+										Address Line 1
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_address_line_1, @shipping_address.address_line_1, :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :address_line_1) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+										Address Line 2
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_address_line_2, @shipping_address.address_line_2, :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :address_line_2) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+										City
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_city, @shipping_address.city, :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :city) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+										State
+								</td>
+								<td>
+									<%= select_tag(:shipping_state, options_for_select(states_array, @shipping_address.state), :include_blank => true, :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %><%= error_messages_for_attribute(@shipping_address, :state) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+										Zip
+								</td>
+								<td>
+									<%= text_field_tag(:shipping_zip, @shipping_address.zip, :class => "check_out_form_fields", :disabled => shipping_addr_disabled) %>
+										<%= error_messages_for_attribute(@shipping_address, :zip) if (@billing_address != @shipping_address) %>
+								</td>
+							</tr>
+						</table>
+					</div></td>
+				</tr>
+				<tr>
+					<td colspan="4" style="border-bottom: solid 1px gray; padding: 10px 0px;"></td>
+				</tr>
+				<tr>
+					<th colspan="4">
+						Credit Card Details
+					</th>
+				</tr>
+<tr>
+  <td>
+    <%= error_messages_for_attribute(@order, "cc_response") %>
+  </td>
+</tr>
+				<tr>
+					<td colspan="4">
+						<table>
+							<tr>
+								<td>
+									<%= f.label :card_type %>
+								</td>
+								<td>
+									<%= f.select :card_type, [["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]] %><%= error_messages_for_attribute(@order, :card_type) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<%= f.label :card_first_name %>
+								</td>
+								<td>
+									<%= f.text_field :card_first_name %><%= error_messages_for_attribute(@order, :card_first_name) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<%= f.label :card_last_name %>
+								</td>
+								<td>
+									<%= f.text_field :card_last_name %><%= error_messages_for_attribute(@order, :card_last_name) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<%= f.label :card_number %>*
+								</td>
+								<td>
+									<%= f.text_field :card_number %><%= error_messages_for_attribute(@order, :card_number) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<%= f.label :card_verification_value, "Card Verification Value (CVV)" %>
+								</td>
+								<td>
+									<%= f.text_field :card_verification_value, :class => "check_out_form_small_field" %><%= error_messages_for_attribute(@order, :card_verification_value) %>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<%= f.label :card_expires_on %>
+								</td>
+								<td>
+									<%= f.select :card_month, [["01 - January", "1", "02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December"]] %><%= f.select :card_year, [Date.today.year, Date.today.year + 1, Date.today.year + 2, Date.today.year + 3, Date.today.year + 4, Date.today.year + 5, Date.today.year + 6, Date.today.year + 7, Date.today.year + 8, Date.today.year + 9, Date.today.year + 10] %>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<%= error_messages_for_attribute(@order, :card_month) %><%= error_messages_for_attribute(@order, :card_year) %>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<div style="color:red">
+										*At this time the site does not do anything with credit cards, but it is not yet secure, so please don't enter a real credit card number.
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" style="border-bottom: solid 1px gray; padding: 10px 0px;"></td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<table class="check_out_cart_summary">
+							<tr>
+								<th>
+									Item
+								</th>
+								<th>
+									Quantity
+								</th>
+								<th>
+									Unit Price
+								</th>
+								<th>
+									Total Price
+								</th>
+							</tr><% @cart.cart_items.each do |cart_item| %><% product = Product.find(cart_item.product_id) %>
+							<tr>
+								<td align="left">
+									<%= product.name %>
+								</td>
+								<td>
+									<%= cart_item.quantity %>
+								</td>
+								<td>
+									<%= number_to_currency(product.price) %>
+								</td>
+								<td align="right">
+									<%= number_to_currency(product.price * cart_item.quantity) %>
+								</td>
+							</tr><% end %>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" style="border-bottom: solid 1px gray; padding: 10px 0px;"></td>
+				</tr>
+				<tr>
+					<td colspan="4" align="right">
+						Total: <%= number_to_currency(@cart.estimated_total) %><br>
+						<br>
+						<%= submit_tag("Place Order", :class => "cart_form_submit") %>
+					</td>
+				</tr>
+			</table><% end %>
+		</div>
+	</body>
+</html>

@@ -118,8 +118,15 @@ jQuery(function($) {
 		
 	/* Sign Up Form Validation
 	___________________________________________________________________ */
-	$(".standard #user_first_name, .standard #user_last_name, .standard #user_email, .standard #user_password, .standard #user_password_confirmation").live('change click', function(){
+	var hasChecked = false;
+	$(".standard #cf_submit").click(function () { 
+		hasChecked = true;
 		return checkForm();
+	});
+	$(".standard #user_first_name, .standard #user_last_name, .standard #user_email, .standard #user_password, .standard #user_password_confirmation").live('change click', function(){
+		if(hasChecked == true) {
+			return checkForm();
+		}
 	});
 	function checkForm() {
 		var hasError = false;
@@ -170,6 +177,32 @@ jQuery(function($) {
 		}
 	}
 	// end contact form validation
+	/*
+		$(".standard #user_first_name, .standard #user_last_name, .standard #user_email, .standard #user_password, .standard #user_password_confirmation").live('change click', function(){
+			return checkForm();
+		});
+
+		function checkForm() {
+			var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+			if($(".standard #user_first_name").val() != '') {
+				$("#user_first_name").removeClass('error');
+			}
+			if($(".standard #user_last_name").val() != '') {
+				$("#user_last_name").removeClass('error');
+			}
+			if($("#user_email").val() != '' && !emailReg.test( $("#user_email").val() )) {
+				$("#user_email").removeClass('error');
+			}
+			if($("#user_password").val() != '') {
+				$("#user_password").removeClass('error');
+			}
+			if($("#user_password_confirmation").val() != '' && "#user_password_confirmation").val() == $("#user_password").val()) {
+				$("#user_password_confirmation").removeClass('error');
+			}
+			return true;
+		}
+*/
+		
 		
 }); // end jQuery
 

@@ -1,0 +1,14 @@
+<% if @user.errors.any? %>
+  <tr><td colspan=2>
+  <div id="error_explanation">
+    <h2><%= pluralize(@user.errors.count, "error") %> 
+        prohibited your account from being set up:</h2>
+    <p>There were problems with the following fields:</p>
+    <ul>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  </td></tr>
+<% end %>

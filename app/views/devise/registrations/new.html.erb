@@ -1,0 +1,35 @@
+Thank you for your interest in The Visible Closet! <br>At this time we are accepting beta user applications. 
+<p>See here for more information on what it means to be a beta tester. </p>
+<p>To apply to be a beta user, please register below. (Required fields are marked with a *)</p>
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+<table class="sign_up_table">
+<%= render 'user_error_messages' %>
+  <tr>
+  <td><%= f.label "First Name:*" %></td><td><%= f.label "Last Name:*" %></td>
+  </tr><tr>
+    <td><%= f.text_field :first_name, :class => 'sign_up_form_narrow', :placeholder => "First Name" %></td>
+    <td><%= f.text_field :last_name, :class => 'sign_up_form_narrow', :placeholder => "Last Name" %></td>
+  </tr>
+  <tr>
+    <td colspan=2><br><%= f.label "Email (username):*" %> <br>
+    <div class='sign_up_form_text_small'>(We hate spam. We'll never spam you or sell your email. Promise.)</div></td>
+  </tr><tr>
+    <td colspan=2><%= f.email_field :email, :class => 'sign_up_form_wide', :placeholder => "your@email.com" %> </td>
+  </tr><tr>
+    <td colspan=2><br><%= f.label "Password:*" %></td>
+  </tr><tr>
+    <td colspan=2><%= f.password_field :password, :class => 'sign_up_form_wide', :placeholder => "Password" %></td>
+  </tr><tr>
+    <td colspan=2>Enter your password again to verify:*</td>
+  </tr><tr>
+    <td colspan=2><%= f.password_field :password_confirmation, :class => 'sign_up_form_wide', :placeholder => "Retype Password" %></td>
+  </tr><tr>
+    <td colspan=2 class='sign_up_form_text'><br>In the space below, please let us know why you would like to be a beta user of The Visible Closet, and what you would like to store.</td>
+  </tr><tr>
+    <td colspan=2><%= f.text_area :signup_comments, :class => 'sign_up_form_wide', :rows => "10" %></td>
+  </tr><tr>
+    <td colspan=2 align="center"><%= f.submit "Submit", :class => 'sign_up_form_submit' %></td>
+  </tr>
+  <tr><td colspan=2><%= render :partial => "devise/shared/links" %></td></tr>
+</table>
+<% end %>

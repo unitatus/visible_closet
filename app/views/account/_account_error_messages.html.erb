@@ -1,0 +1,9 @@
+<% if @errors && @errors.any? %>
+  <div id="error_explanation" class="error_label">
+    Please correct the following <%= pluralize(@errors.count, "error") %>.
+    <% @errors.full_messages.each do |msg| %>
+      <br><%= msg %><br>
+    <% end %>
+<p>
+  </div>
+<% end %>

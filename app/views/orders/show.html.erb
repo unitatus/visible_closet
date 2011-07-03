@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Cart:</b>
+  <%= @order.cart_id %>
+</p>
+
+<p>
+  <b>Ip address:</b>
+  <%= @order.ip_address %>
+</p>
+
+
+<%= link_to 'Edit', edit_order_path(@order) %> |
+<%= link_to 'Back', orders_path %>

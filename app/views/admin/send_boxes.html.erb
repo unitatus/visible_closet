@@ -1,0 +1,18 @@
+Please enter either the user's id, first name, or last name.
+<p>
+<%= form_for :user, :url => { :controller => "admin", :action => "send_boxes_user_search" } do |f| %>
+<table class="sign_up_table">
+  <tr>
+  <td>User Id:</td>
+  <td><%= f.text_field :id, :class => 'sign_up_form_narrow' %></td>
+  </tr><tr>
+  <td><%= f.label :first_name %>:</td>
+  <td><%= f.text_field :first_name, :class => 'sign_up_form_narrow'  %></td>
+  </tr><tr>
+  <td><%= f.label :last_name %>:</td>
+  <td><%= f.text_field :last_name, :class => 'sign_up_form_narrow' %></td>
+  </tr><tr>
+  <td colspan="2" align="center"><%= f.submit "Search", :class => 'sign_up_form_submit' %></td>
+  </tr>
+</table>
+<% end %>
