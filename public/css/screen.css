@@ -281,6 +281,109 @@ ul.sf-menu li li li.sfHover ul {
 	line-height: 16px;
 }
 
+/*	Side Menu
+___________________________________________________________________ */
+.side-menu, .side-menu * {
+	margin:	0;
+	padding: 0;
+	list-style: none;
+	font-size: 12px;
+}
+.side-menu {	
+	margin: 0px 0px 0px 0px;
+}
+
+.side-menu li a {
+	display:block;
+	float:left;
+	position: relative;
+	color: #999;
+	
+}
+.side-menu li {
+	float:left;
+	padding:10px 20px;
+	position: relative;
+	margin-right:5px;
+	
+}
+.side-menu li.current-menu-item a,
+.side-menu li a:hover {
+	color: #f93;
+}
+
+.side-menu ul a {
+	padding:5px 20px;
+}
+.side-menu ul li:first-child a {
+	padding-top:10px;
+} 
+.side-menu ul li:last-child a {
+	padding-bottom:10px;
+} 
+
+.side-menu ul {
+	position: absolute;
+	top: -999em;
+	width: 140px; /* left offset of submenus need to match (see below) */
+	padding: 0;
+	
+	background: #fafafa;
+	border: 1px solid #fff;
+	
+	-webkit-box-shadow:0 0 3px #ccc;
+	-moz-box-shadow:0 0 3px #ccc;
+	box-shadow:0 0 3px #ccc;
+	
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+}
+
+.side-menu ul li {
+	width: 100%;
+}
+.side-menu li:hover {
+	visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+.side-menu li {
+	float: left;
+	position: relative;
+}
+.side-menu li:hover ul,
+.side-menu li.sfHover ul {
+	left: 0;
+	top: 38px; /* match top ul list item height */
+	z-index: 9999;	
+}
+ul.side-menu li:hover li ul,
+ul.side-menu li.sfHover li ul {
+	top: -999em;
+}
+ul.side-menu li li:hover ul,
+ul.side-menu li li.sfHover ul {
+	left: 150px; /* match ul width */
+	top: -8px;
+}
+ul.side-menu li li:hover li ul,
+ul.side-menu li li.sfHover li ul {
+	top: -999em;
+}
+ul.side-menu li li li:hover ul,
+ul.side-menu li li li.sfHover ul {
+	left: 150px; /* match ul width */
+	top: 0;
+}
+.side-menu .sf-sub-indicator {
+	display:none;	
+}
+.side-menu ul .sf-sub-indicator {
+	opacity: .4;
+	display:inline;
+	position: absolute;
+	right: 5px;
+	line-height: 16px;
+}
 
 
 
@@ -502,6 +605,7 @@ form.standard .field {
 	padding: 0 0 20px 0;
 	position: relative;
 }
+
 form.standard label {
 	position: absolute;
 	top: 5px;
@@ -527,12 +631,18 @@ form.standard .textbox,
 form.standard .textarea {
 	width: 320px;
 }
+form.standard .numberbox {
+	width: 50px;
+	height: 20px;
+}
 form.standard .textarea {
 	font-family: inherit;
 	font-size:12px;
 	height: 170px;
 }
 form.standard .textbox:focus,
+form.standard .button:focus,
+form.standard .numberbox:focus,
 form.standard .textarea:focus {
 	border-color: #999;
 }
@@ -664,7 +774,26 @@ html {
 	color:#444;
 }
 
-
+/**************** Tables **************/
+table.prices_table
+{
+        margin-left:auto;
+        margin-right:auto;
+        text-align:left;
+        border-spacing:0px;
+        border: solid black 1px;
+}
+table.prices_table th
+{
+    border: solid black 1px;
+	padding: 5px 5px 5px 5px;
+	font-weight: bold;
+}
+table.prices_table td
+{
+        border: solid black 1px;
+		padding: 5px 5px 5px 5px;
+}
 
 
 

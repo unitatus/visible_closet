@@ -1,43 +1,44 @@
 <%= render 'account_nav' %>
-<div class="account_center">
-<br>
-Please indicate the total number of boxes you would like to order. 
-<br>Ordering your own boxes will allow you to print a form to include with your box when you ship it.<br><br>
-<table class="order_boxes_table">
-  <tr>
-    <th>&nbsp;</th>
-    <th>Your Boxes</th>
-    <th>Our Boxes</th>
-    <th>&nbsp;</th>
-  </tr>
-<%= form_tag("/account/order_boxes") do %>
-  <tr>
-    <td>Number of UNINSURED boxes you would like to store:</td>
-    <td><%= number_field_tag(:num_boxes_yours_uninsured, @cart.get_quantity(Rails.application.config.your_box_uninsured_product_id)) %></td>
-    <td><%= number_field_tag(:num_boxes_ours_uninsured, @cart.get_quantity(Rails.application.config.our_box_uninsured_product_id)) %></td>
-  </tr>
-  <tr>
-    <td>Number of INSURED boxes you would like to store:</td>
-    <td><%= number_field_tag(:num_boxes_yours_insured, @cart.get_quantity(Rails.application.config.your_box_insured_product_id)) %></td>
-    <td><%= number_field_tag(:num_boxes_ours_insured, @cart.get_quantity(Rails.application.config.our_box_insured_product_id)) %></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td colspan=3>
-      <% if @cart %>
-        <%= submit_tag("Update cart") %>
-      <% else %>
-        <%= submit_tag("Add to cart") %>
-      <% end %>
-    </td> 
-  </tr>
-<% end %>
-</table>
-<p><br><br><br>
-All Visible Closet boxes are 12"X12"X24".
+<div class="grid_10">
+Please specify the number of boxes of each type that you would like to store.<br><br><br>
+<%= form_tag("/account/order_boxes", :class => "standard") do %>
+<div class="grid_5">&nbsp;</div>
+<div class="grid_1">
+	Your Boxes
+</div>
+<div class="grid_1">
+	Our Boxes
+</div>
+<div class="grid_5">
+Number of UNINSURED boxes you would like to store:
+</div>
+<div class="grid_1">
+<%= number_field_tag(:num_boxes_yours_uninsured, @cart.get_quantity(Rails.application.config.your_box_uninsured_product_id), :class => "numberbox") %>
+</div>
+<div class="grid_1">
+<%= number_field_tag(:num_boxes_ours_uninsured, @cart.get_quantity(Rails.application.config.our_box_uninsured_product_id), :class => "numberbox") %>
+</div>
+<div style="position: relative; top: 55px; left: 0px;">
+	<%= submit_tag("Order Boxes", :class => 'button') %>
+</div>
+<div class="grid_5">
+Number of INSURED boxes you would like to store:
+</div>
+<div class="grid_1">
+<td><%= number_field_tag(:num_boxes_yours_insured, @cart.get_quantity(Rails.application.config.your_box_insured_product_id), :class => "numberbox") %></td>
+</div>
+<div class="grid_1">
+<td><%= number_field_tag(:num_boxes_ours_insured, @cart.get_quantity(Rails.application.config.our_box_insured_product_id), :class => "numberbox") %></td>
+</div>
+<script type="text/javascript" language="JavaScript">
+document.forms[0].elements['num_boxes_yours_uninsured'].focus();
+</script>
+<p>
+	<div class="grid_8">
+<br><br><br><br>All Visible Closet boxes are 12"X12"X24".
 <br>You will get a chance to inventory boxes later! We promise!
 <p>
-<table class="user_list_table"><tr>
+<table class="prices_table"><tr>
 <th colspan=3 align="center">Pricing</th>
 </tr>
 <tr>
@@ -56,4 +57,6 @@ All Visible Closet boxes are 12"X12"X24".
   <td><%= number_to_currency(@your_box_insured.price) %> <%= @your_box_insured.price_comment %></td>
 </tr>
 </table>
+</div>
+<% end %>
 </div>

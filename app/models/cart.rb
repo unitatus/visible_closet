@@ -59,4 +59,8 @@ class Cart < ActiveRecord::Base
     cart.status = "active"
     cart
   end
+  
+  def num_items
+    cart_items.size
+  end
 end

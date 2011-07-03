@@ -51,7 +51,11 @@ class AccountController < ApplicationController
       flash[:alert] = "There was a problem saving your update to the cart."
     end
 
-    redirect_to :action => 'index'    
+    if (cart.num_items == 0)
+      redirect_to :action => 'index'
+    else
+      redirect_to :action => 'check_out'
+    end
   end
 
   def process_cart_item(cart, product_id, quantity)
