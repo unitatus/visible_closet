@@ -45,9 +45,11 @@
 						<div class="grid_12">					
 							<div class="right">
 
-								<ul class="header-bar-menu inline-list clearfix">									
-									<li><a href="#">Legal</a></li>									
-									<li><a href="#">Privacy</a></li>
+								<ul class="header-bar-menu inline-list clearfix">
+									<% if user_signed_in? %>	
+									<li>Signed in as <%= current_user.first_name %> <%= current_user.last_name %>.
+									Not you? &nbsp; <%= link_to "Sign out", destroy_user_session_path %> </li>
+									<% end %>
 								</ul>		
 							</div><!--//right-->
 							
@@ -61,7 +63,7 @@
 						<div class="grid_3">					
 							<h1 id="logo"><a href="/" title="Back to the Home Page"><img src="/images/tvc_logo_1.jpg" alt="Logo" /></a></h1>
 						</div><!--//grid_3-->
-						<div class="grid_16">
+						<div class="grid_22">
 							<ul class="sf-menu clearfix">
 								<li class="current-menu-item"><a href="/">Home</a></li>
 								<li><a href="/">How It Works</a></li>
@@ -69,7 +71,7 @@
 								<li><a href="/">Blog</a></li>
 								<li><a href="/">Contact</a></li>
 								<% if user_signed_in? %>
-								<li><%= link_to "Sign out", destroy_user_session_path %></li>
+								  <li><a href="/account/home">Account</a></li>
 								<% else %>
 								<li><%= link_to "Sign up", new_user_registration_path %></li>
 								<li><%= link_to "Log in", new_user_session_path %></li>
@@ -111,6 +113,10 @@
 													<div class="grid_12">							
 
 														<div class="left">
+															<ul class="footer-menu inline-list clearfix"> 
+																<li><a href="#">Legal</a>&nbsp;&nbsp;</li>									
+																<li><a href="#">Privacy</a></li>
+															</ul>
 															<p>Copyright &copy; 2011 The Visible Closet, Inc. All rights reserved.</p>
 														</div><!--//left-->
 

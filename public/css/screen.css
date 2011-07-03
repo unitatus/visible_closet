@@ -507,6 +507,11 @@ form.standard label {
 	top: 5px;
 	left: 0px;
 }
+form.standard .label_right {
+	position: absolute;
+	top: 5px;
+	right: 20px;	
+}
 form.standard .textbox,
 form.standard .textarea,
 form.standard .button {
