@@ -807,7 +807,28 @@ table.check_out_cart_summary th
         text-align: center;
 		font-weight: bold;
 }
-
+table.cart_summary
+{
+	background-color: #e9e9e9;
+	border: 1px solid #d1d1d1;
+	padding: 5px;
+	width: 100%;
+}
+table.cart_summary th
+{
+   	text-align: center;
+	font-weight: bold;
+	height: 30px;
+}
+table.cart_summary td
+{
+	border: 1px solid #d1d1d1;
+	background-color: white;
+	text-align: center;
+    color: #454444;
+    font-size: 12px;
+    line-height: 20px;
+}
 
 
 
