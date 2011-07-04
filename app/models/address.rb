@@ -59,7 +59,15 @@ class Address < ActiveRecord::Base
     raise "Do not use this method. You must specify find_active or one of the generated methods, or implement a new method"
   end
   
+  def Address.find_by_id_and_user_id(id=nil, user_id=nil)
+    raise "Do not use this method. You must specify find_active_by... or one of the generated methods, or implement a new method"    
+  end
+  
   def Address.find_active(user_id, order=nil)
     find_all_by_user_id_and_status(user_id, "active", order)
+  end
+  
+  def Address.find_active_by_id_and_user_id(id, user_id)
+    find_by_id_and_user_id_and_status(id, user_id, "active")
   end
 end

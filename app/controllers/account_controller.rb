@@ -218,6 +218,8 @@ class AccountController < ApplicationController
       render 'check_out'
     else
       if @order.purchase
+        session[:billing_address] = nil
+        session[:shipping_address] = nil
         @cart.mark_ordered
         @cart.save
       else
@@ -244,14 +246,12 @@ class AccountController < ApplicationController
   end
   
   def choose_new_shipping_address
-logger.debug "address id is " << params[:address_id].inspect << " OK!"
     session[:shipping_address] = params[:address_id]      
     
     redirect_to :action => 'check_out'
   end
 
   def choose_new_billing_address
-    logger.debug "address id is " << params[:address_id].inspect << " OK!"
     session[:billing_address] = params[:address_id]      
     
     redirect_to :action => 'check_out'
@@ -263,7 +263,7 @@ logger.debug "address id is " << params[:address_id].inspect << " OK!"
     if session[address_identifier].blank?
       addresses.first
     else
-      return_address = Address.find_by_id_and_user_id(session[address_identifier], current_user.id)
+      return_address = Address.find_active_by_id_and_user_id(session[address_identifier], current_user.id)
       if (return_address.nil?) # potential bug w/ mult users on same computer
         @addresses.first
       else
