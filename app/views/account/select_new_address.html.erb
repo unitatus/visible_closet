@@ -1,0 +1,31 @@
+<%= render 'account/account_nav' %>
+	<div class="grid_9">
+		<h1>Select a new <%= @action %> address</h1>
+	<% first = true %>
+	<% @addresses.each do |address| %>
+	    <% if !first %>
+<div class="grid_9"><hr></div>
+	    <% end %>
+		<div class="grid_7">
+		<%= form_tag "/account/choose_new_#{@action}_address", :class => "standard" do %>
+		<%= hidden_field_tag :address_id, address.id.to_s %>
+
+		<%= address.first_name %> <%= address.last_name %> 
+		<br><%= address.address_line_1 %>
+		<% if !address.address_line_2.blank? %>
+			<br><%= address.address_line_2 %>
+		<% end %>
+		<br><%= address.city %>, <%= address.state %>
+		<br><%= address.zip %>
+		<br>Day Phone: <%= number_to_phone(address.day_phone) %>
+		<% if !address.evening_phone.blank? %>
+		<br>Evening Phone: <%= number_to_phone(address.evening_phone) %>
+		<% end %>
+		<p>
+		<%= submit_tag("Select Address", :class => "button") %>
+	</div>
+
+		<% first = false %>
+		<% end %> <!-- form -->
+	<% end %> <!-- loop -->
+</div>

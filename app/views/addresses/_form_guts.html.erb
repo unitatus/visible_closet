@@ -1,0 +1,48 @@
+<div class="field clearfix">
+	<%= f.label "First Name*"%>
+	<%= f.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (@address.errors[:first_name].empty? ? "": " error") %>
+	<%= error_messages_for_attribute(@address, :first_name) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Last Name*"%>
+	<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (@address.errors[:last_name].empty? ? "": " error") %>
+	<%= error_messages_for_attribute(@address, :last_name) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Day Phone*"%>
+	<%= f.text_field :day_phone, :placeholder => "###-###-####", :class => "textbox" + (@address.errors[:day_phone].empty? ? "": " error") %>
+	<%= error_messages_for_attribute(@address, :day_phone) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Evening Phone"%>
+	<%= f.text_field :evening_phone, :placeholder => "###-###-####", :class => "textbox" + (@address.errors[:evening_phone].empty? ? "": " error") %>
+	<%= error_messages_for_attribute(@address, :evening_phone) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Address Line 1*"%>
+	<%= f.text_field :address_line_1, :placeholder => "Address Line 1", :class => "textbox" + (@address.errors[:address_line_1].empty? ? "": " error") %>
+	<%= error_messages_for_attribute(@address, :address_line_1) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Address Line 2"%>
+	<%= f.text_field :address_line_2, :placeholder => "Apt #, Suite, etc", :class => "textbox" + (@address.errors[:address_line_2].empty? ? "": " error") %>
+	<%= error_messages_for_attribute(@address, :address_line_2) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "City*"%>
+	<%= f.text_field :city, :placeholder => "Sometown", :class => "textbox" + (@address.errors[:city].empty? ? "": " error") %>
+	<%= error_messages_for_attribute(@address, :city) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "State*"%>
+	<%= f.select :state, options_for_select(states_array, @address.state), :include_blank => true, :class => (@address.errors[:state].empty? ? "": "error") %>
+	<%= error_messages_for_attribute(@address, :state) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Zip*"%>
+	<%= f.text_field :zip, :placeholder => "#####", :class => "textbox" + (@address.errors[:zip].empty? ? "": " error") %>
+	<%= error_messages_for_attribute(@address, :zip) %>
+</div><!--//field-->
+	<div class="field clearfix">
+    <%= f.submit :class => 'button' %>
+	</div>

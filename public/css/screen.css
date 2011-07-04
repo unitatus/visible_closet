@@ -794,6 +794,19 @@ table.prices_table td
         border: solid black 1px;
 		padding: 5px 5px 5px 5px;
 }
+table.check_out_cart_summary
+{
+        width: 100%
+}
+table.check_out_cart_summary td
+{
+        text-align: center;
+}
+table.check_out_cart_summary th
+{
+        text-align: center;
+		font-weight: bold;
+}
 
 
 

@@ -55,7 +55,7 @@ class Address < ActiveRecord::Base
     new_address
   end
   
-  def Address.find_by_user_id
+  def Address.find_by_user_id(user_id=nil)
     raise "Do not use this method. You must specify find_active or one of the generated methods, or implement a new method"
   end
   

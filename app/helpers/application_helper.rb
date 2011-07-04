@@ -71,4 +71,14 @@ module ApplicationHelper
 	'WV',
 	'WY']
   end
+  
+  def year_array(num_years=10)
+    years = Array.new
+    
+    for num in 1..num_years
+      years << (Date.today.year + (num - 1))
+    end
+    
+    years
+  end
 end

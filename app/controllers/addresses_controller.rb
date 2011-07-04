@@ -10,6 +10,17 @@ class AddressesController < ApplicationController
     end
   end
 
+  # GET /boxes/1
+  # GET /boxes/1.xml
+  def show
+    @address = Address.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @address }
+    end
+  end
+  
   # GET /addresses/new
   # GET /addresses/new.xml
   def new

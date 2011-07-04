@@ -54,7 +54,7 @@ class AccountController < ApplicationController
     if (cart.num_items == 0)
       redirect_to :action => 'index'
     else
-      if Address.find_by_user_id(current_user.id).nil?
+      if Address.find_active(current_user.id).nil?
         redirect_to :action => 'new', :controller => 'addresses'
       else
         redirect_to :action => 'check_out'
@@ -139,142 +139,136 @@ class AccountController < ApplicationController
   end
 
   def check_out
-    @cart = Cart.find_active_by_user_id(current_user.id)
-    @billing_address = Address.new
-    @shipping_address = Address.new
-    @addresses = Address.all(:conditions => {:user_id => current_user.id} )
+    @addresses = Address.find_active(current_user.id, :order => :first_name)
+    
+    if @addresses.nil? || @addresses.empty?
+      render :action => "new", :controller => "addresses"
+      return
+    end
+    
+    # Todo: find most recent address from last order
+    @shipping_address = get_address(:shipping_address, @addresses)
+    @billing_address = get_address(:billing_address, @addresses)
     @order = Order.new
+    @cart = Cart.find_active_by_user_id(current_user.id)
   end
 
-  # assumption: you cannot update addresses here, only add new ones 
-  # or search for old ones
-  def finalize_check_out
-    manage_address_create
+  def add_new_billing_address
+    @address = Address.new
+    @address.user_id = current_user.id
+  end
+  
+  def add_new_shipping_address
+    @address = Address.new
+    @address.user_id = current_user.id
+  end
+  
+  def create_new_billing_address
+    @billing_address = Address.new(params[:address])
+    @billing_address.user_id = current_user.id
 
-    manage_order_create
+    if @billing_address.save
+      @addresses = Address.find_active(current_user.id, :order => :first_name)
+      @cart = Cart.find_active_by_user_id(current_user.id)
+      session[:billing_address] = @billing_address.id
 
-    # Or's work in sequence, so with this if check we avoid having lots of 
-    # nested if's.
-    if (!@billing_address.valid? || !@shipping_address.valid? || !@order.valid? || !@billing_address.save || !@shipping_address.save || !@order.save)
-      render 'check_out'
-    end
-
-    if @order.purchase
-      @cart.mark_ordered
-      if !@cart.save
-        render 'check_out'
-      end
+      # Todo: find most recent address from last order
+      @shipping_address = get_address(:shipping_address, @addresses)
+    
+      @order = Order.new
+      render :action => "check_out"
     else
-      render 'check_out'
-    end
+      render :action => "add_new_billing_address"
+    end    
+  end
+  
+  def create_new_shipping_address
+    @shipping_address = Address.new(params[:address])
+    @shipping_address.user_id = current_user.id
 
+    if @shipping_address.save
+      @addresses = Address.find_active(current_user.id, :order => :first_name)
+      @cart = Cart.find_active_by_user_id(current_user.id)
+      session[:shipping_address] = @shipping_address.id
+
+      # Todo: find most recent address from last order
+      @billing_address = get_address(:billing_address, @addresses)
+    
+      @order = Order.new
+      render :action => "check_out"
+    else
+      render :action => "add_new_shipping_address"
+    end    
   end
 
-  def manage_order_create
+  def finalize_check_out
+    @cart = Cart.find_active_by_user_id(current_user.id)
     @order = @cart.build_order(params[:order])
 
     @order.ip_address = request.remote_ip
-    @order.billing_address_id = @billing_address.id
+    @order.billing_address_id = params[:billing_address_id]
+    @order.shipping_address_id = params[:shipping_address_id]
     @order.user_id = current_user.id
 
-    @order.valid?
+    if (!@order.save)
+      @addresses = Address.find_active(current_user.id, :order => :first_name)
+      @shipping_address = get_address(:shipping_address, @addresses)
+      @billing_address = get_address(:billing_address, @addresses)
 
-    # Create order lines for each cart item
-    # Create a charge for the total order amount and associate it with the user
-    # Use the order to create credit card transaction
-    # Save the response as a credit card transaction
-    # If the response was not a success, do the logic to say so
-    # If the response was a success, create a payment for the user's account, clear out the cart, and render the next page
-  end
-
-  def manage_address_create
-    # In case this is a refresh
-    initialize_checkout_page
-
-    # Don't copy params if they are nil
-    if (params[:same_as_billing][:same_as_billing] != "1" && params[:shipping_address_id].blank?)
-      copy_params_to_shipping_address
-    end
-
-    # Don't copy params if they are nil
-    if (params[:billing_address_id].blank?)
-      copy_params_to_billing_address
-    end
-
-    # We have to call valid? on each object in order for error messages to be generated. Can't rely on next if, b/c first might fail and second won't trigger.
-    @billing_address.valid?
-    @shipping_address.valid?
-  end
-
-  def initialize_checkout_page
-    @cart = Cart.find_active_by_user_id(current_user.id)
-    @addresses = Address.all(:conditions => {:user_id => current_user.id} )
-
-    if (params[:billing_address_id].blank?)
-      @billing_address = Address.new
-      @billing_address.user_id = current_user.id
+      render 'check_out'
     else
-      @billing_address = Address.find(params[:billing_address_id])
-    end
-
-    if (params[:same_as_billing][:same_as_billing] == "1")
-      @shipping_address = @billing_address
-    else 
-      if (params[:shipping_address_id].blank?)
-        @shipping_address = Address.new
-        @shipping_address.user_id = current_user.id
+      if @order.purchase
+        @cart.mark_ordered
+        @cart.save
       else
-        @shipping_address = Address.find(params[:shipping_address_id])
+        @order.destroy # clean up
+        @addresses = Address.find_active(current_user.id, :order => :first_name)
+        @shipping_address = get_address(:shipping_address, @addresses)
+        @billing_address = get_address(:billing_address, @addresses)
+        @order = @cart.build_order(params[:order])
+        render 'check_out'
       end
     end
   end
-
-  def update_checkout_address
-    initialize_checkout_page
-    @order = Order.new
-
-    if (params[:saved_address_selected] != 'billing' && params[:billing_address_id].blank?)
-      copy_params_to_billing_address
-    end
-
-    if (params[:saved_address_selected] != 'shipping' && @shipping_address != @billing_address && params[:shipping_address_id].blank?)
-      copy_params_to_shipping_address
-    end
-
-    render 'check_out'
+  
+  def select_new_billing_address
+    @addresses = Address.find_active(current_user.id, :order => :first_name)
+    @action = "billing"
+    render 'select_new_address'
+  end
+  
+  def select_new_shipping_address
+    @addresses = Address.find_active(current_user.id, :order => :first_name)
+    @action = "shipping"
+    render 'select_new_address'
+  end
+  
+  def choose_new_shipping_address
+logger.debug "address id is " << params[:address_id].inspect << " OK!"
+    session[:shipping_address] = params[:address_id]      
+    
+    redirect_to :action => 'check_out'
   end
 
-  def copy_params_to_shipping_address
-    @shipping_address.address_name = params[:shipping_address_name]
-    @shipping_address.first_name = params[:shipping_first_name]
-    @shipping_address.last_name = params[:shipping_last_name]
-    @shipping_address.day_phone = gsub_nullable(params[:shipping_day_phone], /\D/, "")
-    @shipping_address.evening_phone = gsub_nullable(params[:shipping_evening_phone], /\D/, "")
-    @shipping_address.address_line_1 = params[:shipping_address_line_1]
-    @shipping_address.address_line_2 = params[:shipping_address_line_2]
-    @shipping_address.city = params[:shipping_city]
-    @shipping_address.state = params[:shipping_state]
-    @shipping_address.zip = params[:shipping_zip]
+  def choose_new_billing_address
+    logger.debug "address id is " << params[:address_id].inspect << " OK!"
+    session[:billing_address] = params[:address_id]      
+    
+    redirect_to :action => 'check_out'
   end
-
-  def copy_params_to_billing_address
-    @billing_address.address_name = params[:billing_address_name]
-    @billing_address.first_name = params[:billing_first_name]
-    @billing_address.last_name = params[:billing_last_name]
-    @billing_address.day_phone = params[:billing_day_phone].gsub(/\D/, "")
-    @billing_address.evening_phone = params[:billing_evening_phone].gsub(/\D/, "")
-    @billing_address.address_line_1 = params[:billing_address_line_1]
-    @billing_address.address_line_2 = params[:billing_address_line_2]
-    @billing_address.city = params[:billing_city]
-    @billing_address.state = params[:billing_state]
-    @billing_address.zip = params[:billing_zip]
-  end
-
-  def gsub_nullable(str, expr, replace)
-    if (str.nil?)
-      str
+  
+  private 
+  
+  def get_address(address_identifier, addresses)
+    if session[address_identifier].blank?
+      addresses.first
     else
-      str.gsub(expr, replace)
+      return_address = Address.find_by_id_and_user_id(session[address_identifier], current_user.id)
+      if (return_address.nil?) # potential bug w/ mult users on same computer
+        @addresses.first
+      else
+        return_address
+      end
     end
   end
 end

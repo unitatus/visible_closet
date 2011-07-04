@@ -3,6 +3,7 @@ VisibleCloset::Application.routes.draw do
   resources :orders
   resources :products
   resources :boxes
+
   resources :addresses
 
   devise_for :users, :path_names => { :sign_up => "beta_register" }, :controllers => { :registrations => "registrations" }
@@ -20,6 +21,14 @@ VisibleCloset::Application.routes.draw do
   get "account/check_out"
   post "account/finalize_check_out"
   post "account/update_checkout_address"
+  get "account/add_new_billing_address"
+  post "account/create_new_billing_address"
+  get "account/add_new_shipping_address"
+  post "account/create_new_shipping_address"
+  get "account/select_new_billing_address"
+  get "account/select_new_shipping_address"
+  post "account/choose_new_shipping_address"
+  post "account/choose_new_billing_address"
 
   match "account/home" => "account#index"
 
