@@ -34,6 +34,14 @@ class Order < ActiveRecord::Base
     (cart.estimated_total*100).round
   end
 
+  def shipping_address
+    Address.find(self.shipping_address_id)
+  end
+  
+  def billing_address
+    Address.find(self.billing_address_id)
+  end
+  
   private
 
   def purchase_options
@@ -73,5 +81,4 @@ class Order < ActiveRecord::Base
       :last_name => card_last_name
     )
   end
-
 end

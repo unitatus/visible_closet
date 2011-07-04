@@ -146,9 +146,15 @@ class AccountController < ApplicationController
       return
     end
     
-    # Todo: find most recent address from last order
-    @shipping_address = get_address(:shipping_address, @addresses)
-    @billing_address = get_address(:billing_address, @addresses)
+    @shipping_address = get_address_from_session(:shipping_address)
+    if (@shipping_address.nil?)
+      @shipping_address = get_last_shipping_address @addresses
+    end
+    
+    @billing_address = get_address_from_session(:billing_address)
+    if @billing_address.nil?
+      @billing_address = get_last_billing_address @addresses
+    end
     @order = Order.new
     @cart = Cart.find_active_by_user_id(current_user.id)
   end
@@ -172,9 +178,11 @@ class AccountController < ApplicationController
       @cart = Cart.find_active_by_user_id(current_user.id)
       session[:billing_address] = @billing_address.id
 
-      # Todo: find most recent address from last order
-      @shipping_address = get_address(:shipping_address, @addresses)
-    
+      @shipping_address = get_address_from_session(:shipping_address)
+      if (@shipping_address.nil?)
+        @shipping_address = get_last_shipping_address @addresses
+      end
+          
       @order = Order.new
       render :action => "check_out"
     else
@@ -191,9 +199,11 @@ class AccountController < ApplicationController
       @cart = Cart.find_active_by_user_id(current_user.id)
       session[:shipping_address] = @shipping_address.id
 
-      # Todo: find most recent address from last order
-      @billing_address = get_address(:billing_address, @addresses)
-    
+      @billing_address = get_address_from_session(:billing_address)
+      if (@billing_address.nil?)
+        @billing_address = get_last_billing_address @addresses
+      end
+          
       @order = Order.new
       render :action => "check_out"
     else
@@ -212,8 +222,15 @@ class AccountController < ApplicationController
 
     if (!@order.save)
       @addresses = Address.find_active(current_user.id, :order => :first_name)
-      @shipping_address = get_address(:shipping_address, @addresses)
-      @billing_address = get_address(:billing_address, @addresses)
+      @shipping_address = get_address_from_session(:shipping_address)
+      if (@shipping_address.nil?)
+        @shipping_address = get_last_shipping_address @addresses
+      end
+
+      @billing_address = get_address_from_session(:billing_address)
+      if @billing_address.nil?
+        @billing_address = get_last_billing_address @addresses
+      end
 
       render 'check_out'
     else
@@ -225,8 +242,15 @@ class AccountController < ApplicationController
       else
         @order.destroy # clean up
         @addresses = Address.find_active(current_user.id, :order => :first_name)
-        @shipping_address = get_address(:shipping_address, @addresses)
-        @billing_address = get_address(:billing_address, @addresses)
+        @shipping_address = get_address_from_session(:shipping_address)
+        if (@shipping_address.nil?)
+          @shipping_address = get_last_shipping_address @addresses
+        end
+
+        @billing_address = get_address_from_session(:billing_address)
+        if @billing_address.nil?
+          @billing_address = get_last_billing_address @addresses
+        end
         @order = @cart.build_order(params[:order])
         render 'check_out'
       end
@@ -259,9 +283,9 @@ class AccountController < ApplicationController
   
   private 
   
-  def get_address(address_identifier, addresses)
+  def get_address_from_session(address_identifier)
     if session[address_identifier].blank?
-      addresses.first
+      nil
     else
       return_address = Address.find_active_by_id_and_user_id(session[address_identifier], current_user.id)
       if (return_address.nil?) # potential bug w/ mult users on same computer
@@ -270,5 +294,33 @@ class AccountController < ApplicationController
         return_address
       end
     end
+  end
+  
+  def get_last_billing_address(user_id=nil, addresses)
+    last_order = get_last_order(user_id)
+    if last_order
+      last_order.billing_address
+    else
+      addresses.first
+    end
+  end
+  
+  def get_last_shipping_address(user_id=nil, addresses)
+    last_order = get_last_order(user_id)
+    if last_order
+      last_order.shipping_address
+    else
+      addresses.first
+    end
+  end
+  
+  def get_last_order(user_id=nil)
+    if user_id.nil? && @current_user
+      user_id = @current_user.id
+    elsif user_id.nil?
+      return nil
+    end
+    
+    Order.find_by_user_id(user_id, :order => "created_at desc", :limit => 1)
   end
 end
