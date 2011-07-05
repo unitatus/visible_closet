@@ -13,6 +13,6 @@ ActionMailer::Base.smtp_settings = {
 
 ActionMailer::Base.default_url_options[:host] = "localhost:3000" if Rails.env.development?
 ActionMailer::Base.default_url_options[:host] = "localhost:3000" if Rails.env.test?
-ActionMailer::Base.default_url_options[:host] = "www.thevisiblecloset.com" if Rails.env.production?
+ActionMailer::Base.default_url_options[:host] = "http://evening-sky-543.heroku.com/" if Rails.env.production?
 
 #Mail.register_interceptor(DevelopmentMailInterceptor) if Rails.env.development?
