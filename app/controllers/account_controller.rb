@@ -187,6 +187,7 @@ class AccountController < ApplicationController
       @order = Order.new
       render :action => "check_out"
     else
+      @address = @billing_address
       render :action => "add_new_billing_address"
     end    
   end
