@@ -46,6 +46,14 @@ class Address < ActiveRecord::Base
     evening_phone.empty?
   end
 
+  def day_phone=(phone_number)
+    if phone_number.is_a?(String)
+      phone_number = phone_number.gsub(/\D/, '')
+    end
+    
+    super(phone_number)
+  end
+
   # Hard coded country for now
   def Address.new(params=nil)
     new_address = super(params)
