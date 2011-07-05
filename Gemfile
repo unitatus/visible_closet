@@ -11,6 +11,7 @@ gem 'paperclip'
 gem 'validatable'
 gem 'activemerchant'
 gem 'authorize-net'
+gem 'rake', '0.8.7'
 
 group :development do
   gem 'rspec-rails'
