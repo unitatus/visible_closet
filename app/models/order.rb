@@ -22,12 +22,23 @@ class Order < ActiveRecord::Base
   validate :validate_card, :on => :create
 
   def purchase
+    # Purchase needs to save and submit to credit card processing -- but if save fails, cc processing should not trigger, 
+    # and if cc processing fails, save should not trigger. Since saving is easier to roll back, that's what should -- but we need to hold onto the errors from 
+    # cc processing in this object
+    if (!save)
+      return false
+    end
+  
     response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
     payment_transactions.create!(:action => "purchase", :amount => total_in_cents, :response => response)
-    cart.mark_ordered if response.success?
 
-    errors.add("cc_response", response.message) unless response.success?
-    response.success?
+    if !response.success?
+      errors.add("cc_response", response.message)
+      destroy # Can't keep this object around if the credit card did not charge
+    else
+      cart.mark_ordered
+      cart.save
+    end
   end
 
   def total_in_cents

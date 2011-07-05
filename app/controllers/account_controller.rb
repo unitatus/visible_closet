@@ -220,7 +220,7 @@ class AccountController < ApplicationController
     @order.shipping_address_id = params[:shipping_address_id]
     @order.user_id = current_user.id
 
-    if (!@order.save)
+    if (!@order.purchase)
       @addresses = Address.find_active(current_user.id, :order => :first_name)
       @shipping_address = get_address_from_session(:shipping_address)
       if (@shipping_address.nil?)
@@ -233,27 +233,6 @@ class AccountController < ApplicationController
       end
 
       render 'check_out'
-    else
-      if @order.purchase
-        session[:billing_address] = nil
-        session[:shipping_address] = nil
-        @cart.mark_ordered
-        @cart.save
-      else
-        @order.destroy # clean up
-        @addresses = Address.find_active(current_user.id, :order => :first_name)
-        @shipping_address = get_address_from_session(:shipping_address)
-        if (@shipping_address.nil?)
-          @shipping_address = get_last_shipping_address @addresses
-        end
-
-        @billing_address = get_address_from_session(:billing_address)
-        if @billing_address.nil?
-          @billing_address = get_last_billing_address @addresses
-        end
-        @order = @cart.build_order(params[:order])
-        render 'check_out'
-      end
     end
   end
   
