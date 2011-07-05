@@ -142,7 +142,7 @@ class AccountController < ApplicationController
     @addresses = Address.find_active(current_user.id, :order => :first_name)
     
     if @addresses.nil? || @addresses.empty?
-      render :action => "new", :controller => "addresses"
+      render :action => "add_new_billing_address"
       return
     end
     
