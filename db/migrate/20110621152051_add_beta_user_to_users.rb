@@ -1,6 +1,6 @@
 class AddBetaUserToUsers < ActiveRecord::Migration
   def self.up
-    add_column :users, :beta_user, :boolean, :default => 1
+    add_column :users, :beta_user, :boolean, :default => true
   end
 
   def self.down
