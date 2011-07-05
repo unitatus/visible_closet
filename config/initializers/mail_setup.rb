@@ -7,7 +7,8 @@ ActionMailer::Base.smtp_settings = {
   :password             => "outobahn",
   :authentication       => "plain",
   :enable_starttls_auto => true
-} if Rails.env.development?
+#} if Rails.env.development?
+} # same for production?
 
 
 ActionMailer::Base.default_url_options[:host] = "localhost:3000" if Rails.env.development?
