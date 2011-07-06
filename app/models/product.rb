@@ -12,4 +12,5 @@
 #
 
 class Product < ActiveRecord::Base
+  attr_accessible :id, :name, :price, :price_comment, :created_at, :updated_at
 end

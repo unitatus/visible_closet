@@ -222,6 +222,7 @@ class AccountController < ApplicationController
     @order.shipping_address_id = params[:shipping_address_id]
     @order.user_id = current_user.id
 
+    # This executes the money purchase and triggers all the other actions that come after it if successful
     if (!@order.purchase)
       @addresses = Address.find_active(current_user.id, :order => :first_name)
       @shipping_address = get_address_from_session(:shipping_address)

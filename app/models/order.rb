@@ -23,23 +23,29 @@ class Order < ActiveRecord::Base
   validate :validate_card, :on => :create
 
   def purchase
-    # Purchase needs to save and submit to credit card processing -- but if save fails, cc processing should not trigger, 
-    # and if cc processing fails, save should not trigger. Since saving is easier to roll back, that's what should -- but we need to hold onto the errors from 
-    # cc processing in this object
-    if (!save)
+    begin
+      self.transaction do
+        if (!save)
+          raise ActiveRecord::Rollback
+        end
+
+        # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
+        do_purchase_processing
+  
+        response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
+        payment_transactions.create!(:action => "purchase", :amount => total_in_cents, :response => response)
+
+        if !response.success?
+          errors.add("cc_response", response.message)
+          raise ActiveRecord::Rollback
+        end
+      end # end transaction
+    rescue ActiveRecord::Rollback
+      # If this got called then we failed for a legitimate reason; we use the exception to end the transaction
       return false
     end
-  
-    response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
-    payment_transactions.create!(:action => "purchase", :amount => total_in_cents, :response => response)
-
-    if !response.success?
-      errors.add("cc_response", response.message)
-      destroy # Can't keep this object around if the credit card did not charge
-    else
-      cart.mark_ordered
-      cart.save
-    end
+    
+    return true
   end
 
   def total_in_cents
@@ -100,5 +106,43 @@ class Order < ActiveRecord::Base
       :first_name => card_first_name,
       :last_name => card_last_name
     )
+  end
+  
+  # this method throws a RuntimeError b/c the only way that save wouldn't work is if something went really wrong
+  # and we don't want to miss that
+  def do_purchase_processing()
+    cart.mark_ordered
+    
+    if (!cart.save)
+      raise "Unable to save cart. Cart: " << cart.inspect
+    end
+    
+    user = User.find(cart.user_id)
+    
+    order_lines.each do |order_line|
+      product = order_line.product
+      
+      if product.id.to_s == Rails.application.config.our_box_insured_product_id.to_s
+        insured = true
+        type = Box::VC_BOX_TYPE
+      elsif product.id.to_s == Rails.application.config.our_box_uninsured_product_id.to_s
+        insured = false
+        type = Box::VC_BOX_TYPE
+      elsif product.id.to_s == Rails.application.config.your_box_insured_product_id.to_s
+        insured = true
+        type = Box::CUST_BOX_TYPE
+      elsif product.id.to_s == Rails.application.config.your_box_uninsured_product_id.to_s
+        insured = false
+        type = Box::CUST_BOX_TYPE
+      else
+        raise "Bad configuration - no match on product " << product.inspect << ", for which product.id returned " << product.id.to_s << "."
+      end
+      
+      for i in 1..(order_line.quantity)
+        if !Box.create!(:assigned_to_user_id => user.id, :order_line_id => order_line.id, :status => Box::NEW_STATUS, :box_type => type, :insured => insured)
+          raise "Standard box creation failed."
+        end
+      end # inner for loop
+    end
   end
 end

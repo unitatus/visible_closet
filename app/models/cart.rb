@@ -63,7 +63,9 @@ class Cart < ActiveRecord::Base
   def num_items
     cart_items.size
   end
-  
+
+  # you can't override the build_order method, as ActiveRecord actually adds it to this class, not the parent, so if you override you lose the method!
+  # That's polymorphism in rails I guess! :(  
   def build_order_properly(attributes={})
     order = build_order(attributes)
     

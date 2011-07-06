@@ -14,6 +14,7 @@
 
 class OrderLine < ActiveRecord::Base
   belongs_to :order
+  belongs_to :product
   
   after_initialize :init_status
   

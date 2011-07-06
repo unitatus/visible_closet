@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110705224828) do
+ActiveRecord::Schema.define(:version => 20110706050041) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -34,9 +34,14 @@ ActiveRecord::Schema.define(:version => 20110705224828) do
     t.integer  "assigned_to_user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "order_line_id"
+    t.string   "status"
+    t.boolean  "insured"
+    t.string   "box_type"
   end
 
   add_index "boxes", ["assigned_to_user_id"], :name => "index_boxes_on_assigned_to_user_id"
+  add_index "boxes", ["order_line_id"], :name => "index_boxes_on_order_line_id"
 
   create_table "cart_items", :force => true do |t|
     t.integer  "quantity"
