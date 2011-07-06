@@ -215,7 +215,7 @@ class AccountController < ApplicationController
 
   def finalize_check_out
     @cart = Cart.find_active_by_user_id(current_user.id)
-    @order = @cart.build_order(params[:order])
+    @order = @cart.build_order_properly(params[:order])
 
     @order.ip_address = request.remote_ip
     @order.billing_address_id = params[:billing_address_id]

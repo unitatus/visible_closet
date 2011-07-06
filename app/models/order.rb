@@ -16,6 +16,7 @@
 class Order < ActiveRecord::Base
   belongs_to :cart
   has_many :payment_transactions
+  has_many :order_lines
 
   attr_accessor :card_number, :card_verification_value, :card_first_name, :card_last_name, :card_type, :card_month, :card_year
 
@@ -51,6 +52,14 @@ class Order < ActiveRecord::Base
   
   def billing_address
     Address.find(self.billing_address_id)
+  end
+  
+  def build_order_line(attributes={})
+    order_line = order_lines.build(:attributes => attributes)
+    
+    order_line.order_id = id
+    
+    order_line
   end
   
   private
