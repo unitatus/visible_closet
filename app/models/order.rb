@@ -25,29 +25,26 @@ class Order < ActiveRecord::Base
   validate :validate_card, :on => :create
 
   def purchase
-    begin
-      self.transaction do
-        if (!save)
-          raise ActiveRecord::Rollback
-        end
+    transaction_successful = false
 
-        # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
-        do_purchase_processing
-  
-        response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
-        payment_transactions.create!(:action => "purchase", :amount => total_in_cents, :response => response)
+    self.transaction do
+      if (!save)
+        raise ActiveRecord::Rollback
+      end
+      # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
+      do_purchase_processing
 
-        if !response.success?
-          errors.add("cc_response", response.message)
-          raise ActiveRecord::Rollback
-        end
-      end # end transaction
-    rescue ActiveRecord::Rollback
-      # If this got called then we failed for a legitimate reason; we use the exception to end the transaction
-      return false
-    end
-    
-    return true
+      response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
+      payment_transactions.create!(:action => "purchase", :amount => total_in_cents, :response => response)
+      if !response.success?
+        errors.add("cc_response", response.message)
+        raise ActiveRecord::Rollback
+      end
+      
+      transaction_successful = true
+    end # end transaction    
+
+    return transaction_successful
   end
 
   def total_in_cents
@@ -143,7 +140,7 @@ class Order < ActiveRecord::Base
       elsif product.id.to_s == Rails.application.config.our_box_uninsured_product_id.to_s
         insured = false
         type = Box::VC_BOX_TYPE
-        status = BOX::NEW_STATUS
+        status = Box::NEW_STATUS
       elsif product.id.to_s == Rails.application.config.your_box_insured_product_id.to_s
         insured = true
         type = Box::CUST_BOX_TYPE

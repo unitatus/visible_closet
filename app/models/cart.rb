@@ -69,6 +69,15 @@ class Cart < ActiveRecord::Base
   def build_order_properly(attributes={})
     order = build_order(attributes)
     
+    # Need to manually set the credit card attributes, since mass assignment works if you have all attr_accessor or all attr_accessible, but not both!
+    order.card_type = attributes[:card_type]
+    order.card_number = attributes[:card_number]
+    order.card_verification_value = attributes[:card_verification_value]
+    order.card_month = attributes[:card_month]
+    order.card_year = attributes[:card_year]
+    order.card_first_name = attributes[:card_first_name]
+    order.card_last_name = attributes[:card_last_name]
+    
     cart_items.each do |cart_item|
       order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity } )
     end    

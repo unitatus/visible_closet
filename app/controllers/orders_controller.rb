@@ -82,4 +82,8 @@ class OrdersController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def process_order
+    @order = Order.find(params[:id])
+  end
 end

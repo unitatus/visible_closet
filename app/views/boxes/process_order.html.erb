@@ -1,0 +1,38 @@
+<table class="prices_table">
+  <tr>
+	<th>Order ID</th>
+    <th>User First Name</th>
+    <th>User Last Name</th>
+    <th>User Email</th>
+    <th>Order Created</th>
+	<th>Order Status</th>
+	<th>Process Order</th>
+  </tr>
+<% @orders.each do |order| %>
+
+<% user = User.find(order.user_id) %>
+  <tr>
+	<td>
+		<%= order.id %>
+	</td>
+    <td>
+      <%= user.first_name %>
+    </td>
+    <td>
+      <%= user.last_name %>
+    </td>
+    <td>
+      <%= user.email %>
+    </td>
+	<td>
+		<%= order.created_at %>
+	</td>
+	<td>
+		<%= order.status %>
+	</td>
+    <td>
+      <a href="/orders/<%= order.id %>/process">Process Order</a>
+    </td>
+  </tr>
+<% end %>
+</table>
