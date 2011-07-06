@@ -15,9 +15,10 @@
 #
 
 class Box < ActiveRecord::Base
-  NEW_STATUS = :new
-  IN_TRANSIT_STATUS = :in_transit
-  IN_STORAGE_STATUS = :in_storage
+  NEW_STATUS = "new"
+  IN_TRANSIT_STATUS = "in_transit"
+  IN_STORAGE_STATUS = "in_storage"
+  BEING_PREPARED_STATUS = "being_prepared"
   
   CUST_BOX_TYPE = :cust_box
   VC_BOX_TYPE = :vc_box
@@ -30,12 +31,14 @@ class Box < ActiveRecord::Base
   # TODO: Figure out internationalization
   def status_en
     case status
-    when NEW_STATUS.to_s
+    when NEW_STATUS
       return "New"
-    when IN_TRANSIT_STATUS.to_s
+    when IN_TRANSIT_STATUS
       return "In Transit"
-    when IN_STORAGE_STATUS.to_s
+    when IN_STORAGE_STATUS
       return "In Storage"
+    when BEING_PREPARED_STATUS
+      return "Being prepared by you"
     else
       raise "Illegal status " << status
     end
@@ -43,9 +46,9 @@ class Box < ActiveRecord::Base
   
   def box_type_en
     case box_type
-    when CUST_BOX_TYPE.to_s
+    when CUST_BOX_TYPE
       return "Box provided by you"
-    when VC_BOX_TYPE.to_s
+    when VC_BOX_TYPE
       return "Box provided by The Visible Closet"
     else
       raise "Illegal box type " << box_type

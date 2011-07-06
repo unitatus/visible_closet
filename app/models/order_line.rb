@@ -13,6 +13,9 @@
 #
 
 class OrderLine < ActiveRecord::Base
+  NEW_STATUS = "new"
+  PROCESSED_STATUS = "processed"
+  
   belongs_to :order
   belongs_to :product
   
@@ -20,7 +23,7 @@ class OrderLine < ActiveRecord::Base
   
   def init_status
     if status.blank?
-      self.status = "new"
+      self.status = NEW_STATUS
     end
   end
 end

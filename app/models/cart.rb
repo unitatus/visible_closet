@@ -70,8 +70,7 @@ class Cart < ActiveRecord::Base
     order = build_order(attributes)
     
     cart_items.each do |cart_item|
-      order_line = order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity } )
-      order.order_lines << order_line
+      order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity } )
     end    
     order
   end

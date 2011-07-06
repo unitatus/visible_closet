@@ -17,8 +17,10 @@ class Order < ActiveRecord::Base
   belongs_to :cart
   has_many :payment_transactions
   has_many :order_lines
+  has_one :user
 
   attr_accessor :card_number, :card_verification_value, :card_first_name, :card_last_name, :card_type, :card_month, :card_year
+  attr_accessible :user_id, :created_at
 
   validate :validate_card, :on => :create
 
@@ -66,6 +68,18 @@ class Order < ActiveRecord::Base
     order_line.order_id = id
     
     order_line
+  end
+  
+  def status
+    status = OrderLine::PROCESSED_STATUS
+    
+    order_lines.each do |order_line|
+      if order_line.status == OrderLine::NEW_STATUS
+        status = OrderLine::NEW_STATUS
+      end
+    end
+    
+    return status
   end
   
   private
@@ -125,21 +139,25 @@ class Order < ActiveRecord::Base
       if product.id.to_s == Rails.application.config.our_box_insured_product_id.to_s
         insured = true
         type = Box::VC_BOX_TYPE
+        status = Box::NEW_STATUS
       elsif product.id.to_s == Rails.application.config.our_box_uninsured_product_id.to_s
         insured = false
         type = Box::VC_BOX_TYPE
+        status = BOX::NEW_STATUS
       elsif product.id.to_s == Rails.application.config.your_box_insured_product_id.to_s
         insured = true
         type = Box::CUST_BOX_TYPE
+        status = Box::BEING_PREPARED_STATUS
       elsif product.id.to_s == Rails.application.config.your_box_uninsured_product_id.to_s
         insured = false
         type = Box::CUST_BOX_TYPE
+        status = Box::BEING_PREPARED_STATUS
       else
         raise "Bad configuration - no match on product " << product.inspect << ", for which product.id returned " << product.id.to_s << "."
       end
       
       for i in 1..(order_line.quantity)
-        if !Box.create!(:assigned_to_user_id => user.id, :order_line_id => order_line.id, :status => Box::NEW_STATUS, :box_type => type, :insured => insured)
+        if !Box.create!(:assigned_to_user_id => user.id, :order_line_id => order_line.id, :status => status, :box_type => type, :insured => insured)
           raise "Standard box creation failed."
         end
       end # inner for loop

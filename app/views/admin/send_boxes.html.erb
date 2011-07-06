@@ -1,18 +1,38 @@
-Please enter either the user's id, first name, or last name.
-<p>
-<%= form_for :user, :url => { :controller => "admin", :action => "send_boxes_user_search" } do |f| %>
-<table class="sign_up_table">
+<table class="prices_table">
   <tr>
-  <td>User Id:</td>
-  <td><%= f.text_field :id, :class => 'sign_up_form_narrow' %></td>
-  </tr><tr>
-  <td><%= f.label :first_name %>:</td>
-  <td><%= f.text_field :first_name, :class => 'sign_up_form_narrow'  %></td>
-  </tr><tr>
-  <td><%= f.label :last_name %>:</td>
-  <td><%= f.text_field :last_name, :class => 'sign_up_form_narrow' %></td>
-  </tr><tr>
-  <td colspan="2" align="center"><%= f.submit "Search", :class => 'sign_up_form_submit' %></td>
+	<th>Order ID</th>
+    <th>User First Name</th>
+    <th>User Last Name</th>
+    <th>User Email</th>
+    <th>Order Created</th>
+	<th>Order Status</th>
+	<th>Process Order</th>
   </tr>
-</table>
+<% @orders.each do |order| %>
+
+<% user = User.find(order.user_id) %>
+  <tr>
+	<td>
+		<%= order.id %>
+	</td>
+    <td>
+      <%= user.first_name %>
+    </td>
+    <td>
+      <%= user.last_name %>
+    </td>
+    <td>
+      <%= user.email %>
+    </td>
+	<td>
+		<%= order.created_at %>
+	</td>
+	<td>
+		<%= order.status %>
+	</td>
+    <td>
+      <a href="">Process</a>
+    </td>
+  </tr>
 <% end %>
+</table>
