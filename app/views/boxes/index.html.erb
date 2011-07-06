@@ -5,26 +5,20 @@ You do not have any boxes in storage order under management. Click <a href="/acc
 <% else %>
 <table class="prices_table"><tr>
 	<th>Box ID</th>
-	<th>User id</th>
-	<th>Order Line Id</th>
 	<th>Status</th>
-	<th>Type</th>
-	<th>Insured</th>
-	<th>Show</th>
+	<th>Box Source</th>
+	<th>Description</th>
+	<th>Insured?</th>
 	<th>Edit</th>
-	<th>Destroy</th>
 	</tr>
 	<% @boxes.each do |box| %>
 	  <tr>
 		<td><%= box.id %></td>
-		<td><%= box.assigned_to_user_id %></td>
-		<td><%= box.order_line_id %></td>
-		<td><%= box.status %></td>
-		<td><%= box.box_type %></td>
-		<td><%= box.insured %></td>
-	    <td><%= link_to 'Show', box %></td>
+		<td><%= box.status_en %></td>
+		<td><%= box.box_type == Box::CUST_BOX_TYPE.to_s ? "Your box" : "Visible Closet box" %></td>
+		<td width="300px"><%= box.description %></td>
+		<td><%= box.insured? ? "yes" : "no" %></td>
 	    <td><%= link_to 'Edit', edit_box_path(box) %></td>
-	    <td><%= link_to 'Destroy', box, :confirm => 'Are you sure?', :method => :delete %></td>
 	  </tr>
 	<% end %>
 </table>

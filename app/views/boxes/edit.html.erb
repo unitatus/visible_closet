@@ -1,6 +1,8 @@
-<h1>Editing box</h1>
+<%= render 'account/account_nav' %>
+<div class="grid_9">
+<h1>Editing box <%= @box.id %></h1>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @box %> |
-<%= link_to 'Back', boxes_path %>
+<%= link_to 'All Your Boxes', boxes_path %>
+</div>

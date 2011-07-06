@@ -1,4 +1,4 @@
-<%= form_for(@box) do |f| %>
+<%= form_for(@box, :html => { :class => "standard" }) do |f| %>
   <% if @box.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@box.errors.count, "error") %> prohibited this box from being saved:</h2>
@@ -10,8 +10,9 @@
       </ul>
     </div>
   <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<div class="field clearfix">
+  <%= f.label "Box Description" %>
+</div>
+<br>  <%= f.text_area :description, :cols => 40, :rows =>10 %>
+  <%= f.submit :class => "button" %>
 <% end %>

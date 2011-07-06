@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110706050041
+# Schema version: 20110706160837
 #
 # Table name: boxes
 #
@@ -11,6 +11,7 @@
 #  status              :string(255)
 #  insured             :boolean
 #  box_type            :string(255)
+#  description         :text
 #
 
 class Box < ActiveRecord::Base
@@ -21,8 +22,33 @@ class Box < ActiveRecord::Base
   CUST_BOX_TYPE = :cust_box
   VC_BOX_TYPE = :vc_box
   
-  attr_accessible :assigned_to_user_id, :order_line_id, :status, :box_type, :insured
+  attr_accessible :assigned_to_user_id, :order_line_id, :status, :box_type, :insured, :description
 
   has_many :stored_items
   has_one :order_line
+  
+  # TODO: Figure out internationalization
+  def status_en
+    case status
+    when NEW_STATUS.to_s
+      return "New"
+    when IN_TRANSIT_STATUS.to_s
+      return "In Transit"
+    when IN_STORAGE_STATUS.to_s
+      return "In Storage"
+    else
+      raise "Illegal status " << status
+    end
+  end
+  
+  def box_type_en
+    case box_type
+    when CUST_BOX_TYPE.to_s
+      return "Box provided by you"
+    when VC_BOX_TYPE.to_s
+      return "Box provided by The Visible Closet"
+    else
+      raise "Illegal box type " << box_type
+    end
+  end
 end

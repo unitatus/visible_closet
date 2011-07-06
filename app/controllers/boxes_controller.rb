@@ -2,7 +2,7 @@ class BoxesController < ApplicationController
   # GET /boxes
   # GET /boxes.xml
   def index
-    @boxes = Box.all
+    @boxes = Box.find_all_by_assigned_to_user_id(current_user.id)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +13,7 @@ class BoxesController < ApplicationController
   # GET /boxes/1
   # GET /boxes/1.xml
   def show
-    @box = Box.find(params[:id])
+    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -25,6 +25,7 @@ class BoxesController < ApplicationController
   # GET /boxes/new.xml
   def new
     @box = Box.new
+    @box.assigned_to_user_id = current_user.id
 
     respond_to do |format|
       format.html # new.html.erb
@@ -34,13 +35,14 @@ class BoxesController < ApplicationController
 
   # GET /boxes/1/edit
   def edit
-    @box = Box.find(params[:id])
+    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)    
   end
 
   # POST /boxes
   # POST /boxes.xml
   def create
     @box = Box.new(params[:box])
+    @box.assigned_to_user_id = current_user.id
 
     respond_to do |format|
       if @box.save
@@ -56,11 +58,12 @@ class BoxesController < ApplicationController
   # PUT /boxes/1
   # PUT /boxes/1.xml
   def update
-    @box = Box.find(params[:id])
+    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
 
     respond_to do |format|
       if @box.update_attributes(params[:box])
-        format.html { redirect_to(@box, :notice => 'Box was successfully updated.') }
+        @boxes = Box.find_all_by_assigned_to_user_id(current_user.id)
+        format.html { render :action => "index" }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -72,7 +75,7 @@ class BoxesController < ApplicationController
   # DELETE /boxes/1
   # DELETE /boxes/1.xml
   def destroy
-    @box = Box.find(params[:id])
+    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
     @box.destroy
 
     respond_to do |format|
