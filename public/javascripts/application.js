@@ -15,3 +15,9 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 		for(var i = 0; i < countCheckBoxes; i++)
 			objCheckBoxes[i].checked = CheckValue;
 }
+
+function ToggleIndexingLock()
+{
+	document.forms['box_form'].elements['marked_for_indexing'].checked = document.forms['box_form'].elements['marked_for_indexing_locked'].checked;
+	document.forms['box_form'].elements['marked_for_indexing'].disabled = document.forms['box_form'].elements['marked_for_indexing_locked'].checked;
+}

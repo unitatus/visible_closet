@@ -2,6 +2,9 @@ VisibleCloset::Application.routes.draw do
 
   resources :orders
   resources :products
+
+  match "boxes/receive_box" => "boxes#receive_box"
+
   resources :boxes
 
   resources :addresses

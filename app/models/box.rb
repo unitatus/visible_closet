@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110706160837
+# Schema version: 20110707043921
 #
 # Table name: boxes
 #
@@ -12,6 +12,7 @@
 #  insured             :boolean
 #  box_type            :string(255)
 #  description         :text
+#  indexing_status     :string(255)
 #
 
 class Box < ActiveRecord::Base
@@ -20,10 +21,15 @@ class Box < ActiveRecord::Base
   IN_STORAGE_STATUS = "in_storage"
   BEING_PREPARED_STATUS = "being_prepared"
   
+  NO_INDEXING_REQUESTED = "no_indexing_requested"
+  INDEXING_REQUESTED = "indexing_requested"
+  INDEXED = "indexed"
+  
+  # TODO: Get rid of these, turn them into strings
   CUST_BOX_TYPE = :cust_box
   VC_BOX_TYPE = :vc_box
   
-  attr_accessible :assigned_to_user_id, :order_line_id, :status, :box_type, :insured, :description
+  attr_accessible :assigned_to_user_id, :order_line_id, :status, :box_type, :insured, :description, :indexing_status
 
   has_many :stored_items
   has_one :order_line

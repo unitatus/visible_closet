@@ -83,4 +83,55 @@ class BoxesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def receive_box
+    @error_messages = Array.new
+    @messages = Array.new
+    @marked_for_indexing_locked = (params[:marked_for_indexing_locked] == "1")
+    
+    if params[:box_id].blank?
+      return
+    end
+    
+    begin
+      box = Box.find(params[:box_id])
+    rescue ActiveRecord::RecordNotFound => r
+      @error_messages << "Box not found!"
+      return
+    end
+    
+    if (box.status == Box::IN_STORAGE_STATUS)
+      @error_messages << ("Warning: box was in 'In Storage' status. Please record this error and see an administrator. Box id: " + box.id.to_s + ". Box was still received, but was left in this status.")
+    end
+    
+    if (box.status == Box::NEW_STATUS)
+      @error_messages << ("Warning: box was in 'New' status. Please record this error and see an administrator. Box id: " + box.id.to_s + ". Box was still received.")
+    end    
+    
+    # need to check for both, since one disables the other which means that it is not posted
+    if params[:marked_for_indexing] == "1" || params[:marked_for_indexing_locked] == "1"
+      if box.indexing_status == Box::NO_INDEXING_REQUESTED
+        generate_indexing_order
+      end
+      box.indexing_status = Box::INDEXING_REQUESTED
+    end
+    
+    box.status = Box::IN_STORAGE_STATUS
+    
+    if !box.save
+      raise "Error on save with box: " << box.inspect
+    end
+    
+    if box.indexing_status == Box::INDEXING_REQUESTED
+      @error_messages << "WARNING!!! Indexing requested! Please send this box for indexing!"
+    end
+    
+    @messages << ("Box " + box.id.to_s + " processed.")
+  end
+  
+  private
+  
+  def generate_indexing_order
+    # TODO
+  end
 end
