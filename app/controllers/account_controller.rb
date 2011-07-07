@@ -215,6 +215,13 @@ class AccountController < ApplicationController
 
   def finalize_check_out
     @cart = Cart.find_active_by_user_id(current_user.id)
+    
+    # The most likely reason why a cart would not be found is because the submit button was clicked twice, and the order previously committed.
+    # That means we should render nicely as though it did.
+    if (!@cart)
+      return
+    end
+    
     @order = @cart.build_order_properly(params[:order])
 
     @order.ip_address = request.remote_ip
