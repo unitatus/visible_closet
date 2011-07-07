@@ -7,7 +7,7 @@ VisibleCloset::Application.routes.draw do
   resources :addresses
 
   match "orders/:id/process" => "orders#process_order"
-  match "orders/:id/process_lines" => "orders#process_order"
+  match "orders/:id/process_lines" => "orders#process_lines"
 
   devise_for :users, :path_names => { :sign_up => "beta_register" }, :controllers => { :registrations => "registrations" }
 

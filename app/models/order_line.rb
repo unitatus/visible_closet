@@ -18,6 +18,7 @@ class OrderLine < ActiveRecord::Base
   
   belongs_to :order
   belongs_to :product
+  has_many :boxes
   
   after_initialize :init_status
   
@@ -25,5 +26,24 @@ class OrderLine < ActiveRecord::Base
     if status.blank?
       self.status = NEW_STATUS
     end
+  end
+  
+  def process
+    self.status = PROCESSED_STATUS
+    
+    self.transaction do
+      boxes.each do |box|
+        box.status = Box::IN_TRANSIT_STATUS
+        if (!box.save)
+          raise "Unable to save box " << box.inspect
+        end
+      end
+      
+      if (!save)
+        raise "Unable to save OrderLine " << self.inspect
+      end
+    end # end transaction
+    
+    return true # Only hard errors are thrown in the transaction, so if we made it here we are ok
   end
 end

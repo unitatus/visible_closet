@@ -145,10 +145,14 @@ class Order < ActiveRecord::Base
         insured = true
         type = Box::CUST_BOX_TYPE
         status = Box::BEING_PREPARED_STATUS
+        order_line.status = OrderLine::PROCESSED_STATUS
+        order_line.save
       elsif product.id.to_s == Rails.application.config.your_box_uninsured_product_id.to_s
         insured = false
         type = Box::CUST_BOX_TYPE
         status = Box::BEING_PREPARED_STATUS
+        order_line.status = OrderLine::PROCESSED_STATUS
+        order_line.save
       else
         raise "Bad configuration - no match on product " << product.inspect << ", for which product.id returned " << product.id.to_s << "."
       end
