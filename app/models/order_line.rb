@@ -46,4 +46,8 @@ class OrderLine < ActiveRecord::Base
     
     return true # Only hard errors are thrown in the transaction, so if we made it here we are ok
   end
+  
+  def total_in_cents
+    quantity * product.price * 100
+  end
 end

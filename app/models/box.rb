@@ -26,8 +26,8 @@ class Box < ActiveRecord::Base
   INDEXED = "indexed"
   
   # TODO: Get rid of these, turn them into strings
-  CUST_BOX_TYPE = :cust_box
-  VC_BOX_TYPE = :vc_box
+  CUST_BOX_TYPE = "cust_box"
+  VC_BOX_TYPE = "vc_box"
   
   attr_accessible :assigned_to_user_id, :order_line_id, :status, :box_type, :insured, :description, :indexing_status
 
@@ -72,12 +72,42 @@ class Box < ActiveRecord::Base
     
     self.status = Box::IN_STORAGE_STATUS
     
-    return self.save
+    self.transaction do
+      generate_indexing_order
+      
+      return self.save
+    end
   end
   
   private
   
   def generate_indexing_order
+    if self.box_type == CUST_BOX_TYPE
+      product_id = Rails.application.config.your_box_inventorying_product_id
+    elsif self.box_type == VC_BOX_TYPE
+      product_id = Rails.application.config.our_box_inventorying_product_id
+    else
+      raise "Invalid box type for box " << inspect
+    end
     
+    order = InternalOrder.new
+    
+    order.user_id = assigned_to_user_id
+    
+    if (!order.save)
+      raise "Failed to save order; messages: " << order.errors.full_messages.inspect
+    end
+    
+    order_line = OrderLine.new
+    
+    order_line.product_id = product_id
+    order_line.order_id = order.id
+    order_line.quantity = 1
+    
+    if (!order_line.save)
+      raise "Failed to save order line " + order_line.inspect + " for box " + inspect
+    end
+    
+    order.generate_charges
   end
 end

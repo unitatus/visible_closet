@@ -16,7 +16,7 @@
 class Order < ActiveRecord::Base
   belongs_to :cart
   has_many :payment_transactions
-  has_many :order_lines
+  has_many :order_lines, :dependent => :destroy
   has_one :user
 
   attr_accessor :card_number, :card_verification_value, :card_first_name, :card_last_name, :card_type, :card_month, :card_year
@@ -34,6 +34,8 @@ class Order < ActiveRecord::Base
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
       do_purchase_processing
 
+      # TODO: This needs to be refactored into a payment processor object that takes a user, payment object thingie, and a charges array, so we can 
+      # have charges for the user.
       response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
       payment_transactions.create!(:action => "purchase", :amount => total_in_cents, :response => response)
       if !response.success?
@@ -77,6 +79,14 @@ class Order < ActiveRecord::Base
     end
     
     return status
+  end
+  
+  def generate_charges
+    raise "Attempted to call generate charges on unsaved order" unless self.id
+    
+    order_lines.each do | order_line |
+      raise "Failed to generate charge for order_line " + order_line.inspect unless Charge.create!(:user_id => user_id, :total_in_cents => order_line.total_in_cents, :product_id => order_line.product_id)
+    end
   end
   
   private
