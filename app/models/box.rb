@@ -60,4 +60,24 @@ class Box < ActiveRecord::Base
       raise "Illegal box type " << box_type
     end
   end
+  
+  def receive(indexing_requested = false)
+    # need to check for both, since one disables the other which means that it is not posted
+    if indexing_requested
+      if self.indexing_status == Box::NO_INDEXING_REQUESTED
+        generate_indexing_order
+      end
+      self.indexing_status = Box::INDEXING_REQUESTED
+    end
+    
+    self.status = Box::IN_STORAGE_STATUS
+    
+    return self.save
+  end
+  
+  private
+  
+  def generate_indexing_order
+    
+  end
 end
