@@ -58,4 +58,8 @@ class OrderLine < ActiveRecord::Base
   def ordered_boxes
     Box.find_all_by_ordering_order_line_id(id)
   end
+  
+  def inventorying_line
+    product_id == Rails.application.config.our_box_inventorying_product_id || product_id == Rails.application.config.your_box_inventorying_product_id
+  end
 end

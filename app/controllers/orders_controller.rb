@@ -89,13 +89,13 @@ class OrdersController < ApplicationController
   
   def ship_order_lines
     @order_lines = Array.new
-    
+  
     params[:order_line_ids].each do |order_line_id|
       order_line = OrderLine.find(order_line_id)
-      
+    
       # will save the order line
       order_line.ship
-      
+    
       @order_lines << order_line
     end
   end

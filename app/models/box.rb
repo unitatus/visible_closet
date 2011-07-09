@@ -61,6 +61,8 @@ class Box < ActiveRecord::Base
   end
   
   def receive(indexing_requested = false)
+    self.transaction do
+      
     # need to check for both, since one disables the other which means that it is not posted
     if indexing_requested
       if self.indexing_status == Box::NO_INDEXING_REQUESTED
@@ -70,12 +72,9 @@ class Box < ActiveRecord::Base
     end
     
     self.status = Box::IN_STORAGE_STATUS
-    
-    self.transaction do
-      generate_indexing_order
       
-      return self.save
-    end
+    return self.save
+    end # end transaction
   end
   
   private

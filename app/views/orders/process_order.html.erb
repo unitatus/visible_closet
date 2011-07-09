@@ -1,24 +1,26 @@
-<div class="grid_9">
+<div class="grid_10">
 <%= form_tag("ship_order_lines", :class => "standard", :id => "ship_order_lines_form", :name => "ship_order_lines_form") %>
 <table class="prices_table">
   <tr>
-	<th width="15%">
+	<th width="20%">
 		<%= check_box_tag('check_all', 'check_all', false,  :onClick => "SetAllCheckBoxes('ship_order_lines_form', 'order_line_ids[]', this.checked)")%>
 		
 	Select All</th>
-	<th width="15%">Order ID</th>
+	<th width="20%">Order ID</th>
 	<th width="20%">Order Line ID</th>
-    <th width="15%">Product ID</th>
-    <th width="25%">Product Desc</th>
+	<th width="20%">Box ID</th>
+    <th width="10%">Product ID</th>
+    <th width="20%">Product Desc</th>
     <th>Quantity</th>
     <th>Status</th>
+	<th width="20%">Inventory?</th>
   </tr>
 <% @order.order_lines.each do |order_line| %>
 <% product = order_line.product %>
 <% class_name = order_line.status == OrderLine::NEW_STATUS ? "order_line_new" : "order_line_processed" %>
   <tr>
 	<td class="<%= class_name %>">
-		<% if order_line.status == OrderLine::NEW_STATUS %>
+		<% if order_line.status == OrderLine::NEW_STATUS && order_line.product_id == Rails.application.config.our_box_product_id %>
 		<%= check_box_tag("order_line_ids[]", order_line.id) %>
 		<% else %>
 		NA
@@ -31,6 +33,14 @@
       <%= order_line.id %>
     </td>
 	<td class="<%= class_name %>">
+		<% if order_line.inventorying_line %>
+		<% box = Box.find_by_indexing_order_line_id(order_line.id) %>
+		<%= box.id %>
+		<% else %>
+		NA or many
+		<% end %>
+	</td>
+	<td class="<%= class_name %>">
       <%= product.id %>
     </td>
 	<td class="<%= class_name %>">
@@ -42,11 +52,18 @@
 	<td class="<%= class_name %>">
       <%= order_line.status %>
     </td>
+	<td class="<%= class_name %>">
+	  <% if order_line.status == OrderLine::NEW_STATUS && order_line.inventorying_line %>
+	<a href="/boxes/inventory_box?id=<%= box.id %>">Inventory&gt;&gt;</a>
+	<% else %>
+	NA
+	<% end %>
+	</td>
   </tr>
 <% end %>
 </table>
 <br>
 <div class="right">
-<%= submit_tag("Process Selected Lines", :class => "button") %>
+<%= submit_tag("Ship Selected Lines", :class => "button") %>
 </div>
 </div>

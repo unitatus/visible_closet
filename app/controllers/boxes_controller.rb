@@ -118,6 +118,6 @@ class BoxesController < ApplicationController
   end  
   
   def inventory_box
-    
+    @box = Box.find(params[:id])
   end
 end
