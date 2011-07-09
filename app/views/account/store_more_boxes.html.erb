@@ -10,28 +10,19 @@ Please specify the number of boxes of each type that you would like to store.<br
 	Our Boxes
 </div>
 <div class="grid_5">
-Number of UNINSURED boxes you would like to store:
+Number of boxes you would like to store:
 </div>
 <div class="grid_1">
-<%= number_field_tag(:num_boxes_yours_uninsured, @cart.get_quantity(Rails.application.config.your_box_uninsured_product_id), :class => "numberbox") %>
+<%= number_field_tag(:num_boxes_yours, @cart.get_quantity(Rails.application.config.your_box_product_id), :class => "numberbox") %>
 </div>
 <div class="grid_1">
-<%= number_field_tag(:num_boxes_ours_uninsured, @cart.get_quantity(Rails.application.config.our_box_uninsured_product_id), :class => "numberbox") %>
+<%= number_field_tag(:num_boxes_ours, @cart.get_quantity(Rails.application.config.our_box_product_id), :class => "numberbox") %>
 </div>
 <div style="position: relative; top: 55px; left: 0px;">
 	<%= submit_tag("Order Boxes", :class => 'button') %>
 </div>
-<div class="grid_5">
-Number of INSURED boxes you would like to store:
-</div>
-<div class="grid_1">
-<td><%= number_field_tag(:num_boxes_yours_insured, @cart.get_quantity(Rails.application.config.your_box_insured_product_id), :class => "numberbox") %></td>
-</div>
-<div class="grid_1">
-<td><%= number_field_tag(:num_boxes_ours_insured, @cart.get_quantity(Rails.application.config.our_box_insured_product_id), :class => "numberbox") %></td>
-</div>
 <script type="text/javascript" language="JavaScript">
-document.forms[0].elements['num_boxes_yours_uninsured'].focus();
+document.forms[0].elements['num_boxes_yours'].focus();
 </script>
 <p>
 	<div class="grid_8">
@@ -39,22 +30,14 @@ document.forms[0].elements['num_boxes_yours_uninsured'].focus();
 <br>You will get a chance to inventory boxes later! We promise!
 <p>
 <table class="prices_table"><tr>
-<th colspan=3 align="center">Pricing</th>
+<th colspan=2 align="center">Pricing</th>
 </tr>
 <tr>
-  <td rowspan=2>Uninsured</td>
-  <td>Storing a Visible Storage box, uninsured: </td>
-  <td><%= number_to_currency(@our_box_uninsured.price) %> <%= @our_box_uninsured.price_comment %></td>
+  <td>Storing a Visible Storage box: </td>
+  <td><%= number_to_currency(@our_box.price) %> <%= @our_box.price_comment %></td>
 </tr><tr>
-  <td>Storing your box, uninsured:</td>
-  <td><%= number_to_currency(@your_box_uninsured.price) %> <%= @your_box_uninsured.price_comment %></td>
-</tr><tr>
-  <td rowspan=2>Insured</td>
-  <td>Storing a Visible Storage box, insured: </td>
-  <td><%= number_to_currency(@our_box_insured.price) %> <%= @our_box_insured.price_comment %></td>
-</tr><tr>
-  <td>Storing your box, insured:</td>
-  <td><%= number_to_currency(@your_box_insured.price) %> <%= @your_box_insured.price_comment %></td>
+  <td>Storing your box:</td>
+  <td><%= number_to_currency(@your_box.price) %> <%= @your_box.price_comment %></td>
 </tr>
 </table>
 </div>

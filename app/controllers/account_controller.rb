@@ -3,10 +3,8 @@ class AccountController < ApplicationController
   end
 
   def store_more_boxes
-    @your_box_uninsured = Product.find(Rails.application.config.your_box_uninsured_product_id)
-    @our_box_uninsured = Product.find(Rails.application.config.our_box_uninsured_product_id)
-    @your_box_insured = Product.find(Rails.application.config.your_box_insured_product_id)
-    @our_box_insured = Product.find(Rails.application.config.our_box_insured_product_id)
+    @your_box = Product.find(Rails.application.config.your_box_product_id)
+    @our_box = Product.find(Rails.application.config.our_box_product_id)
 
     @cart = Cart.find_active_by_user_id(current_user.id)
     @cart = Cart.new unless @cart
@@ -19,30 +17,15 @@ class AccountController < ApplicationController
       cart.user_id = current_user.id
     end
 
-    convert_params
+    num_boxes_ours = convert_to_integer(params[:num_boxes_ours])
+    num_boxes_yours = convert_to_integer(params[:num_boxes_yours])
 
-    if (params[:num_boxes_yours_uninsured] != "0") 
-      cart = process_cart_item(cart, 
-        Rails.application.config.your_box_uninsured_product_id, 
-        params[:num_boxes_yours_uninsured])
+    if num_boxes_yours > 0
+      cart = process_cart_item(cart, Rails.application.config.your_box_product_id, num_boxes_yours)
     end
 
-    if (params[:num_boxes_ours_uninsured] != "0") 
-      cart = process_cart_item(cart, 
-        Rails.application.config.our_box_uninsured_product_id, 
-        params[:num_boxes_ours_uninsured])
-    end
-
-    if (params[:num_boxes_yours_insured] != "0") 
-      cart = process_cart_item(cart, 
-        Rails.application.config.your_box_insured_product_id, 
-        params[:num_boxes_yours_insured])
-    end
-
-    if (params[:num_boxes_ours_insured] != "0") 
-      cart = process_cart_item(cart, 
-        Rails.application.config.our_box_insured_product_id, 
-        params[:num_boxes_ours_insured])
+    if (num_boxes_ours > 0) 
+      cart = process_cart_item(cart, Rails.application.config.our_box_product_id, num_boxes_ours)
     end
 
     if (cart.save())
@@ -74,26 +57,6 @@ class AccountController < ApplicationController
     cart_item.quantity = quantity
 
     cart
-  end
-
-  def convert_params()
-    if (params[:num_boxes_yours_uninsured].blank?)
-      params[:num_boxes_yours_uninsured] = "0"
-    end
-    
-    if (params[:num_boxes_yours_insured].blank?)
-      params[:num_boxes_yours_insured] = "0"
-    end
-
-    if (params[:num_boxes_ours_uninsured].blank?)
-      params[:num_boxes_ours_uninsured] = "0"
-    end
-
-    if (params[:num_boxes_ours_insured].blank?)
-      params[:num_boxes_ours_insured] = "0"
-    end
-
-    params
   end
 
   def cart
@@ -271,6 +234,14 @@ class AccountController < ApplicationController
   end
   
   private 
+  
+  def convert_to_integer(str)
+    if str.blank?
+      str = "0"
+    end
+    
+    str.to_i
+  end
   
   def get_address_from_session(address_identifier)
     if session[address_identifier].blank?

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110707043921
+# Schema version: 20110709182101
 #
 # Table name: boxes
 #
@@ -9,7 +9,6 @@
 #  updated_at          :datetime
 #  order_line_id       :integer
 #  status              :string(255)
-#  insured             :boolean
 #  box_type            :string(255)
 #  description         :text
 #  indexing_status     :string(255)
@@ -29,7 +28,7 @@ class Box < ActiveRecord::Base
   CUST_BOX_TYPE = "cust_box"
   VC_BOX_TYPE = "vc_box"
   
-  attr_accessible :assigned_to_user_id, :order_line_id, :status, :box_type, :insured, :description, :indexing_status
+  attr_accessible :assigned_to_user_id, :order_line_id, :status, :box_type, :description, :indexing_status
 
   has_many :stored_items
   has_one :order_line

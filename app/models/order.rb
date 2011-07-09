@@ -143,22 +143,10 @@ class Order < ActiveRecord::Base
     order_lines.each do |order_line|
       product = order_line.product
       
-      if product.id.to_s == Rails.application.config.our_box_insured_product_id.to_s
-        insured = true
+      if product.id.to_s == Rails.application.config.our_box_product_id.to_s
         type = Box::VC_BOX_TYPE
         status = Box::NEW_STATUS
-      elsif product.id.to_s == Rails.application.config.our_box_uninsured_product_id.to_s
-        insured = false
-        type = Box::VC_BOX_TYPE
-        status = Box::NEW_STATUS
-      elsif product.id.to_s == Rails.application.config.your_box_insured_product_id.to_s
-        insured = true
-        type = Box::CUST_BOX_TYPE
-        status = Box::BEING_PREPARED_STATUS
-        order_line.status = OrderLine::PROCESSED_STATUS
-        order_line.save
-      elsif product.id.to_s == Rails.application.config.your_box_uninsured_product_id.to_s
-        insured = false
+      elsif product.id.to_s == Rails.application.config.your_box_product_id.to_s
         type = Box::CUST_BOX_TYPE
         status = Box::BEING_PREPARED_STATUS
         order_line.status = OrderLine::PROCESSED_STATUS
@@ -168,7 +156,7 @@ class Order < ActiveRecord::Base
       end
       
       for i in 1..(order_line.quantity)
-        if !Box.create!(:assigned_to_user_id => user.id, :order_line_id => order_line.id, :status => status, :box_type => type, :insured => insured, :indexing_status => Box::NO_INDEXING_REQUESTED)
+        if !Box.create!(:assigned_to_user_id => user.id, :order_line_id => order_line.id, :status => status, :box_type => type, :indexing_status => Box::NO_INDEXING_REQUESTED)
           raise "Standard box creation failed."
         end
       end # inner for loop

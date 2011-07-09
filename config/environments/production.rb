@@ -48,10 +48,8 @@ VisibleCloset::Application.configure do
   config.active_support.deprecation = :notify
 
   # Customizations for The Visible Closet
-  config.our_box_uninsured_product_id = 1
-  config.your_box_uninsured_product_id = 3
-  config.our_box_insured_product_id = 2
-  config.your_box_insured_product_id = 4
+  config.our_box_product_id = 1
+  config.your_box_product_id = 3
   config.our_box_inventorying_product_id = 5
   config.your_box_inventorying_product_id = 6
 

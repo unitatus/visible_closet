@@ -6,6 +6,7 @@ class AdminController < ApplicationController
 
   def send_boxes
     order_lines = OrderLine.find_all_by_status(OrderLine::NEW_STATUS)
+            
     @orders = Hash.new
     
     order_lines.each do |order_line|

@@ -37,10 +37,11 @@
           <td>#<%= product.id %></td>
           <td><%= product.name %></td>
           <td><%= number_to_currency(product.price) %> <%= product.price_comment %></td>
+				<%= form_tag "/account/update_cart_item", :class => "standard" do %>
           <td><%= text_field_tag(:quantity, cart_item.quantity, :size => 5, :align => "center") %></td>
           <td><%= number_to_currency(product.price * cart_item.quantity) %></td>
           <td>
-				<%= form_tag "/account/update_cart_item", :class => "standard" do %>
+
 		        <%= hidden_field_tag(:cart_item_id, cart_item.id) %>
 				<%= submit_tag("Update Quantity", :class => 'button') %>
 				<% end # form tag %>

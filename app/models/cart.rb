@@ -82,5 +82,5 @@ class Cart < ActiveRecord::Base
       order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity } )
     end    
     order
-  end
+  end  
 end

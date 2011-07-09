@@ -8,7 +8,6 @@ You do not have any boxes in storage order under management. Click <a href="/acc
 	<th>Status</th>
 	<th>Box Source</th>
 	<th>Description</th>
-	<th>Insured?</th>
 	<th>Edit</th>
 	</tr>
 	<% @boxes.each do |box| %>
@@ -17,7 +16,6 @@ You do not have any boxes in storage order under management. Click <a href="/acc
 		<td><%= box.status_en %></td>
 		<td><%= box.box_type == Box::CUST_BOX_TYPE.to_s ? "Your box" : "Visible Closet box" %></td>
 		<td width="300px"><%= box.description %></td>
-		<td><%= box.insured? ? "yes" : "no" %></td>
 	    <td><%= link_to 'Edit', edit_box_path(box) %></td>
 	  </tr>
 	<% end %>
