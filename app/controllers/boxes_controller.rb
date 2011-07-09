@@ -116,4 +116,8 @@ class BoxesController < ApplicationController
     
     @messages << ("Box " + box.id.to_s + " processed.")
   end  
+  
+  def inventory_box
+    
+  end
 end

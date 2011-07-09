@@ -1,9 +1,9 @@
 <div class="grid_9">
-<%= form_tag("process_lines", :class => "standard", :id => "process_lines_form", :name => "process_lines_form") %>
+<%= form_tag("ship_order_lines", :class => "standard", :id => "ship_order_lines_form", :name => "ship_order_lines_form") %>
 <table class="prices_table">
   <tr>
 	<th width="15%">
-		<%= check_box_tag('check_all', 'check_all', false,  :onClick => "SetAllCheckBoxes('process_lines_form', 'order_line_ids[]', this.checked)")%>
+		<%= check_box_tag('check_all', 'check_all', false,  :onClick => "SetAllCheckBoxes('ship_order_lines_form', 'order_line_ids[]', this.checked)")%>
 		
 	Select All</th>
 	<th width="15%">Order ID</th>

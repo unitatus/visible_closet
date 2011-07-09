@@ -1,17 +1,18 @@
 # == Schema Information
-# Schema version: 20110709182101
+# Schema version: 20110709201135
 #
 # Table name: boxes
 #
-#  id                  :integer         not null, primary key
-#  assigned_to_user_id :integer
-#  created_at          :datetime
-#  updated_at          :datetime
-#  order_line_id       :integer
-#  status              :string(255)
-#  box_type            :string(255)
-#  description         :text
-#  indexing_status     :string(255)
+#  id                     :integer         not null, primary key
+#  assigned_to_user_id    :integer
+#  created_at             :datetime
+#  updated_at             :datetime
+#  ordering_order_line_id :integer
+#  status                 :string(255)
+#  box_type               :string(255)
+#  description            :text
+#  indexing_status        :string(255)
+#  indexing_order_line_id :integer
 #
 
 class Box < ActiveRecord::Base
@@ -24,11 +25,10 @@ class Box < ActiveRecord::Base
   INDEXING_REQUESTED = "indexing_requested"
   INDEXED = "indexed"
   
-  # TODO: Get rid of these, turn them into strings
   CUST_BOX_TYPE = "cust_box"
   VC_BOX_TYPE = "vc_box"
   
-  attr_accessible :assigned_to_user_id, :order_line_id, :status, :box_type, :description, :indexing_status
+  attr_accessible :assigned_to_user_id, :ordering_order_line_id, :status, :box_type, :description, :indexing_status
 
   has_many :stored_items
   has_one :order_line
@@ -105,6 +105,8 @@ class Box < ActiveRecord::Base
     
     if (!order_line.save)
       raise "Failed to save order line " + order_line.inspect + " for box " + inspect
+    else
+      self.indexing_order_line_id = order_line.id
     end
     
     order.generate_charges

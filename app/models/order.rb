@@ -156,7 +156,7 @@ class Order < ActiveRecord::Base
       end
       
       for i in 1..(order_line.quantity)
-        if !Box.create!(:assigned_to_user_id => user.id, :order_line_id => order_line.id, :status => status, :box_type => type, :indexing_status => Box::NO_INDEXING_REQUESTED)
+        if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, :indexing_status => Box::NO_INDEXING_REQUESTED)
           raise "Standard box creation failed."
         end
       end # inner for loop

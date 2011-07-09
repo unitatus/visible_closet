@@ -4,13 +4,14 @@ VisibleCloset::Application.routes.draw do
   resources :products
 
   match "boxes/receive_box" => "boxes#receive_box"
+  match "boxes/inventory_box" => "boxes#inventory_box"
 
   resources :boxes
 
   resources :addresses
 
   match "orders/:id/process" => "orders#process_order"
-  match "orders/:id/process_lines" => "orders#process_lines"
+  match "orders/:id/ship_order_lines" => "orders#ship_order_lines"
 
   devise_for :users, :path_names => { :sign_up => "beta_register" }, :controllers => { :registrations => "registrations" }
 
@@ -18,6 +19,8 @@ VisibleCloset::Application.routes.draw do
   get "pages/beta_thanks"
   get "admin/home"
   get "admin/send_boxes"
+  get "admin/inventory_boxes"
+  get "admin/process_orders"
   post "admin/send_boxes_user_search"
   get "account/store_more_boxes"
   post "account/order_boxes"

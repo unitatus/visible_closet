@@ -18,7 +18,6 @@ class OrderLine < ActiveRecord::Base
   
   belongs_to :order
   belongs_to :product
-  has_many :boxes
   
   after_initialize :init_status
   
@@ -28,11 +27,16 @@ class OrderLine < ActiveRecord::Base
     end
   end
   
-  def process
+  def ship
+    # bug checking
+    if product_id != Rails.application.config.our_box_product_id
+      raise "Error: order line being processed for shipping on non-shippable product"
+    end
+    
     self.status = PROCESSED_STATUS
     
     self.transaction do
-      boxes.each do |box|
+      ordered_boxes.each do |box|
         box.status = Box::IN_TRANSIT_STATUS
         if (!box.save)
           raise "Unable to save box " << box.inspect
@@ -49,5 +53,9 @@ class OrderLine < ActiveRecord::Base
   
   def total_in_cents
     quantity * product.price * 100
+  end
+  
+  def ordered_boxes
+    Box.find_all_by_ordering_order_line_id(id)
   end
 end
