@@ -133,4 +133,19 @@ class BoxesController < ApplicationController
     
     respond_to :js
   end
+  
+  def delete_stored_item
+    begin
+      @stored_item = StoredItem.find(params[:id])
+      
+      @stored_item.destroy  
+    rescue ActiveRecord::RecordNotFound
+      # this is fine, just means we probably reloaded on delete
+    end      
+    
+    @box = Box.find(params[:box_id])
+    @stored_items = StoredItem.find_by_box_id(@box.id)
+    
+    render :inventory_box
+  end
 end

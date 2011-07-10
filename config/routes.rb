@@ -5,10 +5,12 @@ VisibleCloset::Application.routes.draw do
 
   match "boxes/receive_box" => "boxes#receive_box"
   match "boxes/inventory_box" => "boxes#inventory_box"
+  match "boxes/delete_stored_item" => "boxes#delete_stored_item"
 
   resources :boxes
 
   resources :addresses
+  
   resources :stored_items, :only => [:index, :create]
 
   match "orders/:id/process" => "orders#process_order"
