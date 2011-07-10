@@ -119,5 +119,18 @@ class BoxesController < ApplicationController
   
   def inventory_box
     @box = Box.find(params[:id])
+    @stored_items = StoredItem.find_by_box_id(@box.id)
+  end
+  
+  def create_stored_item
+    @stored_item = StoredItem.new
+    @stored_item.file = params[:file] if params.has_key?(:file)
+    @stored_item.box_id = params[:box_id]
+
+    # detect Mime-Type (mime-type detection doesn't work in flash)
+    @stored_item.file_content_type = MIME::Types.type_for(params[:name]).to_s if params.has_key?(:name)
+    @stored_item.save!
+    
+    respond_to :js
   end
 end

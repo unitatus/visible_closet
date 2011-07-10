@@ -9,6 +9,7 @@ VisibleCloset::Application.routes.draw do
   resources :boxes
 
   resources :addresses
+  resources :stored_items, :only => [:index, :create]
 
   match "orders/:id/process" => "orders#process_order"
   match "orders/:id/ship_order_lines" => "orders#ship_order_lines"
@@ -38,7 +39,8 @@ VisibleCloset::Application.routes.draw do
   get "account/select_new_shipping_address"
   post "account/choose_new_shipping_address"
   post "account/choose_new_billing_address"
-
+  post "boxes/create_stored_item"
+  
   match "account/home" => "account#index"
 
   # The priority is based upon order of creation:

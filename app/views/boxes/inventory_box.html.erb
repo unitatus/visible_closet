@@ -1,2 +1,24 @@
-Insert image uploader here.
-Forward on from there to show images and add tags (using javascript I imagine).
+<% content_for :head do %>
+	<%= stylesheet_link_tag "/css/application.css" %>
+	<%= javascript_include_tag "/javascripts/plupload/plupload.full.min.js" %>
+	<%= javascript_include_tag "/javascripts/plupload/jquery.plupload.queue.min.js" %>
+	<%= javascript_include_tag "/javascripts/rails.js" %>
+	<%= javascript_include_tag "/javascripts/application.js" %> 
+	<%= javascript_tag do %>
+		<%= render "plupload.js" %>
+	<% end %>
+<% end %>
+<div id='content'> 
+  <div id='flash'></div> 
+  <div id='photos_container'> 
+	<div id="photo">
+   <% @box.stored_items.each do |stored_item| %>
+	<%= image_tag(stored_item.file.url(:thumb)) %>
+	<% end %>
+	</div>
+  </div> 
+  <div id='uploader'> 
+    <p>Your browser doesn't have HTML5, Flash or Silverlight support.</p> 
+  </div> 
+</div>
+

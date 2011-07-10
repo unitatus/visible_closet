@@ -1,0 +1,16 @@
+
+#photos_container {
+  width: 530px;
+  float: left;
+  min-height: 100px;
+  overflow: hidden; }
+  #photos_container .photo {
+    float: left;
+    margin: 10px; }
+    #photos_container .photo img {
+      padding: 1px;
+      border: 2px solid #d8d8d8; }
+
+#uploader {
+  width: 400px;
+  float: right; }
