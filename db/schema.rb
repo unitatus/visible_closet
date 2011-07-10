@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110710023401) do
+ActiveRecord::Schema.define(:version => 20110710193520) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -149,10 +149,10 @@ ActiveRecord::Schema.define(:version => 20110710023401) do
     t.integer  "box_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "file_file_name"
-    t.string   "file_content_type"
-    t.integer  "file_file_size"
-    t.datetime "file_updated_at"
+    t.string   "photo_file_name"
+    t.string   "photo_content_type"
+    t.integer  "photo_file_size"
+    t.datetime "photo_updated_at"
   end
 
   add_index "stored_items", ["box_id"], :name => "index_stored_items_on_box_id"

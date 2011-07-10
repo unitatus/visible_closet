@@ -13,7 +13,7 @@
   <div id='photos_container'> 
 	<div id="photo">
    <% @box.stored_items.each do |stored_item| %>
-	<%= image_tag(stored_item.file.url(:thumb)) %>
+	<%= image_tag(stored_item.photo.url(:thumb)) %>
 	<% end %>
 	</div>
   </div> 
