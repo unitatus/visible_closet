@@ -47,7 +47,7 @@ function selectStoredItem(link_area, stored_item_id)
 <div>
   <div> 
 	<% if @stored_item %>
-	   	<%= image_tag(@stored_item.photo.url(:normal), :name => "large_image") %>
+	   	<%= image_tag(@stored_item.photo.url(:medium), :name => "large_image") %>
     <% end %>
 <br>
 <%= form_tag( { :controller => "boxes", :action => "add_tag"}, { :remote => true, :name => "tags_form" } ) do %>
