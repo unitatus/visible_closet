@@ -12,14 +12,6 @@ class AdminController < ApplicationController
     render 'process_orders'
   end
   
-  def inventory_boxes
-    order_lines = OrderLine.where("status = ? and product_id in (?,?)", OrderLine::NEW_STATUS, Rails.application.config.our_box_inventorying_product_id, Rails.application.config.your_box_inventorying_product_id)
-            
-    @orders = get_orders(order_lines)
-    
-    render 'process_orders'
-  end
-  
   def process_orders
     order_lines = OrderLine.find_all_by_status(OrderLine::NEW_STATUS)
             

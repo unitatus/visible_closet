@@ -1,1 +1,1 @@
-$('#photos_container').append('<%= escape_javascript render("photo", :stored_item => @stored_item) %>');
+$('#photos_container').append('<%= escape_javascript render("photo", :locals => {:stored_item => @stored_item, :box => @box}) %>');

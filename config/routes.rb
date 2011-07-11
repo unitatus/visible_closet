@@ -6,7 +6,9 @@ VisibleCloset::Application.routes.draw do
   match "boxes/receive_box" => "boxes#receive_box"
   match "boxes/inventory_box" => "boxes#inventory_box"
   match "boxes/delete_stored_item" => "boxes#delete_stored_item"
-
+  match "boxes/inventory_boxes" => "boxes#inventory_boxes"
+  match "boxes/clear_box" => "boxes#clear_box"
+  
   resources :boxes
 
   resources :addresses

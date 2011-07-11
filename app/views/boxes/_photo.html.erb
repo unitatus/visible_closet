@@ -1,5 +1,5 @@
 <div class="imgteaser"> 
-<a href="delete_stored_item?id=<%= @stored_item.id.to_s %>&amp;box_id=<%= @box.id %>">
+<a href="delete_stored_item?id=<%= @stored_item.id.to_s %>&amp;box_id=<%= @stored_item.box_id %>">
 <%= image_tag(@stored_item.photo.url(:thumb)) %>
 	<!--<span class="more">&raquo; Learn More</span> -->
 	<span class="desc"> 

@@ -122,6 +122,10 @@ class BoxesController < ApplicationController
     @stored_items = StoredItem.find_by_box_id(@box.id)
   end
   
+  def inventory_boxes
+    @boxes = Box.find_all_by_indexing_status(Box::INDEXING_REQUESTED)
+  end
+  
   def create_stored_item
     @stored_item = StoredItem.new
     @stored_item.photo = params[:file] if params.has_key?(:file)
@@ -136,9 +140,9 @@ class BoxesController < ApplicationController
   
   def delete_stored_item
     begin
-      @stored_item = StoredItem.find(params[:id])
+      stored_item = StoredItem.find(params[:id])
       
-      @stored_item.destroy  
+      stored_item.destroy  
     rescue ActiveRecord::RecordNotFound
       # this is fine, just means we probably reloaded on delete
     end      
@@ -147,5 +151,18 @@ class BoxesController < ApplicationController
     @stored_items = StoredItem.find_by_box_id(@box.id)
     
     render :inventory_box
+  end
+  
+  def clear_box 
+    @box = Box.find(params[:box_id])
+    
+    @box.stored_items.each do |stored_item|
+      stored_item.destroy
+    end
+    
+    @stored_items = Array.new
+    @box.stored_items = @stored_items
+    
+    redirect_to "/boxes/inventory_box?id=#{@box.id}"
   end
 end
