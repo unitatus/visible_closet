@@ -1,0 +1,78 @@
+<% content_for :head do %>
+	<%= javascript_tag do %>
+// technically this isn't used anymore, but leaving it in case I need to bring it back
+function selectStoredItem(link_area, stored_item_id)
+{
+	document["large_image"].src=document["image_" + stored_item_id].src.replace("thumb", "medium");
+	document.getElementById("stored_item_id").value = stored_item_id
+}
+	<% end %>
+<% end %>
+<div class="grid_11">
+
+<a href="/admin/home">&lt;&lt; Return to admin home</a> | 
+<a href="/boxes/inventory_box?id=<%= @box.id %>">&lt;&lt; Return to photos</a> |
+<a href="/boxes/finish_inventorying_box?id=<%= @box.id %>">Finish inventorying this box</a><br><br>
+<table><tr>
+<td width="50%">
+  <div id='photos_container' style="width:100%"> 
+
+   <% @box.stored_items.each do |stored_item| %>
+	<div class="imgteaser imgtagged"> 
+		<a href="/boxes/add_tags?stored_item_id=<%= stored_item.id.to_s %>"> 
+			<%= image_tag(stored_item.photo.url(:thumb), :name => "image_" + stored_item.id.to_s) %>
+			<% if stored_item.id == @stored_item.id %>
+			<span class="selectedtext"> 
+				Selected
+			</span>
+			<% elsif stored_item.stored_item_tags.any? %>
+			<span class="taggedtext"> 
+				Tagged
+			</span>
+			<span class="desc"> 
+				Select
+			</span>
+			<% else %>
+			<span class="desc"> 
+				Select
+			</span>
+			<% end %>
+		</a>
+	</div>
+   <% end %>
+  </div> <!-- photos_container -->
+</td>
+<td style="border-left: 1px solid grey; padding: 10px;"></td>
+<td style="margin-left: auto; margin-right: auto; text-align: center; vertical-align:text-top;" width="50%" align="center">
+<div>
+  <div> 
+	<% if @stored_item %>
+	   	<%= image_tag(@stored_item.photo.url(:normal), :name => "large_image") %>
+    <% end %>
+<br>
+<%= form_tag( { :controller => "boxes", :action => "add_tag"}, { :remote => true, :name => "tags_form" } ) do %>
+<% if @stored_item %>
+	<%= hidden_field_tag :stored_item_id, @stored_item.id %>
+<% else %>
+	<%= hidden_field_tag :stored_item_id %>
+<% end %>
+	<%= text_field_tag("tag")%>
+	<%= submit_tag("Add") %>
+<% end %> <!-- end form -->
+  </div>
+</div>
+<script type="text/javascript" language="JavaScript">
+document.forms['tags_form'].elements['tag'].focus();
+</script>
+ <br>
+<div id="tags_container">
+	<% if @stored_item %>
+	  <% @stored_item.stored_item_tags.each do |stored_item_tag| %>
+	  	<% @stored_item_tag = stored_item_tag %>
+	  	<%= render("stored_item_tag", :locals => {:stored_item_tag => @stored_item_tag}) %>
+		<% @stored_item_tag = nil %>
+	  <% end %>
+	<% end %>
+</div>
+</td></tr></table>
+</div> <!-- grid_11 -->

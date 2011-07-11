@@ -16,12 +16,14 @@
 
 class StoredItem < ActiveRecord::Base
   belongs_to :boxes
+  has_many :stored_item_tags
   attr_accessible :file
   before_create :generate_access_token
   
   has_attached_file :photo, :styles => { 
                               :thumb => "100x100#",
-                              :normal => "600x600>", 
+                              :normal => "600x600>",
+                              :medium => "200x200>" 
                               },
                             :url => "/system/photos/:access_token/:id/:style.:extension",
                             :path => ":rails_root/public/system/photos/:access_token/:id/:style.:extension"

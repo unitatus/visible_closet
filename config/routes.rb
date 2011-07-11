@@ -8,7 +8,11 @@ VisibleCloset::Application.routes.draw do
   match "boxes/delete_stored_item" => "boxes#delete_stored_item"
   match "boxes/inventory_boxes" => "boxes#inventory_boxes"
   match "boxes/clear_box" => "boxes#clear_box"
-  
+  match "boxes/add_tags" => "boxes#add_tags"
+  match "boxes/add_tag" => "boxes#add_tag"
+  match "boxes/delete_tag" => "boxes#delete_tag"
+  match "boxes/finish_inventorying_box" => "boxes#finish_inventorying"
+    
   resources :boxes
 
   resources :addresses

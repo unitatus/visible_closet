@@ -165,4 +165,51 @@ class BoxesController < ApplicationController
     
     redirect_to "/boxes/inventory_box?id=#{@box.id}"
   end
+  
+  def add_tags
+    if params[:stored_item_id].blank?
+      @box = Box.find(params[:box_id])
+      @stored_item = @box.stored_items.first
+    else
+      @stored_item = StoredItem.find(params[:stored_item_id])
+      @box = Box.find(@stored_item.box_id)
+    end
+  end
+  
+  def add_tag
+    @stored_item_tag = StoredItemTag.new
+
+    if (!params[:tag].blank?)    
+      @stored_item_tag.stored_item_id = params[:stored_item_id]
+      @stored_item_tag.tag = params[:tag]
+    
+      if (!@stored_item_tag.save)
+        raise "Failed to save stored tag! " << @stored_item_tag.inspect
+      end
+    end
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def delete_tag
+    @stored_item_tag = StoredItemTag.find(params[:id])
+
+    @stored_item_tag.destroy
+
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def finish_inventorying
+    @box = Box.find(params[:id])
+    
+    @box.indexing_status = Box::INDEXED
+    
+    @box.save!
+    
+    redirect_to :controller => "admin", :action => "home"
+  end
 end

@@ -1,0 +1,2 @@
+$('#tags_container').append('<%= escape_javascript render("stored_item_tag", :locals => {:stored_item_tag => @stored_item_tag}) %>');
+document.forms['tags_form'].elements['tag'].value = "";

@@ -829,6 +829,111 @@ table.cart_summary td
     font-size: 12px;
     line-height: 20px;
 }
-
-
+.imgteaser {
+	margin: 0;
+	overflow: hidden;
+	float: left;
+	position: relative;
+}
+.imgteaser a {
+	text-decoration: none;
+	float: left;
+}
+.imgteaser a:hover {
+	cursor: pointer;
+}
+.imgteaser a img {
+	float: left;
+	margin: 0;
+	padding: 2px;
+	background: #fff;
+	border: 1px solid #ddd;
+}
+.imgteaser a .more {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+	font-size: 1.2em;
+	color: #fff;
+	background: #000;
+	padding: 5px 10px;
+	filter:alpha(opacity=65);
+	opacity:.65;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=65)"; /*--IE 8 Transparency--*/
+}
+.imgteaser a .desc {	display: none; }
+.imgteaser a:hover .more { visibility: hidden;}
+.imgteaser a:hover .desc{	
+	display: block;
+	font-size: 1.2em;
+	padding: 2px 0;
+	background: #111;
+	filter:alpha(opacity=75);
+	opacity:.75;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)"; /*--IE 8 Transparency--*/
+	color: #fff;
+	position: absolute;
+	bottom: 2px;
+	left: 2px;
+	padding: 10px;
+	margin: 0;
+	width: 80px;
+	height: 80px;
+	text-align: center;
+	border-top: 1px solid #999;
+}
+.imgteaser a:hover .desc strong {
+	display: block;
+	margin-bottom: 5px;
+	font-size:1.5em;
+}
+.imgtagged a .taggedtext {
+	display: block;
+	font-size: 1.2em;
+	padding: 2px 0;
+	background: #008000;
+	filter:alpha(opacity=25);
+	opacity:.50;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)"; /*--IE 8 Transparency--*/
+	color: #fff;
+	position: absolute;
+	bottom: 2px;
+	left: 2px;
+	padding: 10px;
+	margin: 0;
+	width: 80px;
+	height: 80px;
+	text-align: center;
+	border-top: 1px solid #999;
+}
+.imgtagged a:hover .taggedtext { visibility: hidden; }
+.imgtagged a .selectedtext {
+	display: block;
+	font-size: 1.2em;
+	padding: 2px 0;
+	background: #0000FF;
+	filter:alpha(opacity=25);
+	opacity:.50;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)"; /*--IE 8 Transparency--*/
+	color: #fff;
+	position: absolute;
+	bottom: 2px;
+	left: 2px;
+	padding: 10px;
+	margin: 0;
+	width: 80px;
+	height: 80px;
+	text-align: center;
+	border-top: 1px solid #999;
+}
+.stored_item_tag {
+	padding: 2px 0;
+	filter:alpha(opacity=75);
+	opacity:.75;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)"; /*--IE 8 Transparency--*/
+	padding: 10px;
+	margin: 0;
+	text-align: center;
+	border-top: 1px solid #999;
+}
 
