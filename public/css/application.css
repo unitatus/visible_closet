@@ -73,14 +73,14 @@ ul { list-style: none; }
 }
 #create-portfolio.thumbnails .post-thumbnail ul {
 	background: rgba(255,255,255,0.9);
-	border-top: 5px solid #333;
+	border-top: 0px solid #333;
 	display: none;
 	left: 0;
 	position: absolute;
 	top: 0;
 }
 #create-portfolio.thumbnails .post-thumbnail ul {
-	height: 130px;
+	height: 135px;
 	width: 160px;
 }
 #create-portfolio.thumbnails .post-thumbnail:hover ul {
@@ -110,8 +110,24 @@ ul { list-style: none; }
 	width: 64px;
 }
 #create-portfolio.thumbnails .post-thumbnail li:first-child a {
-	left: 50%;
-	margin-left: -62px;
+	left: 0%;
+	margin-left: 34px;
+	top: 25%;
+}
+#create-portfolio.thumbnails .post-thumbnail .secondchild li  a {
+	left: 0%;
+	margin-left: 102px;
+	top: 25%;
+}
+#create-portfolio.thumbnails .post-thumbnail .thirdchild li  a {
+	left: 0%;
+	margin-left: 34px;
+	top: 75%;
+}
+#create-portfolio.thumbnails .post-thumbnail .fourthchild li  a {
+	left: 0%;
+	margin-left: 102px;
+	top: 75%;
 }
 #create-portfolio.thumbnails .post-thumbnail li a:hover {
 	background-position: 0 -64px;
