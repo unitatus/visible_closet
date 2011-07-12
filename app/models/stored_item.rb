@@ -50,4 +50,8 @@ class StoredItem < ActiveRecord::Base
   Paperclip.interpolates :access_token  do |attachment, style|
     attachment.instance.access_token
   end
+  
+  def find_all_by_user_id(user_id)
+    self.find(:all, :joins => :boxes, :conditions => { :boxes => { :assigned_to_user_id => user_id } } )
+  end
 end

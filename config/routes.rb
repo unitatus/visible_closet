@@ -17,10 +17,9 @@ VisibleCloset::Application.routes.draw do
 
   resources :addresses
   
-  resources :stored_items, :only => [:index, :create]
-
   match "orders/:id/process" => "orders#process_order"
   match "orders/:id/ship_order_lines" => "orders#ship_order_lines"
+  match "boxes/:box_id/stored_items" => "stored_items#index"
 
   devise_for :users, :path_names => { :sign_up => "beta_register" }, :controllers => { :registrations => "registrations" }
 

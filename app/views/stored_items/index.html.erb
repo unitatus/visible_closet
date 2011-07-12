@@ -1,0 +1,10 @@
+<%= render 'account/account_nav' %>
+<div class="grid_10">
+<% @stored_items.each do |stored_item| %>
+<div class="imgteaser imgtagged"> 
+	<a href="#"> 
+		<%= image_tag(stored_item.photo.url(:thumb), :name => "thumb_" + stored_item.id.to_s) %>
+	</a>
+</div>
+<% end %>
+</div>
