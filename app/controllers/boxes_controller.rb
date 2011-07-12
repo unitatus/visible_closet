@@ -210,6 +210,10 @@ class BoxesController < ApplicationController
     
     @box.save!
     
+    @order_line = OrderLine.find(@box.indexing_order_line_id)
+    @order_line.status = OrderLine::PROCESSED_STATUS
+    @order_line.save!
+    
     redirect_to :controller => "admin", :action => "home"
   end
 end

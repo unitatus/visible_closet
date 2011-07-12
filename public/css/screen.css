@@ -313,48 +313,24 @@ ___________________________________________________________________ */
 }
 
 .side-menu ul a {
-	padding:5px 20px;
+	padding:0px 0px;
 }
 .side-menu ul li:first-child a {
-	padding-top:10px;
+	padding-top:0px;
 } 
 .side-menu ul li:last-child a {
-	padding-bottom:10px;
+	padding-bottom:0px;
 } 
 
 .side-menu ul {
-	position: absolute;
-	top: -999em;
-	width: 140px; /* left offset of submenus need to match (see below) */
-	padding: 0;
-	
-	background: #fafafa;
-	border: 1px solid #fff;
-	
-	-webkit-box-shadow:0 0 3px #ccc;
-	-moz-box-shadow:0 0 3px #ccc;
-	box-shadow:0 0 3px #ccc;
-	
-	-moz-border-radius:3px;
-	-webkit-border-radius:3px;
-	border-radius:3px;
+	position: relative;
+	top: 0px;
+	left: 0px;
 }
 
 .side-menu ul li {
 	width: 100%;
-}
-.side-menu li:hover {
-	visibility: inherit; /* fixes IE7 'sticky bug' */
-}
-.side-menu li {
-	float: left;
-	position: relative;
-}
-.side-menu li:hover ul,
-.side-menu li.sfHover ul {
-	left: 0;
-	top: 38px; /* match top ul list item height */
-	z-index: 9999;	
+	padding: 10px 0 0 15px;
 }
 ul.side-menu li:hover li ul,
 ul.side-menu li.sfHover li ul {

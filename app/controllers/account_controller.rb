@@ -233,6 +233,10 @@ class AccountController < ApplicationController
     redirect_to :action => 'check_out'
   end
   
+  def closet_main
+    
+  end
+  
   private 
   
   def convert_to_integer(str)

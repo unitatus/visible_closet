@@ -1,23 +1,28 @@
 <div class="grid_10">
-<table class="prices_table">
-  <tr>
-	<th>Box ID</th>
-    <th>Customer Name</th>
-    <th>Inventory&gt;&gt;</th>
-  </tr>
-<% @boxes.each do |box| %>
-  <tr>
-	<td>
-		<%= box.id %>
-	</td>
-	<td>
-		<% user = User.find(box.assigned_to_user_id) %>
-		<%= user.first_name %> <%= user.last_name %>
-    </td>
-	<td>
-	<a href="/boxes/inventory_box?id=<%= box.id %>">Inventory&gt;&gt;</a>
-	</td>
-  </tr>
+<a href="/admin/home">&lt;&lt; Back to admin home</a><br><br>
+<% if @boxes.any? %>
+	<table class="prices_table">
+	  <tr>
+		<th>Box ID</th>
+	    <th>Customer Name</th>
+	    <th>Inventory&gt;&gt;</th>
+	  </tr>
+	<% @boxes.each do |box| %>
+	  <tr>
+		<td>
+			<%= box.id %>
+		</td>
+		<td>
+			<% user = User.find(box.assigned_to_user_id) %>
+			<%= user.first_name %> <%= user.last_name %>
+	    </td>
+		<td>
+		<a href="/boxes/inventory_box?id=<%= box.id %>">Inventory&gt;&gt;</a>
+		</td>
+	  </tr>
+	<% end %>
+	</table>
+<% else %>
+	There are no inventory requests at this time.
 <% end %>
-</table>
 </div>
