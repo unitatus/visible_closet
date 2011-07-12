@@ -37,3 +37,13 @@ function removeElement(parentDiv, childDiv)
           return false;
      }
 }
+
+$(document).ready(function(){
+	// Fades store/portfolio link overlays
+	
+	jQuery('.thumbnails .post-thumbnail').hover( function () {
+		jQuery(this).find('ul').css('display','inline').animate({opacity: 0}, 0).stop().animate({opacity: 1}, 300);
+	}, function () {
+		jQuery(this).find('ul').stop().animate({opacity: 0}, 300);
+	});
+});

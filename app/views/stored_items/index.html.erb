@@ -1,10 +1,24 @@
 <%= render 'account/account_nav' %>
 <div class="grid_10">
-<% @stored_items.each do |stored_item| %>
-<div class="imgteaser imgtagged"> 
-	<a href="#"> 
-		<%= image_tag(stored_item.photo.url(:thumb), :name => "thumb_" + stored_item.id.to_s) %>
-	</a>
-</div>
-<% end %>
+<ul id="create-portfolio" class="thumbnails ">
+	<% @stored_items.each do |stored_item| %>
+		<li>
+			<div class="post-thumbnail">
+				<a href="#"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s) %></a>
+				<ul>
+					<li><a href="#">Sell</a></li>
+					<li><a href="#">Mail</a></li>
+				</ul>
+			</div>
+			<p class="tags">
+				<% stored_item.stored_item_tags.each do |tag| %>
+				<% if tag != stored_item.stored_item_tags.first %>
+				, 
+				<% end %>
+				<a href="#"><%= tag.tag %></a>
+				<% end %>
+			</p>
+		</li>
+	<% end %>
+</ul>
 </div>
