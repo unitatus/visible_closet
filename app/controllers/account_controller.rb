@@ -261,7 +261,7 @@ class AccountController < ApplicationController
   end
   
   def get_last_billing_address(user_id=nil, addresses)
-    last_order = get_last_order(user_id)
+    last_order = get_last_order(user_id, "billing_address_id")
     if last_order
       last_order.billing_address
     else
@@ -270,7 +270,7 @@ class AccountController < ApplicationController
   end
   
   def get_last_shipping_address(user_id=nil, addresses)
-    last_order = get_last_order(user_id)
+    last_order = get_last_order(user_id, "shipping_address_id")
     if last_order
       last_order.shipping_address
     else
@@ -278,13 +278,17 @@ class AccountController < ApplicationController
     end
   end
   
-  def get_last_order(user_id=nil)
+  def get_last_order(user_id=nil, not_null_field)
     if user_id.nil? && @current_user
       user_id = @current_user.id
     elsif user_id.nil?
       return nil
     end
     
-    Order.find_by_user_id(user_id, :order => "created_at desc", :limit => 1)
+    begin
+      Order.find(:all, :conditions => "user_id = #{user_id} and #{not_null_field} is not null", :order => "created_at desc", :limit => 1).first
+    rescue ActiveRecord::RecordNotFound
+      return nil
+    end
   end
 end

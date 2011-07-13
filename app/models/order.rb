@@ -54,11 +54,20 @@ class Order < ActiveRecord::Base
   end
 
   def shipping_address
-    Address.find(self.shipping_address_id)
+    begin
+      Address.find(self.shipping_address_id)
+    rescue ActiveRecord::RecordNotFound
+      return nil
+    end
+
   end
   
   def billing_address
-    Address.find(self.billing_address_id)
+    begin
+      Address.find(self.billing_address_id)
+    rescue ActiveRecord::RecordNotFound
+      return nil
+    end
   end
   
   def build_order_line(attributes={})

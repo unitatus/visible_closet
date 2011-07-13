@@ -31,7 +31,7 @@ VisibleCloset::Application.configure do
   config.s3_key = 'AKIAJZUNJU6OZH3A6VZQ'
   config.s3_secret = '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'
   config.s3_path = '/public/system/photos/:access_token/:id/:style.:extension'
-  config.s3_bucket = 'stored_item_photos.thevisiblecloset.com'
+  config.s3_bucket = 'stored_item_photos'
 
   config.after_initialize do
     ActiveMerchant::Billing::Base.mode = :test
