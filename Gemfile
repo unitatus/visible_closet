@@ -14,6 +14,7 @@ gem 'authorize-net'
 gem 'rake', '0.8.7'
 gem 'mime-types', :require => 'mime/types'
 gem 'jquery-rails'
+gem 'aws-s3'
 
 group :development do
   gem 'rspec-rails'

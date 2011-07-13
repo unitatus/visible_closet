@@ -20,13 +20,27 @@ class StoredItem < ActiveRecord::Base
   attr_accessible :file
   before_create :generate_access_token
   
+  #has_attached_file :photo, :styles => { 
+  #                            :thumb => "100x100#",
+  #                            :normal => "600x600>",
+  #                            :medium => "200x200>" 
+  #                            },
+  #                          :url => "/system/photos/:access_token/:id/:style.:extension",
+  #                          :path => ":rails_root/public/system/photos/:access_token/:id/:style.:extension"
+
   has_attached_file :photo, :styles => { 
                               :thumb => "100x100#",
                               :normal => "600x600>",
                               :medium => "200x200>" 
                               },
-                            :url => "/system/photos/:access_token/:id/:style.:extension",
-                            :path => ":rails_root/public/system/photos/:access_token/:id/:style.:extension"
+                            :storage => :s3,
+                            :s3_credentials => { 
+                                  :access_key_id => Rails.application.config.s3_key,
+                                  :secret_access_key => Rails.application.config.s3_secret
+                                },
+                            :path => Rails.application.config.s3_path,
+                            :bucket => Rails.application.config.s3_bucket
+
                             
   validates_attachment_presence :photo
   validates_attachment_content_type :photo, :content_type => [/image\/jpg/, /image\/jpeg/, /image\/pjpeg/, /image\/gif/, /image\/png/, /image\/x-png/]

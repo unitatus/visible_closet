@@ -1,0 +1,9 @@
+production:
+ access_key_id: AKIAJZUNJU6OZH3A6VZQ
+ secret_access_key: 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
+ bucket: stored_item_photos.thevisiblecloset.com
+
+ staging:
+  access_key_id: AKIAJZUNJU6OZH3A6VZQ
+  secret_access_key: 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
+  bucket: stored_item_photos.thevisiblecloset.com
