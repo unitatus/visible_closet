@@ -38,6 +38,18 @@ function removeElement(parentDiv, childDiv)
      }
 }
 
+function utcToLocal(value) {
+	var a = /^(\d{4})-(\d{2})-(\d{2})\s(\d{2}):(\d{2}):(\d{2})\sUTC$/.exec(value);
+
+    if (a) {
+		parsed_date = new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]));
+        return parsed_date.toString("MMMM dd, yyyy hh:mm tt ");
+    }
+
+    return null;
+}
+
+// The following is to slow down image change on stored_item image review
 $(document).ready(function(){
 	// Fades store/portfolio link overlays
 	
