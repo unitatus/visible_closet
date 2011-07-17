@@ -24,9 +24,9 @@ VisibleCloset::Application.configure do
 
   # Customizations for The Visible Closet
   config.our_box_product_id = 1
-  config.your_box_product_id = 3
-  config.our_box_inventorying_product_id = 5
-  config.your_box_inventorying_product_id = 6
+  config.your_box_product_id = 2
+  config.our_box_inventorying_product_id = 3
+  config.your_box_inventorying_product_id = 4
   
   config.s3_key = 'AKIAJZUNJU6OZH3A6VZQ'
   config.s3_secret = 'NYzFOaurfJAZk+M2TBnIy2dhRpxGrFOlDpIg8eT4'

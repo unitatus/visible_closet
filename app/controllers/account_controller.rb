@@ -102,6 +102,8 @@ class AccountController < ApplicationController
   end
 
   def check_out
+    @cart = Cart.find_active_by_user_id(current_user.id)
+    
     @addresses = Address.find_active(current_user.id, :order => :first_name)
     
     if @addresses.nil? || @addresses.empty?
@@ -120,7 +122,7 @@ class AccountController < ApplicationController
       @billing_address = get_last_billing_address @addresses
     end
     @order = Order.new
-    @cart = Cart.find_active_by_user_id(current_user.id)
+    
   end
 
   def add_new_billing_address
