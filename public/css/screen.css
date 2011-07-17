@@ -408,7 +408,13 @@ ___________________________________________________________________ */
 	color: #444;
 }
 .post-thumbnail {
-	padding: 0 0 10px 0;
+	padding: 0 0 0 0;
+	margin: 0;
+	width: 200px;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	vertical-align: middle;
 }
 
 

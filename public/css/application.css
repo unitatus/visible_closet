@@ -62,26 +62,26 @@ ul { list-style: none; }
 .thumbnails h3 a:hover { background: #ffff00; }
 
 #create-portfolio.thumbnails .post-thumbnail {
-	height: 115px;
+	height: 135px;
 	width: 200px;
-	margin: 0 0 20px 0;
+	margin: 0 0 0 0;
 }
 #create-portfolio.thumbnails .post-thumbnail img {
 	-webkit-box-shadow: inset 0px 0px 50px rgba(0,0,0,0.2);
 	-moz-box-shadow: inset 0px 0px 50px rgba(0,0,0,0.2);
 	box-shadow: inset 0px 0px 50px rgba(0,0,0,0.2);
+	margin-left: auto;
+	margin-right: auto;
 }
 #create-portfolio.thumbnails .post-thumbnail ul {
-	background: rgba(255,255,255,0.9);
+	background: rgba(255,255,255,0.4);
 	border-top: 0px solid #333;
 	display: none;
 	left: 0;
 	position: absolute;
 	top: 0;
-}
-#create-portfolio.thumbnails .post-thumbnail ul {
 	height: 135px;
-	width: 160px;
+	width: 200px;
 }
 #create-portfolio.thumbnails .post-thumbnail:hover ul {
 	display: inline;
