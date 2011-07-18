@@ -24,7 +24,7 @@ VisibleCloset::Application.routes.draw do
   devise_for :users, :path_names => { :sign_up => "beta_register" }, :controllers => { :registrations => "registrations" }
 
   get "home/index"
-  get "pages/beta_thanks"
+  match "access_denied" => "home#access_denied"
   get "admin/home"
   get "admin/send_boxes"
   get "admin/inventory_boxes"

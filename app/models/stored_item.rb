@@ -15,7 +15,7 @@
 #
 
 class StoredItem < ActiveRecord::Base
-  belongs_to :boxes
+  belongs_to :box
   has_many :stored_item_tags
   attr_accessible :file
   before_create :generate_access_token
@@ -56,8 +56,14 @@ class StoredItem < ActiveRecord::Base
   Paperclip.interpolates :access_token  do |attachment, style|
     attachment.instance.access_token
   end
-  
-  def find_all_by_user_id(user_id)
-    self.find(:all, :joins => :boxes, :conditions => { :boxes => { :assigned_to_user_id => user_id } } )
+      
+  def StoredItem.find_all_by_assigned_to_user_id(user_id, box_id=nil)
+    box_conditions = { :assigned_to_user_id => user_id }
+    
+    if !box_id.blank?
+      box_conditions[:id] = box_id
+    end
+    
+    all(:joins => :box, :conditions => { :boxes => box_conditions } )
   end
 end

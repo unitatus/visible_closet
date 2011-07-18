@@ -1,5 +1,9 @@
 class AccountController < ApplicationController
+  # The account controller actions are only accessible for someone who is signed up as a user.
+  authorize_resource :class => false
+
   def index
+
   end
 
   def store_more_boxes
@@ -43,20 +47,6 @@ class AccountController < ApplicationController
         redirect_to :action => 'check_out'
       end
     end
-  end
-
-  def process_cart_item(cart, product_id, quantity)
-    cart_item = cart.cart_items.select { |c| c.product_id == product_id }[0]
-
-    if (!cart_item)
-      cart_item = CartItem.new
-      cart_item.product_id = product_id
-      cart.cart_items << cart_item
-    end
-
-    cart_item.quantity = quantity
-
-    cart
   end
 
   def cart
@@ -240,6 +230,20 @@ class AccountController < ApplicationController
   end
   
   private 
+  
+  def process_cart_item(cart, product_id, quantity)
+    cart_item = cart.cart_items.select { |c| c.product_id == product_id }[0]
+
+    if (!cart_item)
+      cart_item = CartItem.new
+      cart_item.product_id = product_id
+      cart.cart_items << cart_item
+    end
+
+    cart_item.quantity = quantity
+
+    cart
+  end
   
   def convert_to_integer(str)
     if str.blank?

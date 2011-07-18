@@ -1,4 +1,7 @@
 class BoxesController < ApplicationController
+  load_resource :only => [:receive_box, :inventory_box, :inventory_boxes, :clear_box, :finish_inventorying, :edit]
+  authorize_resource
+  
   # GET /boxes
   # GET /boxes.xml
   def index
@@ -10,55 +13,68 @@ class BoxesController < ApplicationController
     end
   end
 
+  # There is no need to show the detail of a box at this time.
   # GET /boxes/1
   # GET /boxes/1.xml
-  def show
-    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+  # def show
+  #   @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+  # 
+  #   respond_to do |format|
+  #     format.html # show.html.erb
+  #     format.xml  { render :xml => @box }
+  #   end
+  # end
 
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @box }
-    end
-  end
-
+  # At this time the only way to create a box is to order one -- the new box process happens there.
   # GET /boxes/new
   # GET /boxes/new.xml
-  def new
-    @box = Box.new
-    @box.assigned_to_user_id = current_user.id
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @box }
-    end
-  end
+  # def new
+  #     @box = Box.new
+  #     @box.assigned_to_user_id = current_user.id
+  # 
+  #     respond_to do |format|
+  #       format.html # new.html.erb
+  #       format.xml  { render :xml => @box }
+  #     end
+  #   end
 
   # GET /boxes/1/edit
   def edit
-    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)    
-  end
-
-  # POST /boxes
-  # POST /boxes.xml
-  def create
-    @box = Box.new(params[:box])
-    @box.assigned_to_user_id = current_user.id
-
-    respond_to do |format|
-      if @box.save
-        format.html { redirect_to(@box, :notice => 'Box was successfully created.') }
-        format.xml  { render :xml => @box, :status => :created, :location => @box }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @box.errors, :status => :unprocessable_entity }
-      end
+    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+    
+    if @box.nil?
+      redirect_to access_denied_url
     end
   end
+
+  # See boxes/new
+  #
+  # POST /boxes
+  # POST /boxes.xml
+  # def create
+  #   @box = Box.new(params[:box])
+  #   @box.assigned_to_user_id = current_user.id
+  # 
+  #   respond_to do |format|
+  #     if @box.save
+  #       format.html { redirect_to(@box, :notice => 'Box was successfully created.') }
+  #       format.xml  { render :xml => @box, :status => :created, :location => @box }
+  #     else
+  #       format.html { render :action => "new" }
+  #       format.xml  { render :xml => @box.errors, :status => :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # PUT /boxes/1
   # PUT /boxes/1.xml
   def update
     @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+    
+    if @box.nil?
+      redirect_to access_denied_url
+      return
+    end
 
     respond_to do |format|
       if @box.update_attributes(params[:box])
@@ -72,17 +88,18 @@ class BoxesController < ApplicationController
     end
   end
 
+  # At this time there is no need to delete a box.
   # DELETE /boxes/1
   # DELETE /boxes/1.xml
-  def destroy
-    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
-    @box.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(boxes_url) }
-      format.xml  { head :ok }
-    end
-  end
+  # def destroy
+  #     @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+  #     @box.destroy
+  # 
+  #     respond_to do |format|
+  #       format.html { redirect_to(boxes_url) }
+  #       format.xml  { head :ok }
+  #     end
+  #   end
   
   def receive_box
     @error_messages = Array.new
@@ -118,6 +135,7 @@ class BoxesController < ApplicationController
   end  
   
   def inventory_box
+    # TODO - get rid of this
     @box = Box.find(params[:id])
     @stored_items = StoredItem.find_by_box_id(@box.id)
   end

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110621190155
+# Schema version: 20110717194124
 #
 # Table name: users
 #
@@ -27,9 +27,15 @@
 #  first_name           :string(255)
 #  beta_user            :boolean         default(TRUE)
 #  signup_comments      :text
+#  role                 :string(255)
 #
 
 class User < ActiveRecord::Base
+  # Roles
+  ADMIN = :admin
+  MANAGER = :manager
+  NORMAL = :normal
+
   # Other devise modules are:
   # :token_authenticatable, :encryptable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable, :lockable, :timeoutable, :recoverable, :rememberable, :trackable, :validatable
@@ -42,12 +48,20 @@ class User < ActiveRecord::Base
                   :beta_user,
                   :first_name,
                   :last_name,
-                  :signup_comments
+                  :signup_comments,
+                  :role
+
+  symbolize :role
 
   has_many :boxes
 
   validates :first_name, :presence => true
   validates :last_name, :presence => true
+  validates_inclusion_of :role, :in => [ ADMIN, MANAGER, NORMAL ]
 
   has_many :addresses
+    
+  def after_initialize 
+    self.role ||= NORMAL
+  end
 end

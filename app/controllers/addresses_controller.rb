@@ -1,4 +1,6 @@
 class AddressesController < ApplicationController
+# TODO: This really needs to be made live instead of relying on account controller
+
   # GET /addresses
   # GET /addresses.xml
   def index

@@ -44,6 +44,7 @@ GEM
     braintree (2.10.1)
       builder (>= 2.0.0)
     builder (2.1.2)
+    cancan (1.6.4)
     cocaine (0.1.0)
     devise (1.4.2)
       bcrypt-ruby (~> 2.1.2)
@@ -119,6 +120,7 @@ DEPENDENCIES
   annotate-models
   authorize-net
   aws-s3
+  cancan
   devise
   jquery-rails
   mime-types

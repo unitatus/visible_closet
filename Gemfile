@@ -6,15 +6,16 @@ gem 'rails', '3.0.7'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
-gem 'devise'
-gem 'paperclip'
-gem 'validatable'
-gem 'activemerchant'
-gem 'authorize-net'
+gem 'devise' # User authentication
+gem 'paperclip' # Manages file attachments
+gem 'validatable' # Used for non-Rails validation
+gem 'activemerchant' # Used for credit card authorization
+gem 'authorize-net' # Used for credit card authorization
 gem 'rake', '0.8.7'
 gem 'mime-types', :require => 'mime/types'
 gem 'jquery-rails'
-gem 'aws-s3'
+gem 'aws-s3' # This is Amazon Web Services hard drive - used for storing files
+gem 'cancan' # User authorization
 
 group :development do
   gem 'rspec-rails'
