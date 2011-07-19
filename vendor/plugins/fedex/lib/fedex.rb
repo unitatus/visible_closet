@@ -454,7 +454,6 @@ options = common_options.merge(
     
     # Creates and returns a driver for the requested action
     def create_driver(name)
-puts("Checkpoint A")
       path = File.expand_path(DIR + '/' + WSDL_PATHS[name])
 puts("Checkpoint B")
       wsdl = SOAP::WSDLDriverFactory.new(path)
