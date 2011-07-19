@@ -58,6 +58,7 @@ GEM
     diff-lcs (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
+    httpclient (2.2.1)
     i18n (0.5.0)
     jquery-rails (0.2.7)
       rails (~> 3.0)
@@ -128,6 +129,7 @@ DEPENDENCIES
   aws-s3
   cancan
   devise
+  httpclient
   jquery-rails
   mime-types
   paperclip
