@@ -281,86 +281,6 @@ ul.sf-menu li li li.sfHover ul {
 	line-height: 16px;
 }
 
-/*	Side Menu
-___________________________________________________________________ */
-.side-menu, .side-menu * {
-	margin:	0;
-	padding: 0;
-	list-style: none;
-	font-size: 12px;
-}
-.side-menu {	
-	margin: 0px 0px 0px 0px;
-}
-
-.side-menu li a {
-	display:block;
-	float:left;
-	position: relative;
-	color: #999;
-	
-}
-.side-menu li {
-	float:left;
-	padding:10px 20px;
-	position: relative;
-	margin-right:5px;
-	
-}
-.side-menu li.current-menu-item a,
-.side-menu li a:hover {
-	color: #f93;
-}
-
-.side-menu ul a {
-	padding:0px 0px;
-}
-.side-menu ul li:first-child a {
-	padding-top:0px;
-} 
-.side-menu ul li:last-child a {
-	padding-bottom:0px;
-} 
-
-.side-menu ul {
-	position: relative;
-	top: 0px;
-	left: 0px;
-}
-
-.side-menu ul li {
-	width: 100%;
-	padding: 10px 0 0 15px;
-}
-ul.side-menu li:hover li ul,
-ul.side-menu li.sfHover li ul {
-	top: -999em;
-}
-ul.side-menu li li:hover ul,
-ul.side-menu li li.sfHover ul {
-	left: 150px; /* match ul width */
-	top: -8px;
-}
-ul.side-menu li li:hover li ul,
-ul.side-menu li li.sfHover li ul {
-	top: -999em;
-}
-ul.side-menu li li li:hover ul,
-ul.side-menu li li li.sfHover ul {
-	left: 150px; /* match ul width */
-	top: 0;
-}
-.side-menu .sf-sub-indicator {
-	display:none;	
-}
-.side-menu ul .sf-sub-indicator {
-	opacity: .4;
-	display:inline;
-	position: absolute;
-	right: 5px;
-	line-height: 16px;
-}
-
 
 
 
@@ -917,5 +837,43 @@ table.cart_summary td
 	margin: 0;
 	text-align: center;
 	border-top: 1px solid #999;
+}
+/* ACCOUNT MENU */
+
+#side-menu {
+    width: 200px;
+    color: #006fb3;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+#side-menu ul {
+    
+}
+
+#side-menu li {
+    display: block;
+    height: 33px;
+    line-height: 33px;
+    padding: 0 0 0 0 ;
+}
+
+#side-menu .active {
+    background-image: url('../images/menuBG.gif');
+    background-position: right;
+}
+
+#side-menu a {
+    text-decoration: none;
+    color: #006fb3;
+    padding-left: 10px;
+}
+
+#side-menu .active a {
+    color: #ffffff;
+}
+
+#side-menu h2 {
+    padding-left: 10px;
+    padding-bottom: 30px;
 }
 

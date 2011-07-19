@@ -1,5 +1,6 @@
-<%= render 'account_nav' %>
-<div class="account_center">
+<% @menu_page = :account %>
+<%= render 'account_nav', :locals => { :menu_page => @menu_page } %>
+<div class="grid_9">
 <p class="notice"><%= notice %></p>
 <p class="alert"><%= alert %></p>
 <p>

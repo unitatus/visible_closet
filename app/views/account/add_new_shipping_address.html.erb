@@ -1,4 +1,5 @@
-<%= render 'account_nav' %>
+<% @menu_page = :account %>
+<%= render 'account_nav', :locals => { :menu_page => @menu_page } %>
 <h1>New shipping address</h1>
 <div class="grid_7">
 <%= render 'form_add_new_shipping_address' %>

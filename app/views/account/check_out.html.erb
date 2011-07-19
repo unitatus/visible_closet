@@ -1,5 +1,6 @@
-<%= render 'account/account_nav' %>
-<div class="grid_10">
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div class="grid_9">
 <%= form_for @order, :url => "/account/finalize_check_out", :html => { :class => "standard" } do |f| %>
   <div class="grid_4">
 	<h3>Billing Address</h3>
@@ -44,7 +45,7 @@
 	</div>
   </div>
 <br>
-<div class="grid_10">
+<div class="grid_9">
 <br>
 <hr>
 </div>
@@ -90,11 +91,11 @@
 		</div>
 	</div>
 </div>
-<div class="grid_10">
+<div class="grid_9">
 <br>
 <hr>
 </div>
-<div class="grid_10">
+<div class="grid_9">
 	<table class="check_out_cart_summary">
 		<tr>
 			<th>

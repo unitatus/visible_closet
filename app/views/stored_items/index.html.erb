@@ -1,5 +1,10 @@
+<% if params[:box_id].blank? %>
+<%   @menu_page = :items %>
+<% else %>
+<%   @menu_page = :boxes %>
+<% end %>
 <%= render 'account/account_nav' %>
-<div class="grid_10">
+<div class="grid_9">
 <ul id="create-portfolio" class="thumbnails ">
 	<% @stored_items.each do |stored_item| %>
 		<li>

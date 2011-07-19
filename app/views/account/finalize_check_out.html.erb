@@ -1,4 +1,5 @@
-<%= render 'account_nav' %>
+<% @menu_page = :account %>
+<%= render 'account_nav', :locals => { :menu_page => @menu_page } %>
 Thank you for placing your order! Your boxes are on their way. Click here to print out shipping forms for the boxes that you plan to send in yourself.
 <br><br>
 <br><br>

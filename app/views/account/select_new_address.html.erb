@@ -1,4 +1,5 @@
-<%= render 'account/account_nav' %>
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 	<div class="grid_9">
 		<h1>Select a new <%= @action %> address</h1>
 	<% first = true %>

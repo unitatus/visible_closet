@@ -1,5 +1,6 @@
-<%= render 'account_nav' %>
-<div class="grid_10">
+<% @menu_page = :cart %>
+<%= render 'account_nav', :locals => {:menu_page => @menu_page} %>
+<div class="grid_9">
 <p class="notice"><%= flash[:notice] %></p>
 <p class="alert"><%= flash[:alert] %></p>
 <%= render 'account_error_messages' %>
