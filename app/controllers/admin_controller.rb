@@ -1,6 +1,10 @@
 class AdminController < ApplicationController
   authorize_resource :class => false
 
+  def ssl_required?
+    true
+  end
+
   def home
 
   end

@@ -30,6 +30,7 @@ class StoredItem < ActiveRecord::Base
                                   :access_key_id => Rails.application.config.s3_key,
                                   :secret_access_key => Rails.application.config.s3_secret
                                 },
+                            :s3_protocol => :https,
                             :path => Rails.application.config.s3_path,
                             :bucket => Rails.application.config.s3_bucket
 

@@ -1,6 +1,11 @@
 class BoxesController < ApplicationController
   load_resource :only => [:receive_box, :inventory_box, :inventory_boxes, :clear_box, :finish_inventorying, :edit]
+
   authorize_resource
+
+  def ssl_required?
+    true # make every access to boxes secure
+  end
   
   # GET /boxes
   # GET /boxes.xml
@@ -147,6 +152,9 @@ class BoxesController < ApplicationController
   def create_stored_item
     @stored_item = StoredItem.new
     @stored_item.photo = params[:file] if params.has_key?(:file)
+    
+logger.debug("url is " << @stored_item.photo.url)
+    
     @stored_item.box_id = params[:box_id]
 
     # detect Mime-Type (mime-type detection doesn't work in flash)

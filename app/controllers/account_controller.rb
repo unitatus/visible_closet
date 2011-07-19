@@ -1,6 +1,7 @@
 class AccountController < ApplicationController
   # The account controller actions are only accessible for someone who is signed up as a user.
   authorize_resource :class => false
+  ssl_required :check_out, :add_new_billing_address, :add_new_shipping_address, :create_new_billing_address, :create_new_shipping_address, :finalize_check_out, :select_new_shipping_address, :select_new_billing_address, :choose_new_shipping_address, :choose_new_billing_address
 
   def index
 
