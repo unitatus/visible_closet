@@ -11,6 +11,7 @@ gem 'paperclip' # Manages file attachments
 gem 'validatable' # Used for non-Rails validation
 gem 'activemerchant' # Used for credit card authorization
 gem 'authorize-net' # Used for credit card authorization
+gem 'soap4r', '1.5.8', :path => 'vendor/gems'
 gem 'rake', '0.8.7'
 gem 'mime-types', :require => 'mime/types'
 gem 'jquery-rails'

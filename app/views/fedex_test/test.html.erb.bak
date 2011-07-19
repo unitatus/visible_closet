@@ -1,0 +1,31 @@
+
+Message: <%= @response.message %><br>
+Test: <%= @response.test %><br>
+<br>
+Rates:<br>
+<table class="prices_table">
+	<tr>
+		<th>origin</th>
+		<th>destination</th>
+		<th>package_rates</th>
+		<th>carrier</th>
+		<th>service_name</th>
+		<th>service_code</th>
+		<th>currency</th>
+		<th>delivery_date</th>
+		<th>price</th>
+	</tr>
+<% @response.rates.each do |rate| %>
+<tr>
+	<td><%= rate.origin %></td>
+	<td><%= rate.destination %></td>
+	<td><%= rate.package_rates %></td>
+	<td><%= rate.carrier %></td>
+	<td><%= rate.service_name %></td>
+	<td><%= rate.service_code %></td>
+	<td><%= rate.currency %></td>
+	<td><%= rate.delivery_date %></td>
+	<td>$<%= (rate.price/100) %></td>
+	</tr>
+<% end %>
+</table>

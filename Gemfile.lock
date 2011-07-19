@@ -1,3 +1,8 @@
+PATH
+  remote: vendor/gems
+  specs:
+    soap4r (1.5.8)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -129,5 +134,6 @@ DEPENDENCIES
   rake (= 0.8.7)
   rspec
   rspec-rails
+  soap4r (= 1.5.8)!
   sqlite3
   validatable

@@ -48,6 +48,7 @@ VisibleCloset::Application.routes.draw do
   post "account/choose_new_billing_address"
   post "boxes/create_stored_item"
   get "account/closet_main"
+  get "fedex_test/test"
   
   match "account/home" => "account#index"
 
