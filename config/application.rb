@@ -42,5 +42,7 @@ module VisibleCloset
     config.filter_parameters += [:card_verification_value]
     config.filter_parameters += [:card_month]
     config.filter_parameters += [:card_year]
+    
+    config.to_prepare { Devise::SessionsController.ssl_required :new, :create }
   end
 end

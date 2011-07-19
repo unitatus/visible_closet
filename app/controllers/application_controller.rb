@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
     #return false if RAILS_ENV != 'production'
     
     # otherwise, use the filters.
-    super
+    return_val = super
+    
+    puts("Return_val is " << return_val.inspect)
+    
+    return_val
   end
 end
