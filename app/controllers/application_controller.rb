@@ -16,8 +16,6 @@ class ApplicationController < ActionController::Base
     # otherwise, use the filters.
     return_val = super
     
-    puts("Return_val is " << return_val.inspect)
-    
     return_val
   end
 end
