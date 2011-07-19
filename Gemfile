@@ -17,6 +17,7 @@ gem 'mime-types', :require => 'mime/types'
 gem 'jquery-rails'
 gem 'aws-s3' # This is Amazon Web Services hard drive - used for storing files
 gem 'cancan' # User authorization
+gem 'ssl_requirement'
 
 group :development do
   gem 'rspec-rails'
