@@ -21,8 +21,12 @@ VisibleCloset::Application.routes.draw do
   match "orders/:id/ship_order_lines" => "orders#ship_order_lines"
   match "boxes/:box_id/stored_items" => "stored_items#index"
 
-  devise_for :users, :path_names => { :sign_up => "beta_register" }, :controllers => { :registrations => "registrations" }
+  # Devise stuff
+  devise_for :users, :path_names => { :sign_up => "register" }, :controllers => { :registrations => "registrations" }
+  # this redirects users after logging in to their account home
+  match '/user' => "account#index", :as => :user_root
 
+  # Other
   get "home/index"
   match "access_denied" => "home#access_denied"
   get "admin/home"
