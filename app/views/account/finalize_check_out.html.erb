@@ -2,7 +2,7 @@
 <%= render 'account_nav', :locals => { :menu_page => @menu_page } %>
 <div class="grid_9">
 <h1>Order Complete!</h1>
-<div style="border-style: dotted">
+<hr>
 	<table class="check_out_cart_summary">
 		<tr>
 			<th>
@@ -38,7 +38,9 @@
 	<hr>
 	<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 	<h4>Total Charged (first month's rent): <%= number_to_currency(@order.total_in_cents/100) %></h4>
-	</div>
+</div>
+<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
+<a href="">Printable Summary &gt;&gt;</a>
 </div>
 <p>Thank you for placing your order! To keep track of your boxes, see the <a href="/boxes">Browse Boxes</a> menu on the left. </p>
 <p>To learn more about how to pack boxes, <a href="">click here</a>.</p> 
@@ -51,7 +53,7 @@
 <% end %>
 <% if @order.cust_box_count > 0 %>
 <h2>Your <%= @order.vc_box_count > 1 ? 'Boxes' : 'Box' %></h2>
-<p>You have chosen to store <%= @order.cust_box_count %> <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %> of your own. When you are ready, click <a href="">here</a> to print out <%= @order.vc_box_count > 1 ? '' : 'a ' %>Fedex <%= @order.vc_box_count > 1 ? 'labels' : 'label' %> to affix to your <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %>, and call 1-8000-GO-FEDEX to have Fedex pick up your <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %>. You can also print labels by going to the <a href="/boxes">Browse Boxes</a> menu.</p>
+<p>You have chosen to store <%= @order.cust_box_count %> <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %> of your own. When you are ready, click <a href="">here</a> to print out <%= @order.vc_box_count > 1 ? '' : 'a ' %>Fedex <%= @order.vc_box_count > 1 ? 'labels' : 'label' %> to affix to your <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %>, and call 1-800-GO-FEDEX to have Fedex pick up your <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %>. You can also print labels by going to the <a href="/boxes">Browse Boxes</a> menu.</p>
 
 <% end %>
 <br><br>

@@ -102,7 +102,7 @@ class Order < ActiveRecord::Base
     total = 0
     
     order_lines.each do |order_line|
-      total += 1 if order_line.product_id == Rails.application.config.our_box_product_id
+      total += order_line.quantity if order_line.product_id == Rails.application.config.our_box_product_id
     end
     
     total
@@ -112,7 +112,7 @@ class Order < ActiveRecord::Base
     total = 0
     
     order_lines.each do |order_line|
-      total += 1 if order_line.product_id == Rails.application.config.your_box_product_id
+      total += order_line.quantity if order_line.product_id == Rails.application.config.your_box_product_id
     end
     
     total
