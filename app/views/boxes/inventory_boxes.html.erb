@@ -1,5 +1,7 @@
-<div class="grid_10">
-<a href="/admin/home">&lt;&lt; Back to admin home</a><br><br>
+<% @admin_page = :inventorying %>
+<%= render :partial => "admin/admin_menu", :locals => { :admin_page => @admin_page } %>
+
+<div class="grid_9">
 <% if @boxes.any? %>
 	<table class="prices_table">
 	  <tr>

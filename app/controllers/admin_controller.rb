@@ -13,13 +13,17 @@ class AdminController < ApplicationController
     order_lines = OrderLine.find_all_by_status_and_product_id(OrderLine::NEW_STATUS, Rails.application.config.our_box_product_id)
             
     @orders = get_orders(order_lines)
-    
+    # set for navigation
+    @admin_page = :shipping
+        
     render 'process_orders'
   end
   
   def process_orders
     order_lines = OrderLine.find_all_by_status(OrderLine::NEW_STATUS)
-            
+    # set for navigation
+    @admin_page = :orders
+    
     @orders = get_orders(order_lines)
   end
 

@@ -1,4 +1,7 @@
-<div class="grid_10">
+<% @admin_page = :shipping %>
+<%= render :partial => "admin/admin_menu", :locals => { :admin_page => @admin_page } %>
+
+<div class="grid_9">
 <%= form_tag("ship_order_lines", :class => "standard", :id => "ship_order_lines_form", :name => "ship_order_lines_form") %>
 <table class="prices_table">
   <tr>

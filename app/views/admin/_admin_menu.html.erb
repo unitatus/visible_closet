@@ -1,0 +1,23 @@
+<% active_class_str = " class='active'" %>
+<% orders_class = ""; materials_class = ""; receiving_class = ""; inventorying_class = ""; %>
+<% case @admin_page %>
+<% when :orders %>
+<%   orders_class = active_class_str %>
+<% when :shipping %>
+<%   shipping_class = active_class_str %>
+<% when :receiving %>
+<%   receiving_class = active_class_str %>
+<% when :inventorying %>
+<%   inventorying_class = active_class_str %>
+<% end %>
+<div class="grid_3">
+	<div id="side-menu" style="width: 100%;">
+		<h2>Admin</h2>
+		<ul>
+		  <li<%= orders_class %>><a href="/admin/process_orders">All orders</a></li>
+		  <li<%= shipping_class %>><a href="/admin/send_boxes">Shipping</a></li>
+		  <li<%= receiving_class %>><a href="/boxes/receive_box">Receiving</a></li>
+		  <li<%= inventorying_class %>><a href="/boxes/inventory_boxes">Inventorying</a></li>
+		</ul>
+	</div>
+</div>

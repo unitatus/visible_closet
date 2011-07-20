@@ -30,7 +30,7 @@ VisibleCloset::Application.routes.draw do
   # Other
   get "home/index"
   match "access_denied" => "home#access_denied"
-  get "admin/home"
+  match "admin/home" => "admin#process_orders"
   get "admin/send_boxes"
   get "admin/inventory_boxes"
   get "admin/process_orders"
