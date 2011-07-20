@@ -3,6 +3,8 @@ class BoxesController < ApplicationController
 
   authorize_resource
 
+  require 'soap/wsdlDriver'
+
   def ssl_required?
     true # make every access to boxes secure
   end
@@ -152,9 +154,7 @@ class BoxesController < ApplicationController
   def create_stored_item
     @stored_item = StoredItem.new
     @stored_item.photo = params[:file] if params.has_key?(:file)
-    
-logger.debug("url is " << @stored_item.photo.url)
-    
+        
     @stored_item.box_id = params[:box_id]
 
     # detect Mime-Type (mime-type detection doesn't work in flash)
@@ -241,5 +241,76 @@ logger.debug("url is " << @stored_item.photo.url)
     @order_line.save!
     
     redirect_to :controller => "admin", :action => "home"
+  end
+  
+  def get_label
+    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+    
+    if @box.nil?
+      redirect_to access_denied_url
+      return
+    end
+    
+    order_line = OrderLine.find(@box.ordering_order_line_id)
+    order = order_line.order
+    shipping_address = Address.find(order.shipping_address_id)
+    receiving_address = Address.find(Rails.application.config.fedex_vc_address_id)
+    
+    @fedex = Fedex::Base.new(
+      :auth_key => Rails.application.config.fedex_auth_key,
+      :security_code => Rails.application.config.fedex_security_code,
+      :account_number => Rails.application.config.fedex_account_number,
+      :meter_number => Rails.application.config.fedex_meter_number, 
+      :debug => Rails.application.config.fedex_debug,
+      :label_image_type => Rails.application.config.fedex_label_image_type
+    )
+    
+    shipper = {
+      :name => current_user.first_name + " " + current_user.last_name,
+      :phone_number => shipping_address.day_phone
+    }
+    recipient = {
+      :name => Rails.application.config.fedex_vc_name,
+      :phone_number => receiving_address.day_phone
+    }
+    origin = {
+      :street => shipping_address.address_line_1 + (shipping_address.address_line_2.nil? ? "" : " " + shipping_address.address_line_2),
+      :city => shipping_address.city,
+      :state => shipping_address.state,
+      :zip => shipping_address.zip,
+      :country => shipping_address.country
+    }
+   destination = {
+     :street => receiving_address.address_line_1 + (receiving_address.address_line_2.nil? ? "" : " " + receiving_address.address_line_2),
+     :city => receiving_address.city,
+     :state => receiving_address.state,
+    :zip => receiving_address.zip,
+    :country => receiving_address.country,
+    :residential => false
+   }
+   pkg_count = 1
+   weight = Rails.application.config.fedex_default_shipping_weight_lbs
+   service_type = Fedex::ServiceTypes::FEDEX_GROUND
+   
+   @label, @tracking_number = @fedex.label(
+     :shipper => { :contact => shipper, :address => origin },
+     :recipient => { :contact => recipient, :address => destination },
+     :count => pkg_count,
+     :weight => weight,
+     :service_type => service_type
+    )
+
+    shipment = Shipment.new
+    
+    shipment.box_id = @box.id
+    shipment.from_address_id = shipping_address.id
+    shipment.to_address_id = receiving_address.id
+    shipment.tracking_number = @tracking_number
+    
+    if (!shipment.save)
+      raise "Malformed data: cannot save shipment " << shipment.inspect
+    end
+
+    send_data(@label, :filename => "box_#{@box.id}_label.pdf", :type => "application/pdf")
   end
 end

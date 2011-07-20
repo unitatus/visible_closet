@@ -148,20 +148,14 @@ module Fedex #:nodoc:
     #    :zip => '20500'
     #  }
     def price(options = {})
-puts("Getting to this spot")
       # Check overall options
       check_required_options(:price, options)
-puts("Checkpoint 1")
       # Check Address Options
       check_required_options(:contact, options[:shipper][:contact])
-      puts("Checkpoint 2")
       check_required_options(:address, options[:shipper][:address])
-      puts("Checkpoint 3")
       # Check Contact Options
       check_required_options(:contact, options[:recipient][:contact])
-      puts("Checkpoint 4")
       check_required_options(:address, options[:recipient][:address])
-            puts("Checkpoint 5")
       # Prepare variables
       shipper             = options[:shipper]
       recipient           = options[:recipient]
@@ -177,12 +171,9 @@ puts("Checkpoint 1")
       weight              = options[:weight]
                           
       residential         = !!recipient_address[:residential]
-puts("Checkpoint 6")
       service_type        = resolve_service_type(service_type, residential) if service_type
-    puts("Checkpoint 7")
       # Create the driver
       driver = create_driver(:rate)
-      puts("Checkpoint 8")
       options = common_options.merge(
         :RequestedShipment => {
           :Shipper => {
@@ -232,23 +223,14 @@ puts("Checkpoint 6")
           ]
         }
       )
-      
-      puts("Options is now: " << options.inspect)
-      
-      puts("**********************************************************************")
-      
+            
       result = driver.getRates(options)
       
-      puts("Checkpoint 9")
       extract_price = proc do |reply_detail|
-        puts("Checkpoint 9a")
-        puts("Rate request type is " << @rate_request_type)
         shipment_details = reply_detail.ratedShipmentDetails
-        puts("shipment detail count is " << shipment_details.size)
         price = nil
         for shipment_detail in shipment_details
           rate_detail = shipment_detail.shipmentRateDetail
-  puts("rate detail rateType is " << rate_detail.rateType.inspect)
           if rate_detail.rateType == "PAYOR_#{@rate_request_type}"
             price = (rate_detail.totalNetCharge.amount.to_f * 100).to_i
             break
@@ -260,7 +242,7 @@ puts("Checkpoint 6")
           raise "Couldn't find Fedex price in response!"
         end
       end
-puts("Checkpoint 10")
+
       msg = error_msg(result, false)
       if successful?(result) && msg !~ /There are no valid services available/
         reply_details = result.rateReplyDetails
@@ -296,7 +278,6 @@ puts("Checkpoint 10")
     #                          :phone_number => '4805551212'},
     #             :address => address} # See "Address" for under price.
     def label(options = {})
-      puts options.inspect if $DEBUG
       # Check overall options
       check_required_options(:label, options)
       
@@ -331,8 +312,7 @@ puts("Checkpoint 10")
       
       # Create the driver
       driver = create_driver(:ship)
-puts("Rate request type is " << @rate_request_type)
-options = common_options.merge(
+      options = common_options.merge(
         :RequestedShipment => {
           :ShipTimestamp => time,
           :DropoffType => @dropoff_type,
@@ -386,11 +366,7 @@ options = common_options.merge(
           }
         }
       )
-      
-      puts("Options is now: " << options.inspect)
-      
-      puts("**********************************************************************")
-      
+            
       result = driver.processShipment(options)
       
       successful = successful?(result)
@@ -398,11 +374,12 @@ options = common_options.merge(
       msg = error_msg(result, false)
       if successful && msg !~ /There are no valid services available/
         # pre = result.completedShipmentDetail.shipmentRating.shipmentRateDetails
+        # charge didn't work at one point, haven't fixed it yet
         # charge = ((pre.class == Array ? pre[0].totalNetCharge.amount.to_f : pre.totalNetCharge.amount.to_f) * 100).to_i
         label = Base64.decode64(result.completedShipmentDetail.completedPackageDetails.label.parts.image)
         tracking_number = result.completedShipmentDetail.completedPackageDetails.trackingIds.trackingNumber
-        # [charge, label, tracking_number]
-         [0.0, label, tracking_number]
+        # [label, tracking_number]
+         [label, tracking_number]
       else
         raise FedexError.new("Unable to get label from Fedex: #{msg}")
       end
@@ -455,11 +432,8 @@ options = common_options.merge(
     # Creates and returns a driver for the requested action
     def create_driver(name)
       path = File.expand_path(DIR + '/' + WSDL_PATHS[name])
-puts("Checkpoint B")
       wsdl = SOAP::WSDLDriverFactory.new(path)
-puts("Checkpoint C")
       driver = wsdl.create_rpc_driver
-puts("Checkpoint D")
       # /s+(1000|0|9c9|fcc)\s+/ => ""
       driver.wiredump_dev = STDOUT if @debug
       

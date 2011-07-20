@@ -9,15 +9,16 @@ You do not have any boxes in storage order under management. Click <a href="/acc
 	<th>Status</th>
 	<th>Box Source</th>
 	<th>Description</th>
-	<th>Inventory?</th>
+	<th>Inventory</th>
 	<th>Edit</th>
+	<th>Label</th>
 	</tr>
 	<% @boxes.each do |box| %>
 	  <tr>
 		<td><%= box.id %></td>
 		<td><%= box.status_en %></td>
 		<td><%= box.box_type == Box::CUST_BOX_TYPE.to_s ? "Your box" : "Visible Closet box" %></td>
-		<td width="250px"><%= box.description %></td>
+		<td width="150px"><%= box.description %></td>
 		<td>
 			<% if box.indexing_status == Box::INDEXING_REQUESTED %>
 				Soon!
@@ -28,6 +29,13 @@ You do not have any boxes in storage order under management. Click <a href="/acc
 			<% end %>
 		</td>
 	    <td><%= link_to 'Edit', edit_box_path(box) %></td>
+		<td>
+			<% if box.box_type == Box::CUST_BOX_TYPE && box.status == Box::BEING_PREPARED_STATUS %>
+				<a href="/box/<%= box.id %>/get_label">Shipping label</a>
+			<% else %>
+				NA
+			<% end %>
+		</td>
 	  </tr>
 	<% end %>
 </table>

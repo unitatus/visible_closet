@@ -39,11 +39,11 @@ class Address < ActiveRecord::Base
   validates_numericality_of :evening_phone, :message => "Please enter only numbers for the phone", :unless => :skip_evening_content_validation
 
   def skip_day_content_validation
-    day_phone.empty?
+    day_phone.blank?
   end
 
   def skip_evening_content_validation
-    evening_phone.empty?
+    evening_phone.blank?
   end
 
   def day_phone=(phone_number)

@@ -74,6 +74,7 @@ class Ability
       can :index, Box
       can :edit, Box
       can :update, Box
+      can :get_label, Box
       
       # stored items
       can :index, StoredItem

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110717194124) do
+ActiveRecord::Schema.define(:version => 20110720045231) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -144,6 +144,20 @@ ActiveRecord::Schema.define(:version => 20110717194124) do
     t.datetime "updated_at"
     t.string   "price_comment"
   end
+
+  create_table "shipments", :force => true do |t|
+    t.integer  "box_id"
+    t.integer  "from_address_id"
+    t.integer  "to_address_id"
+    t.string   "tracking_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "shipments", ["box_id"], :name => "index_shipments_on_box_id"
+  add_index "shipments", ["from_address_id"], :name => "index_shipments_on_from_address_id"
+  add_index "shipments", ["to_address_id"], :name => "index_shipments_on_to_address_id"
+  add_index "shipments", ["tracking_number"], :name => "index_shipments_on_tracking_number"
 
   create_table "stored_item_tags", :force => true do |t|
     t.integer  "stored_item_id"

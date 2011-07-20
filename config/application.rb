@@ -43,6 +43,16 @@ module VisibleCloset
     config.filter_parameters += [:card_month]
     config.filter_parameters += [:card_year]
     
+    config.fedex_auth_key = 'USPNgfkiu1RuPm4j'
+    config.fedex_security_code = 'LmMpuDePYA9Hv8dvrBXJiIUe8'
+    config.fedex_account_number = '510087720'
+    config.fedex_meter_number = '118543679'
+    config.fedex_debug = true
+    config.fedex_label_image_type = 'PDF'
+    config.fedex_vc_name = 'The Visible Closet'
+    config.fedex_vc_address_id = 7
+    config.fedex_default_shipping_weight_lbs = 10
+    
     config.to_prepare { Devise::SessionsController.ssl_required :new, :create }
   end
 end

@@ -52,8 +52,8 @@
 
 <% end %>
 <% if @order.cust_box_count > 0 %>
-<h2>Your <%= @order.vc_box_count > 1 ? 'Boxes' : 'Box' %></h2>
-<p>You have chosen to store <%= @order.cust_box_count %> <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %> of your own. When you are ready, click <a href="">here</a> to print out <%= @order.vc_box_count > 1 ? '' : 'a ' %>Fedex <%= @order.vc_box_count > 1 ? 'labels' : 'label' %> to affix to your <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %>, and call 1-800-GO-FEDEX to have Fedex pick up your <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %>. You can also print labels by going to the <a href="/boxes">Browse Boxes</a> menu.</p>
+<h2>Your <%= @order.cust_box_count > 1 ? 'Boxes' : 'Box' %></h2>
+<p>You have chosen to store <%= @order.cust_box_count %> <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %> of your own. When you are ready, go to <a href="/boxes">Browse Boxes</a> to print out <%= @order.cust_box_count > 1 ? 'a label for each box' : 'a label for your box' %>, and call 1-800-GO-FEDEX to have Fedex pick up your <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %>. </p>
 
 <% end %>
 <br><br>
