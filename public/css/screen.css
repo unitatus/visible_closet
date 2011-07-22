@@ -877,3 +877,23 @@ table.cart_summary td
     padding-bottom: 30px;
 }
 
+/* Basic layout */
+.simple_header {
+	font-weight:bold;
+	text-align: left;
+	padding: 20px 0 5px 0;
+	color: #006fb3;
+	font-size: 125%;
+}
+.simple_body {
+	text-align: left;
+	padding: 0 110px 0 30px;
+
+}
+.simple_body ul {
+	padding: 10px 0 0 25px;
+	list-style-type: circle;
+}
+.simple_body ul li {
+	padding: 5px 0 0 0;
+}

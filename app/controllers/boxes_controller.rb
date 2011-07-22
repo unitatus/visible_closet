@@ -240,7 +240,7 @@ class BoxesController < ApplicationController
     @order_line.status = OrderLine::PROCESSED_STATUS
     @order_line.save!
     
-    redirect_to :controller => "admin", :action => "home"
+    redirect_to :controller => "admin", :action => "process_orders"
   end
   
   def get_label

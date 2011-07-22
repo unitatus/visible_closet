@@ -27,14 +27,25 @@ VisibleCloset::Application.routes.draw do
   # this redirects users after logging in to their account home
   match '/user' => "account#index", :as => :user_root
 
-  # Other
+  # Home and Pages
   get "home/index"
   match "access_denied" => "home#access_denied"
+  match "how_it_works" => "pages#how_it_works"
+  match "restrictions" => "pages#restrictions"
+  match "contact" => "pages#contact"
+  match "packing_tips" => "pages#packing_tips"
+  match "right_for_me" => "pages#right_for_me"
+  match "faq" => "pages#faq"
+  match "legal" => "pages#legal"
+  
+  # Admin
   match "admin/home" => "admin#process_orders"
   get "admin/send_boxes"
   get "admin/inventory_boxes"
   get "admin/process_orders"
   post "admin/send_boxes_user_search"
+  
+  # Account
   get "account/store_more_boxes"
   post "account/order_boxes"
   get "account/cart"
@@ -51,6 +62,8 @@ VisibleCloset::Application.routes.draw do
   get "account/select_new_shipping_address"
   post "account/choose_new_shipping_address"
   post "account/choose_new_billing_address"
+  
+  
   post "boxes/create_stored_item"
   get "account/closet_main"
   get "fedex_test/test"
