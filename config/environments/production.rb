@@ -57,6 +57,7 @@ VisibleCloset::Application.configure do
   config.s3_secret = 'NYzFOaurfJAZk+M2TBnIy2dhRpxGrFOlDpIg8eT4'
   config.s3_path = '/public/system/photos/:access_token/:id/:style.:extension'
   config.s3_bucket = 'stored_item_photos'
+  config.fedex_vc_address_id = 6
 
   config.after_initialize do
     ActiveMerchant::Billing::Base.mode = :test

@@ -50,7 +50,6 @@ module VisibleCloset
     config.fedex_debug = true
     config.fedex_label_image_type = 'PDF'
     config.fedex_vc_name = 'The Visible Closet'
-    config.fedex_vc_address_id = 7
     config.fedex_default_shipping_weight_lbs = 10
 
     # Indicate the log-in and sign-up screens that need to be SSL-required
