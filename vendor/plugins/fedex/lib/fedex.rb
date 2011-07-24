@@ -311,6 +311,7 @@ module Fedex #:nodoc:
       service_type        = resolve_service_type(service_type, residential)
       
       customer_reference  = options[:customer_reference]
+      po_reference         = options[:po_reference]
       
       # Create the driver
       driver = create_driver(:ship)
@@ -370,10 +371,15 @@ module Fedex #:nodoc:
       )
       
       if customer_reference
-        options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] = {
-            :CustomerReferenceType => CustomerReferenceTypes::CUSTOMER_REFERENCE,
-            :Value => customer_reference
-        }
+        options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] = [
+            {:CustomerReferenceType => CustomerReferenceTypes::CUSTOMER_REFERENCE,
+            :Value => customer_reference}
+        ]
+      end
+      
+      if po_reference
+        options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] << {:CustomerReferenceType => CustomerReferenceTypes::P_O_NUMBER,
+        :Value => po_reference}
       end
             
       result = driver.processShipment(options)

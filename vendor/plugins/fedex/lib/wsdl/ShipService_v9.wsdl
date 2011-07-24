@@ -3620,7 +3620,7 @@
               <xs:documentation>Human-readable text describing the package.</xs:documentation>
             </xs:annotation>
           </xs:element>
-          <xs:element name="CustomerReferences" type="ns:CustomerReference" minOccurs="0"/>
+          <xs:element name="CustomerReferences" type="ns:CustomerReference" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="SpecialServicesRequested" type="ns:PackageSpecialServicesRequested" minOccurs="0"/>
           <xs:element name="ContentRecords" type="ns:ContentRecord" minOccurs="0">
             <xs:annotation>
