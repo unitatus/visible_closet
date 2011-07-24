@@ -31,6 +31,7 @@ class Box < ActiveRecord::Base
   attr_accessible :assigned_to_user_id, :ordering_order_line_id, :status, :box_type, :description, :indexing_status
 
   has_many :stored_items
+  has_many :shipments
   has_one :order_line
   
   # TODO: Figure out internationalization
@@ -75,6 +76,10 @@ class Box < ActiveRecord::Base
       
     return self.save
     end # end transaction
+  end
+  
+  def get_active_shipment
+    Shipment.find_by_box_id_and_state(self.id, Shipment::ACTIVE)
   end
   
   private

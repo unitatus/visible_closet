@@ -31,8 +31,8 @@ class StoredItem < ActiveRecord::Base
                                   :secret_access_key => Rails.application.config.s3_secret
                                 },
                             :s3_protocol => :https,
-                            :path => Rails.application.config.s3_path,
-                            :bucket => Rails.application.config.s3_bucket
+                            :path => Rails.application.config.s3_photo_path,
+                            :bucket => Rails.application.config.s3_photo_bucket
 
                             
   validates_attachment_presence :photo

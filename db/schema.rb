@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110720045231) do
+ActiveRecord::Schema.define(:version => 20110724155803) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -152,6 +152,9 @@ ActiveRecord::Schema.define(:version => 20110720045231) do
     t.string   "tracking_number"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "shipment_label_file_name"
+    t.datetime "shipment_label_updated_at"
+    t.string   "state"
   end
 
   add_index "shipments", ["box_id"], :name => "index_shipments_on_box_id"

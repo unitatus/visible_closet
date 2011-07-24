@@ -51,6 +51,13 @@ module VisibleCloset
     config.fedex_label_image_type = 'PDF'
     config.fedex_vc_name = 'The Visible Closet'
     config.fedex_default_shipping_weight_lbs = 10
+  
+    config.s3_key = 'AKIAJZUNJU6OZH3A6VZQ'
+    config.s3_secret = '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'
+    config.s3_photo_path = '/public/system/photos/:access_token/:id/:style.:extension'
+    config.s3_photo_bucket = 'stored_item_photos'
+    config.s3_labels_path = '/public/system/labels/'
+    config.s3_labels_bucket = 'shipment_labels'
 
     # Indicate the log-in and sign-up screens that need to be SSL-required
     config.to_prepare { Devise::SessionsController.ssl_required :new, :create }

@@ -154,7 +154,7 @@ class BoxesController < ApplicationController
   def create_stored_item
     @stored_item = StoredItem.new
     @stored_item.photo = params[:file] if params.has_key?(:file)
-        
+    
     @stored_item.box_id = params[:box_id]
 
     # detect Mime-Type (mime-type detection doesn't work in flash)
@@ -245,13 +245,25 @@ class BoxesController < ApplicationController
   
   def get_label
     @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
-    
+
     if @box.nil?
       redirect_to access_denied_url
       return
     end
     
-    order_line = OrderLine.find(@box.ordering_order_line_id)
+    shipment = Shipment.find_by_box_id_and_state(@box.id, Shipment::ACTIVE)
+    
+    if (shipment)
+      send_data(shipment.shipment_label, :filename => "box_#{@box.id}_label.pdf", :type => "application/pdf")
+    else
+      send_data(create_label(@box), :filename => "box_#{@box.id}_label.pdf", :type => "application/pdf")
+    end
+  end
+  
+  private
+  
+  def create_label(box)    
+    order_line = OrderLine.find(box.ordering_order_line_id)
     order = order_line.order
     shipping_address = Address.find(order.shipping_address_id)
     receiving_address = Address.find(Rails.application.config.fedex_vc_address_id)
@@ -291,7 +303,7 @@ class BoxesController < ApplicationController
    pkg_count = 1
    weight = Rails.application.config.fedex_default_shipping_weight_lbs
    service_type = Fedex::ServiceTypes::FEDEX_GROUND
-   customer_reference = "Box ##{@box.id}"
+   customer_reference = "Box ##{box.id}"
    
    @label, @tracking_number = @fedex.label(
      :shipper => { :contact => shipper, :address => origin },
@@ -304,15 +316,23 @@ class BoxesController < ApplicationController
 
     shipment = Shipment.new
     
-    shipment.box_id = @box.id
+    shipment.box_id = box.id
     shipment.from_address_id = shipping_address.id
     shipment.to_address_id = receiving_address.id
     shipment.tracking_number = @tracking_number
     
+    # need to save to get the id
     if (!shipment.save)
-      raise "Malformed data: cannot save shipment " << shipment.inspect
+      raise "Malformed data: cannot save shipment " << shipment.errors.inspect
+    end    
+    
+    shipment.shipment_label = @label
+    
+    if (!shipment.save)
+      shipment.destroy
+      raise "Malformed data: cannot save shipment " << shipment.errors.inspect
     end
 
-    send_data(@label, :filename => "box_#{@box.id}_label.pdf", :type => "application/pdf")
+    return @label
   end
 end

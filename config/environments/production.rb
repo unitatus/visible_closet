@@ -52,11 +52,7 @@ VisibleCloset::Application.configure do
   config.your_box_product_id = 3
   config.our_box_inventorying_product_id = 5
   config.your_box_inventorying_product_id = 6
-  
-  config.s3_key = 'AKIAJZUNJU6OZH3A6VZQ'
-  config.s3_secret = 'NYzFOaurfJAZk+M2TBnIy2dhRpxGrFOlDpIg8eT4'
-  config.s3_path = '/public/system/photos/:access_token/:id/:style.:extension'
-  config.s3_bucket = 'stored_item_photos'
+
   config.fedex_vc_address_id = 6
 
   config.after_initialize do
