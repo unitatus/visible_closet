@@ -1238,7 +1238,7 @@
           <xs:documentation>Reference information to be associated with this package.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-          <xs:element name="CustomerReferenceType" type="ns:CustomerReferenceType" minOccurs="1">
+          <xs:element name="CustomerReferenceType" type="ns:CustomerReferenceType" minOccurs="0">
             <xs:annotation>
               <xs:documentation>The reference type to be associated with this reference data.</xs:documentation>
             </xs:annotation>

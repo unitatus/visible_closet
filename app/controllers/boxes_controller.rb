@@ -291,13 +291,15 @@ class BoxesController < ApplicationController
    pkg_count = 1
    weight = Rails.application.config.fedex_default_shipping_weight_lbs
    service_type = Fedex::ServiceTypes::FEDEX_GROUND
+   customer_reference = "Box ##{@box.id}"
    
    @label, @tracking_number = @fedex.label(
      :shipper => { :contact => shipper, :address => origin },
      :recipient => { :contact => recipient, :address => destination },
      :count => pkg_count,
      :weight => weight,
-     :service_type => service_type
+     :service_type => service_type,
+     :customer_reference => customer_reference
     )
 
     shipment = Shipment.new
