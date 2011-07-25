@@ -73,7 +73,7 @@ class Shipment < ActiveRecord::Base
     weight = Rails.application.config.fedex_default_shipping_weight_lbs
     service_type = Fedex::ServiceTypes::FEDEX_GROUND
     customer_reference = "Box ##{self.box_id}"
-    po_reference = "Check here for inventorying: [  ]"
+    po_reference = "Check for inventorying: [  ]"
 
     self.shipment_label, self.tracking_number = @fedex.label(
       :shipper => { :contact => shipper, :address => origin },

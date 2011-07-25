@@ -242,7 +242,12 @@ class BoxesController < ApplicationController
   end
   
   def get_label
-    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+    # This method can be called by an administrator, so need to account for that
+    if current_user.role == User::ADMIN || current_user.role == User::MANAGER
+      @box = Box.find(params[:id])
+    else
+      @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+    end
 
     if @box.nil?
       redirect_to access_denied_url
