@@ -37,9 +37,8 @@ class OrderLine < ActiveRecord::Base
     
     self.transaction do
       ordered_boxes.each do |box|
-        box.status = Box::IN_TRANSIT_STATUS
-        if (!box.save)
-          raise "Unable to save box " << box.inspect
+        if (!box.ship)
+          raise "Unable to ship box; errors " << box.errors.inspect
         end
       end
       

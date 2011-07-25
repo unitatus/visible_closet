@@ -1,14 +1,16 @@
 <% @admin_page = :shipping %>
 <%= render :partial => "admin/admin_menu", :locals => { :admin_page => @admin_page } %>
+<% @boxes = Box.find_by_ordering_order_lines(@order_lines) %>
 <div class="grid_9">
 <h2>Shipping information</h2>
 Next steps:
 <ol>
-	<li>Gather XXX boxes.</li>
-	<li>The return labels for each box have been generated. Click below to access each one, print it on the label printer, and attach the label to each box.
+	<li>Gather <%= @boxes.size %> boxes.</li>
+	<li>Click each of the links below to download the labels for each of these boxes. Print them out on the label printer and affix to each empty box.
 		<ul>
-		<a href="">Label 1</a>
-		<a href="">Label 2</a>	
+			<% @boxes.each do |box| %>
+			<li><a href="/box/<%= box.id %>/get_label">Box <%= box.id %></a></li>
+			<% end %>
 		</ul>
 	</li>
 	<li>Get a shipping bag, and put the boxes in the bag.</li>

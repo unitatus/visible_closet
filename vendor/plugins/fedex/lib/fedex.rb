@@ -105,6 +105,7 @@ module Fedex #:nodoc:
       @units              = options[:units]             || WeightUnits::LB
       @currency           = options[:currency]          || CurrencyTypes::USD
       @debug              = options[:debug]             || false
+      @label_stock_type   = options[:label_stock_type]
     end
     
     # Gets a rate quote from Fedex.
@@ -380,6 +381,10 @@ module Fedex #:nodoc:
       if po_reference
         options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] << {:CustomerReferenceType => CustomerReferenceTypes::P_O_NUMBER,
         :Value => po_reference}
+      end
+      
+      if @label_stock_type
+        options[:RequestedShipment][:LabelSpecification][:LabelStockType] = @label_stock_type
       end
             
       result = driver.processShipment(options)

@@ -78,11 +78,91 @@ class Box < ActiveRecord::Base
     end # end transaction
   end
   
-  def get_active_shipment
-    Shipment.find_by_box_id_and_state(self.id, Shipment::ACTIVE)
+  # This method will either find its associated active shipment or, if there is none, use its current state and type
+  # to figure out how to create one, complete with label. Since it is creating a shipment with label, 
+  # this method must save the shipment, so it cannot be called on a new box.
+  def get_or_create_shipment
+    if self.id.nil?
+      raise "Cannot create a shipment on a brand new box"
+    end
+    
+    # All shipments must have labels. When they are cleared the shipments go inactive.
+    shipment = Shipment.find_by_box_id_and_state(self.id, Shipment::ACTIVE)
+    
+    if !shipment
+      shipment = create_shipment
+    end
+    
+    shipment
+  end
+  
+  def ship
+    if self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
+      # In this status the shipment that is created is for the shipment back
+      get_or_create_shipment
+      self.status = Box::IN_TRANSIT_STATUS
+    else
+      raise "Attempted to ship in invalid status, for box " << self.inspect
+    end
+  end
+  
+  def Box.find_by_ordering_order_lines(order_lines)
+    order_ids = Array.new
+    
+    order_lines.each do |order_line|
+      order_ids << order_line.id
+    end
+    
+    Box.where(:ordering_order_line_id => order_ids)
   end
   
   private
+  
+  def create_shipment
+    shipment = Shipment.new
+    
+    order = get_order
+    
+    shipment.box_id = self.id
+    shipment.from_address_id = get_from_address_id(order)
+    shipment.to_address_id = get_to_address_id(order)
+
+    if (!shipment.save)
+      raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+    end
+    
+    if !shipment.generate_fedex_label(self)
+      shipment.destroy
+      raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+    end
+    
+    shipment
+  end
+  
+  def get_from_address_id(order)
+    if self.status == BEING_PREPARED_STATUS && self.box_type == CUST_BOX_TYPE    
+      order.shipping_address_id
+    elsif self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
+      order.shipping_address_id
+    else
+      raise "Unimplemented box state for shipping"
+    end    
+  end
+  
+  def get_to_address_id(order)
+    if self.status == BEING_PREPARED_STATUS && self.box_type == CUST_BOX_TYPE    
+      Rails.application.config.fedex_vc_address_id
+    elsif self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
+      Rails.application.config.fedex_vc_address_id
+    else
+      raise "Unimplemented box state for shipping"
+    end
+  end
+  
+  def get_order
+    order_line = OrderLine.find(self.ordering_order_line_id)
+    order = order_line.order
+  end
   
   def generate_indexing_order
     if self.box_type == CUST_BOX_TYPE
