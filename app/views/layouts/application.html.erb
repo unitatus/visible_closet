@@ -15,135 +15,96 @@
 		<meta name="keywords" content="" />
 		<meta name="description" content="The Visible Closet. Your stuff. Organized. Safeguarded. At your fingertips." />
 		<!--<meta name="viewport" content="width=device-width; initial-scale=1.0" />-->
-		
-		<!-- Load CSS -->
-		<%= stylesheet_link_tag "/css/960" %>
-		<%= stylesheet_link_tag "/css/screen" %>
-		
-		<%= stylesheet_link_tag 'http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold' %>
-		<%= stylesheet_link_tag 'http://fonts.googleapis.com/css?family=Droid+Serif' %>
-		<%= stylesheet_link_tag "/css/jquery.fancybox-1.3.4.css" %>
-		<%= stylesheet_link_tag "/css/plupload.queue.css" %>
-		<%= stylesheet_link_tag "/css/application.css" %>
 
-		<!-- Load JavaScript / jQuery -->
+<!-- STYLE SHEET IMPORT -->
+<%= stylesheet_link_tag "/css/screen.css" %>
+<%= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold" %>
+<%= stylesheet_link_tag "http://fonts.googleapis.com/css?family=Droid+Serif" %>
+<%= stylesheet_link_tag "/css/jquery.fancybox-1.3.4.css" %>
+<%= stylesheet_link_tag "/css/plupload.queue.css" %>
+<%= stylesheet_link_tag "/css/application.css" %>
+<%= stylesheet_link_tag "/css/styles.css" %>
+<!-- Load JavaScript / jQuery -->
 		<%= javascript_include_tag "/javascripts/jquery.min.js" %>
 		<%= javascript_include_tag "/javascripts/jquery.cycle.all.min.js" %>
 		<%= javascript_include_tag "/javascripts/superfish-combined.js" %>
-		<%= javascript_include_tag "/javascripts/jquery.fancybox-1.3.4.pack.js" %>
+		<%= javascript_include_tag "/jquery.fancybox-1.3.4.pack.js" %>
 		<%= javascript_include_tag "/javascripts/rails.js" %>
  		<%= javascript_include_tag "/javascripts/application.js" %>
 		<%= javascript_include_tag "/javascripts/date.js" %>
-
+		
 		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
 		<link rel="shortcut icon" href="/images/tvc_tiny.jpg" />
 		<link rel="apple-touch-icon" href="/images/tvc_tiny.jpg" />
+		
 		<%= yield :head %>
-	</head>
-	<body>		
-		<div id="outer">
-			
-			<div id="header" class="clearfix">
-				
-				<div id="header-bar" class="clearfix">
-					<div class="container_12">
-						<div class="grid_12">					
-							<div class="right">
+		
+		<script type="text/javascript">
 
-								<ul class="header-bar-menu inline-list clearfix">
-									<% if user_signed_in? %>	
-									<li>Signed in as <%= current_user.first_name %> <%= current_user.last_name %>.
-									Not you? &nbsp; <%= link_to "Sign out", destroy_user_session_path %> </li>
-									<% end %>
-								</ul>		
-							</div><!--//right-->
-							
-						</div><!--//grid_12-->
-					</div><!--//container_12-->
-				</div><!--//header-bar-->
-				
-				
-				<div id="header-main" class="clearfix">
-					<div class="container_12">
-						<div class="grid_3">					
-							<h1 id="logo"><a href="/" title="Back to the Home Page"><img src="/images/vcLogo_light.jpg" alt="Logo" /></a></h1>
-						</div><!--//grid_3-->
-						<div class="grid_9" style="position: absolute; right: 0px; top: 75px;">
-							<ul class="sf-menu clearfix">
-								<li class="current-menu-item"><a href="/">Home</a></li>
-								<li>
-									<a href="/how_it_works">How It Works</a>
-									<ul>
-										<li><a href="/how_it_works">Overview</a></li>
-										<li><a href="/right_for_me">Is this right for me?</a></li>
-										<li><a href="/pricing">Pricing</a></li>
-										<li><a href="/faq">FAQ</a></li>
-										<li><a href="restrictions">Restrictions</a></li>
-									</ul>
-								</li>
-								<li><a href="http://visiblecloset.blogspot.com/" target="new">Blog</a></li>
-								<li><a href="/contact">Contact</a></li>
-								<% if user_signed_in? %>
-								  <li><a href="/account/home">Account</a></li>
-								<% else %>
-								<li><%= link_to "Sign up", new_user_registration_path %></li>
-								<li><%= link_to "Log in", new_user_session_path %></li>
-								<% end %>
-							</ul>
-						</div><!--//grid_6-->
-			
-					</div><!--//container_12-->
-				</div><!--//header-main-->
-				
-				<div class="container_12"><div class="grid_12 clearfix"><hr class="nopad" /></div></div><!--//container_12-->
-				
-			</div><!--//header-->
-			
-			
-			<!-- *** -->
-			
-			<div id="main" class="clearfix">
-				
-				<div class="container_12">
+		var _gaq = _gaq ||  [];
+		_gaq.push(['_setAccount', 'UA-24704693-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga,s);
+		})();
+
+		</script>
+	</head>
+	
+<!-- SIDE MENU HTML -->
+<body>
+    <div id="toplip">
+	<% if user_signed_in? %>	
+	Signed in as <%= current_user.first_name %> <%= current_user.last_name %>.
+	Not you? &nbsp; <%= link_to "Sign out", destroy_user_session_path %>
+	<% end %>
+	</div>
+    <div id="container">
+        <div id="block">
+            <div id="header">
+                <div id="logo">
+                    <a href="/"><img src="/images/logo.gif" alt="Visible Closet" /></a>
+                </div>
+                <div id="nav">
+    				<ul class="sf-menu">
+    					<li class="current-menu-item"><a href="/">Home</a></li>
+    					<li>
+    						<a href="/how_it_works">How It Works</a>
+    						<ul>
+    							<li><a href="/how_it_works">Overview</a></li>
+    
+    							<li><a href="/right_for_me">Is this right for me?</a></li>
+    							<li><a href="/pricing">Pricing</a></li>
+    							<li><a href="/faq">FAQ</a></li>
+    							<li><a href="restrictions">Restrictions</a></li>
+    						</ul>
+    					</li>
+    					<li><a href="http://visiblecloset.blogspot.com/" target="new">Blog</a></li>
+    					<li><a href="/contact">Contact</a></li>
+						<% if user_signed_in? %>
+						  <li><a href="/account/home">Account</a></li>
+						<% end %>
+
+    				</ul>
+                </div>
+                <div class="clearer"></div>
+				<% if !user_signed_in? %>
+                <div id="login">
+                    <a href="/users/sign_in"><img src="/images/login.gif" alt="Log In" /></a> 
+                </div>
+				<% end %>
+            </div>
 
 <%= yield %>
-
-
-											</div><!--//container_12-->	
-
-										</div><!--//main-->
-
-
-										<!-- *** -->
-
-
-
-
-											<div class="container_12"><div class="grid_12 clearfix"><hr class="nopad thick" /></div></div><!--//container_12-->
-
-											<div id="footer-bottom" class="clearfix">
-												<div class="container_12">						
-													<div class="grid_12">							
-
-														<div class="left">
-															<ul class="footer-menu inline-list clearfix"> 
-																<li><a href="/legal">Legal</a>&nbsp;&nbsp;</li>									
-																<li><a href="/privacy">Privacy</a></li>
-															</ul>
-															<p>Copyright &copy; 2011 The Visible Closet, Inc. All rights reserved.</p>
-														</div><!--//left-->
-
-
-													</div><!--//grid_4-->								
-												</div><!--//container_12-->	
-											</div><!--//footer-bottom-->
-
-
-
-										</div><!--//footer-->
-
-
-									</div><!--//outer-->
-									<script src="/javascripts/analytics.js"></script><!--analytics inserted in footer-->
-								</body>
-							</html>
+            <div id="footer" class="top-border">
+                <p class="copyright">Copyright &copy;2011 The Visible Closet, Inc. All Rights Reserved.</p>
+                <p class="legal"><a href="/legal">Legal</a> | <a href="/privacy">Privacy Policy</a></p>
+                <div class="clearer"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

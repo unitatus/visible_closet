@@ -1,0 +1,352 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+	font-family: Trebuchet MS, Tahoma, Verdana, sans-serif;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+/* ABOVE IS CSS RESET */
+
+/* ------------------------------------------------------------- */
+
+/* BLOCKS */
+
+#toplip {
+    height: 16px;
+    background-color: #323232;
+    width: 100%;
+	text-align: right;
+}
+
+#container {
+    width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#block {
+    width: 940px;
+    margin-left: 10px;
+    display: block;
+}
+
+#header {
+    width: 940px;
+    display: block;
+    padding: 0px;
+    position: relative;
+}
+
+#logo {
+    width: 240px;
+    display: block;
+    float: left;
+}
+
+#nav {
+    width: 700px;
+    display: block;
+    float: left;
+    margin-top: 50px;
+}
+
+#login {
+    width: 120px;
+    height: 45px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+#nav ul {
+    float: right;
+}
+
+#side-menu {
+    width: 200px;
+    color: #006fb3;
+}
+
+#home-extra {
+    width: 940px;
+    display: block;
+    color: #387699;
+}
+
+#home-extra-left {
+    width: 740px;
+    float: left;
+    font-size: 14px;
+    line-height: 18px;
+    color: #387699;
+}
+
+#home-social {
+    width: 200px;
+    float: left;
+    text-align: center;
+    font-size: 10px;
+}
+
+#home-info {
+    width: 940px;
+    display: block;
+    color: #323232;
+}
+
+#footer {
+    color: #d2d2d2;
+    font-size: 10px;
+    padding-bottom: 40px;
+}
+
+#viewer {
+    width: 940px;
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    position: relative;
+}
+
+#viewer-left {
+    width: 625px;
+    height: 300px;
+    display: block;
+    float: left;
+    background-color: #25aae1;
+}
+
+#viewer-right {
+    width: 315px;
+    display: block;
+    float: left;
+    position: relative;
+}
+
+#viewer-right-top {
+    background-color: #5eb1e1;
+    width: 315px;
+    height: 150px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+#viewer-right-bottom {
+    background-color: #323232;
+    width: 315px;
+    height: 150px;
+    position: absolute;
+    top: 150px;
+    right: 0px
+}
+
+/* MODIFIERS */
+
+body {
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+#side-menu ul {
+    
+}
+
+#side-menu li {
+    display: block;
+    height: 33px;
+    line-height: 33px;
+    font-size: 16px;
+    padding: 0px;
+}
+
+#side-menu .active {
+    background-image: url('../images/menuBG.gif');
+    background-position: right;
+}
+
+#side-menu a {
+    text-decoration: none;
+    color: #006fb3;
+    padding-left: 10px;
+    display: block;
+}
+
+#side-menu .active a {
+    color: #ffffff;
+}
+
+#side-menu h2 {
+    padding-left: 10px;
+    padding-bottom: 30px;
+}
+
+#viewer-right-top p {
+    padding: 10px;
+    font-size: 14px;
+    line-height: 24px;
+    color: #434343;
+}
+
+#viewer-right-top p strong {
+    color: #377598;
+}
+
+#viewer-right-top p .learnmore {
+    color: #fff;
+    text-align: right;
+    display: block;
+}
+
+#home-info .box {
+    width: 280px;
+    float: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#home-extra-left p {
+    padding: 10px;
+}
+
+#home-social .facebook-icon {
+    margin-right: 20px;
+}
+
+#home-social p {
+    padding-top: 10px;
+}
+
+#home-info .box h2 {
+    font-size: 24px;
+    line-height: 24px;
+    padding-bottom: 6px;
+}
+
+#home-info .box p {
+    font-size: 14px;
+    line-height: 18px;
+}
+
+#home-info .leftgap {
+    margin-left: 20px;
+}
+
+#footer .copyright {
+    float: left;
+    width: 640px;
+}
+
+#footer .legal {
+    float: left;
+    width: 300px;
+    text-align: right;
+}
+
+#footer .legal a {
+    color: #d2d2d2;
+}
+
+#viewer .upperleftcorner {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 13px;
+    height: 10px;
+    z-index: 999;
+}
+
+#viewer .upperrightcorner {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 13px;
+    height: 10px;
+    z-index: 999;
+}
+
+#viewer .lowerleftcorner {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 13px;
+    height: 10px;
+    z-index: 999;
+}
+
+#viewer .lowerrightcorner {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 13px;
+    height: 10px;
+    z-index: 999;
+}
+
+
+#viewer-right .calltoaction {
+    position: absolute;
+    width: 353px;
+    height: 43px;
+    top: 120px;
+    left: -15px;
+}
+
+#viewer-right-bottom img {
+    padding: 15px 0px 0px 10px;
+}
+
+/* CLASSES */
+
+.clearer {
+    height: 0px;
+    line-height: 0px;
+    font-size: 0px;
+    clear: both;
+}
+
+.top-border {
+    border-top: solid 1px #d4d4d4;
+    margin-top: 10px;
+    padding-top: 10px;
+}

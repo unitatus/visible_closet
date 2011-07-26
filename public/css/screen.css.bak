@@ -249,7 +249,7 @@ ___________________________________________________________________ */
 .sf-menu li:hover ul,
 .sf-menu li.sfHover ul {
 	left: 0;
-	top: 30px; /* match top ul list item height */
+	top: 38px; /* match top ul list item height */
 	z-index: 9999;	
 }
 ul.sf-menu li:hover li ul,
