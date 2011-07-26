@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110724155803
+# Schema version: 20110726022608
 #
 # Table name: shipments
 #
@@ -13,8 +13,13 @@
 #  shipment_label_file_name  :string(255)
 #  shipment_label_updated_at :datetime
 #  state                     :string(255)
+#  order_id                  :integer
 #
 
+# Note: at this time there is no need for a shipment line, because we don't have the need to track shipment line items.
+# If a shipment is associated with a box that means that the shipment is for the box.
+# If a shipment is associated with an order that means it shipped one or more empty boxes. We only have the capability to ship
+# entire order lines at this time.
 class Shipment < ActiveRecord::Base
   require 'aws/s3'
   require 'soap/wsdlDriver'
@@ -28,11 +33,11 @@ class Shipment < ActiveRecord::Base
     shipment
   end
   
-  def generate_fedex_label(box)
+  def generate_fedex_label(box = nil)
     shipping_address = Address.find(self.from_address_id)
     receiving_address = Address.find(self.to_address_id)
     
-    if box.status != Box::BEING_PREPARED_STATUS
+    if box.nil? || box.status != Box::BEING_PREPARED_STATUS
       label_stock_type = Fedex::LabelStockTypes::PAPER_4X6
     end
         
@@ -72,8 +77,18 @@ class Shipment < ActiveRecord::Base
     pkg_count = 1
     weight = Rails.application.config.fedex_default_shipping_weight_lbs
     service_type = Fedex::ServiceTypes::FEDEX_GROUND
-    customer_reference = "Box ##{self.box_id}"
-    po_reference = "Check for inventorying: [  ]"
+    if box # this is for a box
+      customer_reference = "Box ##{self.box_id}"
+      
+      if box.box_type == Box::CUST_BOX_TYPE
+        po_reference = "Check for inventorying: [  ]"
+      else
+        po_reference = nil
+      end
+    else
+      customer_reference = nil
+      po_reference = nil
+    end
 
     self.shipment_label, self.tracking_number = @fedex.label(
       :shipper => { :contact => shipper, :address => origin },
@@ -120,5 +135,17 @@ class Shipment < ActiveRecord::Base
     else
       s3object = AWS::S3::S3Object.value(shipment_label_file_name, Rails.application.config.s3_labels_bucket)
     end
+  end
+  
+  def destroy
+    # I believe if the connection is cached this does nothing
+    AWS::S3::Base.establish_connection!(
+        :access_key_id     => Rails.application.config.s3_key,
+        :secret_access_key => Rails.application.config.s3_secret
+    )
+
+    s3object = AWS::S3::S3Object.delete(shipment_label_file_name, Rails.application.config.s3_labels_bucket)
+    
+    super
   end
 end

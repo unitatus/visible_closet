@@ -5,20 +5,20 @@
 <h2>Shipping information</h2>
 Next steps:
 <ol>
-	<li>Gather <%= @boxes.size %> boxes.</li>
+	<li>Gather <%= pluralize(@boxes.size, 'box') %>.</li>
 	<li>Click each of the links below to download the labels for each of these boxes. Print them out on the label printer and affix to each empty box.
-		<ul>
+		<ul class="simple_body">
 			<% @boxes.each do |box| %>
 			<li><a href="/box/<%= box.id %>/get_label">Box <%= box.id %></a></li> 
 			<% end %>
 		</ul>
 	</li>
 	<li>Get a shipping bag, and put the boxes in the bag.</li>
-	<li>Cut XXX feet of bubble wrap and put it in the bag</li>
-	<li>Gather get a roll of tape, length XXX, and put it in the bag</li>
+	<li>Cut 12 feet of bubble wrap and put it in the bag</li>
+	<li>Get a roll of tape and put it in the bag</li>
 	<li>Click <a href="">here</a> to create an invoice and print it. Put it in the bag.</li>
 	<li>Seal the bag.</li>
-	<li>A label has been created for shipping the bag. Click <a href="">here</a> to access it, and print it to the label printer.</li>
+	<li>A label has been created for shipping the bag. Click <a href="/shipment/<%= @order_shipment.id %>/get_label">here</a> to access it, and print it to the label printer.</li>
 	<li>Place the bag in the "ready" area for FedEx</li>
 </ol>
 </div>

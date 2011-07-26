@@ -101,5 +101,21 @@ class OrdersController < ApplicationController
     
       @order_lines << order_line
     end
+    
+    # Need to create shipment for the empty boxes
+    @order = Order.find(@order_lines[0].order_id)
+    @order_shipment = Shipment.new
+    
+    @order_shipment.order_id = @order.id
+    @order_shipment.from_address_id = Rails.application.config.fedex_vc_address_id
+    @order_shipment.to_address_id = @order.shipping_address_id
+
+    if !@order_shipment.save
+      raise "Error saving shipment; errors: " << @order_shipment.errors.inspect
+    end    
+        
+    if !@order_shipment.generate_fedex_label
+      raise "Error generating shipment and saving; errors: " << @order_shipment.errors.inspect
+    end
   end
 end

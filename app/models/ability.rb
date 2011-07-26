@@ -48,6 +48,7 @@ class Ability
       can :finish_inventorying, Box
       can :process_order, Order
       can :ship_order_lines, Order
+      can :get_order_label, Shipment
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER
