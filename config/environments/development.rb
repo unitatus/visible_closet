@@ -31,32 +31,28 @@ VisibleCloset::Application.configure do
   config.fedex_vc_address_id = 7
 
   config.after_initialize do
-    ActiveMerchant::Billing::Base.mode = :test
+    # ActiveMerchant::Billing::Base.mode = :test
+    # ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
+    #   :login => "7Px7qH7p", # "API Login ID"
+    #   :password => "974w4HTkHGMh9f9n", # "Transaction Key"
+    #   :test => 'true' # Just delete this parameter in production
+    # )
+    # 
+    # ::PURCHASE_GATEWAY = ActiveMerchant::Billing::Base.gateway(:authorize_net).new(
+    #   :login => "7Px7qH7p", # "API Login ID"
+    #   :password => "974w4HTkHGMh9f9n", # "Transaction Key"
+    #   :test => 'true'
+    # )
+    
     ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
-      :login => "7Px7qH7p", # "API Login ID"
-      :password => "974w4HTkHGMh9f9n", # "Transaction Key"
-      :test => 'true' # Just delete this parameter in production
+      :login => "5Fe5e8GF6z7H", # "API Login ID"
+      :password => "83zM4HAnrm84D4pB" # "Transaction Key"
     )
     
     ::PURCHASE_GATEWAY = ActiveMerchant::Billing::Base.gateway(:authorize_net).new(
-      :login => "7Px7qH7p", # "API Login ID"
-      :password => "974w4HTkHGMh9f9n", # "Transaction Key"
-      :test => 'true'
+      :login => "5Fe5e8GF6z7H", # "API Login ID"
+      :password => "83zM4HAnrm84D4pB" # "Transaction Key"
     )
-    
-    # The below is the new information, but it doesn't work.
-    # ActiveMerchant::Billing::Base.mode = :test
-    #     ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
-    #       :login => "5Fe5e8GF6z7H", # "API Login ID"
-    #       :password => "2u8RPL3jRf3K96h7", # "Transaction Key"
-    #       :test => 'true' # Just delete this parameter in production
-    #     )
-    #     
-    #     ::PURCHASE_GATEWAY = ActiveMerchant::Billing::Base.gateway(:authorize_net).new(
-    #       :login => "5Fe5e8GF6z7H", # "API Login ID"
-    #       :password => "2u8RPL3jRf3K96h7", # "Transaction Key"
-    #       :test => 'true'
-    #     )
   end
 end
 

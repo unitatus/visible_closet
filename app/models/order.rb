@@ -33,7 +33,7 @@ class Order < ActiveRecord::Base
       end
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
       do_purchase_processing
-
+debugger
       # TODO: This needs to be refactored into a payment processor object that takes a user, payment object thingie, and a charges array, so we can 
       # have charges for the user.
       response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
