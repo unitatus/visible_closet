@@ -20,7 +20,7 @@ gem 'jquery-rails'
 gem 'aws-s3' # This is Amazon Web Services hard drive - used for storing files
 gem 'cancan' # User authorization
 gem 'ssl_requirement'
-gem 'ruby-debug19'
+#gem 'ruby-debug19'
 
 group :development do
   gem 'rspec-rails'
