@@ -1,3 +1,17 @@
+<% active_top_str = " class='current-menu-item'" %>
+<% home_class = ""; hiw_class = ""; blog_class = ""; contact_class = ""; account_class = ""; %>
+<% case @top_menu_page %>
+<% when :home %>
+<%   home_class = active_top_str %>
+<% when :hiw %>
+<%   hiw_class = active_top_str %>
+<% when :blog %>
+<%   blog_class = active_top_str %>
+<% when :contact %>
+<%   contact_class = active_top_str %>
+<% when :account %>
+<%   account_class = active_top_str %>
+<% end %>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -74,8 +88,8 @@
                 </div>
                 <div id="nav">
     				<ul class="sf-menu">
-    					<li class="current-menu-item"><a href="/">Home</a></li>
-    					<li>
+    					<li<%= home_class %>><a href="/">Home</a></li>
+    					<li<%= hiw_class %>>
     						<a href="/how_it_works">How It Works</a>
     						<ul>
     							<li><a href="/how_it_works">Overview</a></li>
@@ -86,10 +100,10 @@
     							<li><a href="restrictions">Restrictions</a></li>
     						</ul>
     					</li>
-    					<li><a href="http://visiblecloset.blogspot.com/" target="new">Blog</a></li>
-    					<li><a href="/contact">Contact</a></li>
+    					<li<%= blog_class %>><a href="http://visiblecloset.blogspot.com/" target="new">Blog</a></li>
+    					<li<%= contact_class %>><a href="/contact">Contact</a></li>
 						<% if user_signed_in? %>
-						  <li><a href="/account/home">Account</a></li>
+						  <li<%= account_class %>><a href="/account/home">Account</a></li>
 						<% end %>
 
     				</ul>

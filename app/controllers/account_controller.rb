@@ -2,6 +2,7 @@ class AccountController < ApplicationController
   # The account controller actions are only accessible for someone who is signed up as a user.
   authorize_resource :class => false
   ssl_required :check_out, :add_new_billing_address, :add_new_shipping_address, :create_new_billing_address, :create_new_shipping_address, :finalize_check_out, :select_new_shipping_address, :select_new_billing_address, :choose_new_shipping_address, :choose_new_billing_address
+  before_filter :set_menu
 
   def index
 
@@ -231,6 +232,10 @@ class AccountController < ApplicationController
   end
   
   private 
+  
+  def set_menu
+    @top_menu_page = :account
+  end
   
   def process_cart_item(cart, product_id, quantity)
     cart_item = cart.cart_items.select { |c| c.product_id == product_id }[0]

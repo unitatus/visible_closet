@@ -10,6 +10,7 @@ class BoxesController < ApplicationController
   # GET /boxes
   # GET /boxes.xml
   def index
+    @top_menu_page = :account
     @boxes = Box.find_all_by_assigned_to_user_id(current_user.id)
 
     respond_to do |format|
@@ -45,6 +46,7 @@ class BoxesController < ApplicationController
 
   # GET /boxes/1/edit
   def edit
+    @top_menu_page = :account
     @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
     
     if @box.nil?
@@ -74,6 +76,7 @@ class BoxesController < ApplicationController
   # PUT /boxes/1
   # PUT /boxes/1.xml
   def update
+    @top_menu_page = :account
     @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
     
     if @box.nil?
