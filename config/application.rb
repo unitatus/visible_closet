@@ -43,10 +43,18 @@ module VisibleCloset
     config.filter_parameters += [:card_month]
     config.filter_parameters += [:card_year]
     
+    # Test account
     config.fedex_auth_key = 'USPNgfkiu1RuPm4j'
     config.fedex_security_code = 'LmMpuDePYA9Hv8dvrBXJiIUe8'
     config.fedex_account_number = '510087720'
     config.fedex_meter_number = '118543679'
+    
+    # Production account
+    # config.fedex_auth_key = 'bHbI4jcejTh58tHK'
+    # config.fedex_security_code = 'Cr52GqtoTfnp48MEzaSRUP7M6'
+    # config.fedex_account_number = '299468437'
+    # config.fedex_meter_number = '103089427' # this is the one they emailed me about
+    # config.fedex_meter_number = '103065644' # this is the one they started labeling certification for erroneously.
     config.fedex_debug = true
     config.fedex_customer_label_image_type = 'PDF'
     config.fedex_vc_label_image_type = 'PNG'

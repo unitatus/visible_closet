@@ -144,7 +144,9 @@ class Shipment < ActiveRecord::Base
         :secret_access_key => Rails.application.config.s3_secret
     )
 
-    s3object = AWS::S3::S3Object.delete(shipment_label_file_name, Rails.application.config.s3_labels_bucket)
+    if shipment_label_file_name
+      AWS::S3::S3Object.delete(shipment_label_file_name, Rails.application.config.s3_labels_bucket)
+    end
     
     super
   end

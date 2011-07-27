@@ -1,45 +1,69 @@
 <% @menu_page = :boxes %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 <div id="internal-right">
-<% if !@boxes || @boxes.size == 0 %>
-You do not have any boxes in storage order under management. Click <a href="/account/store_more_boxes">here</a> to start storing boxes!
-<% else %>
-<table class="prices_table"><tr>
-	<th>Box ID</th>
-	<th>Status</th>
-	<th>Box Source</th>
-	<th>Description</th>
-	<th>Inventory</th>
-	<th>Edit</th>
-	<th>Label</th>
-	</tr>
-	<% @boxes.each do |box| %>
-	  <tr>
-		<td><%= box.id %></td>
-		<td><%= box.status_en %></td>
-		<td><%= box.box_type == Box::CUST_BOX_TYPE.to_s ? "Your box" : "Visible Closet box" %></td>
-		<td width="150px"><%= box.description %></td>
-		<td>
-			<% if box.indexing_status == Box::INDEXING_REQUESTED %>
-				Soon!
-			<% elsif box.indexing_status == Box::INDEXED %>
-				<a href="/boxes/<%= box.id %>/stored_items">Inventory</a>
+        <p class="browse-headline bottom-border">You currently have <strong><%= @boxes.size %></strong> active boxes. <a href="/account/store_more_boxes">Click here to add more.</a></p>
+	<% @boxes.each_with_index do |box, index| %>
+		<% if index % 3 == 0 && index != 0 %>
+	    <!-- DIVIDER -->
+	    <div class="clearer bottom-border"></div>
+	    <!-- END DIVIDER -->		
+		<% end %>
+
+        <!-- BROWSE BOX -->
+        <div class="browse-box">
+            <p class="browse-box-name">Box <%= box.id %></p>
+            <p>
+			<% if box.description %>
+			<%= box.description %>
 			<% else %>
-				NA
+			<i>no description</i>
 			<% end %>
-		</td>
-	    <td><%= link_to 'Edit', edit_box_path(box) %></td>
-		<td>
-			<% if box.box_type == Box::CUST_BOX_TYPE && box.status == Box::BEING_PREPARED_STATUS %>
-					<a href="/box/<%= box.id %>/get_label">Shipping label</a>
+			</p>
+			<% if box.status == Box::NEW_STATUS && box.box_type == Box::VC_BOX_TYPE %>
+				<% image_file = "status-inventory-to-you" %>
+				<% alt = "Inventory Complete" %>
+			<% elsif box.status == Box::IN_TRANSIT_STATUS %>
+				<% image_file = "status-inventory-to-you" %>
+				<% alt = "In Transit" %>
+			<% elsif box.status == Box::IN_STORAGE_STATUS && box.indexing_status == Box::NO_INDEXING_REQUESTED %>
+				<% image_file = "missing" %>
+				<% alt = "In Storage" %>
+			<% elsif box.status == Box::IN_STORAGE_STATUS && box.indexing_status == Box::INDEXING_REQUESTED %>
+				<% image_file = "status-inventory-processing" %>
+				<% alt = "Inventory Being Processed" %>
+			<% elsif box.status == Box::IN_STORAGE_STATUS && box.indexing_status == Box::INDEXED %>
+				<% image_file = "status-inventory-complete" %>
+				<% alt = "Inventory Complete" %>
+			<% elsif box.status == Box::BEING_PREPARED_STATUS %>
+				<% image_file = "missing" %>
+				<% alt = "Being Prepared by You" %>
+			<% end %>
+            <img src="images/<%= image_file %>.jpg" alt="<%= alt %>" />
+            <p><strong>Box Status: </strong><%= box.status_en %></p>
+            <p><strong>Number of Items: </strong>TBD</p>
+			<% if box.status == Box::IN_STORAGE_STATUS %>
+			<p><strong>Date Received: </strong>TBD</p>
 			<% else %>
-				NA
+				<p><strong>Date Ordered: </strong><%=box.created_at.strftime('%m/%d/%Y')%></p>
 			<% end %>
-		</td>
-	  </tr>
-	<% end %>
-</table>
-<% end %>
-<br />
-</div>
+            <div class="browse-box-menu">
+                <div class="browse-box-menu-contents">
+                    <p class="browse-box-menu-contents-head">Box Options</p>
+                    <ul>
+                        <li><a href="#">edit</a></li>
+                        <li><a href="#">mail this box</a></li>
+						<% if box.indexing_status == Box::INDEXED %>
+                        <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>
+						<% end %>
+						<% if box.box_type == Box::CUST_BOX_TYPE && box.status == Box::BEING_PREPARED_STATUS %>
+							<li><a href="/box/<%= box.id %>/get_label">print label</a></li>
+						<% end %>                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- END BROWSE BOX -->
+		
+	<% end %>        
+    </div>
 <div class="clearer"></div>

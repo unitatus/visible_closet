@@ -58,4 +58,13 @@ $(document).ready(function(){
 	}, function () {
 		jQuery(this).find('ul').stop().animate({opacity: 0}, 300);
 	});
+	
+	$('.browse-box .browse-box-menu').hover(
+          function () {
+            $($(this)).find("div").show();
+          }, 
+          function () {
+            $($(this)).find("div").hide();
+          }
+    );
 });
