@@ -56,18 +56,18 @@ class Shipment < ActiveRecord::Base
        :phone_number => shipping_address.day_phone
      }
      recipient = {
-       :name => Rails.application.config.fedex_vc_name,
+       :name => receiving_address.first_name + " " + receiving_address.last_name,
        :phone_number => receiving_address.day_phone
      }
      origin = {
-       :street => shipping_address.address_line_1 + (shipping_address.address_line_2.nil? ? "" : " " + shipping_address.address_line_2),
+       :street => shipping_address.address_line_1 + (shipping_address.address_line_2.nil? ? "" : "\n" + shipping_address.address_line_2),
        :city => shipping_address.city,
        :state => shipping_address.state,
        :zip => shipping_address.zip,
        :country => shipping_address.country
      }
     destination = {
-      :street => receiving_address.address_line_1 + (receiving_address.address_line_2.nil? ? "" : " " + receiving_address.address_line_2),
+      :street => receiving_address.address_line_1 + (receiving_address.address_line_2.nil? ? "" : "\n" + receiving_address.address_line_2),
       :city => receiving_address.city,
       :state => receiving_address.state,
      :zip => receiving_address.zip,

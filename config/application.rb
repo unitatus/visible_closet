@@ -50,7 +50,6 @@ module VisibleCloset
     config.fedex_debug = true
     config.fedex_customer_label_image_type = 'PDF'
     config.fedex_vc_label_image_type = 'PNG'
-    config.fedex_vc_name = 'The Visible Closet'
     config.fedex_default_shipping_weight_lbs = 10
   
     config.s3_key = 'AKIAJZUNJU6OZH3A6VZQ'
