@@ -9,7 +9,6 @@
 	<% end %>
 <% end %>
 
-<div class="grid_11">
 <a href="/admin/home">&lt;&lt; Return to admin home</a> | 
 <a href="/boxes/clear_box?box_id=<%= @box.id %>" onclick = "if (! confirm('Are you sure?')) return false;">Reset box contents</a> | 
 <a href="/boxes/add_tags?box_id=<%= @box.id %>">Add tags &gt;&gt;</a><br><br>
@@ -27,5 +26,4 @@
     <p>Your browser doesn't have HTML5, Flash or Silverlight support.</p> 
   </div>
 </div> 
-</div> <!-- grid_11 -->
-
+<div class="clearer"></div>

@@ -1,13 +1,13 @@
 <% @menu_page = :account %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
-	<div class="grid_9">
-		<h1>Select a new <%= @action %> address</h1>
+<div id="internal-right">
+		<div class="simple_header">Select a new <%= @action %> address</div><br>
 	<% first = true %>
 	<% @addresses.each do |address| %>
 	    <% if !first %>
-<div class="grid_9"><hr></div>
+<br>
+<hr>
 	    <% end %>
-		<div class="grid_7">
 		<%= form_tag "/account/choose_new_#{@action}_address", :class => "standard" do %>
 		<%= hidden_field_tag :address_id, address.id.to_s %>
 
@@ -22,11 +22,11 @@
 		<% if !address.evening_phone.blank? %>
 		<br>Evening Phone: <%= number_to_phone(address.evening_phone) %>
 		<% end %>
-		<p>
+		<br><br>
 		<%= submit_tag("Select Address", :class => "button") %>
-	</div>
 
 		<% first = false %>
 		<% end %> <!-- form -->
 	<% end %> <!-- loop -->
 </div>
+<div class="clearer"></div>

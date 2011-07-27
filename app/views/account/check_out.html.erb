@@ -1,6 +1,6 @@
 <% @menu_page = :account %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
-<div class="grid_9">
+<div id="internal-right">
 <%= form_for @order, :url => "/account/finalize_check_out", :html => { :class => "standard" } do |f| %>
   <div class="grid_4">
 	<h3>Billing Address</h3>
@@ -45,12 +45,9 @@
 	</div>
   </div>
 <br>
-<div class="grid_9">
 <br>
 <hr>
-</div>
-<div class="grid_7">
-<h3>Credit Card Info</h3>
+<div class="simple_header">Credit Card Info</div><br>
 	<div class="field clearfix">
 	<%= f.label :card_type %>
 	<div style="position:relative; right:210px; top:10px;">
@@ -90,12 +87,8 @@
 	<%= error_messages_for_attribute(@order, :card_year) %>
 		</div>
 	</div>
-</div>
-<div class="grid_9">
 <br>
 <hr>
-</div>
-<div class="grid_9">
 	<table class="check_out_cart_summary">
 		<tr>
 			<th>
@@ -130,9 +123,11 @@
 	<br>
 	<hr>
 	<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
-	<h4>Total: <%= number_to_currency(@cart.estimated_total) %></h4>
+	<b>Total: <%= number_to_currency(@cart.estimated_total) %></b>
+	</div><div style="text-align: right; padding: 20px 0 0 0">
 	<%= submit_tag("Place Order", :class => "button") %>
 	</div>
 	<br>
 </div>
 <% end %> <!-- end form -->
+<div class="clearer"></div>

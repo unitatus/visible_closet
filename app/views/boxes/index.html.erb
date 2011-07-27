@@ -1,6 +1,6 @@
 <% @menu_page = :boxes %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
-<div class="grid_9">
+<div id="internal-right">
 <% if !@boxes || @boxes.size == 0 %>
 You do not have any boxes in storage order under management. Click <a href="/account/store_more_boxes">here</a> to start storing boxes!
 <% else %>
@@ -42,3 +42,4 @@ You do not have any boxes in storage order under management. Click <a href="/acc
 <% end %>
 <br />
 </div>
+<div class="clearer"></div>

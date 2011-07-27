@@ -4,8 +4,8 @@
 <%   @menu_page = :boxes %>
 <% end %>
 <%= render 'account/account_nav' %>
-<div class="grid_9">
-<ul id="create-portfolio" class="thumbnails ">
+<div id="internal-right">
+<ul id="create-portfolio" class="thumbnails">
 	<% @stored_items.each do |stored_item| %>
 		<li>
 			<div class="post-thumbnail">
@@ -29,3 +29,4 @@
 	<% end %>
 </ul>
 </div>
+<div class="clearer"></div>

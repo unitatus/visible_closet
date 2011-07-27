@@ -1,6 +1,6 @@
 <% @menu_page = :store_more_stuff %>
 <%= render 'account_nav', :locals =>  { :menu_page => @menu_page }%>
-<div class="grid_9">
+<div id="internal-right">
 Please specify the number of boxes of each type that you would like to store.<br><br><br>
 <%= form_tag("/account/order_boxes", :class => "standard") do %>
 <div class="grid_5">&nbsp;</div>
@@ -44,3 +44,4 @@ document.forms[0].elements['num_boxes_yours'].focus();
 </div>
 <% end %>
 </div>
+<div id="internal-right">

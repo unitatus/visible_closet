@@ -891,9 +891,20 @@ table.cart_summary td
 
 }
 .simple_body ul {
-	padding: 10px 0 0 25px;
+	padding: 10px 0 15px 25px;
 	list-style-type: circle;
 }
 .simple_body ul li {
-	padding: 5px 0 0 0;
+	padding: 10px 0 0 0;
+}
+.simple_body ol {
+	padding: 10px 0 15px 25px;
+	list-style-type: upper-roman;
+}
+.simple_body ol li {
+	padding: 10px 0 0 0;	
+}
+/********* How it works ********/
+.how_it_works {
+	padding: 0 0 0 50px;
 }

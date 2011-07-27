@@ -1,5 +1,6 @@
 
 <%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
 <% if @orders.size > 0 %>
 	<table class="prices_table">
 	  <tr>
@@ -42,5 +43,7 @@
 		<% end %>
 	</table>
 <% else %>
-There are no orders to process.
+<br><br>There are no orders to process.
 <% end %>
+</div>
+<div class="clearer"></div>

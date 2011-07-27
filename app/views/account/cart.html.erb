@@ -1,6 +1,6 @@
 <% @menu_page = :cart %>
 <%= render 'account_nav', :locals => {:menu_page => @menu_page} %>
-<div class="grid_9">
+<div id="internal-right">
 <p class="notice"><%= flash[:notice] %></p>
 <p class="alert"><%= flash[:alert] %></p>
 <%= render 'account_error_messages' %>
@@ -66,3 +66,4 @@
 *Size of your box assumed to be 1 cubic foot. We will measure your box when we receive it to determine your final cost.
 <% end %>
 </div>
+<div class="clearer"></div>

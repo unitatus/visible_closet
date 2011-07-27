@@ -53,10 +53,14 @@ blockquote, q {
 /* BLOCKS */
 
 #toplip {
-    height: 16px;
+    height: 18px;
     background-color: #323232;
     width: 100%;
-	text-align: right;
+    color: #a8a8a8;
+    font-size: 11px;
+    line-height: 18px;
+    text-align: right;
+    font-family: Helvetica;
 }
 
 #container {
@@ -182,10 +186,26 @@ blockquote, q {
     right: 0px
 }
 
+#internal-left {
+    width: 240px;
+    float: left;
+    padding: 20px 0px 20px 0px;
+}
+
+#internal-right {
+    width: 700px;
+    float: left;
+    padding: 20px 0px 20px 0px;
+}
+
 /* MODIFIERS */
 
 body {
     font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+#toplip a {
+    color: #fff;
 }
 
 #side-menu ul {
@@ -349,4 +369,18 @@ body {
     border-top: solid 1px #d4d4d4;
     margin-top: 10px;
     padding-top: 10px;
+}
+
+.bottom-border {
+    border-bottom: solid 1px #d4d4d4;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+/* PAGE SPECIFIC */
+
+.how-it-works {
+    width: 940px;
+    height: 289px;
+    padding: 10px 0px 50px 0px;
 }

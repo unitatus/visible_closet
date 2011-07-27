@@ -1,7 +1,8 @@
 <% @admin_page = :inventorying %>
 <%= render :partial => "admin/admin_menu", :locals => { :admin_page => @admin_page } %>
 
-<div class="grid_9">
+<div id="internal-right">
+	<br><br>
 <% if @boxes.any? %>
 	<table class="prices_table">
 	  <tr>
@@ -28,3 +29,4 @@
 	There are no inventory requests at this time.
 <% end %>
 </div>
+<div class="clearer"></div>

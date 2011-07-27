@@ -1,7 +1,7 @@
 <% @admin_page = :receiving %>
 <%= render :partial => "admin/admin_menu", :locals => { :admin_page => @admin_page } %>
-<div class="grid_9">
-	<h2>Box Receiving</h2>
+<div id="internal-right">
+	<div class="simple_header">Box Receiving</div>
 		<% if @messages.size > 0 %>
 			<ul>
 				<% @messages.each do |message| %>
@@ -19,6 +19,7 @@
 				</ul>
 			</div>
 		<% end %>		
+		<br><br><br>
 		<%= form_tag "", :class => "standard", :id => "box_form" do %>
 			<div class="field clearfix">
 				Box ID:
@@ -38,7 +39,8 @@
 		<% end %>
 		<br>
 <h5>This page is used for rapid-fire scanning of box id's. Use the checkbox to indicate that a box was indicated for invoicing. If a box was specified for invoicing and you do not select the checkbox the box will still be invoiced -- users who selected invoicing online have already committed to it, so you can't turn it off here (they have to explicitly turn it off).<br><br>To scan a series of boxes that are all marked for indexing, click the "index indicator lock" checkbox.		
-</div>
 <script type="text/javascript" language="JavaScript">
 document.forms['box_form'].elements['box_id'].focus();
 </script>
+</div>
+<div class="clearer"></div>
