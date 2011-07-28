@@ -37,11 +37,14 @@ class Order < ActiveRecord::Base
       # TODO: This needs to be refactored into a payment processor object that takes a user, payment object thingie, and a charges array, so we can 
       # have charges for the user.
       response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
-      payment_transactions.create!(:action => "purchase", :amount => total_in_cents, :response => response)
+      payment_transactions.create(:action => "purchase", :amount => total_in_cents, :response => response)
       if !response.success?
         errors.add("cc_response", response.message)
         raise ActiveRecord::Rollback
       end
+      
+      # Do this after creating the payments so that we know the payments went through ok
+      generate_charges
       
       transaction_successful = true
     end # end transaction    

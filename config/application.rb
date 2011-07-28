@@ -66,6 +66,17 @@ module VisibleCloset
     config.s3_photo_bucket = 'stored_item_photos'
     config.s3_labels_path = '/public/system/labels/'
     config.s3_labels_bucket = 'shipment_labels'
+    
+    ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
+      :login => "5Fe5e8GF6z7H", # "API Login ID"
+      :password => "83zM4HAnrm84D4pB" # "Transaction Key"
+    )
+    
+    ::PURCHASE_GATEWAY = ActiveMerchant::Billing::Base.gateway(:authorize_net).new(
+      :login => "5Fe5e8GF6z7H", # "API Login ID"
+      :password => "83zM4HAnrm84D4pB" # "Transaction Key"
+    )
+    
 
     # Indicate the log-in and sign-up screens that need to be SSL-required
     config.to_prepare { Devise::SessionsController.ssl_required :new, :create }

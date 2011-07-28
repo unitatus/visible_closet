@@ -42,17 +42,7 @@ VisibleCloset::Application.configure do
     #   :login => "7Px7qH7p", # "API Login ID"
     #   :password => "974w4HTkHGMh9f9n", # "Transaction Key"
     #   :test => 'true'
-    # )
-    
-    ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
-      :login => "5Fe5e8GF6z7H", # "API Login ID"
-      :password => "83zM4HAnrm84D4pB" # "Transaction Key"
-    )
-    
-    ::PURCHASE_GATEWAY = ActiveMerchant::Billing::Base.gateway(:authorize_net).new(
-      :login => "5Fe5e8GF6z7H", # "API Login ID"
-      :password => "83zM4HAnrm84D4pB" # "Transaction Key"
-    )
+    # )    
   end
 end
 

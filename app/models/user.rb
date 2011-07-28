@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110717194124
+# Schema version: 20110728042015
 #
 # Table name: users
 #
@@ -28,6 +28,7 @@
 #  beta_user            :boolean         default(TRUE)
 #  signup_comments      :text
 #  role                 :string(255)
+#  cim_id               :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -63,5 +64,105 @@ class User < ActiveRecord::Base
     
   def after_initialize 
     self.role ||= NORMAL
+  end
+  
+  def cim_id
+    if read_attribute(:cim_id)
+      return read_attribute(:cim_id)
+    end
+    
+    if self.id.nil? || self.email.nil? || self.first_name.nil?
+      raise "Cannot get cim_id without saving user object."
+    end
+    
+    cim_user = {:profile => cim_user_profile}
+    
+    response = CIM_GATEWAY.create_customer_profile(cim_user)
+    
+    if response.success? and response.authorization
+      update_attribute(:cim_id, response.authorization)
+      response.authorization
+    else
+      raise "Failed to generate cim_id with response " << response.inspect
+    end
+  end
+  
+  # This method automatically saves changes to this field to the database
+  def cim_id=(value)
+    if self.id.nil? || self.email.nil? || self.first_name.nil?
+      raise "Cannot set cim_id without saving user object."
+    end
+
+    if read_attribute(:cim_id).nil?
+      write_attribute(:cim_id, value)
+    elsif value.nil?
+      delete_cim_profile
+      write_attribute(:cim_id, value)
+      User.update_all("cim_id=null")
+    else
+      raise "Cannot set cim_id - this can only be done via connection with ActiveMerchant"
+    end
+  end
+  
+  def email=(value)
+    write_attribute(:email, value)
+
+    if !self.id.nil?
+      update_cim_profile
+    end    
+  end
+  
+  def first_name=(value)
+    write_attribute(:first_name, value)
+    if !self.id.nil?
+      update_cim_profile
+    end    
+  end
+  
+  def last_name=(value)
+    write_attribute(:last_name, value)
+    if !self.id.nil?
+      update_cim_profile
+    end    
+  end
+
+  def destroy
+    if delete_cim_profile and super
+      return true
+    end
+    return false
+  end
+  
+  private 
+
+  def delete_cim_profile
+    if not self.cim_id
+      return false
+    end
+    
+    response = CIM_GATEWAY.delete_customer_profile(:customer_profile_id => self.cim_id)
+
+    if response.success?
+      return true
+    end
+    return false
+  end
+  
+  def update_cim_profile
+    if not self.cim_id
+      return false
+    end
+    
+    response = CIM_GATEWAY.update_customer_profile(:profile => cim_user_profile.merge({
+        :customer_profile_id => self.cim_id}))
+
+    if response.success?
+      return true
+    end
+    return false
+  end
+  
+  def cim_user_profile
+    return {:merchant_customer_id => self.id, :email => self.email, :description => self.first_name + " " + self.last_name}
   end
 end
