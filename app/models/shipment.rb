@@ -38,7 +38,10 @@ class Shipment < ActiveRecord::Base
     receiving_address = Address.find(self.to_address_id)
     
     if box.nil? || box.status != Box::BEING_PREPARED_STATUS
-      label_stock_type = Fedex::LabelStockTypes::PAPER_4X6
+      label_stock_type = Fedex::LabelStockTypes::STOCK_4X6 # Fedex::LabelStockTypes::PAPER_4X6
+      label_image_type = Fedex::LabelSpecificationImageTypes::ZPLII
+    else
+      label_image_type = Rails.application.config.fedex_customer_label_image_type
     end
         
      @fedex = Fedex::Base.new(
@@ -47,7 +50,7 @@ class Shipment < ActiveRecord::Base
        :account_number => Rails.application.config.fedex_account_number,
        :meter_number => Rails.application.config.fedex_meter_number, 
        :debug => Rails.application.config.fedex_debug,
-       :label_image_type => Rails.application.config.fedex_customer_label_image_type,
+       :label_image_type => label_image_type,
        :label_stock_type => label_stock_type
      )
 
