@@ -38,11 +38,11 @@
 				<% image_file = "missing" %>
 				<% alt = "Being Prepared by You" %>
 			<% end %>
-            <img src="images/<%= image_file %>.jpg" alt="<%= alt %>" />
+            <img src="/images/<%= image_file %>.jpg" alt="<%= alt %>" />
             <p><strong>Box Status: </strong><%= box.status_en %></p>
-            <p><strong>Number of Items: </strong>TBD</p>
+            <p><strong>Number of Items: </strong><%= box.item_count %></p>
 			<% if box.status == Box::IN_STORAGE_STATUS %>
-			<p><strong>Date Received: </strong>TBD</p>
+			<p><strong>Date Received: </strong><%=box.received_at.blank? ? "unknown" : box.received_at.strftime('%m/%d/%Y')%></p>
 			<% else %>
 				<p><strong>Date Ordered: </strong><%=box.created_at.strftime('%m/%d/%Y')%></p>
 			<% end %>
@@ -50,7 +50,7 @@
                 <div class="browse-box-menu-contents">
                     <p class="browse-box-menu-contents-head">Box Options</p>
                     <ul>
-                        <li><a href="#">edit</a></li>
+                        <li><a href="/boxes/<%= box.id %>/edit">edit</a></li>
                         <li><a href="#">mail this box</a></li>
 						<% if box.indexing_status == Box::INDEXED %>
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>

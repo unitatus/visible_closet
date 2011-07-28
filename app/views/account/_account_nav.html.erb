@@ -3,6 +3,8 @@
 <% case @menu_page %>
 <% when :boxes %>
 <%   boxes_class = active_class_str %>
+<% when :box %>
+<%   boxes_class = active_class_str %>
 <% when :items %>
 <%   items_class = active_class_str %>
 <% when :store_more_stuff %>
@@ -26,4 +28,7 @@
 	        <li<%= support_class %>><a href="#">Support</a></li>
 	    </ul>
 	</div>
+	<% if @menu_page == :boxes %>
+		<img src="/images/browse-legend.jpg" alt="Legend" style="margin-top:20px" />
+	<% end %>
 </div>

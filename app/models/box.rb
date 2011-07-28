@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110709201135
+# Schema version: 20110728021721
 #
 # Table name: boxes
 #
@@ -13,6 +13,7 @@
 #  description            :text
 #  indexing_status        :string(255)
 #  indexing_order_line_id :integer
+#  received_at            :datetime
 #
 
 class Box < ActiveRecord::Base
@@ -73,6 +74,7 @@ class Box < ActiveRecord::Base
     end
     
     self.status = Box::IN_STORAGE_STATUS
+    self.received_at = Time.now
       
     return self.save
     end # end transaction
@@ -114,6 +116,10 @@ class Box < ActiveRecord::Base
     end
     
     Box.where(:ordering_order_line_id => order_ids)
+  end
+  
+  def item_count
+    StoredItem.count(:conditions => "box_id = #{self.id}")
   end
   
   private

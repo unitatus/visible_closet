@@ -1,8 +1,7 @@
-<%= render 'account/account_nav' %>
-<div class="grid_9">
-<h1>Editing box <%= @box.id %></h1>
-
+<% @menu_page = :box %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div id="internal-right">
+<div class="simple_header">Editing box <%= @box.id %></div>
 <%= render 'form' %>
-
-<%= link_to 'All Your Boxes', boxes_path %>
 </div>
+<div class="clearer"></div>
