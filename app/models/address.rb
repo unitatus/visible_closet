@@ -78,4 +78,14 @@ class Address < ActiveRecord::Base
   def Address.find_active_by_id_and_user_id(id, user_id)
     find_by_id_and_user_id_and_status(id, user_id, "active")
   end
+  
+  def summary
+    return_str = self.address_line_1
+    return_str << (self.address_line_2.blank? ? "" : " " + self.address_line_2)
+    return_str << (" " + self.city)
+    return_str << (" " + self.state)
+    return_str << (" " + self.zip)
+    
+    return_str
+  end
 end

@@ -1,10 +1,10 @@
 module ApplicationHelper
   def error_messages_for_attribute(object, attribute)
-    if (object.kind_of? ActiveRecord::Base)
+    # if (object.kind_of? ActiveRecord::Base || object.kind_of? ActiveMerchant::Validateable::Errors)
       error_messages = object.errors[attribute]
-    else # assume validatable for now
-      error_messages = object.errors.raw(attribute)
-    end
+    # else # ???
+      # error_messages = object.errors.raw(attribute)
+    # end
 
     if (error_messages)
       html = '<div class="error_label">'

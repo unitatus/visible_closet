@@ -1,49 +1,62 @@
 # == Schema Information
-# Schema version: 20110701051132
+# Schema version: 20110729015304
 #
 # Table name: payment_profiles
 #
-#  id               :integer         not null, primary key
-#  identifier       :string(255)
-#  last_four_digits :string(255)
-#  user_id          :integer
-#  created_at       :datetime
-#  updated_at       :datetime
+#  id                 :integer         not null, primary key
+#  identifier         :string(255)
+#  last_four_digits   :string(255)
+#  user_id            :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  exp_year           :integer
+#  first_name         :string(255)
+#  last_name          :string(255)
+#  billing_address_id :integer
+#  cc_type            :string(255)
+#  exp_month          :string(255)
 #
 
 class PaymentProfile < ActiveRecord::Base
     belongs_to :user
 
-    attr_accessor :address
     attr_accessor :credit_card
-
-    validates_presence_of :user_id, :credit_card, :address
+    
+    validates_presence_of :user_id, :credit_card, :billing_address_id
+    
+    validate :validate_card, :on => :create
 
     def credit_card=(cc)
       if not cc.nil?
         self.last_four_digits = cc.number[-4,4]
+        self.cc_type = cc.type
+        self.exp_month = cc.month
+        self.exp_year = cc.year
+        self.first_name = cc.first_name
+        self.last_name = cc.last_name
       end
       
       @credit_card = cc
     end
     
     # Assumes a Visible Closet address object; need to map it to an ActiveMerchant address hash
-    def address=(new_address)
-      if new_address.nil?
-        @address = nil
+    def address_hash
+      if self.billing_address_id.nil?
+        nil
       else
-        @address = { :name => new_address.first_name + " " + new_address.last_name,
-                      :address1 => new_address.address_line_1,
-                      :address2 => new_address.address_line_2,
+        address = Address.find(self.billing_address_id)
+        return { :name => address.first_name + " " + address.last_name,
+                      :address1 => address.address_line_1,
+                      :address2 => address.address_line_2,
                       :company => nil, # not supported at this time
-                      :city => new_address.city,
-                      :state => new_address.state,
-                      :zip => new_address.zip,
-                      :country => new_address.country,
-                      :phone => new_address.day_phone }
+                      :city => address.city,
+                      :state => address.state,
+                      :zip => address.zip,
+                      :country => address.country,
+                      :phone => address.day_phone }
       end
     end
-
+    
     def create
       if super and create_payment_profile
         return true
@@ -71,13 +84,24 @@ class PaymentProfile < ActiveRecord::Base
     end
 
     private
+    
+    def validate_card
+      unless @credit_card.valid?
+        @credit_card.errors.each do |attr, messages|
+          messages.each do | message |
+            errors.add("card_" + attr, message)
+          end
+        end
+      end
+    end
+    
     def create_payment_profile
       if not self.id
         return false
       end
 
       profile = {:customer_profile_id => user.cim_id,
-                  :payment_profile => {:bill_to => self.address,
+                  :payment_profile => {:bill_to => self.address_hash,
                                        :payment => {:credit_card => self.credit_card}
                                        }
                   }
@@ -85,7 +109,6 @@ class PaymentProfile < ActiveRecord::Base
       response = CIM_GATEWAY.create_customer_payment_profile(profile)
       if response.success? and response.params['customer_payment_profile_id']
         update_attribute(:identifier, response.params['customer_payment_profile_id'])
-        self.address = nil
         self.credit_card = nil
         return true
       else
@@ -97,13 +120,12 @@ class PaymentProfile < ActiveRecord::Base
     def update_payment_profile
       profile = {:customer_profile_id => user.cim_id,
                   :payment_profile => {:customer_payment_profile_id => self.identifier,
-                                       :bill_to => self.address,
+                                       :bill_to => self.address_hash,
                                        :payment => {:credit_card => self.credit_card}
                                        }
                   }
       response = CIM_GATEWAY.update_customer_payment_profile(profile)
       if response.success?
-        self.address = nil
         self.credit_card = nil
         return true
       else

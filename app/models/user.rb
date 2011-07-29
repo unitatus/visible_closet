@@ -55,6 +55,8 @@ class User < ActiveRecord::Base
   symbolize :role
 
   has_many :boxes
+  has_many :payment_profiles
+  has_many :addresses
 
   validates :first_name, :presence => true
   validates :last_name, :presence => true

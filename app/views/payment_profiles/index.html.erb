@@ -1,0 +1,33 @@
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div class="simple_header">Credit Card Maintenance</div>
+<div id="internal-right">
+	<div class="graybox">
+		<table><thead style="font-size: 125%"><tr><td>Type</td><td>Number</td><td>Exp Date</td><td>Cardholder Name</td><td>Billing Address</td><td>Delete?</td></tr></thead>
+			<tbody class="top-line bottom-line">
+		<% current_user.payment_profiles.each do |profile| %>
+		<% address = Address.find(profile.billing_address_id) %>
+		<tr>
+			<td><%= profile.cc_type %></td>
+			<td>************<%= profile.last_four_digits %></td>
+			<td><%= profile.exp_month %>/<%= profile.exp_year %></td>
+			<td><%= profile.first_name %> <%= profile.last_name %></td>
+			<td>
+			<%= address.first_name %> <%= address.last_name %><br>
+			<%= address.address_line_1 %><br>
+			<% if not address.address_line_2.blank? %>
+			<%= address.address_line_2 %><br>
+			<% end %>
+			<%= address.city %>, <%= address.state %>, <%= address.zip %>
+			</td>
+			<td><%= link_to("Delete", { :action => "destroy", :id => profile },
+			  :confirm => "Are you sure you want to delete this card?",
+			  :method => :delete) %></td>
+		</tr>
+		<% end %>
+		</tbody>	
+		</table>
+	</div><br>
+	<div style="text-align: right; width: 100%"><a href="/payment_profiles/new">Add new payment method &gt;&gt;</a></div>
+</div>
+<div class="clearer"></div>

@@ -14,8 +14,8 @@ VisibleCloset::Application.routes.draw do
   match "boxes/finish_inventorying_box" => "boxes#finish_inventorying"
     
   resources :boxes
-
   resources :addresses
+  resources :payment_profiles
   
   match "orders/:id/process" => "orders#process_order"
   match "orders/:id/ship_order_lines" => "orders#ship_order_lines"

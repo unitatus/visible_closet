@@ -1,0 +1,74 @@
+<%= form_for(@profile, :html => { :class => "standard" }) do |f| %>
+<div class="field clearfix">
+	<%= f.label "Card type*"%>
+	<%= select_tag :type, options_for_select([["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]], @credit_card.type) %>
+	<%= error_messages_for_attribute(@profile, :card_type) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Cardholder First Name*" %>
+	<%= text_field_tag :first_name, @credit_card.first_name, :class => "textbox" %>
+	<%= error_messages_for_attribute(@credit_card, :first_name) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Cardholder Last Name*" %>
+	<%= text_field_tag :last_name, @credit_card.last_name, :class => "textbox" %>
+	<%= error_messages_for_attribute(@credit_card, :last_name) %>
+</div><!--//field-->
+<div class="field clearfix">
+<%= f.label "Number*" %>
+<%= text_field_tag :number, @credit_card.number, :class => "textbox" %>
+<%= error_messages_for_attribute(@credit_card, :number) %>
+</div>
+<div class="field clearfix">
+<%= f.label "Verification Value (CVV)*" %>
+<%= text_field_tag :verification_value, @credit_card.verification_value, :class => "textbox" %>
+<%= error_messages_for_attribute(@credit_card, :verification_value) %>
+</div>
+<div class="field clearfix">
+<%= f.label "Expiration:" %>
+	<div style="position:relative; right:160px; top:4px;">
+<%= select_tag :month, options_for_select([["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December"]], :selected => @credit_card.month) %>
+<%= select_tag :year, options_for_select(year_array, @credit_card.year) %>
+<%= error_messages_for_attribute(@credit_card, :month) %>
+<%= error_messages_for_attribute(@credit_card, :year) %>
+	</div>
+</div>
+<div class="graybox">
+<table>
+	<thead>
+		<tr>
+			<th colspan="6" style="font-size: 145%">Select an address</th>
+		</tr>
+	</thead>
+	<tbody class="top-line bottom-line"> 
+<% current_user.addresses.each_with_index do |address, index| %>
+	<% if index % 3 == 0 %>
+	<tr>
+	<% end %>
+	<td style="vertical-align: middle">
+	<% if @profile.billing_address_id.nil? && index == 0 %>
+		<%= radio_button(:profile, :billing_address_id, address.id, :checked => true)%>	
+	<% else %>
+		<%= radio_button(:profile, :billing_address_id, address.id)%>	
+	<% end %>
+	</td>
+	<td style="text-align: left">
+		<%= address.first_name %> <%= address.last_name %><br>
+		<%= address.address_line_1 %><br>
+		<% if not address.address_line_2.blank? %>
+		<%= address.address_line_2 %><br>
+		<% end %>
+		<%= address.city %>, <%= address.state %>, <%= address.zip %>
+	</td>
+	<% if index % 3 == 2 %>
+	</tr>
+	<% end %>
+<% end %>
+	</tbody>
+</table>
+</div><br>
+	<div class="field clearfix">
+    <%= f.submit "Submit", :class => 'button' %>
+	</div>
+
+<% end %>
