@@ -79,6 +79,22 @@ class Ability
       
       # stored items
       can :index, StoredItem
+      
+      # payment profiles
+      can :index, PaymentProfile
+      can :new, PaymentProfile
+      can :create, PaymentProfile
+      can :set_default, PaymentProfile
+      can :destroy, PaymentProfile
+      
+      # addresses
+      can :index, Address
+      can :new, Address
+      can :edit, Address
+      can :create, Address
+      can :update, Address
+      can :set_default_shipping, Address
+      can :destroy, Address      
     end
   end
 end

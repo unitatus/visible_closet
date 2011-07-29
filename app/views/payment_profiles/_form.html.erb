@@ -34,15 +34,22 @@
 	</div>
 </div>
 <div class="field clearfix" style="padding: 0 321px 0 0 ">
+	<% if current_user.payment_profile_count != 0 %>
 <%= f.label "Default Card?" %>
 <%= hidden_field_tag :default, 0 %>
 <%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1" %>
+	<% end %>
 </div><br>
 <div class="graybox">
 <table>
 	<thead>
 		<tr>
-			<th colspan="6" style="font-size: 145%">Select an address</th>
+			<th colspan="6" style="font-size: 145%">
+			<% if current_user.active_address_count > 1 %>
+				Select a billing address
+			<% else %>
+				Billing address
+			<% end %></th>
 		</tr>
 	</thead>
 	<tbody class="top-line bottom-line"> 

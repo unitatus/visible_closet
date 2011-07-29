@@ -20,11 +20,10 @@
 
 class PaymentProfile < ActiveRecord::Base
     belongs_to :user
-
+     
     attr_accessor :credit_card
     
     validates_presence_of :user_id, :billing_address_id
-    validates_presence_of :credit_card, :unless => :only_active_changed
     
     validate :validate_card, :on => :create
 
@@ -46,6 +45,29 @@ class PaymentProfile < ActiveRecord::Base
       end
       
       @credit_card = cc
+    end
+    
+    def active=(value)
+      if active.nil?
+        write_attribute(:active, value)
+      elsif (!active? && value == true)
+        raise "Cannot move from inactive to active by setting active indicator"
+      else 
+        write_attribute(:active, value)
+        if value == false
+          inactivate
+        end
+      end
+    end
+    
+    def inactivate
+      write_attribute(:active, false)
+      if delete_payment_profile
+        identifier = nil
+        return true
+      else
+        return false
+      end
     end
     
     # Assumes a Visible Closet address object; need to map it to an ActiveMerchant address hash
@@ -73,17 +95,8 @@ class PaymentProfile < ActiveRecord::Base
         if self.id
           #destroy the instance if it was created
           self.destroy
-          self.id = nil
         end
         return false
-      end
-    end
-
-    def update
-      if only_active_changed
-        super
-      else
-        false
       end
     end
 
@@ -93,12 +106,25 @@ class PaymentProfile < ActiveRecord::Base
       end
       return false
     end
+    
+    # def active=(value)
+    #   if value == true && read_attribute(:active) == false && !read_attribute(:id).nil?
+    #     raise "Cannot reset active to true once it is created and inactivated."
+    #   else
+    #     if value == false && read_attribute(:active) == true
+    #       return inactivate
+    #     else
+    #       return write_attribute(:active, value)
+    #     end
+    #   end
+    # end
+    # 
+    # def inactivate
+    #   write_attribute(:active, false)
+    #   return delete_payment_profile
+    # end
 
     private
-    
-    def only_active_changed
-      changed.size <= 1 and changed[0] == 'active'
-    end
     
     def validate_card
       unless @credit_card.valid?
@@ -123,9 +149,13 @@ class PaymentProfile < ActiveRecord::Base
 
       response = CIM_GATEWAY.create_customer_payment_profile(profile)
       if response.success? and response.params['customer_payment_profile_id']
-        update_attribute(:identifier, response.params['customer_payment_profile_id'])
-        self.credit_card = nil
-        return true
+        if update_attribute(:identifier, response.params['customer_payment_profile_id'])
+          self.credit_card = nil
+          return true
+        else
+          puts("Unable to save identifier attribute on new payment profile; errors: " << errors.inspect)
+          return false
+        end
       else
         errors.add("cc_response", response.message)
         return false
@@ -151,13 +181,17 @@ class PaymentProfile < ActiveRecord::Base
     # end
 
     def delete_payment_profile
-      response = CIM_GATEWAY.delete_customer_payment_profile(:customer_profile_id => self.user.cim_id,
-                                                          :customer_payment_profile_id => self.identifier)
-      if response.success?
-        return true
-      else
-        errors.add("cc_response", response.message)
-        return false
+      if self.identifier
+        response = CIM_GATEWAY.delete_customer_payment_profile(:customer_profile_id => self.user.cim_id,
+                                                            :customer_payment_profile_id => self.identifier)
+        if response.success?
+          return true
+        else
+          errors.add("cc_response", response.message)
+          return false
+        end
       end
+      
+      return true
     end
 end

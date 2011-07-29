@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110709182101
+# Schema version: 20110729155026
 #
 # Table name: orders
 #
@@ -9,7 +9,6 @@
 #  user_id             :integer
 #  created_at          :datetime
 #  updated_at          :datetime
-#  billing_address_id  :integer
 #  shipping_address_id :integer
 #
 

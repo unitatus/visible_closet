@@ -29,6 +29,11 @@ class AddressesController < ApplicationController
     @address = Address.new
     @address.user_id = current_user.id
 
+    if not params[:source_c].blank?
+      session[:source_c] = params[:source_c]
+      session[:source_a] = params[:source_a]
+    end
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @address }
@@ -46,14 +51,19 @@ class AddressesController < ApplicationController
     @address = Address.new(params[:address])
     @address.user_id = current_user.id
 
-    respond_to do |format|
-      if @address.save
-        format.html { redirect_to(addresses_url) }
-        format.xml  { render :xml => @address, :status => :created, :location => @address }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @address.errors, :status => :unprocessable_entity }
+    if @address.save
+      if current_user.active_address_count == 1
+        current_user.update_attribute(:default_shipping_address_id, @address.id)
       end
+      if not (session[:source_c].blank?) # we came from somewhere; return there
+        redirect_to :controller => session[:source_c], :action => session[:source_a]
+        session[:source_c] = nil
+        session[:source_a] = nil
+      else
+        redirect_to(addresses_url)
+      end        
+    else
+      render :action => "new"
     end
   end
 

@@ -9,12 +9,16 @@ class PaymentProfilesController < ApplicationController
   end
   
   def new
+    if current_user.active_address_count == 0
+      redirect_to "/addresses/new?source_c=payment_profiles&source_a=new" and return
+    end
+    
     @profile = PaymentProfile.new
     @credit_card = ActiveMerchant::Billing::CreditCard.new()
     
     if not params[:source_c].blank?
-      session[:source_c] = params[:source_c]
-      session[:source_a] = params[:source_a]
+      session[:source_c] = params[:source_c].to_sym
+      session[:source_a] = params[:source_a].to_sym
     end
   end
   
@@ -27,12 +31,13 @@ class PaymentProfilesController < ApplicationController
     @profile.user_id = current_user.id
     
     if @profile.save
-      if params[:default] == "1"
+      @profile = PaymentProfile.find(@profile.id)
+      
+      if params[:default] == "1" || current_user.payment_profile_count == 1
         current_user.update_attribute(:default_payment_profile_id, @profile.id)
       end
       
-      if not (session[:source_c].blank?) # we came from somewhere; return there
-        session[:payment_profile_id] = @profile.id
+      if not (session[:source_c].blank?) # we came from somewhere; return there        
         redirect_to :controller => session[:source_c], :action => session[:source_a]
         session[:source_c] = nil
         session[:source_a] = nil

@@ -1,7 +1,7 @@
 class AccountController < ApplicationController
   # The account controller actions are only accessible for someone who is signed up as a user.
   authorize_resource :class => false
-  ssl_required :check_out, :add_new_billing_address, :add_new_shipping_address, :create_new_billing_address, :create_new_shipping_address, :finalize_check_out, :select_new_shipping_address, :select_new_billing_address, :choose_new_shipping_address, :choose_new_billing_address
+  ssl_required :check_out, :add_new_shipping_address, :create_new_shipping_address, :finalize_check_out, :select_new_shipping_address, :choose_new_shipping_address
   before_filter :set_menu
 
   def index
@@ -95,18 +95,17 @@ class AccountController < ApplicationController
 
   def check_out
     @cart = Cart.find_active_by_user_id(current_user.id)
-    # In case we got directed in here from payment profile create
-    if not session[:payment_profile_id].blank?
-      params[:payment_profile] = {:payment_profile_id => session[:payment_profile_id].to_s}
-      session[:payment_profile_id] = nil
-    end
     
     @addresses = Address.find_active(current_user.id, :order => :first_name)
     
     if @addresses.nil? || @addresses.empty?
       @address = Address.new
-      render :action => "add_new_billing_address"
+      render :action => "add_new_shipping_address"
       return
+    end
+    
+    if current_user.default_payment_profile.nil?
+      redirect_to "/payment_profiles/new?source_c=account&source_a=check_out" and return
     end
     
     @shipping_address = get_address_from_session(:shipping_address)
@@ -114,45 +113,14 @@ class AccountController < ApplicationController
       @shipping_address = get_last_shipping_address @addresses
     end
     
-    @billing_address = get_address_from_session(:billing_address)
-    if @billing_address.nil?
-      @billing_address = get_last_billing_address @addresses
-    end
     @order = Order.new
   end
 
-  def add_new_billing_address
-    @address = Address.new
-    @address.user_id = current_user.id
-  end
-  
   def add_new_shipping_address
     @address = Address.new
     @address.user_id = current_user.id
   end
-  
-  def create_new_billing_address
-    @billing_address = Address.new(params[:address])
-    @billing_address.user_id = current_user.id
-
-    if @billing_address.save
-      @addresses = Address.find_active(current_user.id, :order => :first_name)
-      @cart = Cart.find_active_by_user_id(current_user.id)
-      session[:billing_address] = @billing_address.id
-
-      @shipping_address = get_address_from_session(:shipping_address)
-      if (@shipping_address.nil?)
-        @shipping_address = get_last_shipping_address @addresses
-      end
-          
-      @order = Order.new
-      render :action => "check_out"
-    else
-      @address = @billing_address
-      render :action => "add_new_billing_address"
-    end    
-  end
-  
+    
   def create_new_shipping_address
     @shipping_address = Address.new(params[:address])
     @shipping_address.user_id = current_user.id
@@ -161,11 +129,6 @@ class AccountController < ApplicationController
       @addresses = Address.find_active(current_user.id, :order => :first_name)
       @cart = Cart.find_active_by_user_id(current_user.id)
       session[:shipping_address] = @shipping_address.id
-
-      @billing_address = get_address_from_session(:billing_address)
-      if (@billing_address.nil?)
-        @billing_address = get_last_billing_address @addresses
-      end
           
       @order = Order.new
       render :action => "check_out"
@@ -186,14 +149,10 @@ class AccountController < ApplicationController
     @order = @cart.build_order_properly(params[:order])
 
     @order.ip_address = request.remote_ip
-    @order.billing_address_id = params[:billing_address_id]
     @order.shipping_address_id = params[:shipping_address_id]
     @order.user_id = current_user.id
     
-    if params[:payment_profile].nil?
-      @order.errors.add(:payment_profile_id, "Card must be selected")
-      fail_checkout
-    elsif (!@order.purchase(PaymentProfile.find(params[:payment_profile][:payment_profile_id])))
+    if (!@order.purchase(current_user.default_payment_profile))
       fail_checkout
     end
   end
@@ -205,18 +164,7 @@ class AccountController < ApplicationController
       @shipping_address = get_last_shipping_address @addresses
     end
 
-    @billing_address = get_address_from_session(:billing_address)
-    if @billing_address.nil?
-      @billing_address = get_last_billing_address @addresses
-    end
-
     render 'check_out'    
-  end
-  
-  def select_new_billing_address
-    @addresses = Address.find_active(current_user.id, :order => :first_name)
-    @action = "billing"
-    render 'select_new_address'
   end
   
   def select_new_shipping_address
@@ -227,12 +175,6 @@ class AccountController < ApplicationController
   
   def choose_new_shipping_address
     session[:shipping_address] = params[:address_id]      
-    
-    redirect_to :action => 'check_out'
-  end
-
-  def choose_new_billing_address
-    session[:billing_address] = params[:address_id]      
     
     redirect_to :action => 'check_out'
   end
@@ -282,21 +224,12 @@ class AccountController < ApplicationController
     end
   end
   
-  def get_last_billing_address(user_id=nil, addresses)
-    last_order = get_last_order(user_id, "billing_address_id")
-    if last_order
-      last_order.billing_address
-    else
-      addresses.first
-    end
-  end
-  
   def get_last_shipping_address(user_id=nil, addresses)
     last_order = get_last_order(user_id, "shipping_address_id")
     if last_order
       last_order.shipping_address
     else
-      addresses.first
+      current_user.default_shipping_address
     end
   end
   

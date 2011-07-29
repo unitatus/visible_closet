@@ -1,19 +1,20 @@
 # == Schema Information
-# Schema version: 20110701051132
+# Schema version: 20110729175338
 #
 # Table name: payment_transactions
 #
-#  id            :integer         not null, primary key
-#  order_id      :integer
-#  action        :string(255)
-#  amount        :integer
-#  success       :boolean
-#  authorization :string(255)
-#  message       :string(255)
-#  params        :text
-#  user_id       :integer
-#  created_at    :datetime
-#  updated_at    :datetime
+#  id                 :integer         not null, primary key
+#  order_id           :integer
+#  action             :string(255)
+#  amount             :integer
+#  success            :boolean
+#  authorization      :string(255)
+#  message            :string(255)
+#  params             :text
+#  user_id            :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#  payment_profile_id :integer
 #
 
 class PaymentTransaction < ActiveRecord::Base
@@ -44,9 +45,9 @@ class PaymentTransaction < ActiveRecord::Base
                                                                   :customer_payment_profile_id => payment_profile.identifier}})
 
     if response.success? and response.authorization
-      [create!(:action => "purchase", :amount => total_to_pay, :response => response, :order_id => order_id), nil]
+      [create!(:action => "purchase", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id), nil]
     elsif RAILS_ENV == "development"
-      [create!(:action => "purchase in dev (failed, overrode)", :amount => total_to_pay, :response => response, :order_id => order_id), nil]
+      [create!(:action => "purchase in dev (failed, overrode)", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id), nil]
     else
       [nil, response.message]
     end

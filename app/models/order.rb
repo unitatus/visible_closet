@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110701051132
+# Schema version: 20110729155026
 #
 # Table name: orders
 #
@@ -9,7 +9,6 @@
 #  user_id             :integer
 #  created_at          :datetime
 #  updated_at          :datetime
-#  billing_address_id  :integer
 #  shipping_address_id :integer
 #
 
@@ -50,14 +49,6 @@ class Order < ActiveRecord::Base
       return nil
     end
 
-  end
-  
-  def billing_address
-    begin
-      Address.find(self.billing_address_id)
-    rescue ActiveRecord::RecordNotFound
-      return nil
-    end
   end
   
   def build_order_line(attributes={})
@@ -126,22 +117,6 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def purchase_options
-    billing_address = Address.find(billing_address_id)
-    {
-      :ip => ip_address,
-      :billing_address => {
-        :name => billing_address.first_name + " " + billing_address.last_name,
-        :address1 => billing_address.address_line_1,
-        :address2 => billing_address.address_line_2,
-        :city => billing_address.city,
-        :state => billing_address.state,
-        :country => billing_address.country,
-        :zip => billing_address.zip
-      }
-    }
-  end
-  
   # this method throws a RuntimeError b/c the only way that save wouldn't work is if something went really wrong
   # and we don't want to miss that
   def do_purchase_processing()

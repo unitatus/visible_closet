@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110729144256) do
+ActiveRecord::Schema.define(:version => 20110729175338) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -93,7 +93,6 @@ ActiveRecord::Schema.define(:version => 20110729144256) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "billing_address_id"
     t.integer  "shipping_address_id"
   end
 
@@ -128,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20110729144256) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "payment_profile_id"
   end
 
   add_index "payment_transactions", ["order_id"], :name => "index_payment_transactions_on_order_id"

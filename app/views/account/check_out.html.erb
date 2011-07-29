@@ -9,28 +9,7 @@
 	<% end %>
 	
 <%= form_for @order, :url => "/account/finalize_check_out", :html => { :class => "standard" } do |f| %>
-  <div style="width: 200px; display: block; position: relative;">
-	<div class="simple_header">Billing Address</div>
-	<%= hidden_field_tag :billing_address_id, @billing_address.id %>
-	<%= @billing_address.first_name %> <%= @billing_address.last_name %>
-	<br><%= @billing_address.address_line_1 %>
-	<% if !@billing_address.address_line_2.blank? %>
-	<br><%= @billing_address.address_line_2 %>
-	<% end %>
-	<br><%= @billing_address.city %>, <%= @billing_address.state %>
-	<br><%= @billing_address.zip %>
-	<br>Day Phone: <%= number_to_phone(@billing_address.day_phone) %>
-	<% if !@billing_address.evening_phone.nil? %>
-	<br>Evening Phone: <%= number_to_phone(@billing_address.evening_phone) %>
-	<% end %>
-	<br>
-	<% if @addresses.size > 1 %>
-	<a href="/account/select_new_billing_address">Choose other address</a> |
-	<% end %>
-	<a href="/account/add_new_billing_address">Enter new address</a>
-  </div>
-  <div style="width: 200px; display: block; position: relative;">
-	<div class="simple_header">Shipping Address</div>
+	<div class="simple_header">Shipping Address</div><br>
 	<%= hidden_field_tag :shipping_address_id, @shipping_address.id %>
 	<%= @shipping_address.first_name %> <%= @shipping_address.last_name %>
 	<br><%= @shipping_address.address_line_1 %>
@@ -43,55 +22,21 @@
 	<% if !@shipping_address.evening_phone.nil? %>
 	<br>Evening Phone: <%= number_to_phone(@shipping_address.evening_phone) %>
 	<% end %>
-	<br>
+	<br><br>
 	<% if @addresses.size > 1 %>
 	<a href="/account/select_new_shipping_address">Choose other address</a> |
 	<% end %>
 	<a href="/account/add_new_shipping_address">Enter new address</a>
-  </div>
 <br>
 <br>
 <hr>
-<div class="simple_header" style="padding: 0 0 0 0">Credit Card Info</div><br>
-<div class="graybox">
-<table>
-	<thead>
-		<tr>
-			<th colspan="4" style="font-size: 145%">Select a credit card, or <a href="/payment_profiles/new?source_c=account&source_a=check_out">add a new one</a>.
-	<% if @order.errors.size > 0 %>
-	<br><br>
-	<%= error_messages_for_attribute(@order, :payment_profile_id) %>
-	<% end %>		
-		</th>
-		</tr>
-		<tr><th>&nbsp;</th><th style="font-size: 125%">Credit Card</th><th style="font-size: 125%">Name on card</th><th style="font-size: 125%">Expires on</th></tr>
-	</thead>
-	<tbody class="top-line bottom-line"> 
-<% current_user.payment_profiles.each_with_index do |profile, index| %>
-	<td style="vertical-align: middle">
-	<% if (params[:payment_profile].nil? && index == 0) || (!params[:payment_profile].nil? && params[:payment_profile][:payment_profile_id] == profile.id.to_s) %>
-		<%= radio_button(:payment_profile, :payment_profile_id, profile.id, :checked => true)%>	
-	<% else %>
-		<%= radio_button(:payment_profile, :payment_profile_id, profile.id)%>	
-	<% end %>
-	</td>
-	<td style="text-align: middle">
-		<%= profile.cc_type.capitalize %> ending in <%= profile.last_four_digits %>
-	</td>
-	<td>
-		<%= profile.first_name %> <%= profile.last_name %>
-	</td>
-	<td>
-		<%= profile.exp_month %> / <%= profile.exp_year %>
-	</td>
-	</tr>
-<% end %>
-	</tbody>
-	<tr><td colspan="4" style="text-align: right"><a href="/payment_profiles">Manage your cards &gt;&gt;</a></td></tr>
-	
-</table>
-</div>
-<br>
+<div class="simple_header" style="padding: 0 0 0 0">Credit Card (default on file)</div><br>
+<% profile = current_user.default_payment_profile %>
+<b><%= profile.cc_type.capitalize %></b> ending in <%= profile.last_four_digits %>.<br>
+Name on card: <%= profile.first_name %> <%= profile.last_name %><br>
+Expires on: <%= profile.exp_month %>/<%= profile.exp_year %><br><br>
+	<a href="/payment_profiles">Manage your cards</a> | <a href="/payment_profiles/new?source_c=account&source_a=check_out">Enter new default card</a>
+<br><br>
 <hr>
 	<table class="check_out_cart_summary">
 		<tr>

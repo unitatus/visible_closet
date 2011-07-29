@@ -65,6 +65,8 @@ class User < ActiveRecord::Base
   validates_inclusion_of :role, :in => [ ADMIN, MANAGER, NORMAL ]
 
   has_many :addresses
+  belongs_to :default_shipping_address, :class_name => "Address"
+  belongs_to :default_payment_profile, :class_name => "PaymentProfile"
     
   def after_initialize 
     self.role ||= NORMAL
@@ -139,6 +141,18 @@ class User < ActiveRecord::Base
   
   def payment_profiles
     PaymentProfile.find_all_by_active_and_user_id(true, self.id)
+  end
+  
+  def active_address_count
+    Address.count(:conditions => "status = 'active' AND user_id = #{self.id}")
+  end
+  
+  def payment_profile_count
+    PaymentProfile.count(:conditions => "user_id = #{self.id}")
+  end
+  
+  def addresses
+    Address.find_all_by_status_and_user_id("active", self.id)
   end
   
   private 
