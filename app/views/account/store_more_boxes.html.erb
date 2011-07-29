@@ -16,10 +16,20 @@
                 <tr>
                     <td class="detailtext">Number of boxes you would like to store:</td>
                     <td>
-						<%= number_field_tag(:num_boxes_yours, @cart.get_quantity(Rails.application.config.your_box_product_id), :class => "numberbox") %>
+	                	<div class="incrementer">
+		                    <span>&nbsp;</span>
+							<%= text_field_tag(:num_boxes_yours, @cart.get_quantity(Rails.application.config.your_box_product_id), :class => "numberbox") %>
+		                    <div class="increment-up"></div>
+		                    <div class="increment-down"></div>
+		                </div>
 					</td>
                     <td>
-						<%= number_field_tag(:num_boxes_ours, @cart.get_quantity(Rails.application.config.our_box_product_id), :class => "numberbox") %>
+	                	<div class="incrementer">
+		                    <span>&nbsp;</span>
+							<%= text_field_tag(:num_boxes_ours, @cart.get_quantity(Rails.application.config.our_box_product_id), :class => "numberbox") %>
+		                    <div class="increment-up"></div>
+		                    <div class="increment-down"></div>
+		                </div>
 					</td>
                 </tr>
             </tbody>
