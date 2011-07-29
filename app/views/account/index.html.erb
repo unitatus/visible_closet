@@ -4,9 +4,44 @@
 <p class="notice"><%= notice %></p>
 <p class="alert"><%= alert %></p>
 <p>
-At some point this will contain more information ... but not today! 
+<div class="simple_header">Your Visible Closet</div>
+	<% total_boxes = Box.count_boxes(current_user) %>
+	<% with_you = Box.count_boxes(current_user, Box::BEING_PREPARED_STATUS) %>
+	<% in_transit = Box.count_boxes(current_user, Box::BEING_PREPARED_STATUS) %>
+<a href="/boxes">Boxes in storage</a>: <%= total_boxes %><br>
+&nbsp;&nbsp;&nbsp;With you: <%= with_you %><br>
+&nbsp;&nbsp;&nbsp;In transit: <%= in_transit %><br>
+&nbsp;&nbsp;&nbsp;With us: <%= total_boxes - in_transit - with_you %><br>
 <br>
-<br>
-<br>
+<a href="#">Inventory items</a>: <%= StoredItem.count_items(current_user) %>
+<div class="simple_header">Account Info</div>
+<% payment_profile = current_user.default_payment_profile %>
+<b>Default credit card on file:</b>
+<% if payment_profile.nil? %>
+none.
+<% else %>
+<%= payment_profile.cc_type.capitalize %></b>, ************<%= payment_profile.last_four_digits %>, exp <%= payment_profile.exp_month %>/<%= payment_profile.exp_year %>. 
+<% end %>
+<br>&nbsp;&nbsp;&nbsp;
+<% if payment_profile.nil? %>
+<a href="/payment_profiles/new">Set up a default credit card &gt;&gt;</a>
+<% else %>
+<a href="/payment_profiles">Manage your credit cards on file &gt;&gt;</a>
+<% end %>
+<br><br>
+<b>Default shipping address on file: </b>
+<% shipping_address = current_user.default_shipping_address %>
+<% if shipping_address.nil? %>
+ none.
+<% else %>
+<br><br>
+<%= raw address_summary(shipping_address) %>
+<% end %>
+<br>&nbsp;&nbsp;&nbsp;
+<% if shipping_address.nil? %>
+<a href="/addresses/new">Set up a default shipping address &gt;&gt;</a>
+<% else %>
+<a href="/addresses">Manage your addresses &gt;&gt;</a>
+<% end %>
 </div>
 <div class="clearer"></div>

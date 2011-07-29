@@ -38,6 +38,10 @@ class StoredItem < ActiveRecord::Base
   validates_attachment_presence :photo
   validates_attachment_content_type :photo, :content_type => [/image\/jpg/, /image\/jpeg/, /image\/pjpeg/, /image\/gif/, /image\/png/, /image\/x-png/]
   
+  def StoredItem.count_items(user)
+    count_by_sql "SELECT COUNT(*) FROM stored_items s, boxes b WHERE s.box_id = b.id AND b.assigned_to_user_id = #{user.id}"
+  end
+  
   private
   
   # simple random salt

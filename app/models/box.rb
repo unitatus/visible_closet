@@ -118,6 +118,20 @@ class Box < ActiveRecord::Base
     Box.where(:ordering_order_line_id => order_ids)
   end
   
+  def Box.count_boxes(user, status=nil, type=nil)
+    conditions = {:conditions => "assigned_to_user_id = #{user.id}"}
+    
+    if status
+      conditions[:conditions] << " AND status = '#{status}'"
+    end
+    
+    if type
+      conditions[:conditions] << " AND box_type = '#{type}'"
+    end
+    
+    Box.count(conditions)
+  end
+  
   def item_count
     StoredItem.count(:conditions => "box_id = #{self.id}")
   end
