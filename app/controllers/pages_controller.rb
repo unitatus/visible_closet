@@ -25,6 +25,10 @@ class PagesController < ApplicationController
     @top_menu_page = :hiw
   end
   
+  def pricing
+    @top_menu_page = :hiw
+  end
+  
   def contact
     @top_menu_page = :contact
   end
