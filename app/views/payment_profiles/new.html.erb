@@ -1,6 +1,7 @@
 <% @menu_page = :account %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 <div class="simple_header">Create New Card</div>
+(<%= link_to 'see all credit cards', payment_profiles_path %>)
 <div id="internal-right">
 <% if @profile.errors.size > 0 %>
 <% # If there is a credit card error, it is always followed by garbage. %>

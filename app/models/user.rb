@@ -137,6 +137,10 @@ class User < ActiveRecord::Base
     return false
   end
   
+  def payment_profiles
+    PaymentProfile.find_all_by_active_and_user_id(true, self.id)
+  end
+  
   private 
 
   def delete_cim_profile

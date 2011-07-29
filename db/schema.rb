@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110729141654) do
+ActiveRecord::Schema.define(:version => 20110729144256) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(:version => 20110729141654) do
     t.integer  "billing_address_id"
     t.string   "cc_type"
     t.string   "exp_month"
+    t.boolean  "active"
   end
 
   add_index "payment_profiles", ["user_id"], :name => "index_payment_profiles_on_user_id"

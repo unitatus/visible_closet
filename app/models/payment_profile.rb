@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110729015304
+# Schema version: 20110729144256
 #
 # Table name: payment_profiles
 #
@@ -15,6 +15,7 @@
 #  billing_address_id :integer
 #  cc_type            :string(255)
 #  exp_month          :string(255)
+#  active             :boolean
 #
 
 class PaymentProfile < ActiveRecord::Base
@@ -22,9 +23,17 @@ class PaymentProfile < ActiveRecord::Base
 
     attr_accessor :credit_card
     
-    validates_presence_of :user_id, :credit_card, :billing_address_id
+    validates_presence_of :user_id, :billing_address_id
+    validates_presence_of :credit_card, :unless => :only_active_changed
     
     validate :validate_card, :on => :create
+
+    def PaymentProfile.new(params=nil)
+      profile = super(params)
+      profile.active = true
+
+      profile
+    end
 
     def credit_card=(cc)
       if not cc.nil?
@@ -71,10 +80,11 @@ class PaymentProfile < ActiveRecord::Base
     end
 
     def update
-      if super and update_payment_profile
-        return true
+      if only_active_changed
+        super
+      else
+        false
       end
-      return false
     end
 
     def destroy
@@ -85,6 +95,10 @@ class PaymentProfile < ActiveRecord::Base
     end
 
     private
+    
+    def only_active_changed
+      changed.size <= 1 and changed[0] == 'active'
+    end
     
     def validate_card
       unless @credit_card.valid?
@@ -118,22 +132,23 @@ class PaymentProfile < ActiveRecord::Base
       end
     end
 
-    def update_payment_profile
-      profile = {:customer_profile_id => user.cim_id,
-                  :payment_profile => {:customer_payment_profile_id => self.identifier,
-                                       :bill_to => self.address_hash,
-                                       :payment => {:credit_card => self.credit_card}
-                                       }
-                  }
-      response = CIM_GATEWAY.update_customer_payment_profile(profile)
-      if response.success?
-        self.credit_card = nil
-        return true
-      else
-        errors.add("cc_response", response.message)
-        return false
-      end
-    end
+    # Updates are not allowed, but this method is kept around just in case, since it may prove useful.
+    # def update_payment_profile
+    #   profile = {:customer_profile_id => user.cim_id,
+    #               :payment_profile => {:customer_payment_profile_id => self.identifier,
+    #                                    :bill_to => self.address_hash,
+    #                                    :payment => {:credit_card => self.credit_card}
+    #                                    }
+    #               }
+    #   response = CIM_GATEWAY.update_customer_payment_profile(profile)
+    #   if response.success?
+    #     self.credit_card = nil
+    #     return true
+    #   else
+    #     errors.add("cc_response", response.message)
+    #     return false
+    #   end
+    # end
 
     def delete_payment_profile
       response = CIM_GATEWAY.delete_customer_payment_profile(:customer_profile_id => self.user.cim_id,
