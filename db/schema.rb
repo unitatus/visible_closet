@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110729131208) do
+ActiveRecord::Schema.define(:version => 20110729141654) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -191,11 +191,11 @@ ActiveRecord::Schema.define(:version => 20110729131208) do
   add_index "stored_items", ["box_id"], :name => "index_stored_items_on_box_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                     :default => "",   :null => false
-    t.string   "encrypted_password",         :limit => 128, :default => "",   :null => false
+    t.string   "email",                                      :default => "",   :null => false
+    t.string   "encrypted_password",          :limit => 128, :default => "",   :null => false
     t.string   "reset_password_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                             :default => 0
+    t.integer  "sign_in_count",                              :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -204,7 +204,7 @@ ActiveRecord::Schema.define(:version => 20110729131208) do
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.integer  "failed_attempts",                           :default => 0
+    t.integer  "failed_attempts",                            :default => 0
     t.string   "unlock_token"
     t.datetime "locked_at"
     t.string   "authentication_token"
@@ -212,11 +212,12 @@ ActiveRecord::Schema.define(:version => 20110729131208) do
     t.datetime "updated_at"
     t.string   "last_name"
     t.string   "first_name"
-    t.boolean  "beta_user",                                 :default => true
+    t.boolean  "beta_user",                                  :default => true
     t.text     "signup_comments"
     t.string   "role"
     t.string   "cim_id"
     t.integer  "default_payment_profile_id"
+    t.integer  "default_shipping_address_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

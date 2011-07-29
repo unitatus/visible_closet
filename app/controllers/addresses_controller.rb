@@ -1,5 +1,5 @@
 class AddressesController < ApplicationController
-# TODO: This really needs to be made live instead of relying on account controller
+  authorize_resource
 
   # GET /addresses
   # GET /addresses.xml
@@ -12,16 +12,16 @@ class AddressesController < ApplicationController
     end
   end
 
-  # GET /boxes/1
-  # GET /boxes/1.xml
-  def show
-    @address = Address.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @address }
-    end
-  end
+  # # GET /boxes/1
+  # # GET /boxes/1.xml
+  # def show
+  #   @address = Address.find(params[:id])
+  # 
+  #   respond_to do |format|
+  #     format.html # show.html.erb
+  #     format.xml  { render :xml => @address }
+  #   end
+  # end
   
   # GET /addresses/new
   # GET /addresses/new.xml
@@ -37,7 +37,7 @@ class AddressesController < ApplicationController
 
   # GET /addresses/1/edit
   def edit
-    @address = Address.find_by_id_and_user_id(params[:id], current_user.id)
+    @address = Address.find_active_by_id_and_user_id(params[:id], current_user.id)
   end
 
   # POST /addresses
@@ -60,7 +60,7 @@ class AddressesController < ApplicationController
   # PUT /addresses/1
   # PUT /addresses/1.xml
   def update
-    @address = Address.find_by_id_and_user_id(params[:id], current_user.id)
+    @address = Address.find_active_by_id_and_user_id(params[:id], current_user.id)
 
     respond_to do |format|
       if @address.update_attributes(params[:address])
@@ -76,7 +76,7 @@ class AddressesController < ApplicationController
   # DELETE /addresses/1
   # DELETE /addresses/1.xml
   def destroy
-    @address = Address.find_by_id_and_user_id(params[:id], current_user.id)
+    @address = Address.find_active_by_id_and_user_id(params[:id], current_user.id)
     @address.status = 'inactive'
     @address.save
 
@@ -84,5 +84,13 @@ class AddressesController < ApplicationController
         format.html { redirect_to(addresses_url) }
         format.xml  { head :ok }
     end
+  end
+  
+  # PUT /addresses/id/set_default_shipping
+  def set_default_shipping
+    current_user.update_attribute(:default_shipping_address_id, params[:id])
+    @addresses = Address.find_active(current_user.id, :order => :first_name)
+    
+    render :index
   end
 end

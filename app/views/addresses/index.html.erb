@@ -1,15 +1,18 @@
 <% @menu_page = :account %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
-<div class="grid_9">
-	<h1>Your Addresses On File</h1>
+<div id="internal-right">
+	<div class="simple_header">Your Addresses On File</div><br>
 <% if !@addresses || @addresses.size == 0 %>
 You do not have any addresses on file. Click <a href="/addresses/new">here</a> to add a new address.
 <% else %>
-<% first = true %>
-<% @addresses.each do |address| %>
-    <% if !first %>
-<hr>
-    <% end %>
+<div class="graybox">
+	<table>
+		<tbody class="top-line bottom-line">
+<% @addresses.each_with_index do |address, index| %>
+	<% if index % 3 == 0 %>
+	<tr>
+	<% end %>
+	<td>
 	<%= address.first_name %> <%= address.last_name %> 
 	<br><%= address.address_line_1 %>
 	<% if !address.address_line_2.blank? %>
@@ -22,11 +25,19 @@ You do not have any addresses on file. Click <a href="/addresses/new">here</a> t
 	<br>Evening Phone: <%= number_to_phone(address.evening_phone) %>
 	<% end %>
 	<br><%= link_to 'Edit', edit_address_path(address) %> | 
-	<%= link_to 'Destroy', address, :confirm => 'Are you sure?', :method => :delete %>
-	<p>
-<% first = false %>
+	<%= link_to 'Destroy', address, :confirm => 'Are you sure?', :method => :delete %> <br>
+	<% if current_user.default_shipping_address_id == address.id %>
+		Default Shipping Address
+	<% else %>
+		<a href="/addresses/<%=address.id%>/set_default_shipping">Make Default Shipping Address</a>
+	<% end %>
+	</td>
+	<% if (index + 1) % 3 == 0 || index == @addresses.size - 1 %>
+		</tr>
+	<% end %>
 <% end %>
-<p><div style="text-align: right">
+</tbody></table>
+<br><div style="text-align: right">
 	<%= link_to 'Create New Address >>', new_address_path() %>
 	</div>
 <% end %> <!-- nil check -->

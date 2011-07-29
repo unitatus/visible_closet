@@ -1,11 +1,8 @@
-<%= render 'account/account_nav' %>
-<div class="grid_2">
-	<h1>Edit Address</h1></div>
-	<div class="grid_10">
-	<div style="position: relative; top:8px">(<%= link_to 'See all addresses', addresses_path %>)</div>
-	</div>
-<div class="grid_12">
-	<div class="grid_7">
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div id="internal-right">
+	<div class="simple_header">Edit Address</div>
+	(<%= link_to 'See all addresses', addresses_path %>)
+<br><br>
 <%= render 'form' %>
-	</div>
 </div>

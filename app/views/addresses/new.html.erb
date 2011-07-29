@@ -1,6 +1,9 @@
-<%= render 'account/account_nav' %>
-<h1>New address</h1>
-<div class="grid_7">
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div id="internal-right">
+	<div class="simple_header">New Address</div>
+	(<%= link_to 'See all addresses', addresses_path %>)
+<br><br>
 <%= render 'form' %>
 
 </div>
