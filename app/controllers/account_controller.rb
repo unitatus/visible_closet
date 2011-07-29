@@ -95,6 +95,11 @@ class AccountController < ApplicationController
 
   def check_out
     @cart = Cart.find_active_by_user_id(current_user.id)
+    # In case we got directed in here from payment profile create
+    if not session[:payment_profile_id].blank?
+      params[:payment_profile] = {:payment_profile_id => session[:payment_profile_id].to_s}
+      session[:payment_profile_id] = nil
+    end
     
     @addresses = Address.find_active(current_user.id, :order => :first_name)
     
@@ -114,7 +119,6 @@ class AccountController < ApplicationController
       @billing_address = get_last_billing_address @addresses
     end
     @order = Order.new
-    
   end
 
   def add_new_billing_address
@@ -186,23 +190,27 @@ class AccountController < ApplicationController
     @order.shipping_address_id = params[:shipping_address_id]
     @order.user_id = current_user.id
     
-    payment_profile = PaymentProfile.find(params[:payment_profile][:payment_profile_id])
-
-    # This executes the money purchase and triggers all the other actions that come after it if successful
-    if (!@order.purchase(payment_profile))
-      @addresses = Address.find_active(current_user.id, :order => :first_name)
-      @shipping_address = get_address_from_session(:shipping_address)
-      if (@shipping_address.nil?)
-        @shipping_address = get_last_shipping_address @addresses
-      end
-
-      @billing_address = get_address_from_session(:billing_address)
-      if @billing_address.nil?
-        @billing_address = get_last_billing_address @addresses
-      end
-
-      render 'check_out'
+    if params[:payment_profile].nil?
+      @order.errors.add(:payment_profile_id, "Card must be selected")
+      fail_checkout
+    elsif (!@order.purchase(PaymentProfile.find(params[:payment_profile][:payment_profile_id])))
+      fail_checkout
     end
+  end
+  
+  def fail_checkout
+    @addresses = Address.find_active(current_user.id, :order => :first_name)
+    @shipping_address = get_address_from_session(:shipping_address)
+    if (@shipping_address.nil?)
+      @shipping_address = get_last_shipping_address @addresses
+    end
+
+    @billing_address = get_address_from_session(:billing_address)
+    if @billing_address.nil?
+      @billing_address = get_last_billing_address @addresses
+    end
+
+    render 'check_out'    
   end
   
   def select_new_billing_address

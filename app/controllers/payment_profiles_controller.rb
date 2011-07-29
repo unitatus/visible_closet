@@ -11,6 +11,11 @@ class PaymentProfilesController < ApplicationController
   def new
     @profile = PaymentProfile.new
     @credit_card = ActiveMerchant::Billing::CreditCard.new()
+    
+    if not params[:source_c].blank?
+      session[:source_c] = params[:source_c]
+      session[:source_a] = params[:source_a]
+    end
   end
   
   def create
@@ -22,9 +27,23 @@ class PaymentProfilesController < ApplicationController
     @profile.user_id = current_user.id
     
     if @profile.save
-      render :action => "index"
+      if not (session[:source_c].blank?) # we came from somewhere; return there
+        session[:payment_profile_id] = @profile.id
+        redirect_to :controller => session[:source_c], :action => session[:source_a]
+        session[:source_c] = nil
+        session[:source_a] = nil
+      else
+        render :action => "index"
+      end
     else
       puts("Failed to save payment profile. Errors are " << @profile.errors.inspect)
+      # Need to completely reset @profile, as otherwise Rails will make the form an edit form. :|
+      @new_profile = PaymentProfile.new
+      @new_profile.billing_address_id = @profile.billing_address_id
+      @profile.errors.each do |attr, msg|
+        @new_profile.errors.add(attr, msg)
+      end
+      @profile = @new_profile
       render :action => "new"
     end
   end

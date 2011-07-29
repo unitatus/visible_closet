@@ -57,14 +57,19 @@
 <table>
 	<thead>
 		<tr>
-			<th colspan="4" style="font-size: 145%">Select a credit card, or <a href="/payment_profiles/new">add a new one</a>.</th>
+			<th colspan="4" style="font-size: 145%">Select a credit card, or <a href="/payment_profiles/new?source_c=account&source_a=check_out">add a new one</a>.
+	<% if @order.errors.size > 0 %>
+	<br><br>
+	<%= error_messages_for_attribute(@order, :payment_profile_id) %>
+	<% end %>		
+		</th>
 		</tr>
 		<tr><th>&nbsp;</th><th style="font-size: 125%">Credit Card</th><th style="font-size: 125%">Name on card</th><th style="font-size: 125%">Expires on</th></tr>
 	</thead>
 	<tbody class="top-line bottom-line"> 
 <% current_user.payment_profiles.each_with_index do |profile, index| %>
 	<td style="vertical-align: middle">
-	<% if (params[:payment_profile][:payment_profile_id].blank? && index == 0) || (params[:payment_profile][:payment_profile_id] == profile.id.to_s) %>
+	<% if (params[:payment_profile].nil? && index == 0) || (!params[:payment_profile].nil? && params[:payment_profile][:payment_profile_id] == profile.id.to_s) %>
 		<%= radio_button(:payment_profile, :payment_profile_id, profile.id, :checked => true)%>	
 	<% else %>
 		<%= radio_button(:payment_profile, :payment_profile_id, profile.id)%>	

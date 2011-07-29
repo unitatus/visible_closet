@@ -64,6 +64,7 @@ class PaymentProfile < ActiveRecord::Base
         if self.id
           #destroy the instance if it was created
           self.destroy
+          self.id = nil
         end
         return false
       end
