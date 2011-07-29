@@ -185,9 +185,11 @@ class AccountController < ApplicationController
     @order.billing_address_id = params[:billing_address_id]
     @order.shipping_address_id = params[:shipping_address_id]
     @order.user_id = current_user.id
+    
+    payment_profile = PaymentProfile.find(params[:payment_profile][:payment_profile_id])
 
     # This executes the money purchase and triggers all the other actions that come after it if successful
-    if (!@order.purchase)
+    if (!@order.purchase(payment_profile))
       @addresses = Address.find_active(current_user.id, :order => :first_name)
       @shipping_address = get_address_from_session(:shipping_address)
       if (@shipping_address.nil?)

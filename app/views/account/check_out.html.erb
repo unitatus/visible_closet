@@ -1,9 +1,16 @@
 <% @menu_page = :account %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 <div id="internal-right">
+	<% if @order.errors.size > 0 %>
+	<% # If there is a credit card error, it is always followed by garbage. %>
+		<% if not @order.errors[:cc_response].nil? %>
+	  <div class="error_label"><%= @order.errors[:cc_response][0] %></div><br>
+		<% end %>
+	<% end %>
+	
 <%= form_for @order, :url => "/account/finalize_check_out", :html => { :class => "standard" } do |f| %>
-  <div class="grid_4">
-	<h3>Billing Address</h3>
+  <div style="width: 200px; display: block; position: relative;">
+	<div class="simple_header">Billing Address</div>
 	<%= hidden_field_tag :billing_address_id, @billing_address.id %>
 	<%= @billing_address.first_name %> <%= @billing_address.last_name %>
 	<br><%= @billing_address.address_line_1 %>
@@ -22,9 +29,8 @@
 	<% end %>
 	<a href="/account/add_new_billing_address">Enter new address</a>
   </div>
-  <div class="grid_4">
-	<div style="padding-left: 30px">
-	<h3>Shipping Address</h3>
+  <div style="width: 200px; display: block; position: relative;">
+	<div class="simple_header">Shipping Address</div>
 	<%= hidden_field_tag :shipping_address_id, @shipping_address.id %>
 	<%= @shipping_address.first_name %> <%= @shipping_address.last_name %>
 	<br><%= @shipping_address.address_line_1 %>
@@ -42,51 +48,44 @@
 	<a href="/account/select_new_shipping_address">Choose other address</a> |
 	<% end %>
 	<a href="/account/add_new_shipping_address">Enter new address</a>
-	</div>
   </div>
 <br>
 <br>
 <hr>
-<div class="simple_header">Credit Card Info</div><br>
-	<div class="field clearfix">
-	<%= f.label :card_type %>
-	<div style="position:relative; right:210px; top:10px;">
-	<%= f.select :card_type, [["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]] %>
-	<%= error_messages_for_attribute(@order, :card_type) %>
-	</div>
-	</div>
-	<div class="field clearfix">
-	<%= f.label :card_first_name %>
-	<%= f.text_field :card_first_name, :class => "textbox" %>
-	<%= error_messages_for_attribute(@order, :card_first_name) %>
-	</div>
-	<div class="field clearfix">
-	<%= f.label :card_last_name %>
-	<%= f.text_field :card_last_name, :class => "textbox" %>
-	<%= error_messages_for_attribute(@order, :card_last_name) %>
-	</div>
-	<div class="field clearfix">
-	<%= f.label :card_number %>
-	<%= f.text_field :card_number, :class => "textbox" %>
-	<%= error_messages_for_attribute(@order, :card_number) %>
-	<div style="color:red">
-		At this time the site does not do anything with credit cards.
-	</div>
-	</div>
-	<div class="field clearfix">
-	<%= f.label :card_verification_value %>
-	<%= f.text_field :card_verification_value, :class => "textbox" %>
-	<%= error_messages_for_attribute(@order, :card_verification_value) %>
-	</div>
-	<div class="field clearfix">
-	<%= f.label :card_expires_on %>
-		<div style="position:relative; right:160px; top:4px;">
-	<%= f.select :card_month, [["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December"]] %>
-	<%= f.select :card_year, year_array %>
-	<%= error_messages_for_attribute(@order, :card_month) %>
-	<%= error_messages_for_attribute(@order, :card_year) %>
-		</div>
-	</div>
+<div class="simple_header" style="padding: 0 0 0 0">Credit Card Info</div><br>
+<div class="graybox">
+<table>
+	<thead>
+		<tr>
+			<th colspan="4" style="font-size: 145%">Select a credit card, or <a href="/payment_profiles/new">add a new one</a>.</th>
+		</tr>
+		<tr><th>&nbsp;</th><th style="font-size: 125%">Credit Card</th><th style="font-size: 125%">Name on card</th><th style="font-size: 125%">Expires on</th></tr>
+	</thead>
+	<tbody class="top-line bottom-line"> 
+<% current_user.payment_profiles.each_with_index do |profile, index| %>
+	<td style="vertical-align: middle">
+	<% if (params[:payment_profile][:payment_profile_id].blank? && index == 0) || (params[:payment_profile][:payment_profile_id] == profile.id.to_s) %>
+		<%= radio_button(:payment_profile, :payment_profile_id, profile.id, :checked => true)%>	
+	<% else %>
+		<%= radio_button(:payment_profile, :payment_profile_id, profile.id)%>	
+	<% end %>
+	</td>
+	<td style="text-align: middle">
+		<%= profile.cc_type.capitalize %> ending in <%= profile.last_four_digits %>
+	</td>
+	<td>
+		<%= profile.first_name %> <%= profile.last_name %>
+	</td>
+	<td>
+		<%= profile.exp_month %> / <%= profile.exp_year %>
+	</td>
+	</tr>
+<% end %>
+	</tbody>
+	<tr><td colspan="4" style="text-align: right"><a href="/payment_profiles">Manage your cards &gt;&gt;</a></td></tr>
+	
+</table>
+</div>
 <br>
 <hr>
 	<table class="check_out_cart_summary">

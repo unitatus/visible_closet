@@ -19,12 +19,9 @@ class Order < ActiveRecord::Base
   has_many :order_lines, :dependent => :destroy
   has_one :user
 
-  attr_accessor :card_number, :card_verification_value, :card_first_name, :card_last_name, :card_type, :card_month, :card_year
   attr_accessible :user_id, :created_at
 
-  validate :validate_card, :on => :create
-
-  def purchase
+  def purchase(payment_profile)
     transaction_successful = false
 
     self.transaction do
@@ -34,17 +31,7 @@ class Order < ActiveRecord::Base
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
       do_purchase_processing
 
-      # TODO: This needs to be refactored into a payment processor object that takes a user, payment object thingie, and a charges array, so we can 
-      # have charges for the user.
-      response = PURCHASE_GATEWAY.purchase(total_in_cents, credit_card, purchase_options)
-      if !response.success?
-        errors.add("cc_response", response.message)
-        raise ActiveRecord::Rollback
-      end
-      
-      # Do this after creating the payments so that we know the payments went through ok
-      payment_transactions.create(:action => "purchase", :amount => total_in_cents, :response => response)
-      generate_charges
+      pay_for_order(payment_profile)
       
       transaction_successful = true
     end # end transaction    
@@ -93,12 +80,16 @@ class Order < ActiveRecord::Base
     return status
   end
   
+  # this method saves the charges
   def generate_charges
     raise "Attempted to call generate charges on unsaved order" unless self.id
+    charges = Array.new
     
     order_lines.each do | order_line |
-      raise "Failed to generate charge for order_line " + order_line.inspect unless Charge.create!(:user_id => user_id, :total_in_cents => order_line.total_in_cents, :product_id => order_line.product_id)
+      charges << Charge.create!(:user_id => user_id, :total_in_cents => order_line.total_in_cents, :product_id => order_line.product_id)
     end
+    
+    charges
   end
   
   def vc_box_count
@@ -122,6 +113,18 @@ class Order < ActiveRecord::Base
   end
   
   private
+  
+  # This method saves the transactions
+  def pay_for_order(payment_profile)
+    charges = generate_charges
+
+    new_transaction, message = PaymentTransaction.pay(charges, payment_profile, self.id)
+    
+    if new_transaction.nil?
+      errors.add("cc_response", message)
+      raise ActiveRecord::Rollback
+    end
+  end
 
   def purchase_options
     billing_address = Address.find(billing_address_id)
@@ -137,28 +140,6 @@ class Order < ActiveRecord::Base
         :zip => billing_address.zip
       }
     }
-  end
-
-  def validate_card
-    unless credit_card.valid?
-      credit_card.errors.each do |attr, messages|
-        messages.each do | message |
-          errors.add("card_" + attr, message)
-        end
-      end
-    end
-  end
-
-  def credit_card
-    @credit_card ||= ActiveMerchant::Billing::CreditCard.new(
-      :type => card_type,
-      :number => card_number,
-      :verification_value => card_verification_value,
-      :month => card_month,
-      :year => card_year,
-      :first_name => card_first_name,
-      :last_name => card_last_name
-    )
   end
   
   # this method throws a RuntimeError b/c the only way that save wouldn't work is if something went really wrong
