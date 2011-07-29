@@ -22,11 +22,14 @@
 			<% if box.status == Box::NEW_STATUS && box.box_type == Box::VC_BOX_TYPE %>
 				<% image_file = "status-inventory-to-you" %>
 				<% alt = "Inventory Complete" %>
-			<% elsif box.status == Box::IN_TRANSIT_STATUS %>
+			<% elsif box.status == Box::IN_TRANSIT_TO_YOU_STATUS %>
 				<% image_file = "status-inventory-to-you" %>
 				<% alt = "In Transit" %>
+			<% elsif box.status == Box::IN_TRANSIT_TO_TVC_STATUS %>
+				<% image_file = "status-inventory-to-us" %>
+				<% alt = "In Transit" %>			
 			<% elsif box.status == Box::IN_STORAGE_STATUS && box.indexing_status == Box::NO_INDEXING_REQUESTED %>
-				<% image_file = "missing" %>
+				<% image_file = "status-inventory-storage" %>
 				<% alt = "In Storage" %>
 			<% elsif box.status == Box::IN_STORAGE_STATUS && box.indexing_status == Box::INDEXING_REQUESTED %>
 				<% image_file = "status-inventory-processing" %>
@@ -35,12 +38,17 @@
 				<% image_file = "status-inventory-complete" %>
 				<% alt = "Inventory Complete" %>
 			<% elsif box.status == Box::BEING_PREPARED_STATUS %>
-				<% image_file = "missing" %>
+				<% image_file = "status-inventory-packed" %>
 				<% alt = "Being Prepared by You" %>
 			<% end %>
             <img src="/images/<%= image_file %>.jpg" alt="<%= alt %>" />
             <p><strong>Box Status: </strong><%= box.status_en %></p>
-            <p><strong>Number of Items: </strong><%= box.item_count %></p>
+            <p><strong>Number of Items: </strong>
+			<% if box.indexing_status == Box::INDEXED %>
+				<%= box.item_count %></p>
+			<% else %>
+				Unknown
+			<% end %>
 			<% if box.status == Box::IN_STORAGE_STATUS %>
 			<p><strong>Date Received: </strong><%=box.received_at.blank? ? "unknown" : box.received_at.strftime('%m/%d/%Y')%></p>
 			<% else %>
@@ -51,7 +59,9 @@
                     <p class="browse-box-menu-contents-head">Box Options</p>
                     <ul>
                         <li><a href="/boxes/<%= box.id %>/edit">edit</a></li>
-                        <li><a href="#">mail this box</a></li>
+						<% if box.status == Box::IN_STORAGE_STATUS %>
+                        <li><a href="#">return this box</a></li>
+						<% end %>
 						<% if box.indexing_status == Box::INDEXED %>
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>
 						<% end %>

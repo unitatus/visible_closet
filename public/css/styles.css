@@ -447,6 +447,61 @@ body {
     border: 1px solid #c7c7c7;
 }
 
+.graybox input[type="number"] {
+    border: 1px solid #c7c7c7;
+}
+
+.graybox .incrementer {
+    border: 0px;
+    background-color: transparent;
+    width: 60px;
+    height: 39px;
+    background-image: url('../images/inputBG.gif');
+    position: relative;
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
+}
+
+.graybox .incrementer input[type="text"], .graybox .incrementer input[type="number"] {
+    border: 0px;
+    background-color: transparent;
+    width: 40px;
+    height: 39px;
+    font-size: 20px;
+    text-align: center;
+    display: block;
+    float: left;
+    margin: 0px;
+}
+
+.graybox .incrementer .increment-up {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 0px;
+    right: 0px;
+    cursor: pointer;
+}
+
+.graybox .incrementer .increment-down {
+    position: absolute;
+    width: 20px;
+    height: 19px;
+    bottom: 0px;
+    right: 0px;
+    cursor: pointer;
+}
+
+.graybox span {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+}
+
 /* PAGE SPECIFIC */
 
 /* how it works */
@@ -467,6 +522,46 @@ body {
     color: #323232;
     position: relative;
     padding: 15px;
+}
+
+#legend {
+    width: 230px;
+    display: block;
+    background-image: url('../images/legend-middle.gif');
+}
+
+#legend img {
+    display: block;
+}
+
+#legend .legend-item {
+    width: 170px;
+    height: 50px;
+    display: block;
+    position: relative;
+    left: 30px;
+}
+
+#legend .legend-item img {
+    float: left;
+    padding-right: 10px;
+}
+
+#legend .legend-item p {
+    color: #2a2a2a;
+    font-size: 12px;
+    line-height: 18px;
+    padding: 10px 0px 10px 0px;
+}
+
+#legend .legend-border {
+    border-top: 1px solid #d3d3d3;
+    border-bottom: 1px solid #ffffff;
+    clear: both;
+    height: 0;
+    left: 30px;
+    position: relative;
+    width: 170px;
 }
 
 .browse-box-name {
@@ -537,4 +632,305 @@ body {
 .browse-box-menu-contents li a:hover {
     color: #000 !important;
     background-color: #558fb1;
+}
+
+/* order boxes */
+.more-heading {
+    font-weight: bolder;
+    color: #558fb1;
+    margin-bottom: 20px;
+}
+
+.graybox .detailtext {
+    font-size: 16px;
+    text-align: right;
+}
+
+.more-stuff-box-sizing {
+    width: 500px;
+}
+
+.order-boxes {
+    text-align: right;
+    width: 500px;
+}
+
+.left-aligned-text td {
+    text-align: left !important;
+}
+
+.order-boxes-notes {
+    font-size: 16px;
+    line-height: 36px;
+}
+
+.order-boxes-notes strong {
+    font-weight: bolder;
+    color: #558fb1;
+    padding-bottom: 10px;
+    padding-top: 20px;
+    display: block;
+}
+
+.order-boxes-notes td {
+    width: 200px;
+}
+
+/* inventory */
+.graybox .inventory-box {
+    width: 100px;
+    display: block;
+    margin: 5px;
+    float: left;
+}
+
+.graybox .inventory-box img {
+    width: 80px;
+    height: 80px;
+    border: 10px solid #fff;
+}
+
+.graybox .inventory-box .add-tags {
+    color: #888888;
+    font-size: 10px;
+    line-height: 14px;
+}
+
+.graybox .inventory-box p {
+    color: #006fb3;
+    font-size: 10px;
+    line-height: 14px;
+}
+
+.graybox .inventory-pagination {
+    padding: 10px;
+    text-align: center;
+}
+
+.graybox .inventory-pagination a {
+    padding: 3px;
+    margin: 0px;
+    width: 14px;
+    height: 14px;
+    font-size: 12px;
+    line-height: 14px;
+    color: #888888 !important;
+}
+
+.graybox .inventory-pagination .active {
+    background-color: #006fb3;
+    color: #fff !important;
+}
+
+.inventory-boxdisplay-box {
+    display: block;
+    width: 100px;
+    float: left;
+    text-align: center;
+    padding: 0px 10px 0px 10px;
+    font-size: 10px;
+}
+
+.inventory-boxdisplay-box a {
+    font-size: 14px;
+    font-weight: bolder;
+}
+
+.inventory-boxdisplay-image {
+    width: 100px;
+    height: 90px;
+    background-image: url("../images/inventory-box.jpg");
+    background-position: 0px 90px;
+}
+
+.activebox .inventory-boxdisplay-image {
+    background-position: 0px 0px;
+}
+
+.inventory-boxdisplay-image a {
+    display: block;
+    width: 100px;
+    height: 90px;
+}
+
+#inventory-boxcanvas {
+    position: absolute;
+    left: 0px;
+}
+
+#inventory-menu-leftarrow {
+    width: 50px;
+    height: 50px;
+    background-color: black;
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    background-image: url("../images/leftarrow.jpg");
+    background-position: 0px 0px;
+}
+
+#inventory-menu-rightarrow {
+    width: 50px;
+    height: 50px;
+    background-color: black;
+    position: absolute;
+    top: 50px;
+    right: 0px;
+    background-image: url("../images/rightarrow.jpg");
+    background-position: 0px 0px;
+}
+
+#inventory-menu-leftarrow.disabled {
+    background-position: 0px 50px;
+}
+
+#inventory-menu-rightarrow.disabled {
+    background-position: 0px 50px;
+}
+
+#inventory-boxdisplay {
+    width: 600px;
+    height: 125px;
+    position: absolute;
+    left: 50px;
+    top: 0px;
+    overflow: hidden;
+}
+
+#inventory-menu {
+    position: relative;
+    height: 150px;
+}
+
+/* pricing */
+#pricing {
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px 0px 20px 0px;
+}
+
+#pricing .pricing-heading {
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    background-color: #5eb1e1;
+}
+
+#pricing .pricing-textbox {
+    float: left;
+    width: 270px;
+    padding: 10px 10px 10px 10px;
+}
+
+#pricing .pricing-box2 {
+    float: left;
+    width: 200px;
+    border-bottom: 0px;
+}
+
+#pricing .pricing-box2.hasbg {
+    background-image: url('../images/pricing-col2bg.png');
+}
+
+#pricing .pricing-item .pricing-box2.hasbg {
+    background-image: url('../images/pricing-col2bg.png');
+    height: 60px;
+}
+
+#pricing .pricing-box3.hasbg {
+    background-image: url('../images/pricing-col3bg.png');
+}
+
+#pricing .pricing-item .pricing-box3.hasbg {
+    background-image: url('../images/pricing-col3bg.png');
+    height: 60px;
+}
+
+#pricing .pricing-box3 {
+    float: left;
+    width: 200px;
+}
+
+#pricing .pricing-item {
+    height: 60px;
+}
+
+#pricing .pricing-item img {
+    display: block;
+    position: relative;
+    left: 10px;
+}
+
+#pricing .pricing-item .endcap {
+    left: 0px;
+}
+
+#pricing .pricing-heading .pricing-box2 {
+    height: 180px;
+}
+
+#pricing .pricing-heading .pricing-box3 {
+    height: 180px;
+}
+
+#pricing .pricing-heading .pricing-textbox p {
+    color: #fff;
+    font-size: 14px;
+    line-height: 18px;
+    text-shadow:1px 1px 3px #333333
+}
+
+#pricing .pricing-heading .pricing-textbox h1 {
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 18px;
+    font-weight: bolder;
+    text-shadow:1px 1px 3px #333333
+}
+
+#pricing .pricing-item .pricing-textbox p {
+    font-size: 16px;
+    line-height: 18px;
+    padding: 0px 10px 0px 30px;
+}
+
+#pricing .pricing-gray {
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    background-color: #e1e1e1;
+}
+
+#pricing .pricing-bignum {
+    float: left;
+    width: 90px;
+    text-align: right;
+    font-size: 72px;
+    color: #fff;
+    line-height: 100px;
+}
+
+#pricing .pricing-smallnum {
+    float: left;
+    width: 105px;
+    text-align: left;
+    line-height: 20px;
+    font-size: 18px;
+    padding-left: 5px;
+}
+
+#pricing .pricing-smallnum .numadjust {
+    color: #fff;
+    margin-top: 20px;
+}
+
+#pricing .pricing-bignum .dollarsign {
+    line-height: 100px;
+    font-size: 30px;
+    position: relative;
+    top: -30px;
+}
+
+#pricing .colhead {
+    position: relative;
+    top: -20px;
 }

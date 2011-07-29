@@ -1,8 +1,4 @@
-<% if params[:box_id].blank? %>
 <%   @menu_page = :items %>
-<% else %>
-<%   @menu_page = :boxes %>
-<% end %>
 <%= render 'account/account_nav' %>
 <div id="internal-right">
 <ul id="create-portfolio" class="thumbnails">

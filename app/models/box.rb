@@ -18,7 +18,8 @@
 
 class Box < ActiveRecord::Base
   NEW_STATUS = "new"
-  IN_TRANSIT_STATUS = "in_transit"
+  IN_TRANSIT_TO_YOU_STATUS = "in_transit_to_cust"
+  IN_TRANSIT_TO_TVC_STATUS = "in_transit_to_tvc"
   IN_STORAGE_STATUS = "in_storage"
   BEING_PREPARED_STATUS = "being_prepared"
   
@@ -40,8 +41,10 @@ class Box < ActiveRecord::Base
     case status
     when NEW_STATUS
       return "New"
-    when IN_TRANSIT_STATUS
-      return "In Transit"
+    when IN_TRANSIT_TO_YOU_STATUS
+      return "In transit to you"
+    when IN_TRANSIT_TO_TVC_STATUS
+      return "In transit to us"
     when IN_STORAGE_STATUS
       return "In Storage"
     when BEING_PREPARED_STATUS
@@ -102,7 +105,7 @@ class Box < ActiveRecord::Base
     if self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
       # In this status the shipment that is created is for the shipment back
       get_or_create_shipment
-      self.status = Box::IN_TRANSIT_STATUS
+      self.status = Box::IN_TRANSIT_TO_YOU_STATUS
     else
       raise "Attempted to ship in invalid status, for box " << self.inspect
     end

@@ -59,7 +59,7 @@ $(document).ready(function(){
 		jQuery(this).find('ul').stop().animate({opacity: 0}, 300);
 	});
 	
-	$('.browse-box .browse-box-menu').hover(
+    $('.browse-box .browse-box-menu').hover(
           function () {
             $($(this)).find("div").show();
           }, 
@@ -67,4 +67,98 @@ $(document).ready(function(){
             $($(this)).find("div").hide();
           }
     );
+    
+    $('.increment-up').click(function(){
+        oldVal = parseInt($($(this)).parent().find("input").attr('value'));
+        $($(this)).parent().find("input").attr('value',oldVal+1)
+    });
+    
+    $('.increment-down').click(function(){
+        oldVal = parseInt($($(this)).parent().find("input").attr('value'));
+        if(oldVal>0){
+        $($(this)).parent().find("input").attr('value',oldVal-1)
+        }
+    });
+    
+    $('#inventory-menu-rightarrow').click(function(){
+        if($('#inventory-menu-rightarrow').hasClass('enabled')){
+            $('#inventory-menu-rightarrow').removeClass('enabled');
+            boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
+            curPos = $("#inventory-boxcanvas").position().left;
+            boxSize = 120;
+            if(curPos > 0-((boxCount*boxSize)-(5*boxSize))){
+                $("#inventory-boxcanvas").animate({
+                    left: '-='+boxSize
+                  }, 1000, function() {
+                    $('#inventory-menu-rightarrow').addClass('enabled');
+                    $('#inventory-menu-leftarrow').removeClass('disabled');
+                    boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
+                    curPos = $("#inventory-boxcanvas").position().left;
+                    if(curPos <= 0-((boxCount*boxSize)-(5*boxSize))){
+                        $('#inventory-menu-rightarrow').addClass('disabled');
+                    }
+                  });
+            }else{
+                $('#inventory-menu-rightarrow').addClass('enabled');
+            }
+        }
+    });
+    
+    $('#inventory-menu-leftarrow').click(function(){
+        if($('#inventory-menu-leftarrow').hasClass('enabled')){
+            $('#inventory-menu-leftarrow').removeClass('enabled');
+            boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
+            curPos = $("#inventory-boxcanvas").position().left;
+            boxSize = 120;
+            if(curPos < 0){
+                $("#inventory-boxcanvas").animate({
+                    left: '+='+boxSize
+                  }, 1000, function() {
+                    $('#inventory-menu-leftarrow').addClass('enabled');
+                    $('#inventory-menu-rightarrow').removeClass('disabled');
+                    boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
+                    curPos = $("#inventory-boxcanvas").position().left;
+                    if(curPos >= 0){
+                        $('#inventory-menu-leftarrow').addClass('disabled');
+                    }
+                  });
+            }else{
+                $('#inventory-menu-leftarrow').addClass('enabled');
+            }
+        }
+    });
+    
+    boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
+    boxSize = 120;
+    widthCalc = boxSize * boxCount;
+    $("#inventory-boxcanvas").css('width',widthCalc);
+    whichActive = $('#inventory-boxdisplay').find(".activebox").index();
+    offsetMax = boxCount-5
+    if(offsetMax<0){
+        offsetMax=0;
+    }
+    
+    if (whichActive > offsetMax){
+        offsetCalc = offsetMax*boxSize;
+    }else{
+        offsetCalc = whichActive*boxSize;
+    }
+    
+    $("#inventory-boxcanvas").animate({
+        left: '-='+offsetCalc
+      }, 1000, function() {
+        $('#inventory-menu-leftarrow').addClass('enabled');
+        $('#inventory-menu-rightarrow').addClass('enabled');
+        curPos = $("#inventory-boxcanvas").position().left;
+        if(curPos != 0){
+            $('#inventory-menu-leftarrow').removeClass('disabled');
+        }
+        if(curPos == 0-((boxCount*boxSize)-(5*boxSize))){
+            $('#inventory-menu-rightarrow').addClass('disabled');
+        }
+        if(boxCount<=5){
+            $('#inventory-menu-rightarrow').addClass('disabled');
+        }
+      });
+
 });
