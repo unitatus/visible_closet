@@ -36,15 +36,22 @@
 						<a href="/payment_profiles/<%=profile.id%>/set_default">Set Default</a> 
 					<% end %>
 				</td>
-				<td><%= link_to("Delete", { :action => "destroy", :id => profile },
+				<td>
+				<% if current_user.default_payment_profile_id == profile.id %>
+				Cannot delete default
+				<% else %>
+				<%= link_to("Delete", { :action => "destroy", :id => profile },
 				  :confirm => "Are you sure you want to delete this card?",
-				  :method => :delete) %></td>
+				  :method => :delete) %>
+				<% end %>
+				</td>
 			</tr>
 			<% end %>
 			</tbody>	
 			</table>
+			<div style="text-align: right; width: 100%"><br><a href="/payment_profiles/new">Add new payment method &gt;&gt;</a></div>
 		</div><br>
-		<div style="text-align: right; width: 100%"><a href="/payment_profiles/new">Add new payment method &gt;&gt;</a></div>
+		
 	<% end %>
 </div>
 <div class="clearer"></div>

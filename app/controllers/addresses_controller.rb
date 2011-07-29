@@ -76,13 +76,20 @@ class AddressesController < ApplicationController
   # DELETE /addresses/1
   # DELETE /addresses/1.xml
   def destroy
-    @address = Address.find_active_by_id_and_user_id(params[:id], current_user.id)
-    @address.status = 'inactive'
-    @address.save
+    if current_user.default_shipping_address_id.to_s == params[:id]
+      @messages = Array.new
+      @messages << "Cannot delete default shipping address."
+      @addresses = Address.find_active(current_user.id, :order => :first_name)
+      render :index
+    else
+      @address = Address.find_active_by_id_and_user_id(params[:id], current_user.id)
+      @address.status = 'inactive'
+      @address.save
 
-    respond_to do |format|
-        format.html { redirect_to(addresses_url) }
-        format.xml  { head :ok }
+      respond_to do |format|
+          format.html { redirect_to(addresses_url) }
+          format.xml  { head :ok }
+      end
     end
   end
   
