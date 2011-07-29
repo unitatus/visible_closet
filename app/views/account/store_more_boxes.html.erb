@@ -1,47 +1,55 @@
 <% @menu_page = :store_more_stuff %>
 <%= render 'account_nav', :locals =>  { :menu_page => @menu_page }%>
 <div id="internal-right">
-Please specify the number of boxes of each type that you would like to store.<br><br><br>
+    <p class="more-heading">Please specify the number of boxes of each type that you would like to store.</p>
 <%= form_tag("/account/order_boxes", :class => "standard") do %>
-<div class="grid_5">&nbsp;</div>
-<div class="grid_1">
-	Your Boxes
-</div>
-<div class="grid_1">
-	Our Boxes
-</div>
-<div class="grid_5">
-Number of boxes you would like to store:
-</div>
-<div class="grid_1">
-<%= number_field_tag(:num_boxes_yours, @cart.get_quantity(Rails.application.config.your_box_product_id), :class => "numberbox") %>
-</div>
-<div class="grid_1">
-<%= number_field_tag(:num_boxes_ours, @cart.get_quantity(Rails.application.config.our_box_product_id), :class => "numberbox") %>
-</div>
-<div style="position: relative; top: 55px; left: 0px;">
-	<%= submit_tag("Order Boxes", :class => 'button') %>
-</div>
-<script type="text/javascript" language="JavaScript">
-document.forms[0].elements['num_boxes_yours'].focus();
-</script>
-<p>
-	<div class="grid_8">
-<br><br><br><br>All Visible Closet boxes are 12"X12"X24".
-<br>You will get a chance to inventory boxes later! We promise!
-<p>
-<table class="prices_table"><tr>
-<th colspan=2 align="center">Pricing</th>
-</tr>
-<tr>
-  <td>Storing a Visible Storage box: </td>
-  <td><%= number_to_currency(@our_box.price) %> <%= @our_box.price_comment %></td>
-</tr><tr>
-  <td>Storing your box:</td>
-  <td><%= number_to_currency(@your_box.price) %> <%= @your_box.price_comment %></td>
-</tr>
-</table>
-</div>
+    <div class="graybox more-stuff-box-sizing">
+        <table class="more-stuff-order">
+            <thead>
+                <tr>
+                  <th>&nbsp;</th>
+                  <th>Your Boxes</th>
+                  <th>Our Boxes</th>
+                </tr>
+              </thead>
+              <tbody class="top-line">
+                <tr>
+                    <td class="detailtext">Number of boxes you would like to store:</td>
+                    <td>
+						<%= number_field_tag(:num_boxes_yours, @cart.get_quantity(Rails.application.config.your_box_product_id), :class => "numberbox") %>
+					</td>
+                    <td>
+						<%= number_field_tag(:num_boxes_ours, @cart.get_quantity(Rails.application.config.our_box_product_id), :class => "numberbox") %>
+					</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="order-boxes">
+		<%= image_submit_tag("/images/order-boxes.gif") %>
+    </div>
+	<script type="text/javascript" language="JavaScript">
+	document.forms[0].elements['num_boxes_yours'].focus();
+	</script>
+    <div class="order-boxes-notes">
+        <p>All Visible Closet boxes are 12"x12"x24".<br />
+        You will get a chance to inventory boxes later! We Promise!</p>
+        <p><strong>Pricing</strong></p>
+        <div class="graybox more-stuff-box-sizing">
+            <table>
+                <tbody class="left-aligned-text">
+                    <tr>
+                        <td>Storing a Visible Storage box:</td>
+                        <td><%= number_to_currency(@our_box.price) %> <%= @our_box.price_comment %></td>
+                    </tr>
+                    <tr>
+                        <td>Storing your box:</td>
+                        <td><%= number_to_currency(@your_box.price) %> <%= @your_box.price_comment %></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 <% end %>
 </div>
 <div class="clearer"></div>
