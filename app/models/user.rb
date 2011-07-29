@@ -1,34 +1,35 @@
 # == Schema Information
-# Schema version: 20110728042015
+# Schema version: 20110729131208
 #
 # Table name: users
 #
-#  id                   :integer         not null, primary key
-#  email                :string(255)     default(""), not null
-#  encrypted_password   :string(128)     default(""), not null
-#  reset_password_token :string(255)
-#  remember_created_at  :datetime
-#  sign_in_count        :integer         default(0)
-#  current_sign_in_at   :datetime
-#  last_sign_in_at      :datetime
-#  current_sign_in_ip   :string(255)
-#  last_sign_in_ip      :string(255)
-#  password_salt        :string(255)
-#  confirmation_token   :string(255)
-#  confirmed_at         :datetime
-#  confirmation_sent_at :datetime
-#  failed_attempts      :integer         default(0)
-#  unlock_token         :string(255)
-#  locked_at            :datetime
-#  authentication_token :string(255)
-#  created_at           :datetime
-#  updated_at           :datetime
-#  last_name            :string(255)
-#  first_name           :string(255)
-#  beta_user            :boolean         default(TRUE)
-#  signup_comments      :text
-#  role                 :string(255)
-#  cim_id               :string(255)
+#  id                         :integer         not null, primary key
+#  email                      :string(255)     default(""), not null
+#  encrypted_password         :string(128)     default(""), not null
+#  reset_password_token       :string(255)
+#  remember_created_at        :datetime
+#  sign_in_count              :integer         default(0)
+#  current_sign_in_at         :datetime
+#  last_sign_in_at            :datetime
+#  current_sign_in_ip         :string(255)
+#  last_sign_in_ip            :string(255)
+#  password_salt              :string(255)
+#  confirmation_token         :string(255)
+#  confirmed_at               :datetime
+#  confirmation_sent_at       :datetime
+#  failed_attempts            :integer         default(0)
+#  unlock_token               :string(255)
+#  locked_at                  :datetime
+#  authentication_token       :string(255)
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  last_name                  :string(255)
+#  first_name                 :string(255)
+#  beta_user                  :boolean         default(TRUE)
+#  signup_comments            :text
+#  role                       :string(255)
+#  cim_id                     :string(255)
+#  default_payment_profile_id :integer
 #
 
 class User < ActiveRecord::Base

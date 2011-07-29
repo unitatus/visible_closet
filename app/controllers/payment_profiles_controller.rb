@@ -27,6 +27,10 @@ class PaymentProfilesController < ApplicationController
     @profile.user_id = current_user.id
     
     if @profile.save
+      if params[:default] == "1"
+        current_user.update_attribute(:default_payment_profile_id, @profile.id)
+      end
+      
       if not (session[:source_c].blank?) # we came from somewhere; return there
         session[:payment_profile_id] = @profile.id
         redirect_to :controller => session[:source_c], :action => session[:source_a]
@@ -48,19 +52,35 @@ class PaymentProfilesController < ApplicationController
     end
   end
   
-  def destroy
-    profile = PaymentProfile.find(params[:id])
+  def set_default
+    if not params[:id].blank?
+      current_user.update_attribute(:default_payment_profile_id, params[:id])
+    end
     
-    profile.destroy
-
-    @profiles = current_user.payment_profiles
-        
-    if @profiles.size == 0
+    render :index
+  end
+  
+  def destroy
+    if current_user.default_payment_profile_id.to_s == params[:id]
+      @messages = Array.new
+      @messages << "Cannot delete default payment method."
       @profile = PaymentProfile.new
       @credit_card = ActiveMerchant::Billing::CreditCard.new()
-      render :action => "new"
-    else
       render :action => "index"
+    else
+      profile = PaymentProfile.find(params[:id])
+
+      profile.destroy
+
+      @profiles = current_user.payment_profiles
+
+      if @profiles.size == 0
+        @profile = PaymentProfile.new
+        @credit_card = ActiveMerchant::Billing::CreditCard.new()
+        render :action => "new"
+      else
+        render :action => "index"
+      end
     end
   end
   

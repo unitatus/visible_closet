@@ -33,6 +33,11 @@
 <%= error_messages_for_attribute(@credit_card, :year) %>
 	</div>
 </div>
+<div class="field clearfix" style="padding: 0 321px 0 0 ">
+<%= f.label "Default Card?" %>
+<%= hidden_field_tag :default, 0 %>
+<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1" %>
+</div><br>
 <div class="graybox">
 <table>
 	<thead>

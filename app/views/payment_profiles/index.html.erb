@@ -2,8 +2,14 @@
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 <div class="simple_header">Credit Card Maintenance</div>
 <div id="internal-right">
+	<% if not @messages.nil? and @messages.size > 0 %>
+		<% @messages.each do |message| %>
+		<div class="error_label"><%= message %></div>
+		<% end %>
+	<% end %>
+	
 	<div class="graybox">
-		<table><thead style="font-size: 125%"><tr><td>Type</td><td>Number</td><td>Exp Date</td><td>Cardholder Name</td><td>Billing Address</td><td>Delete?</td></tr></thead>
+		<table><thead style="font-size: 125%"><tr><td>Type</td><td>Number</td><td>Exp Date</td><td>Cardholder Name</td><td>Billing Address</td><td>Default?</td><td>Delete?</td></tr></thead>
 			<tbody class="top-line bottom-line">
 		<% current_user.payment_profiles.each do |profile| %>
 		<% address = Address.find(profile.billing_address_id) %>
@@ -19,6 +25,13 @@
 			<%= address.address_line_2 %><br>
 			<% end %>
 			<%= address.city %>, <%= address.state %>, <%= address.zip %>
+			</td>
+			<td>
+				<% if current_user.default_payment_profile_id == profile.id  %>
+					Default 
+				<% else %>
+					<a href="/payment_profiles/<%=profile.id%>/set_default">Set Default</a> 
+				<% end %>
 			</td>
 			<td><%= link_to("Delete", { :action => "destroy", :id => profile },
 			  :confirm => "Are you sure you want to delete this card?",

@@ -12,6 +12,7 @@ VisibleCloset::Application.routes.draw do
   match "boxes/add_tag" => "boxes#add_tag"
   match "boxes/delete_tag" => "boxes#delete_tag"
   match "boxes/finish_inventorying_box" => "boxes#finish_inventorying"
+  match "payment_profiles/:id/set_default" => "payment_profiles#set_default"
     
   resources :boxes
   resources :addresses
