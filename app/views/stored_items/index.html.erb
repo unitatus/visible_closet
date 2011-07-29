@@ -1,10 +1,38 @@
 <%   @menu_page = :items %>
 <%= render 'account/account_nav' %>
 <div id="internal-right">
-<ul id="create-portfolio" class="thumbnails">
-	<% @stored_items.each do |stored_item| %>
-		<li>
-			<div class="post-thumbnail">
+	<div id="inventory-menu">
+		<div id="inventory-menu-leftarrow" class="disabled"></div>
+        <div id="inventory-menu-rightarrow"></div>
+		<div id="inventory-boxdisplay">
+            <div id="inventory-boxcanvas">
+	<% @boxes.each do |box| %>
+				<div class="inventory-boxdisplay-box <%= box.id.to_s == params[:box_id] ? "activebox" : "" %>">
+			        <p><a href="/boxes/<%= box.id %>/stored_items">Box <%= box.id %></a></p>
+			        <p>
+					<% if box.description.blank? %>
+						<i>no description</i>
+					<% else %>
+						<%= box.description %>
+					<% end %>
+					</p>
+			        <div class="inventory-boxdisplay-image"><a href="/boxes/<%= box.id %>/stored_items"></a></div>
+			    </div>
+	<% end %>
+				<div class="clearer"></div>
+			</div>
+		</div>
+	</div>
+	<div class="graybox">
+		<div>
+            <p>Filters:  <a href="#">Date Added</a> | <a href="#">Item size</a> | <a href="#">Alphabetical Order</a></p>
+            <br />
+        </div>
+        <div>
+			<ul id="create-portfolio" class="thumbnails">
+			<% @stored_items.each do |stored_item| %>
+			<li>
+				<div class="post-thumbnail">
 				<a href="#"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s) %></a>
 				<ul>
 					<li><a href="#">Sell</a></li>
@@ -12,17 +40,30 @@
 					<div class="thirdchild"><li><a href="#">Dispose</a></li></div>
 					<div class="fourthchild"><li><a href="#">Mail</a></li></div>					
 				</ul>
-			</div>
-			<p class="tags">
-				<% stored_item.stored_item_tags.each do |tag| %>
-				<% if tag != stored_item.stored_item_tags.first %>
-				, 
-				<% end %>
-				<a href="#"><%= tag.tag %></a>
-				<% end %>
-			</p>
-		</li>
-	<% end %>
-</ul>
+				</div>
+                <p class="tags">
+					<% stored_item.stored_item_tags.each do |tag| %>
+					<% if tag != stored_item.stored_item_tags.first %>
+					, 
+					<% end %>
+					<a href="#"><%= tag.tag %></a>
+					<% end %>
+				</p>
+				<p class="add-tags">+add tags</p>
+			</li>
+			<% end %>
+			</ul>
+		</div>
+		<div class="clearer"></div>
+		<!--
+        <div class="inventory-pagination">
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+        </div>
+		-->
+	</div>
 </div>
 <div class="clearer"></div>
