@@ -207,6 +207,7 @@ body {
 h1 {
     color: #25aae1;
     font-size: 22px;
+    line-height: 40px;
 }
 
 #page-content {
@@ -383,6 +384,11 @@ h1 {
     margin-right: auto;
 }
 
+.login-slim-centered {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .clearer {
     height: 0px;
@@ -846,12 +852,24 @@ h1 {
     height: 60px;
 }
 
+#pricing .pricing-item .pricing-box2.hastext {
+    background-image: url('../images/pricing-col2bg-mod.png');
+    background-position: bottom center;
+    height: 60px;
+}
+
 #pricing .pricing-box3.hasbg {
     background-image: url('../images/pricing-col3bg.png');
 }
 
-#pricing .pricing-item .pricing-box3.hasbg {
-    background-image: url('../images/pricing-col3bg.png');
+#pricing .pricing-item .pricing-box2.hasbg {
+    background-image: url('../images/pricing-col2bg.png');
+    height: 60px;
+}
+
+#pricing .pricing-item .pricing-box3.hastext {
+    background-image: url('../images/pricing-col3bg-mod.png');
+    background-position: bottom center;
     height: 60px;
 }
 
@@ -891,6 +909,7 @@ h1 {
 
 #pricing .pricing-heading .pricing-textbox h1 {
     font-size: 20px;
+    line-height: 20px;
     color: #fff;
     margin-bottom: 18px;
     font-weight: bolder;
@@ -968,4 +987,48 @@ h1 {
 
 .packing {
     padding: 20px 0px 20px 0px;
+}
+
+/*is it right for me?*/
+.is-it-right-box {
+    position: relative;
+    float: left;
+    margin: 10px 0px 10px 0px;
+}
+
+#is-it-right .gaps {
+    margin: 10px 20px 10px 20px;
+}
+
+.is-it-right-box .photo {
+    width: 220px;
+    height: 150px;
+    display: block;
+}
+
+.is-it-right-box .heading {
+    width: 220px;
+    position: absolute;
+    top: 170px;
+    left: 0px;
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+}
+
+.is-it-right-box .bluebox {
+    width: 220px;
+    height: 70px;
+    position: absolute;
+    top: 130px;
+    left: 0px;
+    background-image: url('../images/right-bluebox.png');
+}
+
+.is-it-right-box .body {
+    width: 200px;
+    padding: 10px 10px 10px 10px;
+    margin-top: 60px;
+    color: #7c7c7c;
+    background-color: #d6d6d6;
 }
