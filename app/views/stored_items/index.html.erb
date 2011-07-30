@@ -47,7 +47,12 @@
 				<% tag_list << (index > 0 ? ", " : "") %>
 				<% tag_list << tag.tag %>
 				<% end %>
-				<%=h tag_list %>
+				<!-- <%=h tag_list %> -->
+				<div id="stored_item_tags_<%= stored_item.id %>">
+				<% stored_item.stored_item_tags.each_with_index do |tag, index| %>
+				<% divider = (index == 0 ? "" : "| ") %>
+				<div id="tag_<%= tag.id %>" style="display: inline"><%= divider %><%=h tag.tag %> <%= link_to("X", "/stored_item_tags/#{tag.id}/delete", :method => :delete, :remote => true) %></div>
+				<% end %>
 			</p>
 			<p class="add-tags">+add tags</p>
 			</li>

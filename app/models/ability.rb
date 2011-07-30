@@ -79,6 +79,7 @@ class Ability
       
       # stored items
       can :index, StoredItem
+      can :delete, StoredItemTag
       
       # payment profiles
       can :index, PaymentProfile

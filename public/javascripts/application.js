@@ -30,6 +30,7 @@ function removeElement(parentDiv, childDiv)
      else if (document.getElementById(childDiv)) {     
           var child = document.getElementById(childDiv);
           var parent = document.getElementById(parentDiv);
+
           parent.removeChild(child);
      }
      else {
