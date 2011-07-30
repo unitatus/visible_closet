@@ -36,7 +36,7 @@ ul { list-style: none; }
 /* THUMBNAILS */
 
 
-/*#create-portfolio.thumbnails {
+/*#reate-portfolio.thumbnails {
 	margin: -10px 0 30px -10px;
 	width: 880px;
 }*/
@@ -46,8 +46,8 @@ ul { list-style: none; }
 	width: 300px;
 }
 #create-portfolio.thumbnails li {
-	margin: 10px 10px 8px;
-	width: 200px;
+	margin: 10px 7px 8px;
+	width: 150px;
 }
 /*#create-store.thumbnails li { margin-bottom: 40px; }*/
 /*.thumbnails h3 { margin: 24px 0 12px; }*/
@@ -62,8 +62,8 @@ ul { list-style: none; }
 /*.thumbnails h3 a:hover { background: #ffff00; }*/
 
 .post-thumbnail {
-	height: 200px;
-	width: 200px;
+	height: 150px;
+	width: 150px;
 }
 /*#create-portfolio.thumbnails .post-thumbnail img {
 	-webkit-box-shadow: inset 0px 0px 50px rgba(0,0,0,0.2);
@@ -80,8 +80,12 @@ ul { list-style: none; }
 	left: 0;
 	position: absolute;
 	top: 0;
-	height: 200px;
-	width: 200px;
+	height: 150px;
+	width: 150px;
+}
+#create-portfolio.thumbnails .post-thumbnail img {
+	width: 150px;
+	height: 150px;
 }
 #create-portfolio.thumbnails .post-thumbnail:hover ul {
 	display: inline;
@@ -111,23 +115,23 @@ ul { list-style: none; }
 }
 #create-portfolio.thumbnails .post-thumbnail li:first-child a {
 	left: 0%;
-	margin-left: 34px;
-	top: 25%;
+	margin-left: 8px;
+	top: 27%;
 }
 #create-portfolio.thumbnails .post-thumbnail .secondchild li  a {
 	left: 0%;
-	margin-left: 102px;
-	top: 25%;
+	margin-left: 74px;
+	top: 27%;
 }
 #create-portfolio.thumbnails .post-thumbnail .thirdchild li  a {
 	left: 0%;
-	margin-left: 34px;
-	top: 75%;
+	margin-left: 8px;
+	top: 73%;
 }
 #create-portfolio.thumbnails .post-thumbnail .fourthchild li  a {
 	left: 0%;
-	margin-left: 102px;
-	top: 75%;
+	margin-left: 74px;
+	top: 73%;
 }
 #create-portfolio.thumbnails .post-thumbnail li a:hover {
 	background-position: 0 -64px;

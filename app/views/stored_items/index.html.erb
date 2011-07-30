@@ -29,27 +29,32 @@
             <br />
         </div>
         <div>
-			<ul id="create-portfolio" class="thumbnails">
-			<% @stored_items.each do |stored_item| %>
+			<ul id="create-portfolio" class="thumbnails"> 
+			<% @stored_items.each_with_index do |stored_item, index| %>
 			<li>
 				<div class="post-thumbnail">
-				<a href="#"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s) %></a>
-				<ul>
-					<li><a href="#">Sell</a></li>
-					<div class="secondchild"><li><a href="#">Donate</a></li></div>
-					<div class="thirdchild"><li><a href="#">Dispose</a></li></div>
-					<div class="fourthchild"><li><a href="#">Mail</a></li></div>					
-				</ul>
+					<a href="#"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s) %></a>
+			<ul>
+				<li><a href="#">Sell</a></li>
+				<div class="secondchild"><li><a href="#">Donate</a></li></div>
+				<div class="thirdchild"><li><a href="#">Dispose</a></li></div>
+				<div class="fourthchild"><li><a href="#">Mail</a></li></div>					
+			</ul>
 				</div>
-                <p>
-					<% tag_list = "" %>
-					<% stored_item.stored_item_tags.each_with_index do |tag, index| %>
-					<% tag_list << (index > 0 ? ", " : "") %>
-					<% tag_list << tag.tag %>
-					<% end %>
-					<%=h tag_list %><br>
-				<p class="add-tags">+add tags</p>
+            <p>
+				<% tag_list = "" %>
+				<% stored_item.stored_item_tags.each_with_index do |tag, index| %>
+				<% tag_list << (index > 0 ? ", " : "") %>
+				<% tag_list << tag.tag %>
+				<% end %>
+				<%=h tag_list %>
+			</p>
+			<p class="add-tags">+add tags</p>
 			</li>
+				<% if (index - 3) % 4 == 0 %>
+				<div class="clearer"></div>
+				<% end %>
+
 			<% end %>
 			</ul>
 		</div>

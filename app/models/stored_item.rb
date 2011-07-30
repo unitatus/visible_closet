@@ -23,7 +23,7 @@ class StoredItem < ActiveRecord::Base
   has_attached_file :photo, :styles => { 
                               :thumb => "100x100#",
                               :normal => "600x600>",
-                              :medium => "200x200>" 
+                              :medium => "150x150>" 
                               },
                             :storage => :s3,
                             :s3_credentials => { 
