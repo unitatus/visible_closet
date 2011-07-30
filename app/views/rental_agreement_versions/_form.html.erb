@@ -12,7 +12,7 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :agreement_text %><br><br>
+    <%= f.label :agreement_text %> (use normal HTML for formatting):<br><br>
     <%= text_area :rental_agreement_version, :agreement_text, :cols => 60, :rows => 30, :value => @agreement_version.agreement_text %>
   </div>
   <div class="actions">
