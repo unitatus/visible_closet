@@ -52,7 +52,7 @@ class AddressesController < ApplicationController
     @address.user_id = current_user.id
 
     if @address.save
-      if current_user.active_address_count == 1
+      if current_user.default_shipping_address_id.nil?
         current_user.update_attribute(:default_shipping_address_id, @address.id)
       end
       if not (session[:source_c].blank?) # we came from somewhere; return there

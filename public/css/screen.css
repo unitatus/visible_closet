@@ -890,6 +890,9 @@ table.cart_summary td
 	padding: 0 110px 0 30px;
 
 }
+.simple_body p {
+	padding: 6px 0 6px 0;
+}
 .simple_body ul {
 	padding: 10px 0 15px 25px;
 	list-style-type: circle;
@@ -899,7 +902,7 @@ table.cart_summary td
 }
 .simple_body ol {
 	padding: 10px 0 15px 25px;
-	list-style-type: upper-roman;
+	list-style-type: decimal;
 }
 .simple_body ol li {
 	padding: 10px 0 0 0;	
