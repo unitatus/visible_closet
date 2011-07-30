@@ -32,4 +32,8 @@ class PagesController < ApplicationController
   def contact
     @top_menu_page = :contact
   end
+  
+  def support
+    
+  end
 end

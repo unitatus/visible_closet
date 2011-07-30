@@ -45,6 +45,7 @@ VisibleCloset::Application.routes.draw do
   match "legal" => "pages#legal"
   match "pricing" => "pages#pricing"
   match "privacy" => "pages#privacy"
+  match "support" => "pages#support"
   
   # Admin
   match "admin/home" => "admin#process_orders"
