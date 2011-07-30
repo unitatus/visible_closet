@@ -10,4 +10,9 @@
 #
 
 class RentalAgreementVersion < ActiveRecord::Base
+  has_and_belongs_to_many :users
+  
+  def RentalAgreementVersion.latest
+    RentalAgreementVersion.find :first, :order => 'created_at DESC'
+  end
 end

@@ -21,7 +21,7 @@ class RentalAgreementVersionsController < ApplicationController
   def new
     @admin_page = :legal
     @agreement_version = RentalAgreementVersion.new
-    @most_recent_agreemnet = RentalAgreementVersion.last
+    @most_recent_agreement = RentalAgreementVersion.latest
   end
   
   # GET /rental_agreement_versions/1/edit

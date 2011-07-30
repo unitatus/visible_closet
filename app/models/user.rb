@@ -59,6 +59,7 @@ class User < ActiveRecord::Base
   has_many :boxes
   has_many :payment_profiles
   has_many :addresses
+  has_and_belongs_to_many :rental_agreement_versions
 
   validates :first_name, :presence => true
   validates :last_name, :presence => true

@@ -10,10 +10,13 @@
       </ul>
     </div>
   <% end %>
-
+	<% if not @most_recent_agreement.nil? %>
+	Text is pre-populated with text from most recent saved agreement.<br><br>
+	<% end %>
   <div class="field">
     <%= f.label :agreement_text %> (use normal HTML for formatting):<br><br>
-    <%= text_area :rental_agreement_version, :agreement_text, :cols => 60, :rows => 30, :value => @agreement_version.agreement_text %>
+	<% text_area_value = @most_recent_agreement.nil? ? @agreement_version.agreement_text : @most_recent_agreement.agreement_text %>
+    <%= text_area :rental_agreement_version, :agreement_text, :cols => 60, :rows => 30, :value => text_area_value %>
   </div>
   <div class="actions">
     <%= f.submit "Submit" %>
