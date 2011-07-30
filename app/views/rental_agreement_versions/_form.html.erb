@@ -1,0 +1,21 @@
+<%= form_for(@agreement_version) do |f| %>
+  <% if @agreement_version.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@agreement_version.errors.count, "error") %> prohibited this agreement version from being saved:</h2>
+
+      <ul>
+      <% @agreement_version.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :agreement_text %><br><br>
+    <%= text_area :rental_agreement_version, :agreement_text, :cols => 60, :rows => 30, :value => @agreement_version.agreement_text %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Submit" %>
+  </div>
+<% end %>

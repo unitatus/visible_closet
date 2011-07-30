@@ -9,6 +9,8 @@
 <%   receiving_class = active_class_str %>
 <% when :inventorying %>
 <%   inventorying_class = active_class_str %>
+<% when :legal %>
+<%   legal_class = active_class_str %>
 <% end %>
 <div id="internal-left">
     <div id="side-menu">
@@ -18,6 +20,9 @@
 		  <li<%= shipping_class %>><a href="/admin/send_boxes">Shipping</a></li>
 		  <li<%= receiving_class %>><a href="/boxes/receive_box">Receiving</a></li>
 		  <li<%= inventorying_class %>><a href="/boxes/inventory_boxes">Inventorying</a></li>
+			<% if current_user.role == User::ADMIN %>
+		  <li<%= legal_class %>><a href="/rental_agreement_versions">Legal Maint.</a></li>
+		<% end %>
 		</ul>
 	</div>
 </div>

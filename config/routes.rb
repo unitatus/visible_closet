@@ -18,6 +18,7 @@ VisibleCloset::Application.routes.draw do
   resources :boxes
   resources :addresses
   resources :payment_profiles
+  resources :rental_agreement_versions
   
   match "orders/:id/process" => "orders#process_order"
   match "orders/:id/ship_order_lines" => "orders#ship_order_lines"

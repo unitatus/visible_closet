@@ -1,0 +1,16 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<% if @agreement_versions.size > 0 %>
+		<p>Previous versions:</p><br>
+	<% else %>
+		<p>There are no previous versions of the rental agreement in the database</p>
+	<% end %>
+	<ul>
+		<% @agreement_versions.each do |version| %>
+		<li><%= link_to "Version #{version.id}", version %> (<%= link_to "edit formatting", edit_rental_agreement_version_path(version) %>)</li>
+		<% end %>
+	</ul>
+	<br><br>
+	<div style="padding: 0 0 0 60px;"><%= link_to "Create new version >>", new_rental_agreement_version_path %></div><br>
+</div>
+<div class="clearer"></div>

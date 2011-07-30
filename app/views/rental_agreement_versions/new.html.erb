@@ -1,0 +1,10 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+
+<h1>New rental agreement version</h1>
+<br>
+<%= render 'form' %>
+<br>
+<%= link_to 'All Versions', rental_agreement_versions_path %>
+    </div>
+<div class="clearer"></div>
