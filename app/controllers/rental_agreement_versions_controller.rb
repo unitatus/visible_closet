@@ -53,4 +53,18 @@ class RentalAgreementVersionsController < ApplicationController
       render :action => "edit"
     end
   end
+  
+  def latest_agreement_ajax
+    latest = RentalAgreementVersion.latest
+    
+    if latest
+      send_data("<div class='fancybox-ma-content-holder'>" + latest.agreement_text + "</div>")
+    else
+      send_data("No agreement on file")
+    end
+  end
+  
+  def latest_agreement
+    
+  end
 end

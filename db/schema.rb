@@ -159,6 +159,16 @@ ActiveRecord::Schema.define(:version => 20110730200931) do
     t.datetime "updated_at"
   end
 
+  create_table "rental_agreement_versions_users", :id => false, :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "rental_agreement_version_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rental_agreement_versions_users", ["rental_agreement_version_id"], :name => "users_rav_rav_index"
+  add_index "rental_agreement_versions_users", ["user_id"], :name => "users_rav_user_index"
+
   create_table "shipments", :force => true do |t|
     t.integer  "box_id"
     t.integer  "from_address_id"
@@ -229,15 +239,5 @@ ActiveRecord::Schema.define(:version => 20110730200931) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
-
-  create_table "users_rental_agreement_versions", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "rental_agreement_version_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "users_rental_agreement_versions", ["rental_agreement_version_id"], :name => "users_rav_rav_index"
-  add_index "users_rental_agreement_versions", ["user_id"], :name => "users_rav_user_index"
 
 end

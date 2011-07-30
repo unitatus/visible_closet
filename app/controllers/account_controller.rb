@@ -146,13 +146,20 @@ class AccountController < ApplicationController
       return
     end
     
+    # the only way to get to this function is if the user saw the member agreement; take note of that
+    current_agreement = RentalAgreementVersion.latest
+    user = current_user
+    if !user.rental_agreement_versions.include? current_agreement
+      user.rental_agreement_versions << current_agreement
+    end
+    
     @order = @cart.build_order_properly(params[:order])
 
     @order.ip_address = request.remote_ip
     @order.shipping_address_id = params[:shipping_address_id]
-    @order.user_id = current_user.id
+    @order.user_id = user.id
     
-    if (!@order.purchase(current_user.default_payment_profile))
+    if (!@order.purchase(user.default_payment_profile))
       fail_checkout
     end
   end

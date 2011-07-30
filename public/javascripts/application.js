@@ -182,4 +182,15 @@ $(document).ready(function(){
         }
       });
 
+///////////////////////Start Fancybox
+
+	$("#member_agreement_link").fancybox({
+        'width': 665, 
+        'height': 500, 
+        'autoDimensions': false, 
+		ajax : {
+		    type	: "GET"
+		}
+	});
+
 });

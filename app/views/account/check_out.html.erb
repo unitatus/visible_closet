@@ -1,5 +1,10 @@
 <% @menu_page = :account %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<script language=javascript>
+function openMemberAgreement() {
+                window.radopen("membership_agrement", "Agreement");
+            }
+</script>
 <div id="internal-right">
 	<% if @order.errors.size > 0 %>
 	<% # If there is a credit card error, it is always followed by garbage. %>
@@ -73,7 +78,9 @@ Expires on: <%= profile.exp_month %>/<%= profile.exp_year %><br><br>
 	<hr>
 	<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 	<b>Total: <%= number_to_currency(@cart.estimated_total) %></b>
-	</div><div style="text-align: right; padding: 20px 0 0 0">
+	</div><br>
+	<div class="small-print">By clicking 'Place Order' below, I certify that I have read and agree to the <a id="member_agreement_link" href="/member_agreement_ajax">Member Agreement</a> associated with this service. I understand that I will be responsible for paying all shipping and storage charges billed to my account by thevisiblecloset.com</div>
+	<div style="text-align: right; padding: 20px 0 0 0">
 	<%= submit_tag("Place Order", :class => "button") %>
 	</div>
 	<br>

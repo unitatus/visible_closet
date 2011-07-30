@@ -888,7 +888,6 @@ table.cart_summary td
 .simple_body {
 	text-align: left;
 	padding: 0 110px 0 30px;
-
 }
 .simple_body p {
 	padding: 6px 0 6px 0;
@@ -906,6 +905,21 @@ table.cart_summary td
 .simple_body ol li {
 	padding: 10px 0 0 0;	
 	list-style-type: decimal !important;
+}
+/********* Member Agreement *********/
+.member_agreement_header {
+	font-weight:bold;
+	text-align: left;
+	padding: 16px 0 4px 0;
+	color: #006fb3;
+}
+.member_agreement_body {
+	text-align: left;
+	padding: 0 82px 0 23px;
+	font-size: 75%;
+}
+.fancybox-ma-content-holder {
+	width: 650px;
 }
 /********* How it works ********/
 .how_it_works {
@@ -928,4 +942,9 @@ table.cart_summary td
 	width: 10px;
 	vertical-align: middle;
 	height: 50px;
+}
+
+/************ Legal ***********/
+.small-print {
+	font-size: 75%;
 }
