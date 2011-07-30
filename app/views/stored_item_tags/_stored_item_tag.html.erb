@@ -1,0 +1,2 @@
+<div id="tag_<%= @stored_item_tag.id %>" style="display: inline"> | <%= @stored_item_tag.tag %> <%= link_to("X", "/stored_item_tags/#{@stored_item_tag.id}/delete", :method => :delete, :remote => true, :title => "delete this tag") %>
+</div>

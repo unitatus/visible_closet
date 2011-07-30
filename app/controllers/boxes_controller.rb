@@ -211,7 +211,7 @@ class BoxesController < ApplicationController
       @stored_item_tag.tag = params[:tag]
     
       if (!@stored_item_tag.save)
-        raise "Failed to save stored tag! " << @stored_item_tag.inspect
+        raise "Failed to save stored tag! Erorrs: " << @stored_item_tag.errors
       end
     end
     

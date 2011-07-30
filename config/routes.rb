@@ -26,6 +26,7 @@ VisibleCloset::Application.routes.draw do
   match "box/:id/get_label" => "boxes#get_label"
   match "shipment/:id/get_label" => "shipments#get_label"
   match "stored_item_tags/:id/delete" => "stored_item_tags#delete"
+  match "stored_item_tags/add_tag" => "stored_item_tags#add_tag"
 
   # Devise stuff
   devise_for :users, :path_names => { :sign_up => "register" }, :controllers => { :registrations => "registrations" }

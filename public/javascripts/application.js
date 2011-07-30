@@ -22,6 +22,26 @@ function ToggleIndexingLock()
 	document.forms['box_form'].elements['marked_for_indexing'].disabled = document.forms['box_form'].elements['marked_for_indexing_locked'].checked;
 }
 
+function showTagsForm(storedItemId)
+{
+	link_div = 'add_tags_link_' + storedItemId;
+	form_div = 'add_tags_form_' + storedItemId;
+	form_name = 'tags_form_' + storedItemId
+	
+	document.getElementById(link_div).style.display = 'none';
+	document.getElementById(form_div).style.display = 'block'; // This seems to show it
+	document.getElementById(form_name).elements["tag"].focus();
+}
+
+function hideTagsForm(storedItemId)
+{
+	link_div = 'add_tags_link_' + storedItemId;
+	form_div = 'add_tags_form_' + storedItemId;
+	
+	document.getElementById(link_div).style.display = 'block';
+	document.getElementById(form_div).style.display = 'none';	
+}
+
 function removeElement(parentDiv, childDiv)
 {
      if (childDiv == parentDiv) {

@@ -1,0 +1,6 @@
+<% if @stored_item_tag %>
+	$('#stored_item_tags_<%= @stored_item_tag.stored_item_id %>').append('<%= escape_javascript render("stored_item_tag", :locals => {:stored_item_tag => @stored_item_tag}) %>');
+	document.getElementById('tags_form_<%= @stored_item_tag.stored_item_id %>').elements['tag'].value = "";
+<% else %>
+
+<% end %>
