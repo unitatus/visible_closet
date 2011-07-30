@@ -944,6 +944,11 @@ h1 {
     top: -20px;
 }
 
+#pricing .pricing-box2 .textbox, #pricing .pricing-box3 .textbox {
+    padding: 10px 20px 10px 20px;
+    color: #fff;
+}
+
 /*packing tips*/
 .packing-image {
     width: 200px;
