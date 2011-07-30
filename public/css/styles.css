@@ -204,6 +204,11 @@ body {
     font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
+h1 {
+    color: #25aae1;
+    font-size: 22px;
+}
+
 #page-content {
     font-size: 14px;
     line-height: 18px;
@@ -371,6 +376,13 @@ body {
 }
 
 /* CLASSES */
+
+.slim-centered {
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
 .clearer {
     height: 0px;
@@ -804,10 +816,7 @@ body {
 
 /* pricing */
 #pricing {
-    width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 10px 0px 20px 0px;
+    padding: 20px 0px 0px 0px;
 }
 
 #pricing .pricing-heading {
@@ -933,4 +942,25 @@ body {
 #pricing .colhead {
     position: relative;
     top: -20px;
+}
+
+/*packing tips*/
+.packing-image {
+    width: 200px;
+    float: left;
+}
+
+.packing-text {
+    width: 480px;
+    float: left;
+    padding: 0px 0px 0px 20px;
+}
+
+.packing-text li {
+    font-size: 14px;
+    line-height: 28px;
+}
+
+.packing {
+    padding: 20px 0px 20px 0px;
 }
