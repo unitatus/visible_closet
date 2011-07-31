@@ -101,4 +101,8 @@ module ApplicationHelper
     
     return_str
   end
+  
+  def vc_address
+    address_summary(Address.find(Rails.application.config.fedex_vc_address_id))
+  end
 end

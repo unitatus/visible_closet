@@ -1,6 +1,7 @@
 class UserMailer < ActionMailer::Base
   default :from => "The Visible Closet <shipping@thevisiblecloset.com>", :reply_to =>"shipping@thevisiblecloset.com"
   helper :application
+  layout 'user_mailer', :except => :invoice_email
   
   def invoice_email(user, invoice)
     @user = user

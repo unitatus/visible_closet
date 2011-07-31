@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+    <title>Visible Closet</title>
+
+	<style type="text/css"> 
+		
+		html, body, div, span, applet, object, iframe,
+		h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+		a, abbr, acronym, address, big, cite, code,
+		del, dfn, em, font, img, ins, kbd, q, s, samp,
+		small, strike, strong, sub, sup, tt, var,
+		dl, dt, dd, ol, ul, li,
+		fieldset, form, label, legend,
+		table, caption, tbody, tfoot, thead, tr, th, td {
+			margin: 0;
+			padding: 0;
+			border: 0;
+			outline: 0;
+			font-weight: inherit;
+			font-style: inherit;
+			font-size: 100%;
+			font-family: inherit;
+			vertical-align: baseline;
+		}
+		/* remember to define focus styles! */
+		:focus {
+			outline: 0;
+		}
+		body {
+			line-height: 1;
+			color: #333333;
+			background: #ededed;
+		}
+		ol, ul {
+			list-style: none;
+		}
+		/* tables still need 'cellspacing="0"' in the markup */
+		table {
+			border-collapse: separate;
+			border-spacing: 0;
+		}
+		caption, th, td {
+			text-align: left;
+			font-weight: normal;
+		}
+		blockquote:before, blockquote:after,
+		q:before, q:after {
+			content: "";
+		}
+		blockquote, q {
+			quotes: "" "";
+		}
+		
+		.container {
+		    width: 540px;
+		    margin-left: auto;
+		    margin-right: auto;
+		    font-family: Tahoma, sans-serif;
+		    font-size: 12px;
+		    line-height: 18px;
+		    padding: 0px 20px 20px 20px;
+		    background-color: #fff;
+		    border: 1px solid #666666;
+		    margin-top: 20px;
+		    margin-bottom: 20px;
+		}
+		.header {
+		    width: 540px;
+		    height: 80px;
+		    padding-bottom: 10px;
+		}
+		h1, .h1 {
+		    font-size: 18px;
+		    line-height: 18px;
+		    padding: 18px 0px 18px 0px;
+		    font-family: Arial, sans-serif;
+		    font-weight: bolder;
+		    font-style: italic;
+		    color: #666666;
+		}
+		h2, .h2 {
+		    font-size: 14px;
+		    margin-bottom: 18px;
+		    line-height: 14px;
+		    font-weight: bold;
+		    color: #25aae1;
+		}
+		p {
+		    margin-bottom: 18px;
+		    font-size: 12px;
+		    line-height: 18px;
+		    color: #666666;
+		}
+		.copyright {
+		    font-size: 11px;
+		    text-align: right;
+		    color: #666666;
+		}
+		a.button {
+		    display: block;
+		    background-color: #25aae1;
+		    line-height: 15px;
+		    font-size: 16px;
+		    padding: 10px;
+		    width: 200px;
+		    text-align: center;
+		    text-decoration: none;
+		    margin-left: auto;
+		    margin-right: auto;
+		    color: #ffffff;
+		    margin-bottom: 18px;
+		}
+		a.button:hover {
+		    background-color: #666666;
+		}
+	</style>
+	
+</head>
+<body>
+    <table class="container">
+        <tr>
+            <td class="header" style="border-bottom:1px solid #cccccc" >
+                <table class="headerLinks">
+                    <tr>
+                        <img src="http://evening-sky-543.heroku.com/images/vcLogo_beta.gif" alt="Visible Closet" />
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="bodyColumn" >
+<%= yield %>
+            </td>
+        </tr>
+        <tr>
+            <td style="border-top:1px solid #cccccc" class="copyright" >&copy; Copyright 2011 visiblecloset.com, All Rights Reserved</td>
+        </tr>
+
+    </table>
+</body>
+</html>

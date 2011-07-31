@@ -80,6 +80,7 @@ $(document).ready(function(){
 		jQuery(this).find('ul').stop().animate({opacity: 0}, 300);
 	});
 	
+	// Start Capacitr
     $('.browse-box .browse-box-menu').hover(
           function () {
             $($(this)).find("div").show();
@@ -166,8 +167,9 @@ $(document).ready(function(){
     }
     
     $("#inventory-boxcanvas").animate({
-        left: '-='+offsetCalc
+        left: '='+offsetCalc
       }, 1000, function() {
+          //alert(offsetCalc);
         $('#inventory-menu-leftarrow').addClass('enabled');
         $('#inventory-menu-rightarrow').addClass('enabled');
         curPos = $("#inventory-boxcanvas").position().left;

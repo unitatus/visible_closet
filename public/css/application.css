@@ -42,8 +42,9 @@ ul { list-style: none; }
 }*/
 /*#create-store.thumbnails { margin-bottom: 25px; }*/
 .thumbnails li {
-	float: left;
-	width: 300px;
+    float: left;
+    list-style-type: none !important;
+    width: 300px;
 }
 #create-portfolio.thumbnails li {
 	margin: 10px 7px 8px;

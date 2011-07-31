@@ -6,6 +6,11 @@
         <div id="inventory-menu-rightarrow"></div>
 		<div id="inventory-boxdisplay">
             <div id="inventory-boxcanvas">
+				<div class="inventory-boxdisplay-box <%= params[:box_id].blank? ? "activebox" : "" %>">
+                   <p><a href="/stored_items">SHOW ALL</a></p>
+                   <p>content of all boxes</p>
+                   <div class="inventory-boxdisplay-image showall"><a href="/stored_items"></a></div>
+              	</div>
 	<% @boxes.each do |box| %>
 				<div class="inventory-boxdisplay-box <%= box.id.to_s == params[:box_id] ? "activebox" : "" %>">
 			        <p><a href="/boxes/<%= box.id %>/stored_items">Box <%= box.id %></a></p>

@@ -97,10 +97,18 @@ blockquote, q {
 
 #login {
     width: 120px;
-    height: 45px;
+    height: 40px;
     position: absolute;
     top: 0px;
     right: 0px;
+}
+
+#signup {
+    width: 120px;
+    height: 40px;
+    position: absolute;
+    top: 0px;
+    right: 120px;
 }
 
 #nav ul {
@@ -758,11 +766,19 @@ h1 {
     width: 100px;
     height: 90px;
     background-image: url("../images/inventory-box.jpg");
-    background-position: 0px 90px;
+    background-position: 0px -90px;
 }
 
 .activebox .inventory-boxdisplay-image {
     background-position: 0px 0px;
+}
+
+.inventory-boxdisplay-image.showall {
+    background-position: 0px -270px !important;
+}
+
+.activebox .inventory-boxdisplay-image.showall {
+    background-position: 0px -180px !important;
 }
 
 .inventory-boxdisplay-image a {
@@ -1031,4 +1047,29 @@ h1 {
     margin-top: 60px;
     color: #7c7c7c;
     background-color: #d6d6d6;
+}
+
+/*faq*/
+#faq p {
+    font-size: 12px;
+    line-height: 18px;
+    margin-bottom: 18px;
+}
+
+#faq li {
+    font-size: 12px;
+    line-height: 18px;
+    margin-left: 20px;
+}
+
+#faq ul {
+    margin-bottom: 18px;
+}
+
+#faq p.q {
+    font-size: 18px;
+    line-height: 18px;
+    margin-bottom: 18px;
+    font-weight: bolder;
+    color: #25aae1;
 }
