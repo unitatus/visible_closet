@@ -25,8 +25,8 @@
 	</div>
 	<div class="graybox">
 		<div>
-            <p>Filters:  <a href="#">Date Added</a> | <a href="#">Item size</a> | <a href="#">Alphabetical Order</a></p>
-            <br />
+<!--            <p>Filters:  <a href="#">Date Added</a> | <a href="#">Item size</a> | <a href="#">Alphabetical Order</a></p>
+            <br /> -->
         </div>
         <div>
 			<ul id="create-portfolio" class="thumbnails"> 
@@ -43,7 +43,7 @@
 				</div>
             <p>
 			Box: <%= stored_item.box_id %>; Stored Item: <%= stored_item.id %><br>
-				<div id="stored_item_tags_<%= stored_item.id %>" style="display: inline">
+				<!--<div id="stored_item_tags_<%= stored_item.id %>" style="display: inline">
 				Tags: 
 				<% stored_item.stored_item_tags.each_with_index do |tag, index| %>
 				<% divider = (index == 0 ? "" : "| ") %>
@@ -58,9 +58,9 @@
 					<%= hidden_field_tag :stored_item_id, stored_item.id %>
 					<%= text_field_tag("tag")%>
 					<%= submit_tag("Add") %> <a href="javascript:hideTagsForm('<%= stored_item.id %>')">(done)</a>
-					<% end %> <!-- end form -->
+					<% end %> 
 				</div>
-			</p>
+			</p>-->
 			</li>
 				<% if (index - 3) % 4 == 0 %>
 				<div class="clearer"></div>
