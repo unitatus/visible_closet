@@ -96,7 +96,7 @@ module ApplicationHelper
     return_str << address.city
     return_str << ", "
     return_str << address.state
-    return_str << ", "
+    return_str << " "
     return_str << address.zip
     
     return_str

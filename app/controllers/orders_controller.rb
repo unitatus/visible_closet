@@ -120,4 +120,20 @@ class OrdersController < ApplicationController
     
     UserMailer.shipping_materials_sent(@order.user, @order_shipment, @order_lines).deliver
   end
+  
+  def print_invoice
+    @order = Order.find(params[:id])
+    @invoice = Invoice.find_by_order_id(@order.id)
+    @shipping_address = @order.shipping_address
+    @vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
+    if @order.payment_transactions.size > 0 # only one really
+      @payment_profile = @order.payment_transactions.first.payment_profile 
+    else
+      @payment_profile = current_user.default_payment_profile
+    end
+
+    @billing_address = @payment_profile.billing_address
+    
+    render :action => "print_invoice", :layout => false
+  end
 end

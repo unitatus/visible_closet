@@ -19,6 +19,8 @@
 
 class PaymentTransaction < ActiveRecord::Base
   serialize :params
+  
+  belongs_to :payment_profile
 
   def response=(response)
     self.success = response.success?

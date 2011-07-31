@@ -11,5 +11,6 @@
 #  updated_at     :datetime
 #
 
+# Conceptually, a charge can be related to: and order line; a box in storage.
 class Charge < ActiveRecord::Base
 end

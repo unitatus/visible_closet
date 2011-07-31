@@ -20,6 +20,7 @@
 
 class PaymentProfile < ActiveRecord::Base
     belongs_to :user
+    belongs_to :billing_address, :class_name => 'Address'
      
     attr_accessor :credit_card
     

@@ -17,6 +17,7 @@ class Order < ActiveRecord::Base
   has_many :payment_transactions
   has_many :order_lines, :dependent => :destroy
   belongs_to :user
+  belongs_to :shipping_address, :class_name => "Address"
 
   attr_accessible :user_id, :created_at
 
@@ -27,10 +28,11 @@ class Order < ActiveRecord::Base
       if (!save)
         raise ActiveRecord::Rollback
       end
+      
+      charges, payment_transaction = pay_for_order
+      
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
-      do_purchase_processing
-
-      pay_for_order
+      do_post_payment_processing(charges, payment_transaction)
       
       transaction_successful = true
     end # end transaction    
@@ -40,15 +42,6 @@ class Order < ActiveRecord::Base
 
   def total_in_cents
     (cart.estimated_total*100).round
-  end
-
-  def shipping_address
-    begin
-      Address.find(self.shipping_address_id)
-    rescue ActiveRecord::RecordNotFound
-      return nil
-    end
-
   end
   
   def build_order_line(attributes={})
@@ -115,11 +108,13 @@ class Order < ActiveRecord::Base
       errors.add("cc_response", message)
       raise ActiveRecord::Rollback
     end
+    
+    return [charges, new_transaction]
   end
 
   # this method throws a RuntimeError b/c the only way that save wouldn't work is if something went really wrong
-  # and we don't want to miss that
-  def do_purchase_processing()
+  # and we don't want to miss that.
+  def do_post_payment_processing(charges, payment_transaction)
     cart.mark_ordered
     
     if (!cart.save)
@@ -148,12 +143,22 @@ class Order < ActiveRecord::Base
       end # inner for loop
     end
     
-    invoice = create_invoice
+    invoice = create_invoice(charges, payment_transaction)
     
-    UserMailer.invoice_email(user, nil).deliver
+    UserMailer.invoice_email(user, invoice).deliver
   end # end function
   
-  def create_invoice
-    return nil
+  def create_invoice(charges, payment_transaction)
+    invoice = Invoice.new()
+    
+    invoice.user = user
+    invoice.payment_transaction = payment_transaction
+    invoice.order = self
+    
+    if !invoice.save
+      raise "Unable to create invoice; errors: " << invoice.errors.inspect
+    end
+    
+    invoice
   end
 end

@@ -1,0 +1,121 @@
+<style>
+.left_column {
+	width: 30%; 
+	float: left; 
+	text-align: left; 
+	padding-left: 130px
+}
+.right_column {
+	width: 30%; 
+	float: right; 
+	text-align: left; 
+	padding-right: 50px
+}
+.left_wide_column {
+	float:left; 
+	width: 550px; 
+	text-align: right;
+}
+.right_narrow_column {
+	float:right; 
+	width: 120px; 
+	text-align: right;
+}
+</style>
+		<!-- SIDE MENU HTML --> 
+		<body>
+			<div style="text-align: center">
+<div style="text-align: center; margin: auto; width: 700px">
+	<div style="width: auto; padding: 10px; ">
+		<a href="/"><img src="http://www.thevisiblecloset.com/images/vcLogo_beta.gif" alt="Visible Closet" /></a><br><br>
+		<strong>The Visible Closet</strong><br>
+		<%= raw address_summary(@vc_address) %>
+		<br><br><br>
+		<% if @invoice.nil? %>
+			Invoice not found
+		<% else %>
+			<div style="width: auto; text-align: right">
+				<% if @order %>
+				<strong>Order #: <%= @order.id %></strong><br>
+				<% end %>
+				<strong>Invoice #: <%= @invoice.id %></strong><br>
+				<strong>Invoice Date: <%= @invoice.created_at.strftime("%m/%d/%Y") %></strong></br>
+			</div>
+			<br><br>
+			<div style="float: left; text-align: left; padding-left: 130px">
+			<strong>Customer Name: </strong><%= @invoice.user.first_name %> <%= @invoice.user.last_name %>
+			</div>
+			<div style="clear: both">
+			<br><br>
+			<div class="left_column">
+				<strong>Billing Address</strong><br>
+				<%= raw address_summary(@billing_address) %>
+			</div>
+			<div class="right_column">
+				<% if @shipping_address %>
+				<strong>Shipping Address</strong><br>
+				<%= raw address_summary(@shipping_address)%>
+				<% end %>
+			</div>
+			<div style="clear: both">
+			<br><hr>
+			<div style="width: 100%">
+				<br>
+				<table width=100%>
+					<thead>
+						<tr>
+							<th width=30% align="left">Item</th><th width=25%>Qty</th><th></th><th width=25%>Unit Price</th><th width=20% align="right">Price</th>
+						</tr>	
+					</thead>
+					<tbody>
+						<% @invoice.invoice_lines.each do |line| %>
+							<tr>
+								<td align="left"><%= line.product.name %></td>
+								<td><%= line.quantity %></td>
+								<td>x</td>
+								<td><%= number_to_currency(line.product.price) %></td>
+								<td align="right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.total_in_cents / 100) %>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>	
+			</div>
+			<div style="clear: both"></div>
+			<br><hr><br>
+			<div class="left_wide_column">
+				Subtotal:<br>
+				Shipping & Handling:<br>
+				Discount:<br>
+			</div>
+			<div class="right_narrow_column">
+				<%= number_to_currency(@invoice.total_in_cents / 100)%><br>
+				$0.00<br>
+				$0.00<br>
+			</div>
+			<div style="clear: both"></div>
+			<hr>
+			<div class="left_wide_column">
+				Total Amount:
+			</div>
+			<div class="right_narrow_column">
+				<%= number_to_currency(@invoice.total_in_cents / 100) %>
+			</div>
+			<div style="clear: both"></div>
+			<div style="float: left; width: 20%; text-align: left">
+				<br>
+				<strong>Credit Card Details</strong><br>
+				Card Type:<br>
+				Card Number:<br>
+				Expiration:
+			</div>
+			<div style="float: right; width: 79%; text-align: left">
+				<br><br><%= @payment_profile.cc_type.capitalize %><br>
+				************<%= @payment_profile.last_four_digits %><br>
+				<%= @payment_profile.exp_month%>/<%= @payment_profile.exp_year %>
+			</div>
+			<div style="clear: both"></div>
+		<% end %>
+ 	</div>
+</div>
+</div>
+</body>

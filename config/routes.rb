@@ -74,7 +74,7 @@ VisibleCloset::Application.routes.draw do
   get "account/select_new_shipping_address"
   post "account/choose_new_shipping_address"
   post "account/choose_new_billing_address"
-  
+  match "orders/:id/print_invoice" => "orders#print_invoice"
   
   post "boxes/create_stored_item"
   get "account/closet_main"
