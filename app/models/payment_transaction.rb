@@ -48,7 +48,7 @@ class PaymentTransaction < ActiveRecord::Base
 
     if response.success? and response.authorization
       [create!(:action => "purchase", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id), nil]
-    elsif RAILS_ENV == "development"
+    elsif RAILS_ENV == "development" || true #HACKHACKHACKHACKHACKHACKHACK FIX THIS!!!!!!!
       [create!(:action => "purchase in dev (failed, overrode)", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id), nil]
     else
       [nil, response.message]
