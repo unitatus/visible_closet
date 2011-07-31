@@ -106,6 +106,9 @@
 						  <li<%= account_class %>><a href="/account/home">Account</a></li>
 						<% end %>
 
+						<% if not user_signed_in? %>
+						<li><a href="/users/register">Sign Up</a></li>
+						<% end %>
     				</ul>
                 </div>
                 <div class="clearer"></div>

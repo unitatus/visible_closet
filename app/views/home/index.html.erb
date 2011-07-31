@@ -7,12 +7,22 @@
                 </div>
                 <div id="viewer-right">
                     <div id="viewer-right-top">
-                        <p>Moving? Downsizing? Remodeling? Cleaning? <strong>The Visible Closet</strong> is a great solution for a wide variety of people.<br /><span class="learnmore">Learn more
-	<% if !user_signed_in? %>&amp; sign up now<% else %>&gt;&gt;<% end %>
-		</span></p>
+						
+                        <p>To celebrate our grand opening, we are offering free boxes and shipping supplies to new customers!<br>
+						<% if user_signed_in? %>
+							<a href="/account/store_more_boxes">
+						<% else %>
+							<a href="/users/register">
+						<% end %>
+							<span class="learnmore">Store boxes now >></span></a></p>
+							
                     </div>
                     <div id="viewer-right-bottom">
                         <img src="images/rightforme.gif" alt="Is this right for me?" />
+						<div  style="color: white; padding: 10px 10px 10px 10px ">
+Moving? Downsizing? Remodeling? Cleaning? <strong>The Visible Closet</strong> is a great solution for a wide variety of people.
+						<div style="text-align: right"><a href="/right_for_me" style="color: #cccccc">Learn More &gt;&gt;</a></div>
+						</div>
                     </div>
 					<% if !user_signed_in? %>
                     <a href="/users/register" class="calltoaction"><img src="images/calltoaction.png" alt="Sign Up Now" /></a>
@@ -26,7 +36,7 @@
             </div>
             <div id="home-extra">
                 <div id="home-extra-left"><p>Most storage solutions are like black holes. Once you put something in your attic, basement or storage
-                unit, how long before it becomes just another lost memory?</p><p>Store with us and you can search your items by keyword, view pictures of them, send individual items to any address, sell items, or dispose of them in an environmentally sustainable manner -- all with the click of a button.</p></div>
+                unit, how long before it becomes just another lost memory?</p><p>Check out the benefits you receive by storing with The Visible Closet:</p></div>
                 <div id="home-social">
                     <a href="#" class="facebook-icon" target="new"><img src="images/facebook.gif" alt="" /></a>
                     <a href="http://twitter.com/visiblecloset" class="twitter-icon" target="new"><img src="images/twitter.gif" alt="" /></a>
@@ -46,7 +56,7 @@
                 <div class="box">
                     <h2>Manage</h2>
                     <p>Once you have inventoried your items you can manage them individually or in groups. Mail an item to an address. Sell or donate items*. Safely dispose of items. All from the comfort of your home.</p>
-<p><i>Coming soon!</i></p>
+<p><br>*Coming soon!</p>
                 </div>
                 <div class="clearer"></div>
             </div>
