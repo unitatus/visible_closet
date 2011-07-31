@@ -143,6 +143,7 @@ class AccountController < ApplicationController
     # The most likely reason why a cart would not be found is because the submit button was clicked twice, and the order previously committed.
     # That means we should render nicely as though it did.
     if (!@cart)
+      @order = Order.find_all_by_user_id(current_user.id, :first, :order => 'created_at DESC')
       return
     end
     

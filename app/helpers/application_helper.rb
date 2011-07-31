@@ -82,11 +82,15 @@ module ApplicationHelper
     years
   end
   
-  def address_summary(address)
-    return_str = address.first_name
-    return_str << " "
-    return_str << address.last_name
-    return_str << "<br>"
+  def address_summary(address, show_name=true)
+    return_str = ""
+    
+    if show_name
+      return_str << address.first_name
+      return_str << " "
+      return_str << address.last_name
+      return_str << "<br>"
+    end
     return_str << address.address_line_1
     if (not address.address_line_2.blank?)
       return_str << "<br>"

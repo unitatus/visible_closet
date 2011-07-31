@@ -29,7 +29,7 @@
 	<div style="width: auto; padding: 10px; ">
 		<a href="/"><img src="http://www.thevisiblecloset.com/images/vcLogo_beta.gif" alt="Visible Closet" /></a><br><br>
 		<strong>The Visible Closet</strong><br>
-		<%= raw address_summary(@vc_address) %>
+		<%= raw address_summary(@vc_address, false) %>
 		<br><br><br>
 		<% if @invoice.nil? %>
 			Invoice not found
@@ -54,7 +54,7 @@
 			<div class="right_column">
 				<% if @shipping_address %>
 				<strong>Shipping Address</strong><br>
-				<%= raw address_summary(@shipping_address)%>
+				<%= raw address_summary(@shipping_address) %>
 				<% end %>
 			</div>
 			<div style="clear: both">
