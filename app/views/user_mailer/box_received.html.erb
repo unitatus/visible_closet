@@ -7,7 +7,12 @@ We have measured your box, and found that it is a healthy <%= @box.cubic_feet %>
 	<% if @box.indexing_status != Box::NO_INDEXING_REQUESTED %>
 	We also see that you have selected to inventory your box -- a fine idea! Our staff are hard at work processing your inventory, and will notify you when the process is complete.<br><br>
 	<% end %>
-Given this box's size and indexing status, your monthly fee to store this box will be $<%= @box.monthly_fee %>. For the current month, the fee will be prorated starting on <%= @box.received_at.strftime("%m/%d/%Y") %>, the date it was received.
+Given this box's size and inventorying status, your monthly fee to store this box will be <%= number_to_currency(@box.monthly_fee) %>. For the current month, the fee will be prorated starting on <%= @box.received_at.strftime("%m/%d/%Y") %>, the date it was received.
+<% else %>
+<% if @box.indexing_status != Box::NO_INDEXING_REQUESTED %>
+We see that you have selected to inventory your box -- a fine idea! Our staff are hard at work processing your inventory, and will notify you when the process is complete.<br><br>
+<% end %>
+Given this inventorying status, your monthly fee to store this box will be <%= number_to_currency(@box.monthly_fee) %>. For the current month, the fee will be prorated starting on <%= @box.received_at.strftime("%m/%d/%Y") %>, the date it was received.
 <% end %>
 <br><br>
 Thanks for using The Visible Closet, and have a great day!

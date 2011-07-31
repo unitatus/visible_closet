@@ -1,6 +1,7 @@
 <% @admin_page = :receiving %>
 <%= render :partial => "admin/admin_menu", :locals => { :admin_page => @admin_page } %>
 <div id="internal-right">
+	<div class="login-slim-centered">
 	<div class="simple_header">Box Receiving</div>
 		<% if @messages.size > 0 %>
 			<ul>
@@ -23,7 +24,17 @@
 		<%= form_tag "", :class => "standard", :id => "box_form" do %>
 			<div class="field clearfix">
 				Box ID:
-				<%= text_field_tag :box_id, "", :class => "textbox" %>
+				<%= text_field_tag :box_id, "", :class => "textbox", :value => params[:box_id] %>
+			</div>
+			<div class="field clearfix">
+				Box dimensions (w/l/h) in feet:
+				<%= text_field_tag :width, "", :class => "textbox", :style => "width: 6", :placeholder => "width", :value => params[:width] %>
+				<%= text_field_tag :length, "", :class => "textbox", :style => "width: 6", :placeholder => "length", :value => params[:length] %>
+				<%= text_field_tag :height, "", :class => "textbox", :style => "width: 6", :placeholder => "height", :value => params[:height] %> 
+			</div>
+			<div class="field clearfix">
+				Box weight in lbs:
+				<%= text_field_tag :weight, "", :class => "textbox", :style => "width: 6", :placeholder => "weight", :value => params[:weight] %>&nbsp;
 			</div>
 			<div class="field clearfix">
 				Box marked for indexing:
@@ -42,5 +53,6 @@
 <script type="text/javascript" language="JavaScript">
 document.forms['box_form'].elements['box_id'].focus();
 </script>
+</div>
 </div>
 <div class="clearer"></div>

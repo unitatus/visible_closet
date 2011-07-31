@@ -124,6 +124,28 @@ class BoxesController < ApplicationController
       @error_messages << "Box not found!"
       return
     end
+    
+    if params[:weight].to_f == 0
+      @error_messages << "Weight must be a positive number."
+    end
+    
+    if box.box_type == Box::CUST_BOX_TYPE
+      if params[:height].to_f == 0
+        @error_messages << "Height must be a positive number."
+      end
+    
+      if params[:width].to_f == 0
+        @error_messages << "Width must be a number."
+      end
+    
+      if params[:length].to_f == 0
+        @error_messages << "Length must be a number."
+      end
+    end
+    
+    if @error_messages.size > 0
+      return
+    end
         
     if (box.status == Box::IN_STORAGE_STATUS)
       @error_messages << ("Warning: box was in 'In Storage' status. Please record this error and see an administrator. Box id: " + box.id.to_s + ". Box was still received, but was left in this status.")
@@ -132,6 +154,16 @@ class BoxesController < ApplicationController
     if (box.status == Box::NEW_STATUS)
       @error_messages << ("Warning: box was in 'New' status. Please record this error and see an administrator. Box id: " + box.id.to_s + ". Box was still received.")
     end    
+
+    debugger
+    
+    box.weight = params[:weight].to_f
+    
+    if box.box_type == Box::CUST_BOX_TYPE
+      box.width = params[:width].to_f
+      box.length = params[:length].to_f
+      box.height = params[:height].to_f
+    end 
     
     raise ("Error on save with box: " << box.inspect) if !box.receive(params[:marked_for_indexing] == "1" || params[:marked_for_indexing_locked] == "1")
         
@@ -140,6 +172,12 @@ class BoxesController < ApplicationController
     end
     
     @messages << ("Box " + box.id.to_s + " processed.")
+    
+    params[:box_id] = nil
+    params[:weight] = nil
+    params[:length] = nil
+    params[:height] = nil
+    params[:width] = nil
     
     UserMailer.box_received(box).deliver
   end  

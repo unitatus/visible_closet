@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110728021721
+# Schema version: 20110731043457
 #
 # Table name: boxes
 #
@@ -14,6 +14,10 @@
 #  indexing_status        :string(255)
 #  indexing_order_line_id :integer
 #  received_at            :datetime
+#  height                 :float
+#  width                  :float
+#  length                 :float
+#  weight                 :float
 #
 
 class Box < ActiveRecord::Base
@@ -65,6 +69,55 @@ class Box < ActiveRecord::Base
       raise "Illegal box type " << box_type
     end
   end
+
+  # Want to make sure we don't get any data errors.
+  def height
+    if self.box_type == Box::VC_BOX_TYPE
+      update_attribute(:height, Rails.application.config.vc_box_height)
+    end
+    return read_attribute(:height)
+  end
+
+  # Want to make sure we don't get any data errors.
+  def width
+    if self.box_type == Box::VC_BOX_TYPE
+      update_attribute(:width, Rails.application.config.vc_box_width)
+    end
+    
+    return read_attribute(:width)
+  end
+
+  # Want to make sure we don't get any data errors.
+  def length
+    if self.box_type == Box::VC_BOX_TYPE
+      update_attribute(:length, Rails.application.config.vc_box_length)
+    end
+    return read_attribute(:length)
+  end
+  
+  # def height=(value)
+  #   if box_type == VC_BOX_TYPE
+  #     raise "Cannot reset Visible Closet box height."
+  #   else 
+  #     super(value)
+  #   end
+  # end
+  # 
+  # def width=(value)
+  #   if box_type == VC_BOX_TYPE
+  #     raise "Cannot reset Visible Closet box width."
+  #   else 
+  #     super(value)
+  #   end
+  # end
+  # 
+  # def length=(value)
+  #   if box_type == VC_BOX_TYPE
+  #     raise "Cannot reset Visible Closet box length."
+  #   else 
+  #     super(value)
+  #   end
+  # end 
   
   def receive(indexing_requested = false)
     self.transaction do
@@ -123,16 +176,36 @@ class Box < ActiveRecord::Base
   end
   
   def monthly_fee
-    #TODO
-    return 0
+    if self.box_type == CUST_BOX_TYPE && cubic_feet.nil?
+      return nil
+    end
+    
+    if self.box_type == CUST_BOX_TYPE
+      storage_product = Product.find(Rails.application.config.your_box_product_id)
+      indexing_product = Product.find(Rails.application.config.your_box_inventorying_product_id)
+    else
+      storage_product = Product.find(Rails.application.config.our_box_product_id)
+      indexing_product = Product.find(Rails.application.config.our_box_inventorying_product_id)
+    end
+    
+    if self.indexing_status == NO_INDEXING_REQUESTED
+      indexing_fee = 0
+    else
+      indexing_fee = indexing_product.price
+    end
+    
+    if self.box_type == CUST_BOX_TYPE
+      return (storage_product.price + indexing_fee) * cubic_feet
+    else
+      return storage_product.price + indexing_fee
+    end
   end
   
   def cubic_feet
-    if box_type == VC_BOX_TYPE
-      return 2
+    if self.length.nil? || self.width.nil? || self.height.nil?
+      return nil
     else
-      #TODO
-      return 0
+      return self.length * self.width * self.height
     end
   end
   

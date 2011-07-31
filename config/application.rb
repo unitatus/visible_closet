@@ -50,6 +50,13 @@ module VisibleCloset
     config.fedex_account_number = '510087720'
     config.fedex_meter_number = '118543679'
     
+    # Boxes
+    config.vc_box_height = 1
+    config.vc_box_width = 1
+    config.vc_box_length = 2
+    config.volume_uom = 'cubic feet'
+    config.weight_uom = 'lbs'
+    
     # Production account
     # config.fedex_auth_key = 'bHbI4jcejTh58tHK'
     # config.fedex_security_code = 'Cr52GqtoTfnp48MEzaSRUP7M6'
