@@ -16,11 +16,11 @@ class Order < ActiveRecord::Base
   belongs_to :cart
   has_many :payment_transactions
   has_many :order_lines, :dependent => :destroy
-  has_one :user
+  belongs_to :user
 
   attr_accessible :user_id, :created_at
 
-  def purchase(payment_profile)
+  def purchase()
     transaction_successful = false
 
     self.transaction do
@@ -30,7 +30,7 @@ class Order < ActiveRecord::Base
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
       do_purchase_processing
 
-      pay_for_order(payment_profile)
+      pay_for_order
       
       transaction_successful = true
     end # end transaction    
@@ -106,10 +106,10 @@ class Order < ActiveRecord::Base
   private
   
   # This method saves the transactions
-  def pay_for_order(payment_profile)
+  def pay_for_order()
     charges = generate_charges
 
-    new_transaction, message = PaymentTransaction.pay(charges, payment_profile, self.id)
+    new_transaction, message = PaymentTransaction.pay(charges, user.default_payment_profile, self.id)
     
     if new_transaction.nil?
       errors.add("cc_response", message)
@@ -126,8 +126,6 @@ class Order < ActiveRecord::Base
       raise "Unable to save cart. Cart: " << cart.inspect
     end
     
-    user = User.find(cart.user_id)
-    
     order_lines.each do |order_line|
       product = order_line.product
       
@@ -142,12 +140,20 @@ class Order < ActiveRecord::Base
       else
         raise "Bad configuration - no match on product " << product.inspect << ", for which product.id returned " << product.id.to_s << "."
       end
-      
+
       for i in 1..(order_line.quantity)
         if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, :indexing_status => Box::NO_INDEXING_REQUESTED)
           raise "Standard box creation failed."
         end
       end # inner for loop
     end
+    
+    invoice = create_invoice
+    
+    UserMailer.invoice_email(user, nil).deliver
+  end # end function
+  
+  def create_invoice
+    return nil
   end
 end

@@ -159,7 +159,7 @@ class AccountController < ApplicationController
     @order.shipping_address_id = params[:shipping_address_id]
     @order.user_id = user.id
     
-    if (!@order.purchase(user.default_payment_profile))
+    if (!@order.purchase)
       fail_checkout
     end
   end

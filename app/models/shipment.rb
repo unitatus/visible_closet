@@ -24,6 +24,10 @@ class Shipment < ActiveRecord::Base
   require 'aws/s3'
   require 'soap/wsdlDriver'
   
+  belongs_to :to_address, :class_name => "Address"
+  belongs_to :from_address, :class_name => "Address"
+  belongs_to :order
+  
   ACTIVE = :active
   INACTIVE = :inactive
     

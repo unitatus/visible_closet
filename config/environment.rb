@@ -7,3 +7,4 @@ require Rails.root.join('lib', 'extend_symbol.rb')
 VisibleCloset::Application.initialize!
 
 Devise::SessionsController.ssl_required :new, :create
+

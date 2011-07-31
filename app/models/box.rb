@@ -35,6 +35,7 @@ class Box < ActiveRecord::Base
   has_many :stored_items
   has_many :shipments
   has_one :order_line
+  belongs_to :user, :foreign_key => :assigned_to_user_id
   
   # TODO: Figure out internationalization
   def status_en
@@ -119,6 +120,20 @@ class Box < ActiveRecord::Base
     end
     
     Box.where(:ordering_order_line_id => order_ids)
+  end
+  
+  def monthly_fee
+    #TODO
+    return 0
+  end
+  
+  def cubic_feet
+    if box_type == VC_BOX_TYPE
+      return 2
+    else
+      #TODO
+      return 0
+    end
   end
   
   def Box.count_boxes(user, status=nil, type=nil)

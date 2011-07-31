@@ -117,5 +117,7 @@ class OrdersController < ApplicationController
     if !@order_shipment.generate_fedex_label
       raise "Error generating shipment and saving; errors: " << @order_shipment.errors.inspect
     end
+    
+    UserMailer.shipping_materials_sent(@order.user, @order_shipment, @order_lines).deliver
   end
 end

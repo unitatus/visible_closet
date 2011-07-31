@@ -61,4 +61,14 @@ class OrderLine < ActiveRecord::Base
   def inventorying_line
     product_id == Rails.application.config.our_box_inventorying_product_id || product_id == Rails.application.config.your_box_inventorying_product_id
   end
+  
+  def OrderLine.total_quantity(order_lines)
+    total_quantity = 0
+    
+    order_lines.each do |line|
+      total_quantity += line.quantity
+    end
+    
+    total_quantity
+  end
 end

@@ -1,12 +1,11 @@
 
 ActionMailer::Base.smtp_settings = {
-  :address              => "smtp.gmail.com",
-  :port                 => 587,
-  :domain               => "gmail.com",
-  :user_name            => "suggenda",
-  :password             => "outobahn",
-  :authentication       => "plain",
-  :enable_starttls_auto => true
+  :address              => "smtpout.secureserver.net",
+  :port                 => 80,
+  :domain               => "www.thevisiblecloset.com",
+  :user_name            => "dave@thevisiblecloset.com",
+  :password             => "ATIB4aPG",
+  :authentication       => "plain"
 #} if Rails.env.development?
 } # same for production?
 

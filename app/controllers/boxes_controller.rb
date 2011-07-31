@@ -140,6 +140,8 @@ class BoxesController < ApplicationController
     end
     
     @messages << ("Box " + box.id.to_s + " processed.")
+    
+    UserMailer.box_received(box).deliver
   end  
   
   def inventory_box
@@ -240,6 +242,8 @@ class BoxesController < ApplicationController
     @order_line = OrderLine.find(@box.indexing_order_line_id)
     @order_line.status = OrderLine::PROCESSED_STATUS
     @order_line.save!
+    
+    UserMailer.box_inventoried(@box).deliver
     
     redirect_to :controller => "admin", :action => "process_orders"
   end
