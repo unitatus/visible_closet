@@ -36,4 +36,14 @@ class PagesController < ApplicationController
   def support
     
   end
+  
+  def register_block
+    
+  end
+  
+  def register_interest
+    InterestedPerson.create!(:email => params[:email]) if !params[:email].blank? && InterestedPerson.find_by_email(params[:email]).nil?
+    
+    redirect_to "/"
+  end
 end

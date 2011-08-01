@@ -1,0 +1,10 @@
+<div class="login-slim-centered">
+	<h1>Thanks for your interest!</h1>
+<br>
+	<p>We're glad you're interested in joining The Visible Closet! <br><br>At this time we are accepting applications for beta users. We will be launching soon! <br><br>If you are interested in being a beta user, or want to hear the news when we launch our service fully, please enter your email address below! Don't worry, we will never spam you or sell your address.</p>
+	<br>
+	<%= form_tag "/register_interest", :class => "standard" do %>
+	<%= text_field_tag :email, "", :class => "textbox" %><br>
+	<%= submit_tag "Submit", :class => "button" %>
+	<% end %>
+</div>

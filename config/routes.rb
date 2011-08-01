@@ -3,6 +3,8 @@ VisibleCloset::Application.routes.draw do
   resources :orders
   resources :products
 
+  match "/register" => "pages#register_block"
+  match "/register_interest" => "pages#register_interest"
   match "boxes/receive_box" => "boxes#receive_box"
   match "boxes/inventory_box" => "boxes#inventory_box"
   match "boxes/delete_stored_item" => "boxes#delete_stored_item"
