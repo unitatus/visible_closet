@@ -1,12 +1,18 @@
-<h2>Resend confirmation instructions</h2>
+<div class="login-slim-centered">
 
-<%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f| %>
+<h1>Resend confirmation instructions</h1>
+<br>
+<%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post, :class => "standard" }) do |f| %>
   <%= devise_error_messages! %>
 
-  <p><%= f.label :email %><br />
-  <%= f.email_field :email %></p>
-
-  <p><%= f.submit "Resend confirmation instructions" %></p>
+  	<div class="field clearfix">
+  <%= f.label :email %>
+  <%= f.email_field :email, :class => "textbox" %>
+</div>
+<div class="field clearfix">
+  <%= f.submit "Resend confirmation instructions", :class => "button" %>
+</div>
 <% end %>
 
 <%= render :partial => "devise/shared/links" %>
+</div>
