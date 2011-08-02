@@ -35,10 +35,10 @@ class PaymentTransaction < ActiveRecord::Base
   end
   
   def PaymentTransaction.pay(charges, payment_profile, order_id)
-    total_to_pay = 0
+    total_to_pay = 0.0
     
     charges.each do |charge|
-      total_to_pay += charge.total_in_cents
+      total_to_pay += (charge.total_in_cents / 100)
     end
     
     response = CIM_GATEWAY.create_customer_profile_transaction({:transaction => {:type => :auth_capture,
@@ -46,7 +46,7 @@ class PaymentTransaction < ActiveRecord::Base
                                                                   :customer_profile_id => payment_profile.user.cim_id,
                                                                   :customer_payment_profile_id => payment_profile.identifier}})
 
-    if response.success? and response.authorization
+    if response.success?
       [create!(:action => "purchase", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id), nil]
     elsif RAILS_ENV == "development"
       [create!(:action => "purchase in dev (failed, overrode)", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id), nil]
