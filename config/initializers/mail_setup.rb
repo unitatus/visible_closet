@@ -6,8 +6,7 @@ ActionMailer::Base.smtp_settings = {
   :user_name            => "dave@thevisiblecloset.com",
   :password             => "ATIB4aPG",
   :authentication       => "plain"
-#} if Rails.env.development?
-} # same for production?
+} if Rails.env.development?
 
 
 ActionMailer::Base.default_url_options[:host] = "localhost:3000" if Rails.env.development?
