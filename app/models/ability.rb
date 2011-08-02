@@ -70,6 +70,7 @@ class Ability
       can :choose_new_shipping_address, :account
       can :choose_new_billing_address, :account
       can :closet_main, :account
+      can :print_invoice, Order
       
       # boxes
       can :index, Box

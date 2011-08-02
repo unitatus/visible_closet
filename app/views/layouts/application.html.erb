@@ -75,7 +75,7 @@
 		<div id="container">
 	        <div id="block">	
 				Signed in as <%= current_user.first_name %> <%= current_user.last_name %>.
-				Not you? &nbsp; <%= link_to "Sign out", destroy_user_session_path %>
+				<%= link_to "Sign out", destroy_user_session_path %>
 		    </div>
 	    </div>
 	<% end %>
@@ -100,7 +100,7 @@
     							<li><a href="restrictions">Restrictions</a></li>
     						</ul>
     					</li>
-    					<li<%= blog_class %>><a href="http://visiblecloset.blogspot.com/" target="new">Blog</a></li>
+    					
     					<li<%= contact_class %>><a href="/contact">Contact</a></li>
 						<% if user_signed_in? %>
 						  <li<%= account_class %>><a href="/account/home">Account</a></li>

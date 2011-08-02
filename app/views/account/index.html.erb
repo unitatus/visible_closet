@@ -7,13 +7,16 @@
 <div class="simple_header">Your Visible Closet</div>
 	<% total_boxes = Box.count_boxes(current_user) %>
 	<% with_you = Box.count_boxes(current_user, Box::BEING_PREPARED_STATUS) %>
-	<% in_transit = Box.count_boxes(current_user, Box::BEING_PREPARED_STATUS) %>
+	<% in_transit_to_you = Box.count_boxes(current_user, Box::IN_TRANSIT_TO_YOU_STATUS) %>
+	<% in_transit_to_us = Box.count_boxes(current_user, Box::IN_TRANSIT_TO_TVC_STATUS) %>
 <a href="/boxes">Boxes in storage</a>: <%= total_boxes %><br>
 &nbsp;&nbsp;&nbsp;With you: <%= with_you %><br>
-&nbsp;&nbsp;&nbsp;In transit: <%= in_transit %><br>
-&nbsp;&nbsp;&nbsp;With us: <%= total_boxes - in_transit - with_you %><br>
+&nbsp;&nbsp;&nbsp;In transit: <%= in_transit_to_you + in_transit_to_us %><br>
+&nbsp;&nbsp;&nbsp;With us: <%= total_boxes - in_transit_to_you - in_transit_to_us - with_you %><br>
 <br>
 <a href="#">Inventory items</a>: <%= StoredItem.count_items(current_user) %>
+<br><br>
+<hr style="padding-bottom: 0">
 <div class="simple_header">Account Info</div>
 <% payment_profile = current_user.default_payment_profile %>
 <b>Default credit card on file:</b>
@@ -44,6 +47,6 @@ none.
 <a href="/addresses">Manage your addresses &gt;&gt;</a>
 <% end %>
 <br><br>
-<a href="#">Reset Password</a>
+<a href="/users/edit">Change email or password</a>
 </div>
 <div class="clearer"></div>

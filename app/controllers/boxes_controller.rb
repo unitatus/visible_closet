@@ -11,7 +11,7 @@ class BoxesController < ApplicationController
   # GET /boxes.xml
   def index
     @top_menu_page = :account
-    @boxes = Box.find_all_by_assigned_to_user_id(current_user.id)
+    @boxes = Box.find_all_by_assigned_to_user_id(current_user.id, :order => "created_at ASC")
 
     respond_to do |format|
       format.html # index.html.erb
@@ -154,8 +154,6 @@ class BoxesController < ApplicationController
     if (box.status == Box::NEW_STATUS)
       @error_messages << ("Warning: box was in 'New' status. Please record this error and see an administrator. Box id: " + box.id.to_s + ". Box was still received.")
     end    
-
-    debugger
     
     box.weight = params[:weight].to_f
     
