@@ -6,6 +6,7 @@ function openMemberAgreement() {
             }
 </script>
 <div id="internal-right">
+	<h1>Confirm Order</h1>
 	<% if @order.errors.size > 0 %>
 	<% # If there is a credit card error, it is always followed by garbage. %>
 		<% if not @order.errors[:cc_response].nil? %>
@@ -14,6 +15,8 @@ function openMemberAgreement() {
 	<% end %>
 	
 <%= form_for @order, :url => "/account/finalize_check_out", :html => { :class => "standard" } do |f| %>
+<div id="upper">
+<div style="width: 200px; float: left;">
 	<div class="simple_header">Shipping Address</div><br>
 	<%= hidden_field_tag :shipping_address_id, @shipping_address.id %>
 	<%= @shipping_address.first_name %> <%= @shipping_address.last_name %>
@@ -29,18 +32,22 @@ function openMemberAgreement() {
 	<% end %>
 	<br><br>
 	<% if @addresses.size > 1 %>
-	<a href="/account/select_new_shipping_address">Choose other address</a> |
+	<a href="/account/select_new_shipping_address">Choose other address</a><br>
 	<% end %>
 	<a href="/account/add_new_shipping_address">Enter new address</a>
-<br>
-<br>
-<hr>
+</div>
+<div style="width: 300px; float: right; margin-right: 100px">
+	<br>
 <div class="simple_header" style="padding: 0 0 0 0">Credit Card (default on file)</div><br>
 <% profile = current_user.default_payment_profile %>
 <b><%= profile.cc_type.capitalize %></b> ending in <%= profile.last_four_digits %>.<br>
 Name on card: <%= profile.first_name %> <%= profile.last_name %><br>
 Expires on: <%= profile.exp_month %>/<%= profile.exp_year %><br><br>
 	<a href="/payment_profiles">Manage your cards</a> | <a href="/payment_profiles/new?source_c=account&source_a=check_out">Enter new default card</a>
+</div>
+<div style="clear: both">
+</div>
+</div>
 <br><br>
 <hr>
 	<table class="check_out_cart_summary">

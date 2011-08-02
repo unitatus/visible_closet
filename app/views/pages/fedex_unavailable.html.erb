@@ -1,0 +1,17 @@
+<div class="login-slim-centered">
+<h1>Fedex Label Printing</h1><br>
+We apologize, but at this time Fedex label printing is not available. When you are ready to ship your box, simple contact Fedex at 1-800-GO-FEDEX to arrange for shipping. You can of course use any shipper you would like! Please follow these guidelines when shipping:
+<div class="simple_body">
+	<ul>
+		<li>Please write your box number on the outside of your box as follows: BOX# 
+			<% if params[:box_id].blank? %>
+				&lt;your box number&gt;. Your box number can by found on the <a href="/boxes">Browse Boxes</a> page.
+			<% else %>
+				<%= params[:box_id] %>.
+			<% end %>
+		</li>
+		<li>Please mail the box to the following address:</li><br>
+<%= raw address_summary(Address.find(Rails.application.config.fedex_vc_address_id)) %>
+		<li>If you like your box to be inventoried, please write "inventory requested" on the outside of your box. You can always request inventorying later via the <a href="/boxes">Browse Boxes</a> interface.</li>
+	</ul>
+</div>

@@ -8,10 +8,10 @@
          <div class="pricing-box2 hasbg">
              <img src="images/pricing-col2head.gif" alt="" class="colhead" />
              <div class="pricing-bignum">
-                 <p><span class="dollarsign">$</span>5</p>
+                 <p><span class="dollarsign">$</span><%= Integer(@vc_box_price) %></p>
              </div>
              <div class="pricing-smallnum">
-                 <p class="numadjust">00</p>
+                 <p class="numadjust"><%= number_to_currency(@vc_box_price).split(".")[1] %></p>
                  <p>per box</p>
                  <p>per month</p>
              </div>
@@ -20,10 +20,10 @@
          <div class="pricing-box3 hasbg">
              <img src="images/pricing-col3head.gif" alt="" class="colhead" />
              <div class="pricing-bignum">
-                 <p><span class="dollarsign">$</span>8</p>
+                 <p><span class="dollarsign">$</span><%= Integer(@vc_box_price + @vc_box_inventorying_price) %></p>
              </div>
              <div class="pricing-smallnum">
-                 <p class="numadjust">00</p>
+                 <p class="numadjust"><%= number_to_currency(@vc_box_price + @vc_box_inventorying_price).split(".")[1] %></p>
                  <p>per box</p>
                  <p>per month</p>
              </div>
@@ -140,6 +140,6 @@
          <div class="clearer"></div>
      </div>
  </div>
-*Prices quoted are for Visible Closet boxes, which are 12&quot; X 12&quot; X 24&quot;. You are free to store your own boxes at a price of $3 per cubic foot per month for straight storage and $5 per cubic foot per month for inventorying.
+*Prices quoted are for Visible Closet boxes, which are 12&quot; X 12&quot; X 24&quot;. You are free to store your own boxes at a price of <%= number_to_currency(@cust_box_price) %> per cubic foot per month for straight storage and <%= number_to_currency(@cust_box_price + @cust_box_inventorying_price) %> per cubic foot per month for inventorying.
 <br><br>
 **Each Visible Closet box has a maximum inventory count of 30 items. Any item more than 30 will incur a one-time fee of $.35. For your boxes, the max inventory per cubic foot before incurring the $.35 fee is 15.

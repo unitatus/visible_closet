@@ -10,8 +10,9 @@ We just wanted to inform you that we have prepared and shipped your packing mate
 <% num_boxes = OrderLine.total_quantity(@order_lines) %>
 This shipment contains <%= num_boxes %> empty box<%= "es" if num_boxes > 1 %>, with supplies.
 <br><br>
+<!-- 
 You can track your package using tracking number <%= @shipment.tracking_number %> via <a href="http://www.fedex.com/Tracking?action=track&tracknumbers=<%= @shipment.tracking_number %>">fedex.com</a>.
-<br><br>
+<br><br> -->
 Thanks for using The Visible Closet, and have a great day!
 <br><br>
 <div style="padding 0 0 0 15px">~ The Visible Closet Team</div>

@@ -27,6 +27,10 @@ class PagesController < ApplicationController
   
   def pricing
     @top_menu_page = :hiw
+    @vc_box_price = Product.find(Rails.application.config.our_box_product_id).price
+    @cust_box_price = Product.find(Rails.application.config.your_box_product_id).price
+    @vc_box_inventorying_price = Product.find(Rails.application.config.our_box_inventorying_product_id).price
+    @cust_box_inventorying_price = Product.find(Rails.application.config.your_box_inventorying_product_id).price
   end
   
   def contact
@@ -45,5 +49,9 @@ class PagesController < ApplicationController
     InterestedPerson.create!(:email => params[:email]) if !params[:email].blank? && InterestedPerson.find_by_email(params[:email]).nil?
     
     redirect_to "/"
+  end
+  
+  def fedex_unavailable
+    
   end
 end

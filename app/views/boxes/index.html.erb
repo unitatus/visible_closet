@@ -1,7 +1,10 @@
 <% @menu_page = :boxes %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 <div id="internal-right">
-        <p class="browse-headline bottom-border">You currently have <strong><%= @boxes.size %></strong> active boxes. <a href="/account/store_more_boxes">Click here to add more.</a> Mouse over a box for options.</p>
+        <p class="browse-headline bottom-border">You currently have <strong><%= @boxes.size %></strong> active boxes. <a href="/account/store_more_boxes">Click here to add more.</a> 
+	<% if @boxes.size > 0 %>
+		Mouse over a box for options.
+	<% end %></p>
 	<% @boxes.each_with_index do |box, index| %>
 		<% if index % 3 == 0 && index != 0 %>
 	    <!-- DIVIDER -->
@@ -21,7 +24,7 @@
 			</p>
 			<% if box.status == Box::NEW_STATUS && box.box_type == Box::VC_BOX_TYPE %>
 				<% image_file = "status-inventory-to-you" %>
-				<% alt = "In Trnasit" %>
+				<% alt = "In Transit" %>
 			<% elsif box.status == Box::IN_TRANSIT_TO_YOU_STATUS %>
 				<% image_file = "status-inventory-to-you" %>
 				<% alt = "In Transit" %>
@@ -66,7 +69,7 @@
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>
 						<% end %>
 						<% if box.box_type == Box::CUST_BOX_TYPE && box.status == Box::BEING_PREPARED_STATUS %>
-							<li><a href="/box/<%= box.id %>/get_label">print label</a></li>
+							<li><a href="/pages/fedex_unavailable?box_id=<%=box.id%>">print label</a></li>
 						<% end %>                        
                     </ul>
                 </div>
