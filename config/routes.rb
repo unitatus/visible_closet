@@ -42,6 +42,7 @@ VisibleCloset::Application.routes.draw do
   match "how_it_works" => "pages#how_it_works"
   match "restrictions" => "pages#restrictions"
   match "contact" => "pages#contact"
+  match "pages/contact_post"=> "pages#contact_post"
   match "packing_tips" => "pages#packing_tips"
   match "right_for_me" => "pages#right_for_me"
   match "faq" => "pages#faq"

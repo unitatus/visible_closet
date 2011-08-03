@@ -19,4 +19,12 @@ class AdminMailer < ActionMailer::Base
     
     mail(:subject => "New Order")
   end
+  
+  def contact_post(email, text, remote_ip)
+    
+    @text = text
+    @remote_ip = remote_ip
+    
+    mail(:from => email, :reply_to => email, :subject => "Web user email")
+  end
 end

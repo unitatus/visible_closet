@@ -35,6 +35,27 @@ class PagesController < ApplicationController
   
   def contact
     @top_menu_page = :contact
+    @error_messages = Hash.new
+  end
+  
+  def contact_post
+    @top_menu_page = :contact
+
+    @error_messages = Hash.new
+    
+    if not params[:email] =~ /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+      @error_messages[:email] = "Please enter a valid email."
+    end
+    
+    if params[:comment][:text].blank?
+      @error_messages[:text] = "Please enter text."
+    end
+    
+    if @error_messages.empty?
+      AdminMailer.contact_post(params[:email], params[:comment][:text], request.remote_ip).deliver
+    else
+      render :action => "contact"
+    end
   end
   
   def support
