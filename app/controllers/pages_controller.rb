@@ -46,9 +46,10 @@ class PagesController < ApplicationController
   end
   
   def register_interest
-    InterestedPerson.create!(:email => params[:email]) if !params[:email].blank? && InterestedPerson.find_by_email(params[:email]).nil?
-    
-    redirect_to "/"
+    if !params[:email].blank? && InterestedPerson.find_by_email(params[:email]).nil?
+      person = InterestedPerson.create!(:email => params[:email]) 
+      AdminMailer.interested_person_added(person).deliver
+    end
   end
   
   def fedex_unavailable

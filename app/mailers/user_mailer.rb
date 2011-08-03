@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
   helper :application
   layout 'user_mailer', :except => :invoice_email
   
-  def invoice_email(user, invoice)
+  def invoice_email(user, invoice, send_admin = false)
     @user = user
     @order = invoice.order
     @invoice = invoice
@@ -23,7 +23,13 @@ class UserMailer < ActionMailer::Base
 
     @billing_address = @payment_profile.billing_address
     
-    mail(:to => user.email, :subject => "Invoice from The Visible Closet")
+    if !send_admin
+      mail(:to => user.email, :subject => "Invoice from The Visible Closet")
+    else
+      user_email = mail(:to => user.email, :subject => "Invoice from The Visible Closet")
+      AdminMailer.new_order(@user, @order, @invoice, @shipping_address, @vc_address, @payment_profile, @billing_address).deliver
+      return user_email
+    end
   end
   
   def shipping_materials_sent(user, shipment, order_lines)

@@ -144,8 +144,8 @@ class Order < ActiveRecord::Base
     end
     
     invoice = create_invoice(charges, payment_transaction)
-    
-    UserMailer.invoice_email(user, invoice).deliver
+
+    UserMailer.invoice_email(user, invoice, true).deliver
   end # end function
   
   def create_invoice(charges, payment_transaction)
