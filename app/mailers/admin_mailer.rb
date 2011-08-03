@@ -27,4 +27,13 @@ class AdminMailer < ActionMailer::Base
     
     mail(:from => email, :reply_to => email, :subject => "Web user email")
   end
+  
+  def support_post(email, text, remote_ip, user)
+    
+    @text = text
+    @remote_ip = remote_ip
+    @user = user
+    
+    mail(:from => email, :reply_to => email, :subject => "Web user support email")
+  end
 end

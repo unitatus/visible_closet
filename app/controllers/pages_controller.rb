@@ -39,27 +39,22 @@ class PagesController < ApplicationController
   end
   
   def contact_post
-    @top_menu_page = :contact
-
-    @error_messages = Hash.new
-    
-    if not params[:email] =~ /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-      @error_messages[:email] = "Please enter a valid email."
-    end
-    
-    if params[:comment][:text].blank?
-      @error_messages[:text] = "Please enter text."
-    end
-    
-    if @error_messages.empty?
-      AdminMailer.contact_post(params[:email], params[:comment][:text], request.remote_ip).deliver
-    else
-      render :action => "contact"
-    end
+    email_post(:contact, params[:email])
   end
   
   def support
+    if current_user.nil?
+      redirect_to access_denied_url
+    end
+    @error_messages = Hash.new
+  end
+  
+  def support_post
+    if current_user.nil?
+      redirect_to access_denied_url and return
+    end
     
+    email_post(:support, current_user.email, current_user)
   end
   
   def register_block
@@ -75,5 +70,33 @@ class PagesController < ApplicationController
   
   def fedex_unavailable
     
+  end
+  
+  private 
+  
+  def email_post(action, email, user=nil)
+    @error_messages = Hash.new
+  
+    if not email =~ /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+      @error_messages[:email] = "Please enter a valid email."
+    end
+  
+    if params[:comment][:text].blank?
+      @error_messages[:text] = "Please enter text."
+    end
+  
+    if action == :support
+      if @error_messages.empty?
+        AdminMailer.support_post(email, params[:comment][:text], request.remote_ip, user).deliver
+      else
+        render :action => "support"
+      end
+    else
+      if @error_messages.empty?
+        AdminMailer.contact_post(email, params[:comment][:text], request.remote_ip).deliver
+      else
+        render :action => "contact"
+      end
+    end
   end
 end
