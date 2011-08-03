@@ -14,13 +14,33 @@ Evanston, IL<br>
 	Electronic Mail
 </div>
 <div class="simple_body">
-<a href="mailto:contact@thevisiblecloset.com">contact@thevisiblecloset.com</a>
+<br>	Use the form below to send us an email.<br><br>
+<%= form_tag "/pages/contact_post", :class => "standard" do %>
+<div class="field clearfix" style="text-align: left">
+	Your email address: 
+<%= text_field_tag :email, params[:email], :class => "textbox" %><br>
+<% if !@error_messages[:email].blank? %>
+	<div class="error_label", style="text-align: right; padding-right: 80px"><%= @error_messages[:email] %></div>
+<% end %>
+</div>
+<div class="field clearfix" style="text-align: left; vertical-align: top; padding-left: 31px">
+	Your message:
+<% text_area_value = params[:comment].nil? ? "" : params[:comment][:text] %>
+<%= text_area(:comment, :text, :size => "46x10", :value => text_area_value)%><br>
+<% if !@error_messages[:text].blank? %>
+	<div class="error_label" style="text-align: right; padding-right: 80px"><%= @error_messages[:text] %></div>
+<% end %>
+</div>
+<div class="field clearfix" style="padding-right: 70px;">
+<%= submit_tag "Submit", :class => "button" %>
+</div>
+<% end %>
 </div>
 <div class="simple_header">
 	Social
 </div>
 <div class="simple_body">
-	Follow us on <a href="http://www.twitter.com/visiblecloset" target="new">Twitter</a> at @visiblecloset, or like us on Facebook!
+	Follow us on <a href="http://www.twitter.com/visiblecloset" target="new">Twitter</a> at @visiblecloset, or like us on <a href="http://www.facebook.com/pages/The-Visible-Closet/178583068871975" target="new">Facebook</a>!
 </div>
 <div class="simple_header">
 	Phone
