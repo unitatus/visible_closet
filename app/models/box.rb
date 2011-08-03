@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110731043457
+# Schema version: 20110803210001
 #
 # Table name: boxes
 #
@@ -18,6 +18,7 @@
 #  width                  :float
 #  length                 :float
 #  weight                 :float
+#  box_num                :integer
 #
 
 class Box < ActiveRecord::Base
@@ -35,6 +36,7 @@ class Box < ActiveRecord::Base
   VC_BOX_TYPE = "vc_box"
   
   attr_accessible :assigned_to_user_id, :ordering_order_line_id, :status, :box_type, :description, :indexing_status
+  after_create :set_box_num
 
   has_many :stored_items
   has_many :shipments
@@ -305,5 +307,9 @@ class Box < ActiveRecord::Base
     end
     
     order.generate_charges
+  end
+  
+  def set_box_num
+    update_attribute(:box_num, self.user.next_box_num)
   end
 end

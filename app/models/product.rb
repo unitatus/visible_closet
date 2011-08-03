@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20110627180233
+# Schema version: 20110803210001
 #
 # Table name: products
 #
 #  id            :integer         not null, primary key
 #  name          :string(255)
-#  price         :integer
+#  price         :float
 #  created_at    :datetime
 #  updated_at    :datetime
 #  price_comment :string(255)

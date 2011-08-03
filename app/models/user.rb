@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110729141654
+# Schema version: 20110803210001
 #
 # Table name: users
 #
@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
 
   symbolize :role
 
-  has_many :boxes
+  has_many :boxes, :foreign_key => :assigned_to_user_id
   has_many :payment_profiles
   has_many :addresses
   has_many :orders
@@ -153,8 +153,28 @@ class User < ActiveRecord::Base
     PaymentProfile.count(:conditions => "user_id = #{self.id}")
   end
   
+  def box_count
+    Box.count(:conditions => "assigned_to_user_id = #{self.id}")
+  end
+  
   def addresses
     Address.find_all_by_status_and_user_id("active", self.id)
+  end
+    
+  def last_box_num
+    if box_count == 0
+      nil
+    else
+      Box.where(:assigned_to_user_id => self.id).maximum("box_num")
+    end
+  end
+  
+  def next_box_num
+    last_num = last_box_num
+    if (last_num.nil?)
+      1
+    else last_num + 1
+    end
   end
   
   private 
