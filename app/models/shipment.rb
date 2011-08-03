@@ -43,7 +43,7 @@ class Shipment < ActiveRecord::Base
     
     if box.nil? || box.status != Box::BEING_PREPARED_STATUS
       label_stock_type = Fedex::LabelStockTypes::STOCK_4X6 # Fedex::LabelStockTypes::PAPER_4X6
-      label_image_type = Fedex::LabelSpecificationImageTypes::ZPLII
+      label_image_type = Fedex::LabelSpecificationImageTypes::EPL2
     else
       label_image_type = Rails.application.config.fedex_customer_label_image_type
     end
