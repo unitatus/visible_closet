@@ -52,7 +52,11 @@ class OrderLine < ActiveRecord::Base
   end
   
   def total_in_cents
-    quantity * product.price * 100
+    quantity * product.due_at_signup * 100
+  end
+  
+  def unit_price
+    product.due_at_signup
   end
   
   def ordered_boxes

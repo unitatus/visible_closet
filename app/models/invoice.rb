@@ -19,11 +19,7 @@ class Invoice < ActiveRecord::Base
   # has_many :charges
   
   class InvoiceLine
-    attr_accessor :product, :quantity
-    
-    def total_in_cents
-      return @product.price * @quantity * 100
-    end
+    attr_accessor :product, :quantity, :unit_price
   end
   
   def invoice_lines(refresh = false)
@@ -35,6 +31,7 @@ class Invoice < ActiveRecord::Base
         new_invoice_line = InvoiceLine.new()
         new_invoice_line.product = line.product
         new_invoice_line.quantity = line.quantity
+        new_invoice_line.unit_price = line.unit_price
         
         @invoice_lines << new_invoice_line
       end
@@ -47,7 +44,7 @@ class Invoice < ActiveRecord::Base
     the_total = 0.0
     
     self.invoice_lines.each do |line|
-      the_total += line.total_in_cents
+      the_total += line.unit_price
     end
     
     return the_total

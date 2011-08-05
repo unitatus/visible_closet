@@ -59,10 +59,10 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 				Quantity
 			</th>
 			<th>
-				Unit Price
+				Price
 			</th>
 			<th>
-				Total Price
+				Due Now
 			</th>
 		</tr><% @cart.cart_items.each do |cart_item| %>
 			<% product = Product.find(cart_item.product_id) %>
@@ -74,10 +74,10 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 				<%= cart_item.quantity %>
 			</td>
 			<td>
-				<%= number_to_currency(product.price) %>
+				<%= number_to_currency(product.price) %> <%= product.price_comment %>
 			</td>
 			<td align="right">
-				<%= number_to_currency(product.price * cart_item.quantity) %>
+				<%= number_to_currency(product.due_at_signup * cart_item.quantity) %>
 			</td>
 		</tr><% end %> <!-- end loop -->
 	</table>

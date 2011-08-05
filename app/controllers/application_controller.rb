@@ -18,4 +18,12 @@ class ApplicationController < ActionController::Base
     
     return_val
   end
+  
+  def after_sign_in_path_for(resource_or_scope)
+    if resource_or_scope.is_a?(User) && resource_or_scope.sign_in_count < 2
+      "/account/store_more_boxes"
+    else
+      super
+    end
+  end
 end

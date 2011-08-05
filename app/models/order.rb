@@ -29,7 +29,9 @@ class Order < ActiveRecord::Base
         raise ActiveRecord::Rollback
       end
       
-      charges, payment_transaction = pay_for_order
+      if total_in_cents > 0
+        charges, payment_transaction = pay_for_order
+      end
       
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
       do_post_payment_processing(charges, payment_transaction)

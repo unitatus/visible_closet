@@ -73,8 +73,8 @@
 								<td align="left"><%= line.product.name %></td>
 								<td><%= line.quantity %></td>
 								<td>x</td>
-								<td><%= number_to_currency(line.product.price) %></td>
-								<td align="right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.total_in_cents / 100) %>
+								<td><%= number_to_currency(line.unit_price) %></td>
+								<td align="right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.unit_price / 100) %>
 							</tr>
 						<% end %>
 					</tbody>
@@ -109,7 +109,7 @@
 				Expiration:
 			</div>
 			<div style="float: right; width: 79%; text-align: left">
-				<br><br><%= @payment_profile.type.capitalize %><br>
+				<br><br><%= @payment_profile.cc_type.capitalize %><br>
 				************<%= @payment_profile.last_four_digits %><br>
 				<%= @payment_profile.month%>/<%= @payment_profile.year %>
 			</div>

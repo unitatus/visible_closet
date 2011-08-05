@@ -72,6 +72,10 @@ class PagesController < ApplicationController
     
   end
   
+  def request_confirmation
+    
+  end
+  
   private 
   
   def email_post(action, email, user=nil)

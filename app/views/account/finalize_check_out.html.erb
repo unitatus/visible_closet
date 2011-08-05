@@ -12,10 +12,10 @@
 				Quantity
 			</th>
 			<th>
-				Unit Price
+				Price
 			</th>
 			<th>
-				Total Price
+				Due now
 			</th>
 		</tr><% @order.order_lines.each do |order_line| %>
 			<% product = Product.find(order_line.product_id) %>
@@ -27,10 +27,10 @@
 				<%= order_line.quantity %>
 			</td>
 			<td>
-				<%= number_to_currency(product.price) %>
+				<%= number_to_currency(product.price) %> <%= product.price_comment %>
 			</td>
 			<td align="right">
-				<%= number_to_currency(product.price * order_line.quantity) %>
+				<%= number_to_currency(product.due_at_signup * order_line.quantity) %>
 			</td>
 		</tr><% end %> <!-- end loop -->
 	</table>

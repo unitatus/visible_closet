@@ -54,6 +54,7 @@ VisibleCloset::Application.routes.draw do
   match "member_agreement_ajax" => "rental_agreement_versions#latest_agreement_ajax"
   match "member_agreement" => "rental_agreement_versions#latest_agreement"
   get "pages/fedex_unavailable"
+  get "pages/request_confirmation"
   
   # Admin
   match "admin/home" => "admin#process_orders"

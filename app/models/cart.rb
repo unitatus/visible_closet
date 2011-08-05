@@ -23,7 +23,7 @@ class Cart < ActiveRecord::Base
     cart_items.each do |cart_item|
       product = Product.find(cart_item.product_id)
 
-      total_estimate += (cart_item.quantity * product.price)
+      total_estimate += (cart_item.quantity * product.due_at_signup)
     end
  
     total_estimate

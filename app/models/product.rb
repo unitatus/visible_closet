@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110803210001
+# Schema version: 20110805043232
 #
 # Table name: products
 #
@@ -9,8 +9,20 @@
 #  created_at    :datetime
 #  updated_at    :datetime
 #  price_comment :string(255)
+#  first_due     :string(255)
 #
 
 class Product < ActiveRecord::Base
+  AT_SIGNUP = "at_signup"
+  AT_RECEIPT = "at_receipt"
+  
   attr_accessible :id, :name, :price, :price_comment, :created_at, :updated_at
+  
+  def due_at_signup
+    if first_due == AT_SIGNUP
+      self.price
+    else
+      0.0
+    end
+  end
 end
