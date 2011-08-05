@@ -1,5 +1,9 @@
 class OrdersController < ApplicationController
   load_and_authorize_resource
+
+  def ssl_required?
+    true
+  end
   
   # TODO: this should really get some of the site functionality. Right now it's all in account and admin.
   # GET /orders

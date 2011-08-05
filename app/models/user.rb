@@ -79,6 +79,10 @@ class User < ActiveRecord::Base
     self.default_payment_profile ||= PaymentProfile.new
   end
   
+  def cart
+    Cart.find_active_by_user_id(self.id)
+  end
+  
   def cim_id
     if read_attribute(:cim_id)
       return read_attribute(:cim_id)

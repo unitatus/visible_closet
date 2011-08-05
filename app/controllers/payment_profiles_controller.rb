@@ -2,7 +2,7 @@ class PaymentProfilesController < ApplicationController
 	authorize_resource
 	
 	def ssl_required?
-    true # make every access to boxes secure
+    true
   end
   
   def index
@@ -36,6 +36,7 @@ class PaymentProfilesController < ApplicationController
       
       if params[:default] == "1" || current_user.payment_profile_count == 1
         current_user.default_payment_profile = @profile
+        current_user.save
       end
       
       if not (session[:source_c].blank?) # we came from somewhere; return there        

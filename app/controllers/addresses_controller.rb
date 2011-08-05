@@ -1,6 +1,10 @@
 class AddressesController < ApplicationController
   authorize_resource
 
+  def ssl_required?
+    true
+  end
+
   # GET /addresses
   # GET /addresses.xml
   def index
@@ -106,6 +110,7 @@ class AddressesController < ApplicationController
   # PUT /addresses/id/set_default_shipping
   def set_default_shipping
     current_user.default_shipping_address = Address.find(params[:id])
+    current_user.save
     @addresses = Address.find_active(current_user.id, :order => :first_name)
     
     render :index

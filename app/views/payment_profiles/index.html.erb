@@ -49,7 +49,11 @@
 			<% end %>
 			</tbody>	
 			</table>
-			<div style="text-align: right; width: 100%"><br><a href="/payment_profiles/new">Add new payment method &gt;&gt;</a></div>
+			<div style="text-align: right; width: 100%"><br><a href="/payment_profiles/new">Add new payment method</a>
+			<% if !current_user.cart.empty? %>
+			| <a href="/account/check_out">To Checkout</a>
+			<% end %>
+			</div>
 		</div><br>
 		
 	<% end %>

@@ -60,6 +60,10 @@ class Cart < ActiveRecord::Base
     cart
   end
   
+  def empty?
+    return cart_items.size == 0
+  end
+  
   def num_items
     cart_items.size
   end
