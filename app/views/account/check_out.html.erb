@@ -79,9 +79,9 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 			<td align="right">
 				<%= number_to_currency(product.due_at_signup * cart_item.quantity) %>
 				<% if product.id == Rails.application.config.our_box_product_id %>
-					<a href="#vc_box_inline" id="vc_product_link" title="Visible Closet Box Details">(?)</a>
+					<a href="#vc_box_inline" id="vc_product_link" title="Visible Closet Box Details">(why?)</a>
 				<% elsif product.id == Rails.application.config.your_box_product_id %>
-					<a href="#cust_box_inline" id="cust_product_link" title="Customer Box Details">(?)</a>
+					<a href="#cust_box_inline" id="cust_product_link" title="Customer Box Details">(why?)</a>
 				<% end %>
 			</td>
 		</tr><% end %> <!-- end loop -->
