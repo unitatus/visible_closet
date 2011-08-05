@@ -63,8 +63,4 @@ class RentalAgreementVersionsController < ApplicationController
       send_data("No agreement on file")
     end
   end
-  
-  def latest_agreement
-    
-  end
 end

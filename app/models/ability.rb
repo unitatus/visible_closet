@@ -96,7 +96,10 @@ class Ability
       can :create, Address
       can :update, Address
       can :set_default_shipping, Address
-      can :destroy, Address      
+      can :destroy, Address
+      
+      # rental agreements
+      can :latest_agreement_ajax, :rental_agreement_version
     end
   end
 end

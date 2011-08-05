@@ -19,7 +19,7 @@
 <%= error_messages_for_attribute(profile, :number) %>
 </div>
 <div class="field clearfix">
-<%= f.label "Verification Value (CVV)*" %>
+<%= f.label "Verification Value (CVV/CID)*" %> <a href="/pcCardCode.html" id="cvv_link" title="Verification Value"style="font-size: 80%">What's this?</a>
 <%= f.text_field :verification_value, :placeholder => "###", :class => "textbox" + (profile.errors[:verification_value].empty? ? "": " error"), :style => "width: 200px;" %>
 <%= error_messages_for_attribute(profile, :verification_value) %>
 </div>

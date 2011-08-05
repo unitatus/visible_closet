@@ -194,5 +194,26 @@ $(document).ready(function(){
 		    type	: "GET"
 		}
 	});
+	
+	$("#vc_product_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none'
+	});
+	
+	$("#cust_product_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none'
+	});
+	
+	$("#cvv_link").fancybox({
+		'width'				: '75%',
+		'height'			: '75%',
+		'autoScale'			: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'type'				: 'iframe'
+	});
 
 });

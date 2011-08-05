@@ -78,6 +78,11 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 			</td>
 			<td align="right">
 				<%= number_to_currency(product.due_at_signup * cart_item.quantity) %>
+				<% if product.id == Rails.application.config.our_box_product_id %>
+					<a href="#vc_box_inline" id="vc_product_link" title="Visible Closet Box Details">(?)</a>
+				<% elsif product.id == Rails.application.config.your_box_product_id %>
+					<a href="#cust_box_inline" id="cust_product_link" title="Customer Box Details">(?)</a>
+				<% end %>
 			</td>
 		</tr><% end %> <!-- end loop -->
 	</table>
@@ -94,3 +99,7 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 </div>
 <% end %> <!-- end form -->
 <div class="clearer"></div>
+<div style="display: none">
+<div id="cust_box_inline" style="text-align: center"><b>Box Details</b><br><br>You must order a box in order to store it. <br>Ordering a box that you supply means that we'll give you a shipping label and / or instructions for how to get the box to us. <br>You will not pay storage charges for your box until we receive the box.</div>
+<div id="vc_box_inline" style="text-align: center"><b>Box Details</b><br><br>You must order a box in order to store it. <br>Ordering a box from The Visible Closet requires that you pay your first month's rent up front. <br>Once you complete your order we will send you your free shipping materials. <br>You do not pay any more storage costs until we receive your box and you have left it in storage for more than one month.</div>
+</div>
