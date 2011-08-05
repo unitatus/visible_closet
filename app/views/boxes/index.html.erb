@@ -17,9 +17,9 @@
             <p class="browse-box-name">Box <%= box.box_num %></p>
             <p>
 			<% if box.description %>
-			<%= box.description %>
+				<p class="truncateText"><%= box.description %></p>
 			<% else %>
-			<i>no description</i>
+				<i>no description</i>
 			<% end %>
 			</p>
 			<% if box.status == Box::NEW_STATUS && box.box_type == Box::VC_BOX_TYPE %>
@@ -80,3 +80,10 @@
 	<% end %>        
     </div>
 <div class="clearer"></div>
+<script type="text/javascript"> 
+ 
+//////////////////////////// initiate the plugin ////////////////////////////////
+$(document).ready(function(){
+	$('.truncateText').widthTruncate({width:155}); 
+});
+</script>
