@@ -91,15 +91,15 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 	<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 	<b>Total: <%= number_to_currency(@cart.estimated_total) %></b>
 	</div><br>
-	<div class="small-print">By clicking 'Place Order' below, I certify that I have read and agree to the <a id="member_agreement_link" href="/member_agreement_ajax">Member Agreement</a> associated with this service. I understand that I will be responsible for paying all shipping and storage charges billed to my account by thevisiblecloset.com</div>
+	<div class="small-print">By clicking 'Store My Boxes!' below, I certify that I have read and agree to the <a id="member_agreement_link" href="/member_agreement_ajax">Member Agreement</a> associated with this service. I understand that I will be responsible for paying all shipping and storage charges billed to my account by thevisiblecloset.com</div>
 	<div style="text-align: right; padding: 20px 0 0 0">
-	<%= submit_tag("Place Order", :class => "button") %>
+	<%= submit_tag("Store My Boxes!", :class => "button") %>
 	</div>
 	<br>
 </div>
 <% end %> <!-- end form -->
 <div class="clearer"></div>
 <div style="display: none">
-<div id="cust_box_inline" style="text-align: center"><b>Box Details</b><br><br>You must order a box in order to store it. <br>Ordering a box that you supply means that we'll give you a shipping label and / or instructions for how to get the box to us. <br>You will not pay storage charges for your box until we receive the box.</div>
-<div id="vc_box_inline" style="text-align: center"><b>Box Details</b><br><br>You must order a box in order to store it. <br>Ordering a box from The Visible Closet requires that you pay your first month's rent up front. <br>Once you complete your order we will send you your free shipping materials. <br>You do not pay any more storage costs until we receive your box and you have left it in storage for more than one month.</div>
+<div id="cust_box_inline" style="text-align: center"><b>Why am I ordering my own box?</b><br><br>We want to make sure that when we receive your box we know who sent it! <br>By clicking "submit" you will create a record of your box in your account, and receive instructions on how to ship it. <br>You can also track your box while it's in transit, and name the box for your own reference. </div>
+<div id="vc_box_inline" style="text-align: center"><b>Why am I paying for this box?</b><br><br>Ordering a box from The Visible Closet requires that you pay your first month's rent up front. <br>Once you complete your order we will send you your free shipping materials. <br>You do not pay any more storage costs until your box has been in storage for one month.</div>
 </div>
