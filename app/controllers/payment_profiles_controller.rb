@@ -14,7 +14,6 @@ class PaymentProfilesController < ApplicationController
     end
     
     @profile = PaymentProfile.new
-    @credit_card = ActiveMerchant::Billing::CreditCard.new()
     
     if not params[:source_c].blank?
       session[:source_c] = params[:source_c].to_sym
@@ -23,18 +22,20 @@ class PaymentProfilesController < ApplicationController
   end
   
   def create
-    @credit_card = create_new_credit_card(params)
-    @profile = PaymentProfile.new
-    @profile.billing_address_id = params[:profile][:billing_address_id]
+    @profile = PaymentProfile.new(params[:payment_profile])
     
-    @profile.credit_card = @credit_card
+    # Double-check, since in this case payment profile can't be saved without billing address id
+    if params[:payment_profile][:billing_address_id].blank?
+      @profile.errors[:billing_address_id] = "Please select billing address."
+    end
+    
     @profile.user_id = current_user.id
     
     if @profile.save
       @profile = PaymentProfile.find(@profile.id)
       
       if params[:default] == "1" || current_user.payment_profile_count == 1
-        current_user.update_attribute(:default_payment_profile_id, @profile.id)
+        current_user.default_payment_profile = @profile
       end
       
       if not (session[:source_c].blank?) # we came from somewhere; return there        
@@ -46,13 +47,8 @@ class PaymentProfilesController < ApplicationController
       end
     else
       puts("Failed to save payment profile. Errors are " << @profile.errors.inspect)
-      # Need to completely reset @profile, as otherwise Rails will make the form an edit form. :|
-      @new_profile = PaymentProfile.new
-      @new_profile.billing_address_id = @profile.billing_address_id
-      @profile.errors.each do |attr, msg|
-        @new_profile.errors.add(attr, msg)
-      end
-      @profile = @new_profile
+      # Need to completely reset @profile, as otherwise Rails will make the form an edit form if this profile saved but the authorize.net profile was not created.
+      @profile = PaymentProfile.new_from(@profile)
       render :action => "new"
     end
   end
@@ -70,7 +66,6 @@ class PaymentProfilesController < ApplicationController
       @messages = Array.new
       @messages << "Cannot delete default payment method."
       @profile = PaymentProfile.new
-      @credit_card = ActiveMerchant::Billing::CreditCard.new()
       render :action => "index"
     else
       profile = PaymentProfile.find(params[:id])
@@ -80,27 +75,10 @@ class PaymentProfilesController < ApplicationController
 
       if @profiles.size == 0
         @profile = PaymentProfile.new
-        @credit_card = ActiveMerchant::Billing::CreditCard.new()
         render :action => "new"
       else
         render :action => "index"
       end
     end
-  end
-  
-  private 
-  
-  def create_new_credit_card(params)
-    cc = ActiveMerchant::Billing::CreditCard.new()
-    
-    cc.type = params[:type]
-    cc.number = params[:number]
-    cc.verification_value = params[:verification_value]
-    cc.month = params[:month]
-    cc.year = params[:year]
-    cc.first_name = params[:first_name]
-    cc.last_name = params[:last_name]
-    
-    cc    
   end
 end

@@ -1,0 +1,34 @@
+<div class="field clearfix">
+	<%= f.label "Card type*"%>
+	<%= f.select :cc_type, options_for_select([["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]], profile.cc_type) %>
+	<%= error_messages_for_attribute(profile, :cc_type) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Cardholder First Name*" %>
+	<%= f.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (profile.errors[:first_name].empty? ? "": " error"), :style => "width: 200px;" %>
+	<%= error_messages_for_attribute(profile, :first_name) %>
+</div><!--//field-->
+<div class="field clearfix">
+	<%= f.label "Cardholder Last Name*" %>
+	<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (profile.errors[:last_name].empty? ? "": " error"), :style => "width: 200px;" %>
+	<%= error_messages_for_attribute(profile, :last_name) %>
+</div><!--//field-->
+<div class="field clearfix">
+<%= f.label "Number*" %>
+<%= f.text_field :number, :placeholder => "#################", :class => "textbox" + (profile.errors[:number].empty? ? "": " error"), :style => "width: 200px;" %>
+<%= error_messages_for_attribute(profile, :number) %>
+</div>
+<div class="field clearfix">
+<%= f.label "Verification Value (CVV)*" %>
+<%= f.text_field :verification_value, :placeholder => "###", :class => "textbox" + (profile.errors[:verification_value].empty? ? "": " error"), :style => "width: 200px;" %>
+<%= error_messages_for_attribute(profile, :verification_value) %>
+</div>
+<div class="field clearfix">
+<%= f.label "Expiration:" %>
+	<div style="position:relative; right:160px; top:4px;">
+<%= f.select :month, options_for_select([["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December"]], :selected => profile.month) %>
+<%= f.select :year, options_for_select(year_array, profile.year) %>
+<%= error_messages_for_attribute(profile, :month) %>
+<%= error_messages_for_attribute(profile, :year) %>
+	</div>
+</div>

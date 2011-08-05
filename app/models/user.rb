@@ -52,7 +52,9 @@ class User < ActiveRecord::Base
                   :first_name,
                   :last_name,
                   :signup_comments,
-                  :role
+                  :role,
+                  :default_shipping_address_attributes,
+                  :default_payment_profile_attributes
 
   symbolize :role
 
@@ -66,12 +68,15 @@ class User < ActiveRecord::Base
   validates :last_name, :presence => true
   validates_inclusion_of :role, :in => [ ADMIN, MANAGER, NORMAL ]
 
-  has_many :addresses
   belongs_to :default_shipping_address, :class_name => "Address"
+  accepts_nested_attributes_for :default_shipping_address, :allow_destroy => true
   belongs_to :default_payment_profile, :class_name => "PaymentProfile"
-    
+  accepts_nested_attributes_for :default_payment_profile, :allow_destroy => true
+  
   def after_initialize 
     self.role ||= NORMAL
+    self.default_shipping_address ||= Address.new
+    self.default_payment_profile ||= PaymentProfile.new
   end
   
   def cim_id

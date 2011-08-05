@@ -42,7 +42,7 @@ function openMemberAgreement() {
 <% profile = current_user.default_payment_profile %>
 <b><%= profile.cc_type.capitalize %></b> ending in <%= profile.last_four_digits %>.<br>
 Name on card: <%= profile.first_name %> <%= profile.last_name %><br>
-Expires on: <%= profile.exp_month %>/<%= profile.exp_year %><br><br>
+Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 	<a href="/payment_profiles">Manage your cards</a> | <a href="/payment_profiles/new?source_c=account&source_a=check_out">Enter new default card</a>
 </div>
 <div style="clear: both">

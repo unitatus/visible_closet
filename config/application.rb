@@ -39,10 +39,10 @@ module VisibleCloset
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-    config.filter_parameters += [:card_number]
-    config.filter_parameters += [:card_verification_value]
-    config.filter_parameters += [:card_month]
-    config.filter_parameters += [:card_year]
+    config.filter_parameters += [:number]
+    config.filter_parameters += [:verification_value]
+    config.filter_parameters += [:month]
+    config.filter_parameters += [:year]
     
     # Test account
     config.fedex_auth_key = 'USPNgfkiu1RuPm4j'

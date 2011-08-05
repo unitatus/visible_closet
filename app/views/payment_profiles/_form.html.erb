@@ -1,43 +1,11 @@
 <%= form_for(@profile, :url => "/payment_profiles", :html => { :class => "standard" }) do |f| %>
-<div class="field clearfix">
-	<%= f.label "Card type*"%>
-	<%= select_tag :type, options_for_select([["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]], @credit_card.type) %>
-	<%= error_messages_for_attribute(@profile, :card_type) %>
-</div><!--//field-->
-<div class="field clearfix">
-	<%= f.label "Cardholder First Name*" %>
-	<%= text_field_tag :first_name, @credit_card.first_name, :class => "textbox" %>
-	<%= error_messages_for_attribute(@credit_card, :first_name) %>
-</div><!--//field-->
-<div class="field clearfix">
-	<%= f.label "Cardholder Last Name*" %>
-	<%= text_field_tag :last_name, @credit_card.last_name, :class => "textbox" %>
-	<%= error_messages_for_attribute(@credit_card, :last_name) %>
-</div><!--//field-->
-<div class="field clearfix">
-<%= f.label "Number*" %>
-<%= text_field_tag :number, @credit_card.number, :class => "textbox" %>
-<%= error_messages_for_attribute(@credit_card, :number) %>
-</div>
-<div class="field clearfix">
-<%= f.label "Verification Value (CVV)*" %>
-<%= text_field_tag :verification_value, @credit_card.verification_value, :class => "textbox" %>
-<%= error_messages_for_attribute(@credit_card, :verification_value) %>
-</div>
-<div class="field clearfix">
-<%= f.label "Expiration:" %>
-	<div style="position:relative; right:160px; top:4px;">
-<%= select_tag :month, options_for_select([["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December"]], :selected => @credit_card.month) %>
-<%= select_tag :year, options_for_select(year_array, @credit_card.year) %>
-<%= error_messages_for_attribute(@credit_card, :month) %>
-<%= error_messages_for_attribute(@credit_card, :year) %>
-	</div>
-</div>
+<%= render :partial => 'form_cc_guts', :locals => { :f => f, :profile => @profile } %>
+
 <div class="field clearfix" style="padding: 0 321px 0 0 ">
 	<% if current_user.payment_profile_count != 0 %>
-<%= f.label "Default Card?" %>
-<%= hidden_field_tag :default, 0 %>
-<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1" %>
+		<%= f.label "Default Card?" %>
+		<%= hidden_field_tag :default, 0 %>
+		<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1" %>
 	<% end %>
 </div><br>
 <div class="graybox">
@@ -45,7 +13,9 @@
 	<thead>
 		<tr>
 			<th colspan="6" style="font-size: 145%">
-			<% if current_user.active_address_count > 1 %>
+			<% if !@profile.errors[:billing_address_id].blank? %>
+				<div class="error_label">Please select a billing address</div>
+			<% elsif current_user.active_address_count > 1 %>
 				Select a billing address
 			<% else %>
 				Billing address
@@ -58,10 +28,10 @@
 	<tr>
 	<% end %>
 	<td style="vertical-align: middle">
-	<% if @profile.billing_address_id.nil? && index == 0 %>
-		<%= radio_button(:profile, :billing_address_id, address.id, :checked => true)%>	
+	<% if (@profile.billing_address.nil? && index == 0) || @profile.billing_address == address %>
+		<%= radio_button(:payment_profile, :billing_address_id, address.id, :checked => true)%>	
 	<% else %>
-		<%= radio_button(:profile, :billing_address_id, address.id)%>	
+		<%= radio_button(:payment_profile, :billing_address_id, address.id)%>	
 	<% end %>
 	</td>
 	<td style="text-align: left">

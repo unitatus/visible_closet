@@ -88,4 +88,11 @@ class Address < ActiveRecord::Base
     
     return_str
   end
+  
+  def destroy
+    if user.default_shipping_address == self
+      user.default_shipping_address = nil
+    end
+    super
+  end
 end

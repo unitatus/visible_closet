@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110729144256
+# Schema version: 20110804223752
 #
 # Table name: payment_profiles
 #
@@ -9,45 +9,67 @@
 #  user_id            :integer
 #  created_at         :datetime
 #  updated_at         :datetime
-#  exp_year           :integer
+#  year               :integer
 #  first_name         :string(255)
 #  last_name          :string(255)
 #  billing_address_id :integer
 #  cc_type            :string(255)
-#  exp_month          :string(255)
+#  month              :string(255)
 #  active             :boolean
 #
 
 class PaymentProfile < ActiveRecord::Base
     belongs_to :user
     belongs_to :billing_address, :class_name => 'Address'
-     
-    attr_accessor :credit_card
     
-    validates_presence_of :user_id, :billing_address_id
+    attr_accessor :number, :verification_value
     
+    # Really we should be validating billing address, but then rails won't let us automatically set a billing address, so we can't create the payment profile
+    # using Devise. The right solution to this is to have Devise allow for customization of create, but that isn't possible. Arg!
+    validates_presence_of :last_four_digits, :year, :first_name, :last_name, :cc_type, :month
     validate :validate_card, :on => :create
 
     def PaymentProfile.new(params=nil)
-      profile = super(params)
-      profile.active = true
+      payment = super(params)
+      payment.active ||= true
 
-      profile
+      payment
     end
 
-    def credit_card=(cc)
-      if not cc.nil?
-        self.last_four_digits = cc.number[-4,4]
-        self.cc_type = cc.type
-        self.exp_month = cc.month
-        self.exp_year = cc.year
-        self.first_name = cc.first_name
-        self.last_name = cc.last_name
+    def PaymentProfile.new_from(profile)
+      new_profile = PaymentProfile.new
+      new_profile.billing_address_id = profile.billing_address_id
+      new_profile.user_id = profile.user_id
+      new_profile.year = profile.year
+      new_profile.first_name = profile.first_name
+      new_profile.last_name = profile.last_name
+      new_profile.billing_address_id = profile.billing_address_id
+      new_profile.cc_type = profile.cc_type
+      new_profile.month = profile.month
+      new_profile.verification_value = profile.verification_value
+      new_profile.number = profile.number
+      
+      profile.errors.each do |attr, msg|
+        new_profile.errors.add(attr, msg)
       end
       
-      @credit_card = cc
+      new_profile      
     end
-    
+
+    def number=(value)
+      if value.nil?
+        self.last_four_digits = nil
+      else
+        self.last_four_digits = value[-4,4]
+      end
+      @number = value
+    end
+
+    def credit_card
+      ActiveMerchant::Billing::CreditCard.new(:number => self.number, :type => self.cc_type, :month => self.month, :year => self.year, \
+      :first_name => self.first_name, :last_name => self.last_name, :verification_value => self.verification_value)
+    end
+      
     def active=(value)
       if active.nil?
         write_attribute(:active, value)
@@ -90,7 +112,7 @@ class PaymentProfile < ActiveRecord::Base
     end
     
     def create
-      if super and create_payment_profile
+      if super and (self.user_id.nil? || create_payment_profile)
         return true
       else
         if self.id
@@ -102,41 +124,16 @@ class PaymentProfile < ActiveRecord::Base
     end
 
     def destroy
+      if user.default_payment_profile == self
+        user.default_payment_profile = nil
+      end
+      
       if delete_payment_profile and super
         return true
       end
       return false
     end
-    
-    # def active=(value)
-    #   if value == true && read_attribute(:active) == false && !read_attribute(:id).nil?
-    #     raise "Cannot reset active to true once it is created and inactivated."
-    #   else
-    #     if value == false && read_attribute(:active) == true
-    #       return inactivate
-    #     else
-    #       return write_attribute(:active, value)
-    #     end
-    #   end
-    # end
-    # 
-    # def inactivate
-    #   write_attribute(:active, false)
-    #   return delete_payment_profile
-    # end
 
-    private
-    
-    def validate_card
-      unless @credit_card.valid?
-        @credit_card.errors.each do |attr, messages|
-          messages.each do | message |
-            errors.add("card_" + attr, message)
-          end
-        end
-      end
-    end
-    
     def create_payment_profile
       if not self.id
         return false
@@ -151,7 +148,7 @@ class PaymentProfile < ActiveRecord::Base
       response = CIM_GATEWAY.create_customer_payment_profile(profile)
       if response.success? and response.params['customer_payment_profile_id']
         if update_attribute(:identifier, response.params['customer_payment_profile_id'])
-          self.credit_card = nil
+          @credit_card = nil
           return true
         else
           puts("Unable to save identifier attribute on new payment profile; errors: " << errors.inspect)
@@ -162,6 +159,29 @@ class PaymentProfile < ActiveRecord::Base
         return false
       end
     end
+
+    private
+    
+    def validate_card
+      cc = credit_card
+      unless cc.valid?
+        cc.errors.each do |attr, messages|
+          messages.each do | message |
+            errors.add(attr, message)
+          end
+        end
+      end
+    end
+    
+    # def validate_save_billing_address_id
+    #   if billing_address.nil?
+    #     if user.nil? || user.default_shipping_address.nil?
+    #       errors.add(:billing_address_id, "Billing address id must be set or user with default shipping address must be associated.")
+    #     else
+    #       billing_address = user.default_shipping_address
+    #     end
+    #   end
+    # end
 
     # Updates are not allowed, but this method is kept around just in case, since it may prove useful.
     # def update_payment_profile

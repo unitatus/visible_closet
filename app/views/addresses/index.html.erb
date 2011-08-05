@@ -30,12 +30,12 @@ You do not have any addresses on file. Click <a href="/addresses/new">here</a> t
 	<br>Evening Phone: <%= number_to_phone(address.evening_phone) %>
 	<% end %>
 	<br><%= link_to 'Edit', edit_address_path(address) %> 
-	<% if current_user.default_shipping_address_id != address.id %>
+	<% if current_user.default_shipping_address != address %>
 	| <%= link_to 'Destroy', address, :confirm => 'Are you sure?', :method => :delete %> <br>
 	<% else %>
 	<br>
 	<% end %>
-	<% if current_user.default_shipping_address_id == address.id %>
+	<% if current_user.default_shipping_address == address %>
 		<b>This is your default shipping address</b>
 	<% else %>
 		<a href="/addresses/<%=address.id%>/set_default_shipping">Make Default Shipping Address</a>

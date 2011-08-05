@@ -131,7 +131,7 @@ class AccountController < ApplicationController
       session[:shipping_address] = @shipping_address.id
           
       @order = Order.new
-      render :action => "check_out"
+      redirect_to "/account/check_out"
     else
       render :action => "add_new_shipping_address"
     end    
@@ -239,7 +239,16 @@ class AccountController < ApplicationController
     if last_order
       last_order.shipping_address
     else
-      current_user.default_shipping_address
+      shipping_address = current_user.default_shipping_address
+      if shipping_address.nil?
+        if current_user.active_address_count == 0
+          return nil
+        else
+          shipping_address = current_user.addresses[0]
+          current_user.update_attribute(:default_shipping_address_id, shipping_address.id)
+        end
+      end
+      shipping_address
     end
   end
   

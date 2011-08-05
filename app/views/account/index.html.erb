@@ -23,7 +23,7 @@
 <% if payment_profile.nil? %>
 none.
 <% else %>
-<%= payment_profile.cc_type.capitalize %></b>, ************<%= payment_profile.last_four_digits %>, exp <%= payment_profile.exp_month %>/<%= payment_profile.exp_year %>. 
+<%= payment_profile.cc_type.capitalize %></b>, ************<%= payment_profile.last_four_digits %>, exp <%= payment_profile.month %>/<%= payment_profile.year %>. 
 <% end %>
 <br>&nbsp;&nbsp;&nbsp;
 <% if payment_profile.nil? %>

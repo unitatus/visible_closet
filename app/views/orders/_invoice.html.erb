@@ -109,9 +109,9 @@
 				Expiration:
 			</div>
 			<div style="float: right; width: 79%; text-align: left">
-				<br><br><%= @payment_profile.cc_type.capitalize %><br>
+				<br><br><%= @payment_profile.type.capitalize %><br>
 				************<%= @payment_profile.last_four_digits %><br>
-				<%= @payment_profile.exp_month%>/<%= @payment_profile.exp_year %>
+				<%= @payment_profile.month%>/<%= @payment_profile.year %>
 			</div>
 			<div style="clear: both"></div>
 		<% end %>

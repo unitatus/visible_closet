@@ -1,0 +1,1006 @@
+2011-08-03T20:20:21+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.min.js dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=85925
+2011-08-03T20:20:21+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=6ms status=200 bytes=10303
+2011-08-03T20:20:21+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=15624
+2011-08-03T20:20:21+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=12ms status=200 bytes=31032
+2011-08-03T20:20:21+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/rails.js dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=13384
+2011-08-03T20:20:21+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/application.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=7054
+2011-08-03T20:20:21+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/date.js dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=25809
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET / HTTP/1.1 | 10.243.15.130 | 3864 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /css/screen.css?1312401760 HTTP/1.1 | 10.243.15.130 | 4696 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /css/application.css?1312401760 HTTP/1.1 | 10.243.15.130 | 1255 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /javascripts/jquery.cycle.all.min.js?1312401761 HTTP/1.1 | 10.243.15.130 | 8388 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /javascripts/rails.js?1312401761 HTTP/1.1 | 10.243.15.130 | 4502 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /css/styles.css?1312401760 HTTP/1.1 | 10.243.15.130 | 4151 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312401760 HTTP/1.1 | 10.243.15.130 | 1562 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /css/jquery.fancybox-1.3.4.css?1312401760 HTTP/1.1 | 10.243.15.130 | 2248 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /javascripts/jquery.fancybox-1.3.4.pack.js?1312401761 HTTP/1.1 | 10.243.15.130 | 6123 | http | 200
+2011-08-03T20:20:21+00:00 heroku[nginx]: GET /javascripts/application.js?1312401761 HTTP/1.1 | 10.243.15.130 | 2138 | http | 200
+2011-08-03T20:22:16+00:00 app[web.1]: 
+2011-08-03T20:22:16+00:00 app[web.1]: 
+2011-08-03T20:22:16+00:00 app[web.1]: Started GET "/" for 10.210.155.62 at 2011-08-03 13:22:16 -0700
+2011-08-03T20:22:16+00:00 heroku[router]: GET www.thevisiblecloset.com/ dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=8945
+2011-08-03T20:22:17+00:00 heroku[router]: GET www.thevisiblecloset.com/css/jquery.fancybox-1.3.4.css dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=8817
+2011-08-03T20:22:18+00:00 heroku[router]: GET www.thevisiblecloset.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=4278
+2011-08-03T20:22:18+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.min.js dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=85925
+2011-08-03T20:22:18+00:00 heroku[nginx]: GET /css
+/screen.css?1312401760 HTTP/1.1 | 10.210.155.62 | 4657 | http | 200
+2011-08-03T20:22:18+00:00 heroku[nginx]: GET /css/jquery.fancybox-1.3.4.css?1312401760 HTTP/1.1 | 10.210.155.62 | 2225 | http | 200
+2011-08-03T20:22:18+00:00 heroku[router]: GET www.thevisiblecloset.com/css/application.css dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=3018
+2011-08-03T20:22:18+00:00 heroku[router]: GET www.thevisiblecloset.com/css/styles.css dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=17898
+2011-08-03T20:22:18+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312401760 HTTP/1.1 | 10.210.155.62 | 1557 | http | 200
+2011-08-03T20:22:19+00:00 heroku[nginx]: GET /css/application.css?1312401760 HTTP/1.1 | 10.210.155.62 | 1249 | http | 200
+2011-08-03T20:22:20+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=31032
+2011-08-03T20:22:20+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=10303
+2011-08-03T20:22:20+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=15624
+2011-08-03T20:22:21+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/rails.js dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=13384
+2011-08-03T20:22:22+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/application.js dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=7054
+2011-08-03T20:22:22+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/date.js dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=25809
+2011-08-03T20:22:23+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_beta.gif dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=2585
+2011-08-03T20:22:24+00:00 heroku[router]: GET www.thevisiblecloset.com/images/subheader.gif dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=15018
+2011-08-03T20:22:24+00:00 heroku[router]: GET www.thevisiblecloset.com/images/homepage-1.gif dyno=web.1 queue=0 wait=0ms service=9ms status=200 bytes=31314
+2011-08-03T20:22:24+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.1 | 10.210.155.62 | 4141 | http | 200
+2011-08-03T20:22:24+00:00 heroku[router]: GET www.thevisiblecloset.com/images/signup.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3931
+2011-08-03T20:22:24+00:00 heroku[nginx]: GET /images/subheader.gif HTTP/1.1 | 10.210.155.62 | 15295 | http | 200
+2011-08-03T20:22:25+00:00 heroku[nginx]: GET /images/signup.gif HTTP/1.1 | 10.210.155.62 | 4207 | http | 200
+2011-08-03T20:22:25+00:00 heroku[nginx]: GET /images/rightforme.gif HTTP/1.1 | 10.210.155.62 | 2808 | http | 200
+2011-08-03T20:22:27+00:00 heroku[router]: GET www.thevisiblecloset.com/images/calltoaction.png dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=8275
+2011-08-03T20:22:27+00:00 heroku[nginx]: GET /images/calltoaction.png HTTP/1.1 | 10.210.155.62 | 8551 | http | 200
+2011-08-03T20:22:27+00:00 heroku[router]: GET www.thevisiblecloset.com/images/lowerleft.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=161
+2011-08-03T20:22:28+00:00 heroku[nginx]: GET /images/upperleft.png HTTP/1.1 | 10.210.155.62 | 448 | http | 200
+2011-08-03T20:22:28+00:00 heroku[router]: GET www.thevisiblecloset.com/images/upperright.png dyno=web.1 queue=0 wait=1ms service=4ms status=200 bytes=3609
+2011-08-03T20:22:28+00:00 heroku[nginx]: GET /images/lowerleft.png HTTP/1.1 | 10.210.155.62 | 436 | http | 200
+2011-08-03T20:22:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/lowerright.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=3610
+2011-08-03T20:22:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/facebook.gif dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=2771
+2011-08-03T20:22:29+00:00 heroku[nginx]: GET /images/lowerright.png HTTP/1.1 | 10.210.155.62 | 3886 | http | 200
+2011-08-03T20:22:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/twitter.gif dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=2761
+2011-08-03T20:23:09+00:00 app[web.1]: 
+2011-08-03T20:23:09+00:00 app[web.1]: 
+2011-08-03T20:23:09+00:00 app[web.1]: Started GET "/how_it_works" for 10.210.155.62 at 2011-08-03 13:23:09 -0700
+2011-08-03T20:23:09+00:00 heroku[router]: GET www.thevisiblecloset.com/how_it_works dyno=web.1 queue=0 wait=0ms service=19ms status=200 bytes=7849
+2011-08-03T20:23:12+00:00 heroku[router]: GET www.thevisiblecloset.com/images/how-it-works.jpg dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=55851
+2011-08-03T21:23:44+00:00 heroku[web.1]: Idling
+2011-08-03T21:23:45+00:00 heroku[web.1]: State changed from up to down
+2011-08-03T21:23:46+00:00 heroku[web.1]: Stopping process with SIGTERM
+2011-08-03T21:23:46+00:00 app[web.1]: >> Stopping ...
+2011-08-03T21:23:46+00:00 heroku[web.1]: Process exited
+2011-08-03T21:29:35+00:00 heroku[web.1]: Unidling
+2011-08-03T21:29:35+00:00 heroku[web.1]: State changed from down to created
+2011-08-03T21:29:35+00:00 heroku[web.1]: State changed from created to starting
+2011-08-03T21:29:39+00:00 heroku[web.1]: Starting process with command `thin -p 29716 -e production -R /home/heroku_rack/heroku.ru start`
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:20: warning: already initialized constant BAG
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:21: warning: already initialized constant BBL
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:22: warning: already initialized constant BDL
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:23: warning: already initialized constant BOX
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:24: warning: already initialized constant BSK
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:25: warning: already initialized constant BXT
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:26: warning: already initialized constant CAG
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:27: warning: already initialized constant CAS
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:28: warning: already initialized constant CHS
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:29: warning: already initialized constant CNT
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:30: warning: already initialized constant CRT
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:31: warning: already initialized constant CTN
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:32: warning: already initialized constant CYL
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:33: warning: already initialized constant DRM
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:34: warning: already initialized constant ENV
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:35: warning: already initialized constant PAL
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:36: warning: already initialized constant PCL
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:37: warning: already initialized constant PCS
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:38: warning: already initialized constant PKG
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:39: warning: already initialized constant PLT
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:40: warning: already initialized constant REL
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:41: warning: already initialized constant ROL
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:42: warning: already initialized constant SAK
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:43: warning: already initialized constant SHW
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:44: warning: already initialized constant SKD
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:45: warning: already initialized constant TBE
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:46: warning: already initialized constant TBN
+2011-08-03T21:29:45+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:47: warning: already initialized constant TNK
+2011-08-03T21:29:49+00:00 app[web.1]: /app/config/environments/production.rb:72: warning: already initialized constant CIM_GATEWAY
+2011-08-03T21:29:49+00:00 app[web.1]: /app/config/environments/production.rb:77: warning: already initialized constant PURCHASE_GATEWAY
+2011-08-03T21:29:49+00:00 app[web.1]: >> Thin web server (v1.2.6 codename Crazy Delicious)
+2011-08-03T21:29:49+00:00 app[web.1]: >> Maximum connections set to 1024
+2011-08-03T21:29:49+00:00 app[web.1]: >> Listening on 0.0.0.0:29716, CTRL+C to stop
+2011-08-03T21:29:50+00:00 heroku[web.1]: State changed from starting to up
+2011-08-03T21:29:51+00:00 app[web.1]: 
+2011-08-03T21:29:51+00:00 app[web.1]: 
+2011-08-03T21:29:51+00:00 app[web.1]: Started GET "/" for 10.210.155.62 at 2011-08-03 14:29:51 -0700
+2011-08-03T21:29:52+00:00 heroku[router]: GET www.thevisiblecloset.com/ dyno=web.1 queue=0 wait=0ms service=77ms status=200 bytes=8945
+2011-08-03T21:29:52+00:00 app[web.1]: 
+2011-08-03T21:29:52+00:00 app[web.1]: 
+2011-08-03T21:29:52+00:00 app[web.1]: Started GET "/" for 10.42.167.61 at 2011-08-03 14:29:52 -0700
+2011-08-03T21:29:52+00:00 heroku[router]: GET www.thevisiblecloset.com/ dyno=web.1 queue=0 wait=0ms service=37ms status=200 bytes=8945
+2011-08-03T21:29:52+00:00 heroku[router]: GET www.thevisiblecloset.com/css/screen.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=16331
+2011-08-03T21:29:52+00:00 heroku[router]: GET www.thevisiblecloset.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=4278
+2011-08-03T21:29:52+00:00 heroku[nginx]: GET / HTTP/1.0 | 10.243.15.130 | 9571 | http | 200
+2011-08-03T21:29:52+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=31032
+2011-08-03T21:29:52+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.min.js dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=85925
+2011-08-03T21:29:53+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=15624
+2011-08-03T21:29:53+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=6ms status=200 bytes=10303
+2011-08-03T21:29:53+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/application.js dyno=web.1 queue=0 wait=0ms service=6ms status=200 bytes=7054
+2011-08-03T21:29:53+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/date.js dyno=web.1 queue=0 wait=0ms service=51ms status=200 bytes=25809
+2011-08-03T21:29:53+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312401760 HTTP/1.1 | 10.210.155.62 | 1557 | http | 200
+2011-08-03T21:29:53+00:00 heroku[nginx]: GET /css/application.css?1312401760 HTTP/1.1 | 10.210.155.62 | 1262 | http | 200
+2011-08-03T21:29:53+00:00 heroku[nginx]: GET /javascripts/superfish-combined.js?1312401761 HTTP/1.1 | 10.210.155.62 | 4416 | http | 200
+2011-08-03T21:29:53+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_beta.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=2585
+2011-08-03T21:29:53+00:00 heroku[nginx]: GET /javascripts/application.js?1312401761 HTTP/1.1 | 10.210.155.62 | 2133 | http | 200
+2011-08-03T21:29:53+00:00 heroku[router]: GET www.thevisiblecloset.com/images/subheader.gif dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=15018
+2011-08-03T21:29:53+00:00 heroku[router]: GET www.thevisiblecloset.com/images/login.gif dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=3851
+2011-08-03T21:29:53+00:00 heroku[nginx]: GET /javascripts/date.js?1312401761 HTTP/1.1 | 10.210.155.62 | 7812 | http | 200
+2011-08-03T21:29:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/rightforme.gif dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=2531
+2011-08-03T21:29:54+00:00
+ heroku[router]: GET www.thevisiblecloset.com/images/homepage-1.gif dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=31314
+2011-08-03T21:29:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/upperleft.png dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=159
+2011-08-03T21:29:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/upperright.png dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=3609
+2011-08-03T21:29:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/facebook.gif dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=2771
+2011-08-03T21:29:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/lowerleft.png dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=161
+2011-08-03T21:29:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/lowerright.png dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3610
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.1 | 10.210.155.62 | 4128 | http | 200
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/signup.gif HTTP/1.1 | 10.210.155.62 | 4220 | http | 200
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/subheader.gif HTTP/1.1 | 10.210.155.62 | 15296 | http | 200
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/homepage-1.gif HTTP/1.1 | 10.210.155.62 | 31591 | http | 200
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/calltoaction.png HTTP/1.1 | 10.210.155.62 | 8552 | http | 200
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/upperright.png HTTP/1.1 | 10.210.155.62 | 3885 | http | 200
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/upperleft.png HTTP/1.1 | 10.210.155.62 | 435 | http | 200
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/facebook.gif HTTP/1.1 | 10.210.155.62 | 3047 | http | 200
+2011-08-03T21:29:54+00:00 heroku[nginx]: GET /images/lowerleft.png HTTP/1.1 | 10.210.155.62 | 437 | http | 200
+2011-08-03T21:29:55+00:00 heroku[nginx]: GET /images/twitter.gif HTTP/1.1 | 10.210.155.62 | 3052 | http | 200
+2011-08-03T21:30:05+00:00 app[web.1]: 
+2011-08-03T21:30:05+00:00 app[web.1]: 
+2011-08-03T21:30:05+00:00 app[web.1]: Started GET "/faq" for 10.210.155.62 at 2011-08-03 14:30:05 -0700
+2011-08-03T21:30:06+00:00 heroku[router]: GET www.thevisiblecloset.com/faq dyno=web.1 queue=0 wait=0ms service=261ms status=200 bytes=11839
+2011-08-03T21:30:16+00:00 app[web.1]: 
+2011-08-03T21:30:16+00:00 app[web.1]: 
+2011-08-03T21:30:16+00:00 app[web.1]: Started GET "/restrictions" for 10.210.155.62 at 2011-08-03 14:30:16 -0700
+2011-08-03T21:30:16+00:00 heroku[router]: GET www.thevisiblecloset.com/restrictions dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=6671
+2011-08-03T21:53:59+00:00 app[web.1]: 
+2011-08-03T21:53:59+00:00 app[web.1]: 
+2011-08-03T21:53:59+00:00 app[web.1]: Started GET "/how_it_works" for 10.210.155.62 at 2011-08-03 14:53:59 -0700
+2011-08-03T21:53:59+00:00 heroku[router]: GET www.thevisiblecloset.com/how_it_works dyno=web.1 queue=0 wait=0ms service=10ms status=200 bytes=7849
+2011-08-03T21:54:00+00:00 heroku[nginx]: GET /how_it_works HTTP/1.1 | 10.210.155.62 | 287 | http | 304
+2011-08-03T21:54:10+00:00 app[web.1]: 
+2011-08-03T21:54:10+00:00 app[web.1]: 
+2011-08-03T21:54:10+00:00 app[web.1]: Started GET "/how_it_works" for 10.210.155.62 at 2011-08-03 14:54:10 -0700
+2011-08-03T21:54:10+00:00 heroku[router]: GET www.thevisiblecloset.com/how_it_works dyno=web.1 queue=0 wait=0ms service=61ms status=200 bytes=7849
+2011-08-03T21:54:31+00:00 app[web.1]: 
+2011-08-03T21:54:31+00:00 app[web.1]: 
+2011-08-03T21:54:31+00:00 app[web.1]: Started GET "/" for 10.210.155.62 at 2011-08-03 14:54:31 -0700
+2011-08-03T21:54:31+00:00 heroku[router]: GET www.thevisiblecloset.com/ dyno=web.1 queue=0 wait=0ms service=9ms status=200 bytes=8945
+2011-08-03T21:54:31+00:00 heroku[nginx]: GET / HTTP/1.1 | 10.210.155.62 | 288 | http | 304
+2011-08-03T21:55:04+00:00 app[web.1]: 
+2011-08-03T21:55:04+00:00 app[web.1]: 
+2011-08-03T21:55:04+00:00 app[web.1]: Started GET "/contact" for 10.243.15.130 at 2011-08-03 14:55:04 -0700
+2011-08-03T21:55:04+00:00 heroku[router]: GET www.thevisiblecloset.com/contact dyno=web.1 queue=0 wait=0ms service=10ms status=200 bytes=7102
+2011-08-03T22:13:47+00:00 heroku[slugc]: Slug compilation started
+2011-08-03T22:13:57+00:00 heroku[api]: Deploy c1be7d2 by admin1@thevisiblecloset.com
+2011-08-03T22:13:57+00:00 heroku[api]: Release v71 created by admin1@thevisiblecloset.com
+2011-08-03T22:13:57+00:00 heroku[web.1]: State changed from up to bouncing
+2011-08-03T22:13:57+00:00 heroku[web.1]: State changed from bouncing to created
+2011-08-03T22:13:57+00:00 heroku[web.1]: State changed from created to starting
+2011-08-03T22:13:58+00:00 heroku[slugc]: Slug compilation finished
+2011-08-03T22:13:59+00:00 heroku[web.1]: Stopping process with SIGTERM
+2011-08-03T22:13:59+00:00 app[web.1]: >> Stopping ...
+2011-08-03T22:13:59+00:00 heroku[web.1]: Process exited
+2011-08-03T22:14:17+00:00 heroku[web.1]: Starting process with command `thin -p 6550 -e production -R /home/heroku_rack/heroku.ru start`
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:20: warning: already initialized constant BAG
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:21: warning: already initialized constant BBL
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:22: warning: already initialized constant BDL
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:23: warning: already initialized constant BOX
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:24: warning: already initialized constant BSK
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:25: warning: already initialized constant BXT
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:26: warning: already initialized constant CAG
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:27: warning: already initialized constant CAS
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:28: warning: already initialized constant CHS
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:29: warning: already initialized constant CNT
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:30: warning: already initialized constant CRT
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:31: warning: already initialized constant CTN
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:32: warning: already initialized constant CYL
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:33: warning: already initialized constant DRM
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:34: warning: already initialized constant ENV
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:35: warning: already initialized constant PAL
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:36: warning: already initialized constant PCL
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:37: warning: already initialized constant PCS
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:38: warning: already initialized constant PKG
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:39: warning: already initialized constant PLT
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:40: warning: already initialized constant REL
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:41: warning: already initialized constant ROL
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:42: warning: already initialized constant SAK
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:143: warning: already initialized constant SUN
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:144: warning: already initialized constant THU
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:145: warning: already initialized constant TUE
+2011-08-03T22:14:22+00:00 app[web.1]: /app/vendor/plugins/fedex/lib/ship_constants.rb:146: warning: already initialized constant WED
+2011-08-03T22:14:26+00:00 app[web.1]: /app/config/environments/production.rb:72: warning: already initialized constant CIM_GATEWAY
+2011-08-03T22:14:26+00:00 app[web.1]: /app/config/environments/production.rb:77: warning: already initialized constant PURCHASE_GATEWAY
+2011-08-03T22:14:26+00:00 app[web.1]: >> Thin web server (v1.2.6 codename Crazy Delicious)
+2011-08-03T22:14:26+00:00 app[web.1]: >> Maximum connections set to 1024
+2011-08-03T22:14:26+00:00 app[web.1]: >> Listening on 0.0.0.0:6550, CTRL+C to stop
+2011-08-03T22:14:27+00:00 heroku[web.1]: State changed from starting to up
+2011-08-03T22:14:31+00:00 heroku[rake.16]: State changed from created to starting
+2011-08-03T22:14:31+00:00 app[web.1]: 
+2011-08-03T22:14:31+00:00 app[web.1]: 
+2011-08-03T22:14:31+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:14:31 -0700
+2011-08-03T22:14:31+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=95ms status=200 bytes=6181
+2011-08-03T22:14:31+00:00 heroku[router]: GET www.thevisiblecloset.com/css/screen.css dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=16331
+2011-08-03T22:14:31+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=31032
+2011-08-03T22:14:31+00:00 heroku[router]: GET www.thevisiblecloset.com/css/application.css dyno=web.1 queue=0 wait=0ms service=6ms status=200 bytes=3018
+2011-08-03T22:14:31+00:00 heroku[router]: GET www.thevisiblecloset.com/css/jquery.fancybox-1.3.4.css dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=8817
+2011-08-03T22:14:31+00:00 heroku[router]: GET www.thevisiblecloset.com/css/styles.css dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=17898
+2011-08-03T22:14:31+00:00 heroku[router]: GET www.thevisiblecloset.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=4278
+2011-08-03T22:14:32+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=10303
+2011-08-03T22:14:32+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/application.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=7054
+2011-08-03T22:14:32+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=15624
+2011-08-03T22:14:32+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/rails.js dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=13384
+2011-08-03T22:14:32+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_beta.gif dyno=web.1 queue=1 wait=0ms service=1ms status=200 bytes=2585
+2011-08-03T22:14:32+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/date.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=25809
+2011-08-03T22:14:32+00:00 heroku[router]: GET www.thevisiblecloset.com/images/login.gif dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=3851
+2011-08-03T22:14:32+00:00 heroku[router]: GET www.thevisiblecloset.com/images/signup.gif dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=3931
+2011-08-03T22:14:32+00:00 heroku[nginx]: GET /css/screen.css?1312409628 HTTP/1.1 | 10.243.15.130 | 4650 | http | 200
+2011-08-03T22:14:32+00:00 heroku[nginx]: GET /javascripts/jquery.min.js?1312409628 HTTP/1.1 | 10.243.15.130 | 31149 | http | 200
+2011-08-03T22:14:32+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312409628 HTTP/1.1 | 10.243.15.130 | 1579 | http | 200
+2011-08-03T22:14:32+00:00 heroku[nginx]: GET /images/vcLogo_beta.gif HTTP/1.1 | 10.243.15.130 | 2867 | http | 200
+2011-08-03T22:14:32+00:00 heroku[nginx]: GET /css/styles.css?1312409628 HTTP/1.1 | 10.243.15.130 | 4175 | http | 200
+2011-08-03T22:14:32+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.1 | 10.243.15.130 | 4133 | http | 200
+2011-08-03T22:14:32+00:00 heroku[nginx]: GET /images/signup.gif HTTP/1.1 | 10.243.15.130 | 4212 | http | 200
+2011-08-03T22:14:33+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_boxOnly.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=4367
+2011-08-03T22:14:33+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/fancybox-x.png dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=203
+2011-08-03T22:14:33+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/fancybox.png dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=15287
+2011-08-03T22:14:33+00:00 app[web.1]: 
+2011-08-03T22:14:33+00:00 app[web.1]: 
+2011-08-03T22:14:33+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:14:33 -0700
+2011-08-03T22:14:33+00:00 app[web.1]: 
+2011-08-03T22:14:33+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=22ms status=404 bytes=728
+2011-08-03T22:14:33+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:14:33+00:00 app[web.1]:   
+2011-08-03T22:14:33+00:00 app[web.1]: 
+2011-08-03T22:14:33+00:00 app[web.1]: 
+2011-08-03T22:14:33+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/fancybox-y.png dyno=web.1 queue=1 wait=23ms service=4ms status=200 bytes=176
+2011-08-03T22:14:34+00:00 app[rake.16]: Awaiting client
+2011-08-03T22:14:34+00:00 app[rake.16]: Starting process with command `rake db:migrate`
+2011-08-03T22:14:35+00:00 heroku[rake.16]: State changed from starting to up
+2011-08-03T22:14:41+00:00 heroku[rake.16]: Process exited
+2011-08-03T22:14:41+00:00 heroku[rake.16]: State changed from up to complete
+2011-08-03T22:14:52+00:00 app[web.1]: 
+2011-08-03T22:14:52+00:00 app[web.1]: 
+2011-08-03T22:14:52+00:00 app[web.1]: Started GET "/users/register" for 10.243.15.130 at 2011-08-03 15:14:52 -0700
+2011-08-03T22:14:52+00:00 heroku[router]: GET www.thevisiblecloset.com/users/register dyno=web.1 queue=0 wait=0ms service=14ms status=302 bytes=113
+2011-08-03T22:14:53+00:00 app[web.1]: 
+2011-08-03T22:14:53+00:00 app[web.1]: 
+2011-08-03T22:14:53+00:00 app[web.1]: Started GET "/users/register" for 10.243.15.130 at 2011-08-03 15:14:53 -0700
+2011-08-03T22:14:53+00:00 heroku[router]: GET www.thevisiblecloset.com/users/register dyno=web.1 queue=0 wait=0ms service=194ms status=200 bytes=7677
+2011-08-03T22:14:53+00:00 heroku[router]: GET www.thevisiblecloset.com/css/screen.css dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=16331
+2011-08-03T22:14:53+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=10303
+2011-08-03T22:14:53+00:00 heroku[router]: GET www.thevisiblecloset.com/css/jquery.fancybox-1.3.4.css dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=8817
+2011-08-03T22:14:53+00:00 heroku[router]: GET www.thevisiblecloset.com/css/application.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3018
+2011-08-03T22:14:53+00:00 heroku[router]: GET www.thevisiblecloset.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=4278
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/css/styles.css dyno=web.1 queue=0 wait=0ms service=47ms status=200 bytes=17898
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.min.js dyno=web.1 queue=0 wait=0ms service=57ms status=200 bytes=85925
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=14ms status=200 bytes=15624
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/rails.js dyno=web.1 queue=1 wait=2ms service=1ms status=200 bytes=13384
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/application.js dyno=web.1 queue=1 wait=1ms service=1ms status=200 bytes=7054
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/date.js dyno=web.1 queue=0 wait=0ms service=10ms status=200 bytes=25809
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/login.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3851
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_beta.gif dyno=web.1 queue=1 wait=3ms service=2ms status=200 bytes=2585
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/signup.gif dyno=web.1 queue=2 wait=8ms service=1ms status=200 bytes=3931
+2011-08-03T22:14:54+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=31032
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /css/jquery.fancybox-1.3.4.css?1312409628 HTTP/1.0 | 127.0.0.1 | 9092 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /css/styles.css?1312409628 HTTP/1.0 | 127.0.0.1 | 18175 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /css/styles.css?1312409628 HTTP/1.1 | 10.243.15.130 | 4092 | https | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /javascripts/application.js?1312409628 HTTP/1.0 | 127.0.0.1 | 7343 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /css/application.css?1312409628 HTTP/1.0 | 127.0.0.1 | 3294 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /css/application.css?1312409628 HTTP/1.1 | 10.243.15.130 | 1294 | https | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.0 | 127.0.0.1 | 4128 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.1 | 10.243.15.130 | 4133 | https | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312409628 HTTP/1.0 | 127.0.0.1 | 4553 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312409628 HTTP/1.1 | 10.243.15.130 | 1565 | https | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /javascripts/rails.js?1312409628 HTTP/1.0 | 127.0.0.1 | 13675 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /javascripts/jquery.min.js?1312409628 HTTP/1.0 | 127.0.0.1 | 86215 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /javascripts/jquery.cycle.all.min.js?1312409628 HTTP/1.0 | 127.0.0.1 | 31323 | http | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /javascripts/jquery.min.js?1312409628 HTTP/1.1 | 10.243.15.130 | 31114 | https | 200
+2011-08-03T22:14:54+00:00 heroku[nginx]: GET /javascripts/rails.js?1312409628 HTTP/1.1 | 10.243.15.130 | 4478 | https | 200
+2011-08-03T22:15:01+00:00 heroku[router]: POST evening-sky-543.heroku.com/_heroku/console dyno=web.1 queue=0 wait=0ms service=3117ms status=200 bytes=17
+2011-08-03T22:15:01+00:00 heroku[nginx]: POST /_heroku/console?session_id=1044166&session_action=create HTTP/1.1 | 50.19.141.19 | 165 | http | 200
+2011-08-03T22:15:34+00:00 app[web.1]: 
+2011-08-03T22:15:34+00:00 app[web.1]: 
+2011-08-03T22:15:34+00:00 app[web.1]: Started GET "/" for 10.243.15.130 at 2011-08-03 15:15:34 -0700
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/ dyno=web.1 queue=0 wait=0ms service=25ms status=200 bytes=8945
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/subheader.gif dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=15018
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/rightforme.gif dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=2531
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/homepage-1.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=31314
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/upperright.png dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=3609
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/upperleft.png dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=159
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/calltoaction.png dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=8275
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/lowerleft.png dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=161
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/lowerright.png dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3610
+2011-08-03T22:15:34+00:00 heroku[router]: GET www.thevisiblecloset.com/images/facebook.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=2771
+2011-08-03T22:15:34+00:00 heroku[nginx]: GET /images/upperleft.png HTTP/1.1 | 10.243.15.130 | 440 | http | 200
+2011-08-03T22:15:34+00:00 heroku[nginx]: GET /images/lowerleft.png HTTP/1.1 | 10.243.15.130 | 442 | http | 200
+2011-08-03T22:15:35+00:00 heroku[nginx]: GET /images/lowerright.png HTTP/1.1 | 10.243.15.130 | 3892 | http | 200
+2011-08-03T22:15:35+00:00 heroku[nginx]: GET /images/facebook.gif HTTP/1.1 | 10.243.15.130 | 3052 | http | 200
+2011-08-03T22:15:35+00:00 heroku[nginx]: GET /images/twitter.gif HTTP/1.1 | 10.243.15.130 | 3042 | http | 200
+2011-08-03T22:15:44+00:00 app[web.1]: 
+2011-08-03T22:15:44+00:00 app[web.1]: 
+2011-08-03T22:15:44+00:00 app[web.1]: Started GET "/users/sign_in" for 10.243.15.130 at 2011-08-03 15:15:44 -0700
+2011-08-03T22:15:44+00:00 heroku[router]: GET www.thevisiblecloset.com/users/sign_in dyno=web.1 queue=0 wait=0ms service=12ms status=302 bytes=112
+2011-08-03T22:15:44+00:00 app[web.1]: 
+2011-08-03T22:15:44+00:00 app[web.1]: 
+2011-08-03T22:15:44+00:00 app[web.1]: Started GET "/users/sign_in" for 10.243.15.130 at 2011-08-03 15:15:44 -0700
+2011-08-03T22:15:44+00:00 heroku[router]: GET www.thevisiblecloset.com/users/sign_in dyno=web.1 queue=0 wait=0ms service=27ms status=200 bytes=6871
+2011-08-03T22:16:35+00:00 app[web.1]: 
+2011-08-03T22:16:35+00:00 app[web.1]: 
+2011-08-03T22:16:35+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:16:35 -0700
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=12ms status=200 bytes=6181
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/css/screen.css dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=16331
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/css/jquery.fancybox-1.3.4.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=8817
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/css/application.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3018
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/css/styles.css dyno=web.1 queue=0 wait=0ms service=9ms status=200 bytes=17898
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.min.js dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=85925
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=4278
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=10303
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=31032
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=15624
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/application.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=7054
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/rails.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=13384
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/images/login.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3851
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/images/signup.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3931
+2011-08-03T22:16:35+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/date.js dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=25809
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /register HTTP/1.1 | 10.243.15.130 | 293 | http | 304
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /css/jquery.fancybox-1.3.4.css?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:16:36+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/fancybox-x.png dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=203
+2011-08-03T22:16:36+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/fancybox-y.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=176
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /javascripts/jquery.fancybox-1.3.4.pack.js?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /javascripts/jquery.min.js?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:16:36+00:00 app[web.1]: 
+2011-08-03T22:16:36+00:00 app[web.1]: 
+2011-08-03T22:16:36+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:16:36 -0700
+2011-08-03T22:16:36+00:00 app[web.1]: 
+2011-08-03T22:16:36+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:16:36+00:00 app[web.1]:   
+2011-08-03T22:16:36+00:00 app[web.1]: 
+2011-08-03T22:16:36+00:00 app[web.1]: 
+2011-08-03T22:16:36+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=7ms status=404 bytes=728
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /images/vcLogo_beta.gif HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.1 | 10.243.15.130 | 236 | http | 304
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /images/signup.gif HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:16:36+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_boxOnly.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=4367
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /images/fancybox/fancybox.png HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:16:36+00:00 heroku[nginx]: GET /images/vcLogo_boxOnly.png HTTP/1.1 | 10.243.15.130 | 4649 | http | 200
+2011-08-03T22:17:04+00:00 app[web.1]: 
+2011-08-03T22:17:04+00:00 app[web.1]: 
+2011-08-03T22:17:04+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:17:04 -0700
+2011-08-03T22:17:04+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=7ms status=304 bytes=0
+2011-08-03T22:17:05+00:00 app[web.1]: 
+2011-08-03T22:17:05+00:00 app[web.1]: 
+2011-08-03T22:17:05+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:17:05 -0700
+2011-08-03T22:17:05+00:00 app[web.1]: 
+2011-08-03T22:17:05+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=10ms status=404 bytes=728
+2011-08-03T22:17:05+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:17:05+00:00 app[web.1]:   
+2011-08-03T22:17:05+00:00 app[web.1]: 
+2011-08-03T22:17:05+00:00 app[web.1]: 
+2011-08-03T22:17:05+00:00 heroku[nginx]: GET /register HTTP/1.1 | 10.243.15.130 | 578 | http | 304
+2011-08-03T22:17:08+00:00 app[web.1]: 
+2011-08-03T22:17:08+00:00 app[web.1]: 
+2011-08-03T22:17:08+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:17:08 -0700
+2011-08-03T22:17:08+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=6181
+2011-08-03T22:17:08+00:00 app[web.1]: 
+2011-08-03T22:17:08+00:00 app[web.1]: 
+2011-08-03T22:17:08+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:17:08 -0700
+2011-08-03T22:17:08+00:00 app[web.1]: 
+2011-08-03T22:17:08+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:17:08+00:00 app[web.1]:   
+2011-08-03T22:17:08+00:00 app[web.1]: 
+2011-08-03T22:17:08+00:00 app[web.1]: 
+2011-08-03T22:17:08+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=3ms status=404 bytes=728
+2011-08-03T22:17:08+00:00 heroku[nginx]: GET /register HTTP/1.1 | 10.243.15.130 | 293 | http | 304
+2011-08-03T22:17:14+00:00 app[web.1]: 
+2011-08-03T22:17:14+00:00 app[web.1]: 
+2011-08-03T22:17:14+00:00 app[web.1]: Started GET "/users/register" for 10.243.15.130 at 2011-08-03 15:17:14 -0700
+2011-08-03T22:17:14+00:00 heroku[router]: GET www.thevisiblecloset.com/users/register dyno=web.1 queue=0 wait=0ms service=5ms status=302 bytes=113
+2011-08-03T22:17:14+00:00 app[web.1]: 
+2011-08-03T22:17:14+00:00 app[web.1]: 
+2011-08-03T22:17:14+00:00 app[web.1]: Started GET "/users/register" for 10.243.15.130 at 2011-08-03 15:17:14 -0700
+2011-08-03T22:17:14+00:00 heroku[router]: GET www.thevisiblecloset.com/users/register dyno=web.1 queue=0 wait=0ms service=93ms status=304 bytes=0
+2011-08-03T22:17:14+00:00 heroku[nginx]: GET /users/register HTTP/1.0 | 127.0.0.1 | 574 | http | 304
+2011-08-03T22:17:14+00:00 heroku[nginx]: GET /users/register HTTP/1.1 | 10.243.15.130 | 579 | https | 304
+2011-08-03T22:17:16+00:00 app[web.1]: 
+2011-08-03T22:17:16+00:00 app[web.1]: 
+2011-08-03T22:17:16+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:17:16 -0700
+2011-08-03T22:17:16+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=9ms status=200 bytes=6181
+2011-08-03T22:17:17+00:00 heroku[nginx]: GET /register HTTP/1.1 | 10.243.15.130 | 292 | http | 304
+2011-08-03T22:17:22+00:00 app[web.1]: 
+2011-08-03T22:17:22+00:00 app[web.1]: 
+2011-08-03T22:17:22+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:17:22 -0700
+2011-08-03T22:17:22+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=6ms status=304 bytes=0
+2011-08-03T22:17:22+00:00 app[web.1]: 
+2011-08-03T22:17:22+00:00 app[web.1]: 
+2011-08-03T22:17:22+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:17:22 -0700
+2011-08-03T22:17:22+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=6181
+2011-08-03T22:17:22+00:00 app[web.1]: 
+2011-08-03T22:17:22+00:00 app[web.1]: 
+2011-08-03T22:17:22+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:17:22 -0700
+2011-08-03T22:17:22+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=5ms status=304 bytes=0
+2011-08-03T22:17:22+00:00 heroku[nginx]: GET /register HTTP/1.1 | 10.243.15.130 | 578 | http | 304
+2011-08-03T22:17:22+00:00 heroku[nginx]: GET /register HTTP/1.1 | 10.243.15.130 | 293 | http | 304
+2011-08-03T22:17:23+00:00 heroku[nginx]: GET /register HTTP/1.1 | 10.243.15.130 | 578 | http | 304
+2011-08-03T22:18:15+00:00 app[web.1]: 
+2011-08-03T22:18:15+00:00 app[web.1]: 
+2011-08-03T22:18:15+00:00 app[web.1]: Started GET "/" for 10.243.15.130 at 2011-08-03 15:18:15 -0700
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/ dyno=web.1 queue=0 wait=0ms service=12ms status=200 bytes=8945
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/css/screen.css dyno=web.1 queue=0 wait=0ms service=9ms status=200 bytes=16331
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=4278
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/css/styles.css dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=17898
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=9ms status=200 bytes=31032
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/rails.js dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=13384
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=10303
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=15ms status=200 bytes=15624
+2011-08-03T22:18:15+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/date.js dyno=web.1 queue=1 wait=20ms service=10ms status=200 bytes=25809
+2011-08-03T22:18:15+00:00 heroku[nginx]: GET / HTTP/1.1 | 10.243.15.130 | 3771 | http | 200
+2011-08-03T22:18:16+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312409628 HTTP/1.1 | 10.243.15.130 | 1579 | http | 200
+2011-08-03T22:18:16+00:00 heroku[nginx]: GET /javascripts/jquery.min.js?1312409628 HTTP/1.1 | 10.243.15.130 | 31309 | http | 200
+2011-08-03T22:18:16+00:00 heroku[nginx]: GET /javascripts/rails.js?1312409628 HTTP/1.1 | 10.243.15.130 | 4523 | http | 200
+2011-08-03T22:18:16+00:00 heroku[nginx]: GET /javascripts/application.js?1312409628 HTTP/1.1 | 10.243.15.130 | 2192 | http | 200
+2011-08-03T22:18:16+00:00 heroku[nginx]: GET /javascripts/jquery.fancybox-1.3.4.pack.js?1312409628 HTTP/1.1 | 10.243.15.130 | 6145 | http | 200
+2011-08-03T22:18:16+00:00 heroku[nginx]: GET /javascripts/date.js?1312409628 HTTP/1.1 | 10.243.15.130 | 7824 | http | 200
+2011-08-03T22:18:18+00:00 heroku[router]: GET www.thevisiblecloset.com/users/sign_in dyno=web.1 queue=0 wait=0ms service=5ms status=302 bytes=112
+2011-08-03T22:18:18+00:00 app[web.1]: 
+2011-08-03T22:18:18+00:00 app[web.1]: 
+2011-08-03T22:18:18+00:00 app[web.1]: Started GET "/users/sign_in" for 10.243.15.130 at 2011-08-03 15:18:18 -0700
+2011-08-03T22:18:19+00:00 app[web.1]: 
+2011-08-03T22:18:19+00:00 app[web.1]: 
+2011-08-03T22:18:19+00:00 app[web.1]: Started GET "/users/sign_in" for 10.243.15.130 at 2011-08-03 15:18:19 -0700
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/users/sign_in dyno=web.1 queue=0 wait=0ms service=20ms status=200 bytes=6871
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=4278
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/css/jquery.fancybox-1.3.4.css dyno=web.1 queue=0 wait=0ms service=6ms status=200 bytes=8817
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/css/application.css dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=3018
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/css/styles.css dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=17898
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.min.js dyno=web.1 queue=0 wait=0ms service=10ms status=200 bytes=85925
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=10303
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=15624
+2011-08-03T22:18:19+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=31032
+2011-08-03T22:18:20+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/application.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=7054
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /users/sign_in HTTP/1.0 | 127.0.0.1 | 7497 | http | 200
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /users/sign_in HTTP/1.1 | 10.243.15.130 | 3159 | https | 200
+2011-08-03T22:18:20+00:00 heroku[router]: GET www.thevisiblecloset.com/images/login.gif dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=3851
+2011-08-03T22:18:20+00:00 heroku[router]: GET www.thevisiblecloset.com/images/signup.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3931
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /css/jquery.fancybox-1.3.4.css?1312409628 HTTP/1.0 | 127.0.0.1 | 9092 | http | 200
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /css/styles.css?1312409628 HTTP/1.0 | 127.0.0.1 | 18174 | http | 200
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /css/styles.css?1312409628 HTTP/1.1 | 10.243.15.130 | 4092 | https | 200
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /javascripts/jquery.min.js?1312409628 HTTP/1.0 | 127.0.0.1 | 86216 | http | 200
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /javascripts/jquery.cycle.all.min.js?1312409628 HTTP/1.0 | 127.0.0.1 | 31323 | http | 200
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.0 | 127.0.0.1 | 4128 | http | 200
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.1 | 10.243.15.130 | 4133 | https | 200
+2011-08-03T22:18:20+00:00 heroku[nginx]: GET /images/signup.gif HTTP/1.0 | 127.0.0.1 | 4208 | http | 200
+2011-08-03T22:18:29+00:00 app[web.1]: 
+2011-08-03T22:18:29+00:00 app[web.1]: 
+2011-08-03T22:18:29+00:00 app[web.1]: Started GET "/register" for 10.243.15.130 at 2011-08-03 15:18:29 -0700
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=6181
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=4278
+2011-08-03T22:18:29
++00:00 heroku[router]: GET www.thevisiblecloset.com/css/screen.css dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=16331
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/css/styles.css dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=17898
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/css/jquery.fancybox-1.3.4.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=8817
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=15624
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/rails.js dyno=web.1 queue=0 wait=0ms service=6ms status=200 bytes=13384
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_beta.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=2585
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.min.js dyno=web.1 queue=1 wait=0ms service=11ms status=200 bytes=85925
+2011-08-03T22:18:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/signup.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3931
+2011-08-03T22:18:29+00:00 heroku[nginx]: GET /javascripts/jquery.cycle.all.min.js?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:18:29+00:00 heroku[nginx]: GET /css/jquery.fancybox-1.3.4.css?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:18:29+00:00 heroku[nginx]: GET /javascripts/date.js?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:18:29+00:00 heroku[nginx]: GET /javascripts/rails.js?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:18:30+00:00 app[web.1]: 
+2011-08-03T22:18:30+00:00 app[web.1]: 
+2011-08-03T22:18:30+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:18:30 -0700
+2011-08-03T22:18:30+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=6ms status=404 bytes=728
+2011-08-03T22:18:30+00:00 app[web.1]: 
+2011-08-03T22:18:30+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:18:30+00:00 app[web.1]:   
+2011-08-03T22:18:30+00:00 app[web.1]: 
+2011-08-03T22:18:30+00:00 app[web.1]: 
+2011-08-03T22:18:30+00:00 heroku[nginx]: GET /css/screen.css?1312409628 HTTP/1.1 | 10.243.15.130 | 236 | http | 304
+2011-08-03T22:18:30+00:00 heroku[nginx]: GET /images/login.gif HTTP/1.1 | 10.243.15.130 | 237 | http | 304
+2011-08-03T22:18:30+00:00 heroku[nginx]: GET /images/fancybox/blank.gif HTTP/1.1 | 10.243.15.130 | 953 | http | 404
+2011-08-03T22:18:40+00:00 heroku[router]: GET www.thevisiblecloset.com/users/register dyno=web.1 queue=0 wait=0ms service=4ms status=302 bytes=113
+2011-08-03T22:18:40+00:00 app[web.1]: 
+2011-08-03T22:18:40+00:00 app[web.1]: 
+2011-08-03T22:18:40+00:00 app[web.1]: Started GET "/users/register" for 10.243.15.130 at 2011-08-03 15:18:40 -0700
+2011-08-03T22:18:41+00:00 app[web.1]: 
+2011-08-03T22:18:41+00:00 app[web.1]: 
+2011-08-03T22:18:41+00:00 app[web.1]: Started GET "/users/register" for 10.243.15.130 at 2011-08-03 15:18:41 -0700
+2011-08-03T22:18:41+00:00 heroku[router]: GET www.thevisiblecloset.com/users/register dyno=web.1 queue=0 wait=0ms service=16ms status=304 bytes=0
+2011-08-03T22:18:56+00:00 app[web.1]: 
+2011-08-03T22:18:56+00:00 app[web.1]: 
+2011-08-03T22:18:56+00:00 app[web.1]: Started GET "/users/register" for 10.243.15.130 at 2011-08-03 15:18:56 -0700
+2011-08-03T22:18:56+00:00 heroku[router]: GET www.thevisiblecloset.com/users/register dyno=web.1 queue=0 wait=0ms service=57ms status=200 bytes=7677
+2011-08-03T22:18:57+00:00 heroku[nginx]: GET /users/register HTTP/1.0 | 127.0.0.1 | 8303 | http | 200
+2011-08-03T22:18:57+00:00 heroku[nginx]: GET /users/register HTTP/1.1 | 10.243.15.130 | 3320 | https | 200
+2011-08-03T22:19:20+00:00 app[web.1]: 
+2011-08-03T22:19:20+00:00 app[web.1]: 
+2011-08-03T22:19:20+00:00 app[web.1]: Started GET "/register" for 10.210.155.62 at 2011-08-03 15:19:20 -0700
+2011-08-03T22:19:20+00:00 heroku[router]: GET www.thevisiblecloset.com/register dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=6181
+2011-08-03T22:19:21+00:00 heroku[nginx]: GET /register HTTP/1.1 | 10.210.155.62 | 292 | http | 304
+2011-08-03T22:19:36+00:00 app[web.1]: 
+2011-08-03T22:19:36+00:00 app[web.1]: 
+2011-08-03T22:19:36+00:00 app[web.1]: Started GET "/users/register" for 10.243.15.130 at 2011-08-03 15:19:36 -0700
+2011-08-03T22:19:36+00:00 heroku[router]: GET www.thevisiblecloset.com/users/register dyno=web.1 queue=0 wait=0ms service=19ms status=200 bytes=7677
+2011-08-03T22:19:36+00:00 heroku[router]: GET www.thevisiblecloset.com/css/screen.css dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=16331
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/css/styles.css dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=17898
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/jquery.min.js dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=85925
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/application.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=7054
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/images/login.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3851
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/javascripts/date.js dyno=web.1 queue=0 wait=0ms service=8ms status=200 bytes=25809
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_beta.gif dyno=web.1 queue=1 wait=2ms service=3ms status=200 bytes=2585
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/images/signup.gif dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=3931
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /users/register HTTP/1.0 | 127.0.0.1 | 288 | http | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /css/screen.css?1312409628 HTTP/1.0 | 127.0.0.1 | 232 | http | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /javascripts/jquery.cycle.all.min.js?1312409628 HTTP/1.0 | 127.0.0.1 | 231 | http | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /javascripts/jquery.cycle.all.min.js?1312409628 HTTP/1.1 | 10.243.15.130 | 236 | https | 304
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/fancybox-y.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=176
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/fancybox-x.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=203
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/fancybox.png dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=15287
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=5ms status=404 bytes=728
+2011-08-03T22:19:37+00:00 app[web.1]: 
+2011-08-03T22:19:37+00:00 app[web.1]: 
+2011-08-03T22:19:37+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:19:37 -0700
+2011-08-03T22:19:37+00:00 app[web.1]: 
+2011-08-03T22:19:37+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:19:37+00:00 app[web.1]:   
+2011-08-03T22:19:37+00:00 app[web.1]: 
+2011-08-03T22:19:37+00:00 app[web.1]: 
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /css/styles.css?1312409628 HTTP/1.0 | 127.0.0.1 | 232 | http | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /css/styles.css?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | https | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /javascripts/rails.js?1312409628 HTTP/1.0 | 127.0.0.1 | 232 | http | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /javascripts/rails.js?1312409628 HTTP/1.1 | 10.243.15.130 | 237 | https | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /images/signup.gif HTTP/1.0 | 127.0.0.1 | 232 | http | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /images/signup.gif HTTP/1.1 | 10.243.15.130 | 237 | https | 304
+2011-08-03T22:19:37+00:00 heroku[nginx]: GET /images/vcLogo_beta.gif HTTP/1.0 | 127.0.0.1 | 231 | http | 304
+2011-08-03T22:19:37+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_boxOnly.png dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=4367
+2011-08-03T22:19:38+00:00 heroku[nginx]: GET /images/fancybox/fancybox.png HTTP/1.0 | 127.0.0.1 | 15564 | http | 200
+2011-08-03T22:19:38+00:00 heroku[nginx]: GET /images/fancybox/fancybox-x.png HTTP/1.0 | 127.0.0.1 | 478 | http | 200
+2011-08-03T22:20:10+00:00 app[web.1]: 
+2011-08-03T22:20:10+00:00 app[web.1]: 
+2011-08-03T22:20:10+00:00 app[web.1]: Started POST "/users" for 10.243.15.130 at 2011-08-03 15:20:10 -0700
+2011-08-03T22:20:10+00:00 heroku[router]: POST www.thevisiblecloset.com/users dyno=web.1 queue=0 wait=0ms service=238ms status=200 bytes=7861
+2011-08-03T22:20:10+00:00 app[web.1]: 
+2011-08-03T22:20:10+00:00 app[web.1]: 
+2011-08-03T22:20:10+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:20:10 -0700
+2011-08-03T22:20:10+00:00 app[web.1]: 
+2011-08-03T22:20:10+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:20:10+00:00 app[web.1]:   
+2011-08-03T22:20:10+00:00 app[web.1]: 
+2011-08-03T22:20:10+00:00 app[web.1]: 
+2011-08-03T22:20:10+00:00 heroku[router]: GET www.thevisiblecloset.com/images/vcLogo_boxOnly.png dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=4367
+2011-08-03T22:20:11+00:00 heroku[nginx]: GET /images/vcLogo_boxOnly.png HTTP/1.0 | 127.0.0.1 | 4644 | http | 200
+2011-08-03T22:20:11+00:00 heroku[nginx]: GET /images/vcLogo_boxOnly.png HTTP/1.1 | 10.243.15.130 | 4649 | https | 200
+2011-08-03T22:20:21+00:00 app[web.1]: 
+2011-08-03T22:20:21+00:00 app[web.1]: 
+2011-08-03T22:20:21+00:00 app[web.1]: Started POST "/users" for 10.243.15.130 at 2011-08-03 15:20:21 -0700
+2011-08-03T22:20:22+00:00 heroku[router]: POST www.thevisiblecloset.com/users dyno=web.1 queue=0 wait=0ms service=1094ms status=302 bytes=103
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 app[web.1]: Started GET "/user" for 10.243.15.130 at 2011-08-03 15:20:22 -0700
+2011-08-03T22:20:22+00:00 heroku[router]: GET www.thevisiblecloset.com/user dyno=web.1 queue=0 wait=0ms service=6ms status=302 bytes=102
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 app[web.1]: Started GET "/user" for 10.243.15.130 at 2011-08-03 15:20:22 -0700
+2011-08-03T22:20:22+00:00 heroku[router]: GET www.thevisiblecloset.com/user dyno=web.1 queue=0 wait=0ms service=85ms status=200 bytes=6454
+2011-08-03T22:20:22+00:00 heroku[router]: GET www.thevisiblecloset.com/images/menuBG.gif dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=1567
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:20:22 -0700
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:20:22+00:00 app[web.1]:   
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 app[web.1]: 
+2011-08-03T22:20:22+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=9ms status=404 bytes=728
+2011-08-03T22:20:22+00:00 heroku[nginx]: GET /user HTTP/1.0 | 127.0.0.1 | 991 | http | 302
+2011-08-03T22:20:22+00:00 heroku[nginx]: GET /user HTTP/1.1 | 10.243.15.130 | 996 | https | 302
+2011-08-03T22:20:22+00:00 heroku[nginx]: GET /user HTTP/1.1 | 10.243.15.130 | 3445 | http | 200
+2011-08-03T22:20:23+00:00 heroku[nginx]: GET /images/menuBG.gif HTTP/1.1 | 10.243.15.130 | 1849 | http | 200
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 app[web.1]: Started GET "/boxes" for 10.243.15.130 at 2011-08-03 15:20:29 -0700
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/boxes dyno=web.1 queue=0 wait=0ms service=6ms status=302 bytes=104
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 app[web.1]: Started GET "/boxes" for 10.243.15.130 at 2011-08-03 15:20:29 -0700
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/boxes dyno=web.1 queue=0 wait=0ms service=23ms status=200 bytes=7322
+2011-08-03T22:20:29+00:00 heroku[nginx]: GET /boxes HTTP/1.1 | 10.243.15.130 | 830 | http | 302
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-processing.jpg dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=2922
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-to-you.jpg dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=2939
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-bottom.gif dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=1699
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-complete.jpg dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=3210
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-packed.jpg dyno=web.1 queue=1 wait=1ms service=1ms status=200 bytes=4205
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-middle.gif dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=1252
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-to-us.jpg dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=2915
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-storage.jpg dyno=web.1 queue=1 wait=1ms service=4ms status=200 bytes=3406
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/menuBG.gif dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=1567
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:20:29 -0700
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:20:29+00:00 app[web.1]:   
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 app[web.1]: 
+2011-08-03T22:20:29+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=4ms status=404 bytes=728
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-top.gif HTTP/1.0 | 127.0.0.1 | 2924 | http | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-top.gif HTTP/1.1 | 10.243.15.130 | 2929 | https | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-middle.gif HTTP/1.0 | 127.0.0.1 | 1529 | http | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-middle.gif HTTP/1.1 | 10.243.15.130 | 1534 | https | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-inventory-to-us.jpg HTTP/1.0 | 127.0.0.1 | 3192 | http | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-inventory-to-us.jpg HTTP/1.1 | 10.243.15.130 | 3197 | https | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-inventory-complete.jpg HTTP/1.0 | 127.0.0.1 | 3488 | http | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-inventory-complete.jpg HTTP/1.1 | 10.243.15.130 | 3493 | https | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-inventory-storage.jpg HTTP/1.0 | 127.0.0.1 | 3684 | http | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/legend-inventory-packed.jpg HTTP/1.0 | 127.0.0.1 | 4482 | http | 200
+2011-08-03T22:20:30+00:00 heroku[nginx]: GET /images/menuBG.gif HTTP/1.0 | 127.0.0.1 | 1843 | http | 200
+2011-08-03T22:20:43+00:00 app[web.1]: 
+2011-08-03T22:20:43+00:00 app[web.1]: 
+2011-08-03T22:20:43+00:00 app[web.1]: Star
+ted GET "/users/sign_in" for 10.243.15.130 at 2011-08-03 15:20:43 -0700
+2011-08-03T22:20:43+00:00 heroku[router]: GET www.thevisiblecloset.com/users/sign_in dyno=web.1 queue=0 wait=0ms service=14ms status=200 bytes=6871
+2011-08-03T22:20:43+00:00 heroku[nginx]: GET /users/sign_in HTTP/1.0 | 127.0.0.1 | 7497 | http | 200
+2011-08-03T22:20:43+00:00 heroku[nginx]: GET /users/sign_in HTTP/1.1 | 10.243.15.130 | 3140 | https | 200
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 app[web.1]: Started GET "/account/home" for 10.243.15.130 at 2011-08-03 15:20:45 -0700
+2011-08-03T22:20:45+00:00 heroku[router]: GET www.thevisiblecloset.com/account/home dyno=web.1 queue=0 wait=0ms service=6ms status=302 bytes=110
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 app[web.1]: Started GET "/account/home" for 10.243.15.130 at 2011-08-03 15:20:45 -0700
+2011-08-03T22:20:45+00:00 heroku[router]: GET www.thevisiblecloset.com/account/home dyno=web.1 queue=0 wait=0ms service=150ms status=200 bytes=6413
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:20:45 -0700
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:20:45+00:00 app[web.1]:   
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 app[web.1]: 
+2011-08-03T22:20:45+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=10ms status=404 bytes=728
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:47+00:00 app[web.1]: Started GET "/account/store_more_boxes" for 10.243.15.130 at 2011-08-03 15:20:47 -0700
+2011-08-03T22:20:47+00:00 heroku[router]: GET www.thevisiblecloset.com/account/store_more_boxes dyno=web.1 queue=0 wait=0ms service=110ms status=200 bytes=8290
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:47+00:00 app[web.1]: Started POST "/users/sign_in" for 10.243.15.130 at 2011-08-03 15:20:47 -0700
+2011-08-03T22:20:47+00:00 heroku[router]: POST www.thevisiblecloset.com/users/sign_in dyno=web.1 queue=0 wait=0ms service=114ms status=302 bytes=103
+2011-08-03T22:20:47+00:00 heroku[router]: GET www.thevisiblecloset.com/images/order-boxes.gif dyno=web.1 queue=0 wait=0ms service=6ms status=200 bytes=6281
+2011-08-03T22:20:47+00:00 heroku[router]: GET www.thevisiblecloset.com/images/inputBG.gif dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=1626
+2011-08-03T22:20:47+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=4ms status=404 bytes=728
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:47+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:20:47 -0700
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:47+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:20:47+00:00 app[web.1]:   
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:47+00:00 app[web.1]: 
+2011-08-03T22:20:48+00:00 app[web.1]: 
+2011-08-03T22:20:48+00:00 app[web.1]: 
+2011-08-03T22:20:48+00:00 app[web.1]: Started GET "/user" for 10.243.15.130 at 2011-08-03 15:20:48 -0700
+2011-08-03T22:20:48+00:00 heroku[router]: GET www.thevisiblecloset.com/user dyno=web.1 queue=0 wait=0ms service=6ms status=302 bytes=102
+2011-08-03T22:20:48+00:00 app[web.1]: 
+2011-08-03T22:20:48+00:00 app[web.1]: 
+2011-08-03T22:20:48+00:00 app[web.1]: Started GET "/user" for 10.243.15.130 at 2011-08-03 15:20:48 -0700
+2011-08-03T22:20:48+00:00 heroku[router]: GET www.thevisiblecloset.com/user dyno=web.1 queue=0 wait=0ms service=85ms status=200 bytes=6509
+2011-08-03T22:20:48+00:00 heroku[nginx]: GET /images/inputBG.gif HTTP/1.1 | 10.243.15.130 | 1907 | http | 200
+2011-08-03T22:20:48+00:00 heroku[nginx]: GET /user HTTP/1.0 | 127.0.0.1 | 976 | http | 302
+2011-08-03T22:20:48+00:00 heroku[nginx]: GET /user HTTP/1.1 | 10.243.15.130 | 981 | https | 302
+2011-08-03T22:20:50+00:00 app[web.1]: 
+2011-08-03T22:20:50+00:00 app[web.1]: 
+2011-08-03T22:20:50+00:00 app[web.1]: Started GET "/boxes" for 10.243.15.130 at 2011-08-03 15:20:50 -0700
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/boxes dyno=web.1 queue=0 wait=0ms service=6ms status=302 bytes=104
+2011-08-03T22:20:50+00:00 app[web.1]: 
+2011-08-03T22:20:50+00:00 app[web.1]: 
+2011-08-03T22:20:50+00:00 app[web.1]: Started GET "/boxes" for 10.243.15.130 at 2011-08-03 15:20:50 -0700
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/boxes dyno=web.1 queue=0 wait=0ms service=71ms status=200 bytes=9930
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/menuBG.gif dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=1567
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-middle.gif dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=1252
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-top.gif dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=2647
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-complete.jpg dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3210
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-processing.jpg dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=2922
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-packed.jpg dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=4205
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-storage.jpg dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=3406
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-to-us.jpg dyno=web.1 queue=0 wait=0ms service=0ms status=200 bytes=2915
+2011-08-03T22:20:50+00:00 heroku[nginx]: GET /boxes HTTP/1.0 | 127.0.0.1 | 10665 | http | 200
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-bottom.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=1699
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/status-inventory-to-you.jpg dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=8485
+2011-08-03T22:20:50+00:00 heroku[router]: GET www.thevisiblecloset.com/images/legend-inventory-to-you.jpg dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=2939
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/menuBG.gif HTTP/1.0 | 127.0.0.1 | 1843 | http | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/menuBG.gif HTTP/1.1 | 10.243.15.130 | 1848 | https | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-middle.gif HTTP/1.0 | 127.0.0.1 | 1528 | http | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-middle.gif HTTP/1.1 | 10.243.15.130 | 1533 | https | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-top.gif HTTP/1.0 | 127.0.0.1 | 2923 | http | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-top.gif HTTP/1.1 | 10.243.15.130 | 2928 | https | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-inventory-complete.jpg HTTP/1.0 | 127.0.0.1 | 3488 | http | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-inventory-complete.jpg HTTP/1.1 | 10.243.15.130 | 3493 | https | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-inventory-storage.jpg HTTP/1.0 | 127.0.0.1 | 3683 | http | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-inventory-packed.jpg HTTP/1.0 | 127.0.0.1 | 4482 | http | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-inventory-to-us.jpg HTTP/1.1 | 10.243.15.130 | 3198 | https | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/status-inventory-to-you.jpg HTTP/1.0 | 127.0.0.1 | 8763 | http | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/status-inventory-to-you.jpg HTTP/1.1 | 10.243.15.130 | 8768 | https | 200
+2011-08-03T22:20:51+00:00 heroku[nginx]: GET /images/legend-inventory-to-you.jpg HTTP/1.0 | 127.0.0.1 | 3217 | http | 200
+2011-08-03T22:21:00+00:00 app[web.1]: 
+2011-08-03T22:21:00+00:00 app[web.1]: 
+2011-08-03T22:21:00+00:00 app[web.1]: Started POST "/account/order_boxes" for 10.243.15.130 at 2011-08-03 15:21:00 -0700
+2011-08-03T22:21:00+00:00 heroku[router]: POST www.thevisiblecloset.com/account/order_boxes dyno=web.1 queue=0 wait=0ms service=146ms status=302 bytes=115
+2011-08-03T22:21:00+00:00 app[web.1]: 
+2011-08-03T22:21:00+00:00 app[web.1]: 
+2011-08-03T22:21:00+00:00 app[web.1]: Started GET "/account/check_out" for 10.243.15.130 at 2011-08-03 15:21:00 -0700
+2011-08-03T22:21:00+00:00 heroku[router]: GET www.thevisiblecloset.com/account/check_out dyno=web.1 queue=0 wait=0ms service=10ms status=302 bytes=116
+2011-08-03T22:21:00+00:00 app[web.1]: 
+2011-08-03T22:21:00+00:00 app[web.1]: 
+2011-08-03T22:21:00+00:00 app[web.1]: Started GET "/account/check_out" for 10.243.15.130 at 2011-08-03 15:21:00 -0700
+2011-08-03T22:21:00+00:00 heroku[router]: GET www.thevisiblecloset.com/account/check_out dyno=web.1 queue=0 wait=0ms service=46ms status=200 bytes=10226
+2011-08-03T22:21:01+00:00 heroku[router]: GET www.thevisiblecloset.com/images/cart.gif dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=5100
+2011-08-03T22:21:01+00:00 app[web.1]: 
+2011-08-03T22:21:01+00:00 app[web.1]: 
+2011-08-03T22:21:01+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:21:01 -0700
+2011-08-03T22:21:01+00:00 app[web.1]: 
+2011-08-03T22:21:01+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:21:01+00:00 app[web.1]:   
+2011-08-03T22:21:01+00:00 app[web.1]: 
+2011-08-03T22:21:01+00:00 app[web.1]: 
+2011-08-03T22:21:01+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=4ms status=404 bytes=728
+2011-08-03T22:21:01+00:00 heroku[nginx]: GET /images/cart.gif HTTP/1.0 | 127.0.0.1 | 5377 | http | 200
+2011-08-03T22:21:01+00:00 heroku[nginx]: GET /images/fancybox/blank.gif HTTP/1.0 | 127.0.0.1 | 948 | http | 404
+2011-08-03T22:21:30+00:00 app[web.1]: 
+2011-08-03T22:21:30+00:00 app[web.1]: 
+2011-08-03T22:21:30+00:00 app[web.1]: Started POST "/account/create_new_shipping_address" for 10.243.15.130 at 2011-08-03 15:21:30 -0700
+2011-08-03T22:21:30+00:00 app[web.1]: 
+2011-08-03T22:21:30+00:00 app[web.1]: ActionView::Template::Error (undefined method `cc_type' for nil:NilClass):
+2011-08-03T22:21:30+00:00 app[web.1]:     40: 	<br>
+2011-08-03T22:21:30+00:00 app[web.1]:     41: <div class="simple_header" style="padding: 0 0 0 0">Credit Card (default on file)</div><br>
+2011-08-03T22:21:30+00:00 app[web.1]:     42: <% profile = current_user.default_payment_profile %>
+2011-08-03T22:21:30+00:00 app[web.1]:     43: <b><%= profile.cc_type.capitalize %></b> ending in <%= profile.last_four_digits %>.<br>
+2011-08-03T22:21:30+00:00 app[web.1]:     44: Name on card: <%= profile.first_name %> <%= profile.last_name %><br>
+2011-08-03T22:21:30+00:00 app[web.1]:     45: Expires on: <%= profile.exp_month %>/<%= profile.exp_year %><br><br>
+2011-08-03T22:21:30+00:00 app[web.1]:     46: 	<a href="/payment_profiles">Manage your cards</a> | <a href="/payment_profiles/new?source_c=account&source_a=check_out">Enter new default card</a>
+2011-08-03T22:21:30+00:00 app[web.1]:   app/views/account/check_out.html.erb:43:in `block in _app_views_account_check_out_html_erb__3640665193154254613_24508700_2212804377204817030'
+2011-08-03T22:21:30+00:00 app[web.1]:   app/views/account/check_out.html.erb:17:in `_app_views_account_check_out_html_erb__3640665193154254613_24508700_2212804377204817030'
+2011-08-03T22:21:30+00:00 app[web.1]:   app/controllers/account_controller.rb:134:in `create_new_shipping_address'
+2011-08-03T22:21:30+00:00 heroku[router]: POST www.thevisiblecloset.com/account/create_new_shipping_address dyno=web.1 queue=0 wait=0ms service=136ms status=500 bytes=728
+2011-08-03T22:21:30+00:00 app[web.1]:   app/middlewares/flash_session_cookie_middleware.rb:16:in `call'
+2011-08-03T22:21:30+00:00 app[web.1]: 
+2011-08-03T22:21:30+00:00 app[web.1]: 
+2011-08-03T22:21:39+00:00 app[web.1]: 
+2011-08-03T22:21:39+00:00 app[web.1]: 
+2011-08-03T22:21:39+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:21:39 -0700
+2011-08-03T22:21:39+00:00 app[web.1]: 
+2011-08-03T22:21:39+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:21:39+00:00 app[web.1]:   
+2011-08-03T22:21:39+00:00 app[web.1]: 
+2011-08-03T22:21:39+00:00 app[web.1]: 
+2011-08-03T22:21:39+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=4ms status=404 bytes=728
+2011-08-03T22:22:03+00:00 app[web.1]: 
+2011-08-03T22:22:03+00:00 app[web.1]: 
+2011-08-03T22:22:03+00:00 app[web.1]: Started GET "/users/confirmation?confirmation_token=zqMMnmwyxXTs7WUHgHBm" for 165.124.115.186 at 2011-08-03 15:22:03 -0700
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/users/confirmation dyno=web.1 queue=0 wait=0ms service=170ms status=302 bytes=104
+2011-08-03T22:22:03+00:00 app[web.1]: 
+2011-08-03T22:22:03+00:00 app[web.1]: 
+2011-08-03T22:22:03+00:00 app[web.1]: Started GET "/user" for 165.124.115.186 at 2011-08-03 15:22:03 -0700
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/user dyno=web.1 queue=0 wait=0ms service=25ms status=200 bytes=6476
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/css/screen.css dyno=web.1 queue=0 wait=0ms service=7ms status=200 bytes=16331
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/javascripts/jquery.min.js dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=85925
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/css/plupload.queue.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=4278
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/css/application.css dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=3018
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/css/jquery.fancybox-1.3.4.css dyno=web.1 queue=0 wait=0ms service=5ms status=200 bytes=8817
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/css/styles.css dyno=web.1 queue=1 wait=6ms service=7ms status=200 bytes=17898
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/javascripts/superfish-combined.js dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=10303
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/javascripts/jquery.fancybox-1.3.4.pack.js dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=15624
+2011-08-03T22:22:03+00:00 heroku[router]: GET evening-sky-543.heroku.com/javascripts/jquery.cycle.all.min.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=31032
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/javascripts/rails.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=13384
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/images/vcLogo_beta.gif dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=2585
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/javascripts/date.js dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=25809
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/javascripts/application.js dyno=web.1 queue=0 wait=0ms service=3ms status=200 bytes=7054
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/images/menuBG.gif dyno=web.1 queue=0 wait=0ms service=2ms status=200 bytes=1567
+2011-08-03T22:22:04+00:00 app[web.1]: 
+2011-08-03T22:22:04+00:00 app[web.1]: 
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/i
+mages/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=7ms status=404 bytes=728
+2011-08-03T22:22:04+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 165.124.115.186 at 2011-08-03 15:22:04 -0700
+2011-08-03T22:22:04+00:00 app[web.1]: 
+2011-08-03T22:22:04+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:22:04+00:00 app[web.1]:   
+2011-08-03T22:22:04+00:00 app[web.1]: 
+2011-08-03T22:22:04+00:00 app[web.1]: 
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/images/fancybox/fancybox-x.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=203
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/images/fancybox/fancybox.png dyno=web.1 queue=0 wait=0ms service=6ms status=200 bytes=15287
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/images/fancybox/fancybox-y.png dyno=web.1 queue=0 wait=4ms service=8ms status=200 bytes=176
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /users/confirmation?confirmation_token=zqMMnmwyxXTs7WUHgHBm HTTP/1.1 | 165.124.115.186 | 944 | http | 302
+2011-08-03T22:22:04+00:00 heroku[router]: GET evening-sky-543.heroku.com/images/vcLogo_boxOnly.png dyno=web.1 queue=0 wait=0ms service=1ms status=200 bytes=4367
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /javascripts/jquery.min.js?1312409628 HTTP/1.1 | 165.124.115.186 | 31188 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /css/plupload.queue.css?1312409628 HTTP/1.1 | 165.124.115.186 | 1562 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /css/application.css?1312409628 HTTP/1.1 | 165.124.115.186 | 1294 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /css/jquery.fancybox-1.3.4.css?1312409628 HTTP/1.1 | 165.124.115.186 | 2230 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /css/styles.css?1312409628 HTTP/1.1 | 165.124.115.186 | 4192 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /javascripts/jquery.fancybox-1.3.4.pack.js?1312409628 HTTP/1.1 | 165.124.115.186 | 6112 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /javascripts/rails.js?1312409628 HTTP/1.1 | 165.124.115.186 | 4514 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /javascripts/date.js?1312409628 HTTP/1.1 | 165.124.115.186 | 7890 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /javascripts/application.js?1312409628 HTTP/1.1 | 165.124.115.186 | 2203 | http | 200
+2011-08-03T22:22:04+00:00 heroku[nginx]: GET /images/menuBG.gif HTTP/1.1 | 165.124.115.186 | 1848 | http | 200
+2011-08-03T22:23:52+00:00 app[web.1]: 
+2011-08-03T22:23:52+00:00 app[web.1]: 
+2011-08-03T22:23:52+00:00 app[web.1]: Started POST "/account/create_new_shipping_address" for 10.243.15.130 at 2011-08-03 15:23:52 -0700
+2011-08-03T22:23:52+00:00 app[web.1]: 
+2011-08-03T22:23:52+00:00 app[web.1]: ActionView::Template::Error (undefined method `cc_type' for nil:NilClass):
+2011-08-03T22:23:52+00:00 app[web.1]:     40: 	<br>
+2011-08-03T22:23:52+00:00 heroku[router]: POST www.thevisiblecloset.com/account/create_new_shipping_address dyno=web.1 queue=0 wait=0ms service=33ms status=500 bytes=728
+2011-08-03T22:23:52+00:00 app[web.1]:     41: <div class="simple_header" style="padding: 0 0 0 0">Credit Card (default on file)</div><br>
+2011-08-03T22:23:52+00:00 app[web.1]:     42: <% profile = current_user.default_payment_profile %>
+2011-08-03T22:23:52+00:00 app[web.1]:     43: <b><%= profile.cc_type.capitalize %></b> ending in <%= profile.last_four_digits %>.<br>
+2011-08-03T22:23:52+00:00 app[web.1]:     44: Name on card: <%= profile.first_name %> <%= profile.last_name %><br>
+2011-08-03T22:23:52+00:00 app[web.1]:     45: Expires on: <%= profile.exp_month %>/<%= profile.exp_year %><br><br>
+2011-08-03T22:23:52+00:00 app[web.1]:     46: 	<a href="/payment_profiles">Manage your cards</a> | <a href="/payment_profiles/new?source_c=account&source_a=check_out">Enter new default card</a>
+2011-08-03T22:23:52+00:00 app[web.1]:   app/views/account/check_out.html.erb:43:in `block in _app_views_account_check_out_html_erb__3640665193154254613_24508700_2212804377204817030'
+2011-08-03T22:23:52+00:00 app[web.1]:   app/views/account/check_out.html.erb:17:in `_app_views_account_check_out_html_erb__3640665193154254613_24508700_2212804377204817030'
+2011-08-03T22:23:52+00:00 app[web.1]:   app/controllers/account_controller.rb:134:in `create_new_shipping_address'
+2011-08-03T22:23:52+00:00 app[web.1]:   app/middlewares/flash_session_cookie_middleware.rb:16:in `call'
+2011-08-03T22:23:52+00:00 app[web.1]: 
+2011-08-03T22:23:52+00:00 app[web.1]: 
+2011-08-03T22:23:53+00:00 heroku[nginx]: POST /account/create_new_shipping_address HTTP/1.1 | 10.243.15.130 | 916 | https | 500
+2011-08-03T22:23:53+00:00 heroku[nginx]: POST /account/create_new_shipping_address HTTP/1.0 | 127.0.0.1 | 911 | http | 500
+2011-08-03T22:23:57+00:00 app[web.1]: 
+2011-08-03T22:23:57+00:00 app[web.1]: 
+2011-08-03T22:23:57+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:23:57 -0700
+2011-08-03T22:23:57+00:00 app[web.1]: 
+2011-08-03T22:23:57+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:23:57+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=6ms status=404 bytes=728
+2011-08-03T22:23:57+00:00 app[web.1]:   
+2011-08-03T22:23:57+00:00 app[web.1]: 
+2011-08-03T22:23:57+00:00 app[web.1]: 
+2011-08-03T22:23:58+00:00 heroku[router]: GET www.thevisiblecloset.com/account/store_more_boxes dyno=web.1 queue=0 wait=0ms service=2ms status=302 bytes=122
+2011-08-03T22:23:58+00:00 app[web.1]: 
+2011-08-03T22:23:58+00:00 app[web.1]: 
+2011-08-03T22:23:58+00:00 app[web.1]: Started GET "/account/store_more_boxes" for 10.243.15.130 at 2011-08-03 15:23:58 -0700
+2011-08-03T22:23:58+00:00 app[web.1]: 
+2011-08-03T22:23:58+00:00 app[web.1]: 
+2011-08-03T22:23:58+00:00 app[web.1]: Started GET "/account/store_more_boxes" for 10.243.15.130 at 2011-08-03 15:23:58 -0700
+2011-08-03T22:23:59+00:00 heroku[router]: GET www.thevisiblecloset.com/account/store_more_boxes dyno=web.1 queue=0 wait=0ms service=47ms status=200 bytes=8424
+2011-08-03T22:23:59+00:00 heroku[router]: GET www.thevisiblecloset.com/images/cart.gif dyno=web.1 queue=0 wait=0ms service=4ms status=200 bytes=5100
+2011-08-03T22:23:59+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=4ms status=404 bytes=728
+2011-08-03T22:23:59+00:00 app[web.1]: 
+2011-08-03T22:23:59+00:00 app[web.1]: 
+2011-08-03T22:23:59+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:23:59 -0700
+2011-08-03T22:23:59+00:00 app[web.1]: 
+2011-08-03T22:23:59+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:23:59+00:00 app[web.1]:   
+2011-08-03T22:23:59+00:00 app[web.1]: 
+2011-08-03T22:23:59+00:00 app[web.1]: 
+2011-08-03T22:23:59+00:00 heroku[nginx]: GET /account/store_more_boxes HTTP/1.1 | 10.243.15.130 | 865 | https | 302
+2011-08-03T22:23:59+00:00 heroku[nginx]: GET /account/store_more_boxes HTTP/1.1 | 10.243.15.130 | 3676 | http | 200
+2011-08-03T22:23:59+00:00 heroku[nginx]: GET /images/cart.gif HTTP/1.1 | 10.243.15.130 | 5382 | http | 200
+2011-08-03T22:23:59+00:00 heroku[nginx]: GET /images/fancybox/blank.gif HTTP/1.1 | 10.243.15.130 | 953 | http | 404
+2011-08-03T22:24:07+00:00 app[web.1]: 
+2011-08-03T22:24:07+00:00 app[web.1]: 
+2011-08-03T22:24:07+00:00 app[web.1]: Started POST "/account/order_boxes" for 10.243.15.130 at 2011-08-03 15:24:07 -0700
+2011-08-03T22:24:07+00:00 heroku[router]: POST www.thevisiblecloset.com/account/order_boxes dyno=web.1 queue=0 wait=0ms service=43ms status=302 bytes=115
+2011-08-03T22:24:07+00:00 app[web.1]: 
+2011-08-03T22:24:07+00:00 app[web.1]: 
+2011-08-03T22:24:07+00:00 app[web.1]: Started GET "/account/check_out" for 10.243.15.130 at 2011-08-03 15:24:07 -0700
+2011-08-03T22:24:07+00:00 heroku[router]: GET www.thevisiblecloset.com/account/check_out dyno=web.1 queue=0 wait=0ms service=14ms status=302 bytes=116
+2011-08-03T22:24:07+00:00 app[web.1]: 
+2011-08-03T22:24:07+00:00 app[web.1]: 
+2011-08-03T22:24:07+00:00 app[web.1]: Started GET "/account/check_out" for 10.243.15.130 at 2011-08-03 15:24:07 -0700
+2011-08-03T22:24:07+00:00 heroku[router]: GET www.thevisiblecloset.com/account/check_out dyno=web.1 queue=0 wait=0ms service=34ms status=302 bytes=159
+2011-08-03T22:24:07+00:00 app[web.1]: 
+2011-08-03T22:24:07+00:00 app[web.1]: 
+2011-08-03T22:24:07+00:00 app[web.1]: Started GET "/payment_profiles/new?source_c=account&source_a=check_out" for 10.243.15.130 at 2011-08-03 15:24:07 -0700
+2011-08-03T22:24:07+00:00 heroku[nginx]: POST /account/order_boxes HTTP/1.1 | 10.243.15.130 | 1057 | http | 302
+2011-08-03T22:24:08+00:00 heroku[nginx]: GET /account/check_out HTTP/1.0 | 127.0.0.1 | 1171 | http | 302
+2011-08-03T22:24:08+00:00 heroku[nginx]: GET /account/check_out HTTP/1.1 | 10.243.15.130 | 1176 | https | 302
+2011-08-03T22:24:08+00:00 app[web.1]: 
+2011-08-03T22:24:08+00:00 app[web.1]: 
+2011-08-03T22:24:08+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:24:08 -0700
+2011-08-03T22:24:08+00:00 app[web.1]: 
+2011-08-03T22:24:08+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:24:08+00:00 app[web.1]:   
+2011-08-03T22:24:08+00:00 app[web.1]: 
+2011-08-03T22:24:08+00:00 app[web.1]: 
+2011-08-03T22:24:08+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=5ms status=404 bytes=728
+2011-08-03T22:25:06+00:00 app[web.1]: 
+2011-08-03T22:25:06+00:00 app[web.1]: 
+2011-08-03T22:25:06+00:00 app[web.1]: Started GET "/boxes" for 10.243.15.130 at 2011-08-03 15:25:06 -0700
+2011-08-03T22:25:06+00:00 heroku[router]: GET www.thevisiblecloset.com/boxes dyno=web.1 queue=0 wait=0ms service=18ms status=200 bytes=7322
+2011-08-03T22:25:06+00:00 app[web.1]: 
+2011-08-03T22:25:06+00:00 app[web.1]: 
+2011-08-03T22:25:06+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:25:06 -0700
+2011-08-03T22:25:06+00:00 app[web.1]: 
+2011-08-03T22:25:06+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:25:06+00:00 app[web.1]:   
+2011-08-03T22:25:06+00:00 app[web.1]: 
+2011-08-03T22:25:06+00:00 app[web.1]: 
+2011-08-03T22:25:06+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=4ms status=404 bytes=728
+2011-08-03T22:25:06+00:00 heroku[nginx]: GET /boxes HTTP/1.0 | 127.0.0.1 | 288 | http | 304
+2011-08-03T22:25:06+00:00 heroku[nginx]: GET /boxes HTTP/1.1 | 10.243.15.130 | 293 | https | 304
+2011-08-03T22:25:10+00:00 app[web.1]: 
+2011-08-03T22:25:10+00:00 app[web.1]: 
+2011-08-03T22:25:10+00:00 app[web.1]: Started GET "/account/store_more_boxes" for 10.243.15.130 at 2011-08-03 15:25:10 -0700
+2011-08-03T22:25:10+00:00 heroku[router]: GET www.thevisiblecloset.com/account/store_more_boxes dyno=web.1 queue=0 wait=0ms service=6ms status=302 bytes=122
+2011-08-03T22:25:10+00:00 app[web.1]: 
+2011-08-03T22:25:10+00:00 app[web.1]: 
+2011-08-03T22:25:10+00:00 app[web.1]: Started GET "/account/store_more_boxes" for 10.243.15.130 at 2011-08-03 15:25:10 -0700
+2011-08-03T22:25:10+00:00 heroku[router]: GET www.thevisiblecloset.com/account/store_more_boxes dyno=web.1 queue=0 wait=0ms service=50ms status=200 bytes=8424
+2011-08-03T22:25:11+00:00 heroku[nginx]: GET /account/store_more_boxes HTTP/1.0 | 127.0.0.1 | 931 | http | 302
+2011-08-03T22:25:11+00:00 heroku[nginx]: GET /account/store_more_boxes HTTP/1.1 | 10.243.15.130 | 936 | https | 302
+2011-08-03T22:25:11+00:00 app[web.1]: 
+2011-08-03T22:25:11+00:00 app[web.1]: 
+2011-08-03T22:25:11+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:25:11 -0700
+2011-08-03T22:25:11+00:00 app[web.1]: 
+2011-08-03T22:25:11+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:25:11+00:00 app[web.1]:   
+2011-08-03T22:25:11+00:00 app[web.1]: 
+2011-08-03T22:25:11+00:00 app[web.1]: 
+2011-08-03T22:25:11+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=8ms status=404 bytes=728
+2011-08-03T22:25:11+00:00 heroku[nginx]: GET /account/store_more_boxes HTTP/1.1 | 10.243.15.130 | 293 | http | 304
+2011-08-03T22:25:11+00:00 heroku[nginx]: GET /images/fancybox/blank.gif HTTP/1.1 | 10.243.15.130 | 953 | http | 404
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: Started POST "/account/order_boxes" for 10.243.15.130 at 2011-08-03 15:25:18 -0700
+2011-08-03T22:25:18+00:00 heroku[router]: POST www.thevisiblecloset.com/account/order_boxes dyno=web.1 queue=0 wait=0ms service=68ms status=302 bytes=115
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: Started GET "/account/check_out" for 10.243.15.130 at 2011-08-03 15:25:18 -0700
+2011-08-03T22:25:18+00:00 heroku[router]: GET www.thevisiblecloset.com/account/check_out dyno=web.1 queue=0 wait=0ms service=8ms status=302 bytes=116
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: Started GET "/account/check_out" for 10.243.15.130 at 2011-08-03 15:25:18 -0700
+2011-08-03T22:25:18+00:00 heroku[router]: GET www.thevisiblecloset.com/account/check_out dyno=web.1 queue=0 wait=0ms service=16ms status=302 bytes=159
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: Started GET "/payment_profiles/new?source_c=account&source_a=check_out" for 10.243.15.130 at 2011-08-03 15:25:18 -0700
+2011-08-03T22:25:18+00:00 heroku[router]: GET www.thevisiblecloset.com/payment_profiles/new dyno=web.1 queue=0 wait=0ms service=68ms status=200 bytes=9608
+2011-08-03T22:25:18+00:00 heroku[nginx]: POST /account/order_boxes HTTP/1.1 | 10.243.15.130 | 1127 | http | 302
+2011-08-03T22:25:18+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=5ms status=404 bytes=728
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:25:18 -0700
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:25:18+00:00 app[web.1]:   
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 app[web.1]: 
+2011-08-03T22:25:18+00:00 heroku[nginx]: GET /account/check_out HTTP/1.0 | 127.0.0.1 | 1241 | http | 302
+2011-08-03T22:25:18+00:00 heroku[nginx]: GET /account/check_out HTTP/1.1 | 10.243.15.130 | 1246 | https | 302
+2011-08-03T22:25:19+00:00 heroku[nginx]: GET /images/fancybox/blank.gif HTTP/1.0 | 127.0.0.1 | 948 | http | 404
+2011-08-03T22:26:46+00:00 app[web.1]: 
+2011-08-03T22:26:46+00:00 app[web.1]: 
+2011-08-03T22:26:46+00:00 app[web.1]: Started POST "/payment_profiles" for 10.243.15.130 at 2011-08-03 15:26:46 -0700
+2011-08-03T22:26:47+00:00 heroku[router]: POST www.thevisiblecloset.com/payment_profiles dyno=web.1 queue=0 wait=0ms service=1344ms status=302 bytes=116
+2011-08-03T22:26:47+00:00 app[web.1]: 
+2011-08-03T22:26:47+00:00 app[web.1]: 
+2011-08-03T22:26:47+00:00 app[web.1]: Started GET "/account/check_out" for 10.243.15.130 at 2011-08-03 15:26:47 -0700
+2011-08-03T22:26:48+00:00 heroku[router]: GET www.thevisiblecloset.com/account/check_out dyno=web.1 queue=0 wait=0ms service=173ms status=500 bytes=728
+2011-08-03T22:26:48+00:00 app[web.1]: 
+2011-08-03T22:26:48+00:00 app[web.1]: ActionView::Template::Error (undefined method `id' for nil:NilClass):
+2011-08-03T22:26:48+00:00 app[web.1]:     18: <div id="upper">
+2011-08-03T22:26:48+00:00 app[web.1]:     19: <div style="width: 200px; float: left;">
+2011-08-03T22:26:48+00:00 app[web.1]:     20: 	<div class="simple_header">Shipping Address</div><br>
+2011-08-03T22:26:48+00:00 app[web.1]:     21: 	<%= hidden_field_tag :shipping_address_id, @shipping_ad
+dress.id %>
+2011-08-03T22:26:48+00:00 app[web.1]:     22: 	<%= @shipping_address.first_name %> <%= @shipping_address.last_name %>
+2011-08-03T22:26:48+00:00 app[web.1]:     23: 	<br><%= @shipping_address.address_line_1 %>
+2011-08-03T22:26:48+00:00 app[web.1]:     24: 	<% if !@shipping_address.address_line_2.blank? %>
+2011-08-03T22:26:48+00:00 app[web.1]:   app/views/account/check_out.html.erb:21:in `block in _app_views_account_check_out_html_erb__3640665193154254613_24508700_2212804377204817030'
+2011-08-03T22:26:48+00:00 app[web.1]:   app/views/account/check_out.html.erb:17:in `_app_views_account_check_out_html_erb__3640665193154254613_24508700_2212804377204817030'
+2011-08-03T22:26:48+00:00 app[web.1]:   app/middlewares/flash_session_cookie_middleware.rb:16:in `call'
+2011-08-03T22:26:48+00:00 app[web.1]: 
+2011-08-03T22:26:48+00:00 app[web.1]: 
+2011-08-03T22:26:48+00:00 heroku[nginx]: POST /payment_profiles HTTP/1.1 | 10.243.15.130 | 823 | https | 302
+2011-08-03T22:26:48+00:00 heroku[nginx]: POST /payment_profiles HTTP/1.0 | 127.0.0.1 | 779 | http | 302
+2011-08-03T22:26:48+00:00 heroku[nginx]: GET /account/check_out HTTP/1.0 | 127.0.0.1 | 960 | http | 500
+2011-08-03T22:26:54+00:00 heroku[router]: GET www.thevisiblecloset.com/images/fancybox/blank.gif dyno=web.1 queue=0 wait=0ms service=5ms status=404 bytes=728
+2011-08-03T22:26:54+00:00 app[web.1]: 
+2011-08-03T22:26:54+00:00 app[web.1]: 
+2011-08-03T22:26:54+00:00 app[web.1]: Started GET "/images/fancybox/blank.gif" for 10.243.15.130 at 2011-08-03 15:26:54 -0700
+2011-08-03T22:26:54+00:00 app[web.1]: 
+2011-08-03T22:26:54+00:00 app[web.1]: ActionController::RoutingError (No route matches "/images/fancybox/blank.gif"):
+2011-08-03T22:26:54+00:00 app[web.1]:   
+2011-08-03T22:26:54+00:00 app[web.1]: 
+2011-08-03T22:26:54+00:00 app[web.1]: 
+2011-08-03T22:26:54+00:00 heroku[nginx]: GET /images/fancybox/blank.gif HTTP/1.0 | 127.0.0.1 | 948 | http | 404
+2011-08-03T22:26:54+00:00 heroku[nginx]: GET /images/fancybox/blank.gif HTTP/1.1 | 10.243.15.130 | 953 | https | 404

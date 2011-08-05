@@ -105,7 +105,7 @@ class AddressesController < ApplicationController
   
   # PUT /addresses/id/set_default_shipping
   def set_default_shipping
-    current_user.update_attribute(:default_shipping_address_id, params[:id])
+    current_user.default_shipping_address = Address.find(params[:id])
     @addresses = Address.find_active(current_user.id, :order => :first_name)
     
     render :index
