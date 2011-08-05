@@ -167,6 +167,9 @@ class PaymentProfile < ActiveRecord::Base
       unless cc.valid?
         cc.errors.each do |attr, messages|
           messages.each do | message |
+            if attr == "type"
+              attr = "cc_type"
+            end
             errors.add(attr, message)
           end
         end
