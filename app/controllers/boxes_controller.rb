@@ -86,7 +86,7 @@ class BoxesController < ApplicationController
 
     respond_to do |format|
       if @box.update_attributes(params[:box])
-        @boxes = Box.find_all_by_assigned_to_user_id(current_user.id)
+        @boxes = Box.find_all_by_assigned_to_user_id(current_user.id, :order => "created_at ASC")
         format.html { render :action => "index" }
         format.xml  { head :ok }
       else
