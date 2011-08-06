@@ -161,7 +161,7 @@ class Box < ActiveRecord::Base
     if self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
       # In this status the shipment that is created is for the shipment back
       get_or_create_shipment
-      self.status = Box::IN_TRANSIT_TO_YOU_STATUS
+      self.update_attribute(:status, Box::IN_TRANSIT_TO_YOU_STATUS)
     else
       raise "Attempted to ship in invalid status, for box " << self.inspect
     end
@@ -244,10 +244,10 @@ class Box < ActiveRecord::Base
       raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
     end
     
-    if !shipment.generate_fedex_label(self)
-      shipment.destroy
-      raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
-    end
+    # if !shipment.generate_fedex_label(self)
+    #   shipment.destroy
+    #   raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+    # end
     
     shipment
   end

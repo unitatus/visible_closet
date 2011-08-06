@@ -36,9 +36,12 @@
       <%= order_line.id %>
     </td>
 	<td class="<%= class_name %>">
-		<% if order_line.inventorying_line %>
 		<% box = Box.find_by_indexing_order_line_id(order_line.id) %>
-		<%= box.id %>
+		<% if box.nil? %>
+			<% box = Box.find_by_ordering_order_line_id(order_line.id) %>
+		<% end %>
+		<% if box %>
+			<%= box.id %>
 		<% else %>
 		NA or many
 		<% end %>
@@ -67,6 +70,7 @@
 </table>
 <br>
 <div class="right">
+	<%= hidden_field_tag :order_id, @order.id %>
 <%= submit_tag("Ship Selected Lines", :class => "button") %>
 </div>
 </div>
