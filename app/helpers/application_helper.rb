@@ -86,22 +86,22 @@ module ApplicationHelper
     return_str = ""
     
     if show_name
-      return_str << address.first_name
+      return_str << (address.first_name.nil? ? "" : address.first_name)
       return_str << " "
-      return_str << address.last_name
+      return_str << (address.last_name.nil? ? "" : address.last_name)
       return_str << "<br>"
     end
-    return_str << address.address_line_1
+    return_str << (address.address_line_1.nil? ? "" : address.address_line_1)
     if (not address.address_line_2.blank?)
       return_str << "<br>"
       return_str << address.address_line_2
     end
     return_str << "<br>"
-    return_str << address.city
+    return_str << (address.city.nil? ? "" : address.city)
     return_str << ", "
-    return_str << address.state
+    return_str << (address.state.nil? ? "" : address.state)
     return_str << " "
-    return_str << address.zip
+    return_str << (address.zip.nil? ? "" : address.zip)
     
     return_str
   end
