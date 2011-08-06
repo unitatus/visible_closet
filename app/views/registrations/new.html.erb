@@ -6,11 +6,9 @@
 <br>
 <% if @user.errors.size < 3 && @user.errors.size > 0 %>
 	<div class="error_label">
-		<ul>
 		<% @user.errors.each do |attr, msg| %>
-			<li><%= attr %> - <%= msg %></li>
+			<%= attr %> - <%= msg %><br>
 		<% end %>	
-		</ul>
 	</div>
 <% elsif @user.errors.size > 3 %>
 <div class="error_label">
