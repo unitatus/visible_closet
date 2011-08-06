@@ -10,7 +10,7 @@
 			<%= attr %> - <%= msg %><br>
 		<% end %>	
 	</div>
-<% elsif @user.errors.size > 3 %>
+<% elsif @user.errors.size >= 3 %>
 <div class="error_label">
 Please correct the errors below before continuing.
 </div>
