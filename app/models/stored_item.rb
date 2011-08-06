@@ -42,6 +42,16 @@ class StoredItem < ActiveRecord::Base
     count_by_sql "SELECT COUNT(*) FROM stored_items s, boxes b WHERE s.box_id = b.id AND b.assigned_to_user_id = #{user.id}"
   end
   
+  def StoredItem.find_all_by_assigned_to_user_id(user_id, box_id=nil)
+    box_conditions = { :assigned_to_user_id => user_id }
+    
+    if !box_id.blank?
+      box_conditions[:id] = box_id
+    end
+    
+    all(:joins => :box, :conditions => { :boxes => box_conditions }, :order => "created_at ASC" )
+  end
+  
   private
   
   # simple random salt
@@ -60,15 +70,5 @@ class StoredItem < ActiveRecord::Base
   # interpolate in paperclip
   Paperclip.interpolates :access_token  do |attachment, style|
     attachment.instance.access_token
-  end
-      
-  def StoredItem.find_all_by_assigned_to_user_id(user_id, box_id=nil)
-    box_conditions = { :assigned_to_user_id => user_id }
-    
-    if !box_id.blank?
-      box_conditions[:id] = box_id
-    end
-    
-    all(:joins => :box, :conditions => { :boxes => box_conditions } )
   end
 end
