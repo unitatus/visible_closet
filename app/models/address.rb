@@ -90,8 +90,8 @@ class Address < ActiveRecord::Base
   end
   
   def destroy
-    if user.default_shipping_address == self
-      user.default_shipping_address = nil
+    if !user.nil? && user.default_shipping_address == self
+      user.update_attribute(:default_shipping_address_id, nil)
     end
     super
   end

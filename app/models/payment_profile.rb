@@ -124,8 +124,8 @@ class PaymentProfile < ActiveRecord::Base
     end
 
     def destroy
-      if user.default_payment_profile == self
-        user.default_payment_profile = nil
+      if !user.nil? && user.default_payment_profile == self
+        user.update_attribute(:default_payment_profile_id, nil)
       end
       
       if delete_payment_profile and super
