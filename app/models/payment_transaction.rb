@@ -47,9 +47,9 @@ class PaymentTransaction < ActiveRecord::Base
                                                                   :customer_payment_profile_id => payment_profile.identifier}})
 
     if response.success?
-      [create!(:action => "purchase", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id), nil]
+      [create!(:action => "purchase", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id), nil]
     elsif RAILS_ENV == "development"
-      [create!(:action => "purchase in dev (failed, overrode)", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id), nil]
+      [create!(:action => "purchase in dev (failed, overrode)", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id), nil]
     else
       [nil, response.message]
     end

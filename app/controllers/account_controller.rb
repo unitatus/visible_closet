@@ -21,31 +21,30 @@ class AccountController < ApplicationController
   end
 
   def order_boxes
-    cart = Cart.find_active_by_user_id(current_user.id)
-    if (cart.nil?)
-      cart = Cart.new
-      cart.user_id = current_user.id
+    @cart = Cart.find_active_by_user_id(current_user.id)
+    if (@cart.nil?)
+      @cart = Cart.new
+      @cart.user_id = current_user.id
     end
+    
+    process_cart_item(@cart, Rails.application.config.your_box_product_id, params[:num_boxes_yours])
+    process_cart_item(@cart, Rails.application.config.our_box_product_id, params[:num_boxes_ours])
 
-    num_boxes_ours = convert_to_integer(params[:num_boxes_ours])
-    num_boxes_yours = convert_to_integer(params[:num_boxes_yours])
-
-    if num_boxes_yours > 0
-      cart = process_cart_item(cart, Rails.application.config.your_box_product_id, num_boxes_yours)
-    end
-
-    if (num_boxes_ours > 0) 
-      cart = process_cart_item(cart, Rails.application.config.our_box_product_id, num_boxes_ours)
-    end
-
-    if (cart.save())
+    if (@cart.save())
       flash[:notice] = "Cart updated. Click the cart option on the left to see cart contents and finalize order."
     else
       flash[:alert] = "There was a problem saving your update to the cart."
+      @your_box = Product.find(Rails.application.config.your_box_product_id)
+      @our_box = Product.find(Rails.application.config.our_box_product_id)
+      render :store_more_boxes
+      return
     end
 
-    if (cart.num_items == 0)
-      redirect_to :action => 'index'
+    if @cart.cart_items.size == 0
+      @your_box = Product.find(Rails.application.config.your_box_product_id)
+      @our_box = Product.find(Rails.application.config.our_box_product_id)
+      @cart.errors[:cart] = "Please enter at least one positive integer."
+      render :store_more_boxes
     else
       if Address.find_active(current_user.id).nil?
         redirect_to :action => 'new', :controller => 'addresses'
@@ -99,6 +98,11 @@ class AccountController < ApplicationController
 
   def check_out
     @cart = Cart.find_active_by_user_id(current_user.id)
+    
+    if !@cart || @cart.cart_items.empty?
+      redirect_to :action => :store_more_boxes
+      return
+    end
     
     @addresses = Address.find_active(current_user.id, :order => :first_name)
     
@@ -212,23 +216,15 @@ class AccountController < ApplicationController
   def process_cart_item(cart, product_id, quantity)
     cart_item = cart.cart_items.select { |c| c.product_id == product_id }[0]
 
-    if (!cart_item)
+    if (!cart_item && quantity.to_i != 0)
       cart_item = CartItem.new
       cart_item.product_id = product_id
       cart.cart_items << cart_item
+    elsif cart_item && quantity.to_i == 0
+      cart.cart_items.delete(cart_item)
     end
 
-    cart_item.quantity = quantity
-
-    cart
-  end
-  
-  def convert_to_integer(str)
-    if str.blank?
-      str = "0"
-    end
-    
-    str.to_i
+    cart_item.quantity = quantity unless cart_item.nil?
   end
   
   def get_address_from_session(address_identifier)

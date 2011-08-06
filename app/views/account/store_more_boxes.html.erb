@@ -1,6 +1,16 @@
 <% @menu_page = :store_more_stuff %>
 <%= render 'account_nav', :locals =>  { :menu_page => @menu_page }%>
 <div id="internal-right">
+
+	<% if @cart.errors.size > 0 %>
+		<div class="error_label">
+			There was a problem saving your entry.<br>
+			<% @cart.errors.each do |attr, msg| %>
+			<%= msg %><br>
+			<% end %>
+			<br>
+		</div>
+	<% end %>
     <p class="more-heading">Please specify the number of boxes of each type that you would like to store.</p>
 <%= form_tag("/account/order_boxes", :class => "standard") do %>
     <div class="graybox more-stuff-box-sizing">
@@ -18,7 +28,7 @@
                     <td>
 	                	<div class="incrementer">
 		                    <span>&nbsp;</span>
-							<%= text_field_tag(:num_boxes_yours, @cart.get_quantity(Rails.application.config.your_box_product_id), :class => "numberbox") %>
+							<%= text_field_tag(:num_boxes_yours, params[:num_boxes_yours].blank? ? @cart.get_quantity(Rails.application.config.your_box_product_id) : params[:num_boxes_yours], :class => "numberbox") %>
 		                    <div class="increment-up"></div>
 		                    <div class="increment-down"></div>
 		                </div>
@@ -26,7 +36,7 @@
                     <td>
 	                	<div class="incrementer">
 		                    <span>&nbsp;</span>
-							<%= text_field_tag(:num_boxes_ours, @cart.get_quantity(Rails.application.config.our_box_product_id), :class => "numberbox") %>
+							<%= text_field_tag(:num_boxes_ours, params[:num_boxes_ours].blank? ? @cart.get_quantity(Rails.application.config.our_box_product_id) : params[:num_boxes_ours], :class => "numberbox") %>
 		                    <div class="increment-up"></div>
 		                    <div class="increment-down"></div>
 		                </div>
