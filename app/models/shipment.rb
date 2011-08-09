@@ -67,14 +67,14 @@ class Shipment < ActiveRecord::Base
        :phone_number => receiving_address.day_phone
      }
      origin = {
-       :street => shipping_address.address_line_1 + (shipping_address.address_line_2.nil? ? "" : "\n" + shipping_address.address_line_2),
+       :street_lines => (shipping_address.address_line_2.blank? ? [shipping_address.address_line_1] : [shipping_address.address_line_1, shipping_address.address_line_2]),
        :city => shipping_address.city,
        :state => shipping_address.state,
        :zip => shipping_address.zip,
        :country => shipping_address.country
      }
     destination = {
-      :street => receiving_address.address_line_1 + (receiving_address.address_line_2.nil? ? "" : "\n" + receiving_address.address_line_2),
+      :street_lines => (receiving_address.address_line_2.blank? ? [receiving_address.address_line_1] : [receiving_address.address_line_1, receiving_address.address_line_2]),
       :city => receiving_address.city,
       :state => receiving_address.state,
      :zip => receiving_address.zip,

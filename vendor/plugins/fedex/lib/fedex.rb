@@ -32,18 +32,21 @@ module Fedex #:nodoc:
       :price       => [ :shipper, :recipient, :weight ],
       :label       => [ :shipper, :recipient, :weight, :service_type ],
       :contact     => [ :name, :phone_number ],
-      :address     => [ :country, :street, :city, :state, :zip ],
-      :ship_cancel => [ :tracking_number ]
+      :address     => [ :country, :street_lines, :city, :state, :zip ],
+      :ship_cancel => [ :tracking_number ],
+      :validate_address => [ :address ]
     }
     
     # Defines the relative path to the WSDL files.  Defaults assume lib/wsdl under plugin directory.
     WSDL_PATHS = {
       :rate => 'wsdl/RateService_v9.wsdl',
       :ship => 'wsdl/ShipService_v9.wsdl',
+      :validate_address => 'wsdl/AddressValidationService_v2.wsdl'
     }
     
     # Defines the Web Services version implemented.
     WS_VERSION = { :Major => 9, :Intermediate => 0, :Minor => 0, :ServiceId => 'ship' }
+    ADDRESS_VERSION = { :Major => 2, :Intermediate => 0, :Minor => 0, :ServiceId => 'aval'}
     
     SUCCESSFUL_RESPONSES = ['SUCCESS', 'WARNING', 'NOTE'] #:nodoc:
     
@@ -331,7 +334,7 @@ module Fedex #:nodoc:
             },
             :Address => {
               :CountryCode => shipper_address[:country],
-              :StreetLines => shipper_address[:street],
+              :StreetLines => shipper_address[:street_lines],
               :City => shipper_address[:city],
               :StateOrProvinceCode => shipper_address[:state],
               :PostalCode => shipper_address[:zip]
@@ -344,7 +347,7 @@ module Fedex #:nodoc:
             },
             :Address => {
               :CountryCode => recipient_address[:country],
-              :StreetLines => recipient_address[:street],
+              :StreetLines => recipient_address[:street_lines],
               :City => recipient_address[:city],
               :StateOrProvinceCode => recipient_address[:state],
               :PostalCode => recipient_address[:zip],
@@ -370,6 +373,14 @@ module Fedex #:nodoc:
           }
         }
       )
+      
+      # recipient_address[:street_lines].each_with_index do |line, index|
+      #   options[:RequestedShipment][:Recipient][:Address][1] << {:StreetLines => line} if index != 0
+      # end
+      # 
+      # shipper_address[:street_lines].each_with_index do |line, index|
+      #   options[:RequestedShipment][:Shipper][:Address][1] << {:StreetLines => line} if index != 0
+      # end
       
       if customer_reference
         options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] = [
@@ -398,7 +409,6 @@ module Fedex #:nodoc:
         # charge = ((pre.class == Array ? pre[0].totalNetCharge.amount.to_f : pre.totalNetCharge.amount.to_f) * 100).to_i
         label = Base64.decode64(result.completedShipmentDetail.completedPackageDetails.label.parts.image)
         tracking_number = result.completedShipmentDetail.completedPackageDetails.trackingIds.trackingNumber
-        # [label, tracking_number]
          [label, tracking_number]
       else
         raise FedexError.new("Unable to get label from Fedex: #{msg}")
@@ -428,13 +438,56 @@ module Fedex #:nodoc:
       return successful?(result)
     end
     
+    def validate_address(options = {})
+      check_required_options(:validate_address, options)
+      check_required_options(:address, options[:address])
+      
+      time                = options[:time] || Time.now
+      time                = time.to_time.iso8601 if time.is_a?(Time)
+      
+      address             = options[:address]
+      
+      residential         = !!address[:residential]
+      
+      driver = create_driver(:validate_address)
+
+      result = driver.addressValidation(common_options(ADDRESS_VERSION).merge(
+        :RequestTimestamp => time,
+        :Options => {
+          :VerifyAddresses => true,
+          :ReturnParsedElements => true
+        },
+        :AddressesToValidate => [
+            {
+              :Address => {
+                :CountryCode => address[:country],
+                :StreetLines => address[:street_lines],
+                :City => address[:city],
+                :StateOrProvinceCode => address[:state],
+                :PostalCode => address[:zip],
+                :Residential => residential
+              }
+            }
+        ]
+      ))
+      
+      successful = successful?(result)
+      
+      msg = error_msg(result, false)
+      if successful && msg !~ /There are no valid services available/
+        process_address_validation_reply(result)
+      else
+        raise FedexError.new("Unable to get label from Fedex: #{msg}")
+      end
+    end
+    
   private
     # Options that go along with each request
-    def common_options
+    def common_options(version=WS_VERSION)
       {
         :WebAuthenticationDetail => { :UserCredential => { :Key => @auth_key, :Password => @security_code } },
         :ClientDetail => { :AccountNumber => @account_number, :MeterNumber => @meter_number },
-        :Version => WS_VERSION
+        :Version => version
       }
     end
   
@@ -483,7 +536,13 @@ module Fedex #:nodoc:
     def error_msg(result, return_nothing_if_successful=true)
       return "" if successful?(result) && return_nothing_if_successful
       notes = result.notifications
-      notes.respond_to?(:message) ? notes.message : notes.first.message
+      if notes.respond_to?(:message)
+        notes.message
+      elsif notes.respond_to?(:first)
+        notes.first.message
+      else
+        "No message"
+      end
     end
     
     # Attempts to determine the carrier code for a tracking number based upon its length.  Currently supports Fedex Ground and Fedex Express
@@ -495,6 +554,78 @@ module Fedex #:nodoc:
         'FDXG'
       end
     end
-  end
-  
+    
+    def process_address_validation_reply(reply)
+      address_data = Hash.new
+
+      address_data[:success] = reply.addressResults.proposedAddressDetails.deliveryPointValidation == "CONFIRMED"
+      
+      parsed_address = reply.addressResults.proposedAddressDetails.parsedAddress
+      
+      parsed_line = elements_to_hash(parsed_address.parsedStreetLine.elements)
+      
+      line_changed = false
+      parsed_line.each do |key, value|
+        
+        puts(key)
+        line_changed = line_changed || value[:changed]
+      end
+
+      address_data[:line_1] = {:changed => line_changed }
+      address_data[:line_2] = {:changed => line_changed }
+      
+      if line_changed
+        address_data[:line_1][:suggested_value] = [nil_to_s(parsed_line, :houseNumber, :value), nil_to_s(parsed_line, :streetName, :value), nil_to_s(parsed_line, :streetSuffix, :value)].join " "
+        address_data[:line_2][:suggested_value] = [nil_to_s(parsed_line, :unitLabel, :value), nil_to_s(parsed_line, :unitNumber, :value)].join " "
+        
+        if address_data[:line_2][:suggested_value].blank?
+          address_data[:line_2][:suggested_value] = nil
+        end
+      end
+            
+      address_data[:city] = {:changed => (parsed_address.parsedCity.elements.changes != "NO_CHANGES") }
+      if address_data[:city][:changed]
+        address_data[:city][:suggested_value] = parsed_address.parsedCity.elements.value
+      end
+      
+      address_data[:state_or_province] = {:changed => (parsed_address.parsedStateOrProvinceCode.elements.changes != "NO_CHANGES") }
+      if address_data[:state_or_province][:changed]
+        address_data[:state_or_provice][:suggested_value] = parsed_address.parsedStateOrProvinceCode.elements.value
+      end
+      
+      parsed_postal_code = elements_to_hash(parsed_address.parsedPostalCode.elements)
+      
+      address_data[:postal_code] = {:changed => (parsed_postal_code[:postalBase][:changed] || parsed_postal_code[:postalAddOn][:changed]) }
+      if address_data[:postal_code][:changed]
+        address_data[:postal_code][:suggested_value] = parsed_postal_code[:postalBase][:value] + (parsed_postal_code[:postalAddOn][:value].blank? ? "" : "-" + parsed_postal_code[:postalAddOn][:value])
+      end
+      
+      address_data[:country_code] = {:changed => (parsed_address.parsedCountryCode.elements.changes != "NO_CHANGES") }
+      if address_data[:country_code][:changed]
+        address_data[:country_code][:suggested_value] = parsed_address.parsedCountryCode.elements.value
+      end
+      
+      address_data
+    end
+    
+    def nil_to_s(hash, level1, level2=nil)
+      if hash[level1].nil?
+        return nil
+      elsif level2.nil?
+        return hash[level1]
+      else
+        return hash[level1][level2]
+      end
+    end
+    
+    def elements_to_hash(elements)
+      parsed_hash = Hash.new
+      
+      elements.each do |element|
+        parsed_hash[element.name.to_s.to_sym] = {:value => element.value, :changed => element.changes != "NO_CHANGES"}
+      end
+      
+      return parsed_hash
+    end
+  end  
 end

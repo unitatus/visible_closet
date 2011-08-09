@@ -101,7 +101,7 @@ class PaymentProfile < ActiveRecord::Base
         address = Address.find(self.billing_address_id)
         return { :name => address.first_name + " " + address.last_name,
                       :address1 => address.address_line_1,
-                      :address2 => address.address_line_2,
+                      :address2 => nil, #address.address_line_2,
                       :company => nil, # not supported at this time
                       :city => address.city,
                       :state => address.state,

@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  require 'soap/wsdlDriver'
+
   skip_authorization_check
   
 	def how_it_works
@@ -74,6 +76,34 @@ class PagesController < ApplicationController
   
   def request_confirmation
     
+  end
+  
+  def test_validate_address
+    fedex = Fedex::Base.new(
+       :auth_key => Rails.application.config.fedex_address_validation_auth_key,
+       :security_code => Rails.application.config.fedex_address_validation_security_code,
+       :account_number => Rails.application.config.fedex_address_validation_account_number,
+       :meter_number => Rails.application.config.fedex_address_validation_meter_number, 
+       :debug => Rails.application.config.fedex_debug
+     )
+     
+     address = {
+       :street_lines => ["140 Custer Ave", "Apt 1"],
+       :city => "Evanston",
+       :state => "IL", 
+       :zip => "60202",
+       :country => "US"
+     }
+     
+     address = {
+       :street_lines => ["1000 FedEx Dr", "Barcode Analysis"],
+       :city => "Moon Township",
+       :state => "PA", 
+       :zip => "15108",
+       :country => "US"
+     }
+     
+     @address_report = fedex.validate_address(:address => address)
   end
   
   private 

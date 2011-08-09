@@ -126,9 +126,9 @@ class OrdersController < ApplicationController
       end    
 
       # Turned off until address correction can be made
-      # if !@order_shipment.generate_fedex_label
-      #   raise "Error generating shipment and saving; errors: " << @order_shipment.errors.inspect
-      # end
+      if !@order_shipment.generate_fedex_label
+        raise "Error generating shipment and saving; errors: " << @order_shipment.errors.inspect
+      end
     
       UserMailer.shipping_materials_sent(@order.user, @order_shipment, @order_lines).deliver
     end # end transaction

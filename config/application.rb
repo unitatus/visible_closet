@@ -50,6 +50,11 @@ module VisibleCloset
     config.fedex_account_number = '510087720'
     config.fedex_meter_number = '118543679'
     
+    config.fedex_address_validation_auth_key = 'bHbI4jcejTh58tHK'
+    config.fedex_address_validation_security_code = 'Cr52GqtoTfnp48MEzaSRUP7M6'
+    config.fedex_address_validation_account_number = '299468437'
+    config.fedex_address_validation_meter_number = '103089427'
+    
     # Boxes
     config.vc_box_height = 1
     config.vc_box_width = 1
