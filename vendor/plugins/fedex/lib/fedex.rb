@@ -477,7 +477,7 @@ module Fedex #:nodoc:
       if successful && msg !~ /There are no valid services available/
         process_address_validation_reply(result)
       else
-        raise FedexError.new("Unable to get label from Fedex: #{msg}")
+        { :success => false, :changes_suggested => false, :messages => ["Invalid address format"] }
       end
     end
     
@@ -559,58 +559,33 @@ module Fedex #:nodoc:
       address_data = Hash.new
 
       address_data[:success] = reply.addressResults.proposedAddressDetails.deliveryPointValidation == "CONFIRMED"
+      address_data[:changes_suggested] = contains(reply.addressResults.proposedAddressDetails.changes, "MODIFIED_TO_ACHIEVE_MATCH")
       
       parsed_address = reply.addressResults.proposedAddressDetails.parsedAddress
       
-      parsed_line = elements_to_hash(parsed_address.parsedStreetLine.elements)
+      parsed_line = elements_to_hash(parsed_address.parsedStreetLine)
+      parsed_postal_code = elements_to_hash(parsed_address.respond_to?(:parsedPostalCode) ? parsed_address.parsedPostalCode : nil)
       
-      line_changed = false
-      parsed_line.each do |key, value|
-        
-        puts(key)
-        line_changed = line_changed || value[:changed]
-      end
-
-      address_data[:line_1] = {:changed => line_changed }
-      address_data[:line_2] = {:changed => line_changed }
+      address_data[:line_1] = {:suggested_value => [nil_to_s(parsed_line, :houseNumber, :value), nil_to_s(parsed_line, :leadingDirectional, :value), \
+          nil_to_s(parsed_line, :streetName, :value), nil_to_s(parsed_line, :streetSuffix, :value), nil_to_s(parsed_line, :trailingDirectional, :value)].join(" ") }
+      address_data[:line_2] = {:suggested_value => [nil_to_s(parsed_line, :unitLabel, :value), nil_to_s(parsed_line, :unitNumber, :value)].join(" ") }
       
-      if line_changed
-        address_data[:line_1][:suggested_value] = [nil_to_s(parsed_line, :houseNumber, :value), nil_to_s(parsed_line, :streetName, :value), nil_to_s(parsed_line, :streetSuffix, :value)].join " "
-        address_data[:line_2][:suggested_value] = [nil_to_s(parsed_line, :unitLabel, :value), nil_to_s(parsed_line, :unitNumber, :value)].join " "
-        
-        if address_data[:line_2][:suggested_value].blank?
-          address_data[:line_2][:suggested_value] = nil
-        end
-      end
-            
-      address_data[:city] = {:changed => (parsed_address.parsedCity.elements.changes != "NO_CHANGES") }
-      if address_data[:city][:changed]
-        address_data[:city][:suggested_value] = parsed_address.parsedCity.elements.value
+      if address_data[:line_2][:suggested_value].blank?
+        address_data[:line_2][:suggested_value] = nil
       end
       
-      address_data[:state_or_province] = {:changed => (parsed_address.parsedStateOrProvinceCode.elements.changes != "NO_CHANGES") }
-      if address_data[:state_or_province][:changed]
-        address_data[:state_or_provice][:suggested_value] = parsed_address.parsedStateOrProvinceCode.elements.value
-      end
-      
-      parsed_postal_code = elements_to_hash(parsed_address.parsedPostalCode.elements)
-      
-      address_data[:postal_code] = {:changed => (parsed_postal_code[:postalBase][:changed] || parsed_postal_code[:postalAddOn][:changed]) }
-      if address_data[:postal_code][:changed]
-        address_data[:postal_code][:suggested_value] = parsed_postal_code[:postalBase][:value] + (parsed_postal_code[:postalAddOn][:value].blank? ? "" : "-" + parsed_postal_code[:postalAddOn][:value])
-      end
-      
-      address_data[:country_code] = {:changed => (parsed_address.parsedCountryCode.elements.changes != "NO_CHANGES") }
-      if address_data[:country_code][:changed]
-        address_data[:country_code][:suggested_value] = parsed_address.parsedCountryCode.elements.value
-      end
+      address_data[:city] = {:suggested_value => parsed_address.parsedCity.elements.value }      
+      address_data[:state_or_province] = {:suggested_value => parsed_address.parsedStateOrProvinceCode.elements.value }
+      address_data[:postal_code] = {:suggested_value => nil_to_s(parsed_postal_code, :postalBase, :value) + \
+          nil_to_s(parsed_postal_code,:postalAddOn, :value) }
+      address_data[:country_code] = {:suggested_value => parsed_address.parsedCountryCode.elements.value }
       
       address_data
     end
     
     def nil_to_s(hash, level1, level2=nil)
-      if hash[level1].nil?
-        return nil
+      if hash.nil? || hash[level1].nil?
+        return ""
       elsif level2.nil?
         return hash[level1]
       else
@@ -618,11 +593,36 @@ module Fedex #:nodoc:
       end
     end
     
-    def elements_to_hash(elements)
+    def contains(elements, value)
+      if elements.respond_to?(:each)
+        elements.each do |element|
+          if element == value
+            return true
+          end
+        end
+      else
+        if elements == value
+          return true
+        end
+      end
+      return false
+    end
+    
+    def elements_to_hash(element_parent)
       parsed_hash = Hash.new
       
-      elements.each do |element|
-        parsed_hash[element.name.to_s.to_sym] = {:value => element.value, :changed => element.changes != "NO_CHANGES"}
+      if !element_parent.respond_to?(:elements)
+        return nil
+      else
+        elements = element_parent.elements
+      end
+      
+      if elements.respond_to?(:each)
+        elements.each do |element|
+          parsed_hash[element.name.to_s.to_sym] = {:value => element.value, :changed => element.changes != "NO_CHANGES"}
+        end
+      else
+        parsed_hash[elements.name.to_s.to_sym] = {:value => elements.value, :changed => elements.changes != "NO_CHANGES"}
       end
       
       return parsed_hash

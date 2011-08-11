@@ -1,3 +1,37 @@
-Hello!<br><br>
-The value of result is:<br><br>
-<%= @address_report.inspect %>
+<br><br>
+<%= form_for(@address, :url => "/pages/test_validate_address", :html => { :class => "standard" }) do |f| %>
+	<div style="float:left">
+		<h1>Your Address</h1>
+		Line 1: <%= f.text_field :address_line_1 %><br>
+		Line 2: <%= f.text_field :address_line_2 %><br>
+		City: <%= f.text_field :city %><br>
+		State: <%= f.text_field :state %><br>
+		Zip: <%= f.text_field :zip %>
+	</div>
+	<% if @address_report %>
+		<% if @address_report[:success] && !@address_report[:changes_suggested] %>
+			Address accepted as is.
+		<% elsif @address_report[:success] && @address_report[:changes_suggested] %>
+			Address not accepted as is, but suggested changes will get it all the way there:
+		<% elsif !@address_report[:success] && @address_report[:changes_suggested] %>
+			Address NOT accepted. Changes suggested, though. ?
+		<% else %>
+			Address NOT accepted. No changes suggested.
+		<% end %>
+		<% if @address_report[:changes_suggested] %>
+			<div style="float:right; padding-right: 500px">
+				<br>
+				Line 1: <%= @address_report[:line_1][:suggested_value] %><br>
+				Line 2: <%= @address_report[:line_2][:suggested_value].to_s %><br>
+				City: <%= @address_report[:city][:suggested_value] %><br>
+				State: <%= @address_report[:state_or_province][:suggested_value] %><br>
+				Zip: <%= @address_report[:postal_code][:suggested_value] %><br>
+			</div>
+			
+		<% end %>
+	<% end %>
+<div class="clearer"></div>
+<div style="text-align: center">
+	<%= f.submit "Submit" %>
+</div>
+<% end %>

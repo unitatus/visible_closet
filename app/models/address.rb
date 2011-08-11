@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110703214139
+# Schema version: 20110810161902
 #
 # Table name: addresses
 #
@@ -19,6 +19,7 @@
 #  user_id        :integer
 #  country        :string(255)
 #  status         :string(255)
+#  comment        :string(255)
 #
 
 class Address < ActiveRecord::Base
@@ -29,6 +30,8 @@ class Address < ActiveRecord::Base
   validates_presence_of :last_name, :message => "Last name cannot be blank"
   validates_presence_of :day_phone, :message => "Day phone cannot be blank"
   validates_presence_of :address_line_1, :message => "Address line 1 cannot be blank"
+  validates_length_of :address_line_1, :maximum => 30, :message => "Fedex cannot accept address lines longer than 30 characters"
+  validates_length_of :address_line_2, :maximum => 30, :message => "Fedex cannot accept address lines longer than 30 characters"
   validates_presence_of :city, :message => "City cannot be blank"
   validates_presence_of :state, :message => "State must be selected"
   validates_presence_of :zip, :message => "Zip code cannot be blank"

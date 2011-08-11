@@ -1,0 +1,29 @@
+<br><br>
+<%= form_for(@address, :url => "/pages/test_validate_address", :html => { :class => "standard" }) do |f| %>
+	<div style="float:left">
+		<h1>Your Address</h1>
+		Line 1: <%= f.text_field :address_line_1 %><br>
+		Line 2: <%= f.text_field :address_line_2 %><br>
+		City: <%= f.text_field :city %><br>
+		State: <%= f.text_field :state %><br>
+		Zip: <%= f.text_field :zip %>
+	</div>
+	<% if @address_report %>
+		<% if @address_report[:suggestions] %>
+			<div style="float:right">
+				<h1>Suggested Address</h1>
+				Line 1: <%= raw @address_report[:line_1][:changed] ? ("<b>" + @address_report[:line_1][:suggested_value] + "</b>") : @address.address_line_1 %><br>
+				Line 2: <%= raw @address_report[:line_2][:changed] ? ("<b>" + @address_report[:line_2][:suggested_value] + "</b>") : @address.address_line_2 %><br>
+				City: <%= raw @address_report[:city][:changed] ? ("<b>" + @address_report[:city][:suggested_value] + "</b>") : @address.city %><br>
+				State: <%= raw @address_report[:state_or_province][:changed] ? ("<b>" + @address_report[:state_or_province][:suggested_value] + "</b>") : @address.state %><br>
+				Zip: <%= raw @address_report[:postal_code][:changed] ? ("<b>" + @address_report[:postal_code][:suggested_value] + "</b>") : @address.zip %><br>
+			</div>
+		<% else %>
+			No suggestions. That was perfect!
+		<% end %>
+	<% end %>
+<div class="clearer"></div>
+<div style="text-align: center">
+	<%= f.submit "Submit" %>
+</div>
+<% end %>
