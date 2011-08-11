@@ -45,10 +45,10 @@ module VisibleCloset
     config.filter_parameters += [:year]
     
     # Test account
-    config.fedex_auth_key = 'USPNgfkiu1RuPm4j'
-    config.fedex_security_code = 'LmMpuDePYA9Hv8dvrBXJiIUe8'
-    config.fedex_account_number = '510087720'
-    config.fedex_meter_number = '118543679'
+    config.fedex_auth_key = 'bHbI4jcejTh58tHK'
+    config.fedex_security_code = 'Cr52GqtoTfnp48MEzaSRUP7M6'
+    config.fedex_account_number = '299468437'
+    config.fedex_meter_number = '103089427'
     
     config.fedex_address_validation_auth_key = 'bHbI4jcejTh58tHK'
     config.fedex_address_validation_security_code = 'Cr52GqtoTfnp48MEzaSRUP7M6'

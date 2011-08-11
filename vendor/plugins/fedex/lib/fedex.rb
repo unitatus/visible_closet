@@ -576,7 +576,7 @@ module Fedex #:nodoc:
       
       address_data[:city] = {:suggested_value => parsed_address.parsedCity.elements.value }      
       address_data[:state_or_province] = {:suggested_value => parsed_address.parsedStateOrProvinceCode.elements.value }
-      address_data[:postal_code] = {:suggested_value => nil_to_s(parsed_postal_code, :postalBase, :value) + \
+      address_data[:postal_code] = {:suggested_value => nil_to_s(parsed_postal_code, :postalBase, :value) + "-" + \
           nil_to_s(parsed_postal_code,:postalAddOn, :value) }
       address_data[:country_code] = {:suggested_value => parsed_address.parsedCountryCode.elements.value }
       

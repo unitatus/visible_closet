@@ -51,7 +51,7 @@
           <xs:documentation>Descriptive data for a physical location. May be used as an actual physical address (place to which one could go), or as a container of "address parts" which should be handled as a unit (such as a city-state-ZIP combination within the US).</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-          <xs:element name="StreetLines" type="xs:string" minOccurs="0">
+          <xs:element name="StreetLines" type="xs:string" minOccurs="0" maxOccurs="unbounded">
             <xs:annotation>
               <xs:documentation>Combination of number, street name, etc. At least one line is required for a valid physical address; empty lines should not be included.</xs:documentation>
             </xs:annotation>
@@ -5464,7 +5464,7 @@
   </binding>
   <service name="ShipService">
     <port name="ShipServicePort" binding="ns:ShipServiceSoapBinding">
-      <s1:address location=" https://wsbeta.fedex.com:443/web-services/ship"/>
+      <s1:address location=" https://ws.fedex.com:443/web-services/ship"/>
     </port>
   </service>
 </definitions>

@@ -27,6 +27,7 @@ class Shipment < ActiveRecord::Base
   belongs_to :to_address, :class_name => "Address"
   belongs_to :from_address, :class_name => "Address"
   belongs_to :order
+  belongs_to :box
   
   ACTIVE = :active
   INACTIVE = :inactive
@@ -41,7 +42,7 @@ class Shipment < ActiveRecord::Base
     shipping_address = Address.find(self.from_address_id)
     receiving_address = Address.find(self.to_address_id)
     
-    if box.nil? || box.status != Box::BEING_PREPARED_STATUS
+    if epl_label?
       label_stock_type = Fedex::LabelStockTypes::STOCK_4X6 # Fedex::LabelStockTypes::PAPER_4X6
       label_image_type = Fedex::LabelSpecificationImageTypes::EPL2
     else
@@ -121,7 +122,7 @@ class Shipment < ActiveRecord::Base
         :secret_access_key => Rails.application.config.s3_secret
     )
         
-    self.shipment_label_file_name = Rails.application.config.s3_labels_path + "shipment_#{self.id}_label.pdf"
+    self.shipment_label_file_name = Rails.application.config.s3_labels_path + "shipment_#{self.id}_label." + (epl_label? ? "epl" : "pdf")
     self.shipment_label_updated_at = Time.now
     
     if !(AWS::S3::S3Object.store(shipment_label_file_name, file, Rails.application.config.s3_labels_bucket) || !AWS::S3::Service.response.success?)
@@ -144,6 +145,13 @@ class Shipment < ActiveRecord::Base
     end
   end
   
+  def shipment_label_file_name_short
+    return_val = shipment_label_file_name
+    return_val.slice! Rails.application.config.s3_labels_path
+    
+    return_val
+  end
+  
   def destroy
     # I believe if the connection is cached this does nothing
     AWS::S3::Base.establish_connection!(
@@ -156,5 +164,11 @@ class Shipment < ActiveRecord::Base
     end
     
     super
+  end
+  
+  private
+  
+  def epl_label?
+    return (box.nil? || box.status != Box::BEING_PREPARED_STATUS)
   end
 end

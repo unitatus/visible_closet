@@ -244,9 +244,14 @@ class Box < ActiveRecord::Base
       raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
     end
     
-    if !shipment.generate_fedex_label(self)
+    begin
+      if !shipment.generate_fedex_label(self)
+        shipment.destroy
+        raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+      end
+    rescue Exception => e
       shipment.destroy
-      raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+      raise e
     end
     
     shipment

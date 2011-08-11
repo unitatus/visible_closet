@@ -299,6 +299,6 @@ class BoxesController < ApplicationController
     
     shipment = @box.get_or_create_shipment
 
-    send_data(shipment.shipment_label, :filename => "box_#{@box.id}_label.pdf", :type => "application/pdf")
+    send_data(shipment.shipment_label, :filename => shipment.shipment_label_file_name_short, :type => "application/pdf")
   end
 end

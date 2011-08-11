@@ -69,7 +69,7 @@
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>
 						<% end %>
 						<% if box.box_type == Box::CUST_BOX_TYPE && box.status == Box::BEING_PREPARED_STATUS %>
-							<li><a href="/pages/fedex_unavailable?box_id=<%=box.id%>">print label</a></li>
+							<li><a href="/box/<%=box.id%>/get_label">print label</a></li>
 						<% end %>                        
                     </ul>
                 </div>
