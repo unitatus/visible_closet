@@ -16,6 +16,7 @@ VisibleCloset::Application.routes.draw do
   match "boxes/finish_inventorying_box" => "boxes#finish_inventorying"
   match "payment_profiles/:id/set_default" => "payment_profiles#set_default"
   match "addresses/:id/set_default_shipping" => "addresses#set_default_shipping"
+  match "m" => "pages#marketing_hit"
     
   resources :boxes
   resources :addresses

@@ -560,6 +560,7 @@ module Fedex #:nodoc:
 
       address_data[:success] = reply.addressResults.proposedAddressDetails.deliveryPointValidation == "CONFIRMED"
       address_data[:changes_suggested] = contains(reply.addressResults.proposedAddressDetails.changes, "MODIFIED_TO_ACHIEVE_MATCH")
+      address_data[:messages] = reply.addressResults.proposedAddressDetails.changes.respond_to?(:each) ? reply.addressResults.proposedAddressDetails.changes : [reply.addressResults.proposedAddressDetails.changes]
       
       parsed_address = reply.addressResults.proposedAddressDetails.parsedAddress
       
@@ -571,7 +572,7 @@ module Fedex #:nodoc:
       address_data[:line_2] = {:suggested_value => [nil_to_s(parsed_line, :unitLabel, :value), nil_to_s(parsed_line, :unitNumber, :value)].join(" ") }
       
       if address_data[:line_2][:suggested_value].blank?
-        address_data[:line_2][:suggested_value] = nil
+        address_data[:line_2][:suggested_value] = ""
       end
       
       address_data[:city] = {:suggested_value => parsed_address.parsedCity.elements.value }      

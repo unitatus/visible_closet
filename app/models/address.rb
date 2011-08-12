@@ -35,6 +35,7 @@ class Address < ActiveRecord::Base
   validates_presence_of :city, :message => "City cannot be blank"
   validates_presence_of :state, :message => "State must be selected"
   validates_presence_of :zip, :message => "Zip code cannot be blank"
+  validate :external_validation, :on => :create
 
   validates_length_of :day_phone, :minimum => 10, :maximum => 10, :message => "Please enter a 10-digit phone number", :unless => :skip_day_content_validation
   validates_numericality_of :day_phone, :message => "Please enter only numbers for the phone", :unless => :skip_day_content_validation
@@ -98,4 +99,140 @@ class Address < ActiveRecord::Base
     end
     super
   end
+  
+  def external_validation
+    fedex = Fedex::Base.new(
+       :auth_key => Rails.application.config.fedex_auth_key,
+       :security_code => Rails.application.config.fedex_security_code,
+       :account_number => Rails.application.config.fedex_account_number,
+       :meter_number => Rails.application.config.fedex_meter_number, 
+       :debug => Rails.application.config.fedex_debug
+     )
+    
+     address_hash = {
+       :street_lines => address_line_2.blank? ? [address_line_1] : [address_line_1, address_line_2],
+       :city => city,
+       :state => state, 
+       :zip => zip,
+       :country => country
+     }
+      
+     # this should really fail gracefully by catching any exception and telling the user that their address could not be validated,
+     # and maybe even using the airbrake interface to send an email?
+     @address_report = fedex.validate_address(:address => address_hash)
+     
+     if @address_report[:line_1][:suggested_value] != self.address_line_1 && @address_report[:changes_suggested]
+       errors[:address_line_1] = "\"#{self.address_line_1}\" was not recognized in FedEx systems. Above is a suggested value for address line 1."
+       self.address_line_1 = @address_report[:line_1][:suggested_value]
+     end
+
+     if @address_report[:line_2][:suggested_value] != self.address_line_2 && @address_report[:changes_suggested]
+       if self.address_line_2.blank?
+         errors[:address_line_2] = "FedEx suggested the above text for line 2. If this looks good, click submit again."
+       else
+         if @address_report[:line_2][:suggested_value].blank?
+           errors[:address_line_2] = "\"#{self.address_line_2}\" was not recognized in FedEx systems. FedEx suggests that this field be blank. To accept, click 'Create Address'."
+         else
+           errors[:address_line_2] = "\"#{self.address_line_2}\" was not recognized in FedEx systems. Above is a suggested value for address line 2."
+         end
+       end
+       self.address_line_2 = @address_report[:line_2][:suggested_value]
+     end
+     
+     if @address_report[:city][:suggested_value] != self.city && @address_report[:changes_suggested]
+       errors[:city] = "\"#{self.city}\" was not recognized in FedEx systems. Above is a suggested value for city."
+       self.city = @address_report[:city][:suggested_value]
+     end
+     
+     if @address_report[:postal_code][:suggested_value] != self.zip && @address_report[:changes_suggested]
+       errors[:zip] = "\"#{self.zip}\" was not recognized in FedEx systems. Above is a suggested value for zip."
+       self.zip = @address_report[:postal_code][:suggested_value]
+     end
+
+     if !@address_report[:success] && @address_report[:changes_suggested]
+       errors[:fedex] = "FedEx was unable to find the address you entered, but offered suggestions. See below  for details and to accept or reject the suggestions."
+     elsif !@address_report[:success]
+       errors[:fedex] = "FedEx was not able to find the address you entered. Please check your entries, or contact us for questions. At this time we can only accept addresses that FedEx can ship to."
+     end
+   end
+  
+  def changes_suggested?
+    @address_report.nil? ? false : @address_report[:changes_suggested]
+  end
+  
+  def submitted_value(value)
+    read_attribute(value)
+  end
+
+  def external_error_messages
+    translated_messages = Array.new
+    
+    if @address_report.nil?
+      return translated_messages
+    end
+    
+    @address_report[:messages].each do |msg|
+      translated_message = translate_external_message(msg)
+      translated_messages << translated_message unless translated_message.blank?
+    end
+    
+    translated_messages
+  end
+  
+  private
+  
+  def translate_external_message(msg)
+    case msg
+    when "MODIFIED_TO_ACHIEVE_MATCH"
+      return nil
+    when "APARTMENT_NUMBER_NOT_FOUND"
+      return "Apartment Number Not Found"
+    when "APARTMENT_NUMBER_REQUIRED"
+      return "Apartmnet Number Required"
+    when "NORMALIZED"
+      return nil
+    when "REMOVED_DATA"
+      return nil
+    when "BOX_NUMBER_REQUIRED"
+      return "Box Number Required"
+    when "NO_CHANGES"
+      return nil
+    when "STREET_RANGE_MATCH"
+      return nil
+    when "BOX_NUMBER_MATCH"
+      return nil
+    when "RR_OR_HC_MATCH"
+      return nil
+    when "CITY_MATCH"
+      return nil
+    when "POSTAL_CODE_MATCH"
+      return nil
+    when "RR_OR_HC_BOX_NUMBER_NEEDED"
+      return "Rural Route or HC Box Number Needed"
+    when "FORMATTED_FOR_COUNTRY"
+      return nil
+    when "APO_OR_FPO_MATCH"
+      return nil
+    when "GENERAL_DELIVERY_MATCH"
+      return nil
+    when "FIELD_TRUNCATED"
+      return nil
+    when "UNABLE_TO_APPEND_NON_ADDRESS_DATA"
+      return "Unable to Append Non-Address Data"
+    when "INSUFFICIENT_DATA"
+      return "Insufficient Data Was Provided To Identify This Address"
+    when "HOUSE_OR_BOX_NUMBER_NOT_FOUND"
+      return "House Or Box Number Not Found"
+    when "POSTAL_CODE_NOT_FOUND"
+      return "Postal Code Not Found"
+    when "INVALID_COUNTRY"
+      return "Invalid Country"
+    when "SERVICE_UNAVAILABLE_FOR_ADDRESS"
+      return "FedEx Service is Unavailable for this Address"
+    else
+      puts("Unknown messages " + msg + " was returned from FedEx.")
+      msg
+    end
+  end
 end
+

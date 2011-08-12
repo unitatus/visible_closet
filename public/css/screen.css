@@ -508,6 +508,12 @@ form.standard .field {
 	position: relative;
 }
 
+form.standard .form_value {
+	text-align: left; 
+	padding: 5px 0 0 150px; 
+	font-weight: normal
+}
+
 form.standard label {
 	position: absolute;
 	top: 5px;

@@ -29,6 +29,10 @@
 			</div>
 			
 		<% end %>
+		<br>Messages:<br>
+		<% @address_report[:messages].each do |msg| %>
+		<%= msg %><br>
+		<% end %>
 	<% end %>
 <div class="clearer"></div>
 <div style="text-align: center">

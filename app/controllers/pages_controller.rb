@@ -81,10 +81,10 @@ class PagesController < ApplicationController
   def test_validate_address
     if (!params[:address].nil?)
       fedex = Fedex::Base.new(
-         :auth_key => Rails.application.config.fedex_address_validation_auth_key,
-         :security_code => Rails.application.config.fedex_address_validation_security_code,
-         :account_number => Rails.application.config.fedex_address_validation_account_number,
-         :meter_number => Rails.application.config.fedex_address_validation_meter_number, 
+         :auth_key => Rails.application.config.fedex_auth_key,
+         :security_code => Rails.application.config.fedex_security_code,
+         :account_number => Rails.application.config.fedex_account_number,
+         :meter_number => Rails.application.config.fedex_meter_number, 
          :debug => Rails.application.config.fedex_debug
        )
       
@@ -104,6 +104,14 @@ class PagesController < ApplicationController
     else
       @address = Address.new
     end
+  end
+  
+  def marketing_hit
+    source = params[:s]
+    
+    MarketingHit.create!(:source => source) unless source.blank?
+    
+    redirect_to "/"
   end
   
   private 

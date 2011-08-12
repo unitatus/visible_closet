@@ -1,0 +1,69 @@
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div id="internal-right">
+	<div class="simple_header">Oops!</div>
+	<br><br>
+	Our partner, FedEx, was not able to find an exact match on your address... but never fear! A close match was found. Please review the suggested values below, modify as necessary, and click "Re-submit" to re-validate. Thanks!<br><br>
+	<%= form_for(@address, :html => { :class => "standard" }) do |f| %>
+	<div class="field clearfix">
+		<%= f.label "First Name:"%>
+		<div class="form_value">
+			<%= hidden_field_tag 'address[first_name]', @address.first_name %>
+			<%= @address.first_name %>
+		</div>
+	</div>
+	<div class="clearer"></div>
+	<div class="field clearfix">
+		<%= f.label "Last Name: "%>
+		<div class="form_value">
+			<%= @address.last_name %>
+			<%= hidden_field_tag 'address[last_name]', @address.last_name %>
+		</div>
+	</div><!--//field-->
+	<div class="field clearfix">
+		<%= f.label "Day Phone: "%>
+		<div class="form_value">
+			<%= number_to_phone(@address.day_phone) %>
+			<%= hidden_field_tag 'address[day_phone]', @address.day_phone %>
+		</div>
+	</div><!--//field-->
+	<div class="field clearfix">
+		<%= f.label "Evening Phone: "%>
+		<div class="form_value">
+			<%= number_to_phone(@address.evening_phone) %>
+			<%= hidden_field_tag 'address[evening_phone]', @address.evening_phone %>
+		</div>
+	</div><!--//field-->
+	<div class="field clearfix">
+		<%= f.label "Address Line 1*: "%>
+		<%= text_field_tag 'address[address_line_1]', @address.suggested_address_line_1, :class => "textbox" + (@address.errors[:address_line_1].empty? ? "": " error"), :style => "width: 200px; margin-right: 332px" %>
+		<%= error_messages_for_attribute(@address, :address_line_1) %>
+	</div><!--//field-->
+	<div class="field clearfix">
+		<%= f.label "Address Line 2: "%>
+		<%= text_field_tag 'address[address_line_2]', @address.suggested_address_line_2, :class => "textbox" + (@address.errors[:address_line_2].empty? ? "": " error"), :style => "width: 200px; margin-right: 332px" %>
+		<%= error_messages_for_attribute(@address, :address_line_2) %>
+	</div><!--//field-->
+	<div class="field clearfix">
+		<%= f.label "City*: "%>
+		<%= text_field_tag 'address[city]', @address.suggested_city, :class => "textbox" + (@address.errors[:city].empty? ? "": " error"), :style => "width: 200px; margin-right: 332px" %>
+		<%= error_messages_for_attribute(@address, :city) %>
+	</div><!--//field-->
+	<div class="field clearfix">
+		<%= f.label "State*: "%>
+		<%= f.select :state, options_for_select(states_array, @address.state), :class => (@address.errors[:state].empty? ? "": "error") %>
+		<%= error_messages_for_attribute(@address, :state) %>
+	</div><!--//field-->
+	<div class="field clearfix">
+		<%= f.label "Zip*: "%>
+		<%= text_field_tag 'address[zip]', @address.suggested_zip, :class => "textbox" + (@address.errors[:zip].empty? ? "": " error"), :style => "width: 200px; margin-right: 332px" %>
+		<%= error_messages_for_attribute(@address, :zip) %>
+	</div><!--//field-->
+		<div class="field clearfix">
+			<%= hidden_field_tag 'source', 'external_validation' %>
+	    <%= f.submit "Re-submit", :class => 'button' %>
+		</div>
+	<% end %>
+
+	</div>
+<div class="clearer"></div>

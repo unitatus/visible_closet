@@ -3,7 +3,22 @@
 <div id="internal-right">
 	<div class="simple_header">New Address</div>
 	(<%= link_to 'See all addresses', addresses_path %>)
-<br><br>
+<br>
+<% if !@address.errors[:fedex].empty? %>
+<br>
+	<div class="error_label"><%= @address.errors[:fedex][0] %></div>
+	<br>
+<% end %>
+<% if !@address.external_error_messages.empty? %>
+<div class="error_label">The following error messages were returned:<br>
+	<ul>
+	<% @address.external_error_messages.each do |msg| %>
+		<li><%= msg %></li>
+	<% end %>
+	</ul>
+</div>
+<% end %>
+<br>
 <%= render 'form' %>
 </div>
 <div class="clearer"></div>
