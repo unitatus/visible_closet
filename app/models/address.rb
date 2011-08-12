@@ -23,18 +23,19 @@
 #
 
 class Address < ActiveRecord::Base
+  require 'soap/wsdlDriver'
 
   belongs_to :user
 
-  validates_presence_of :first_name, :message => "First name cannot be blank"
-  validates_presence_of :last_name, :message => "Last name cannot be blank"
-  validates_presence_of :day_phone, :message => "Day phone cannot be blank"
-  validates_presence_of :address_line_1, :message => "Address line 1 cannot be blank"
+  validates_presence_of :first_name, :message => "can't be blank"
+  validates_presence_of :last_name, :message => "can't be blank"
+  validates_presence_of :day_phone, :message => "can't be blank"
+  validates_presence_of :address_line_1, :message => "can't be blank"
   validates_length_of :address_line_1, :maximum => 30, :message => "Fedex cannot accept address lines longer than 30 characters"
   validates_length_of :address_line_2, :maximum => 30, :message => "Fedex cannot accept address lines longer than 30 characters"
-  validates_presence_of :city, :message => "City cannot be blank"
+  validates_presence_of :city, :message => "can't be blank"
   validates_presence_of :state, :message => "State must be selected"
-  validates_presence_of :zip, :message => "Zip code cannot be blank"
+  validates_presence_of :zip, :message => "can't be blank"
   validate :external_validation, :on => :create
 
   validates_length_of :day_phone, :minimum => 10, :maximum => 10, :message => "Please enter a 10-digit phone number", :unless => :skip_day_content_validation
@@ -101,6 +102,11 @@ class Address < ActiveRecord::Base
   end
   
   def external_validation
+    if !errors.empty?
+      # there are errors. Back out -- these can cause fatal consequences in fedex call.
+      return false
+    end 
+    
     fedex = Fedex::Base.new(
        :auth_key => Rails.application.config.fedex_auth_key,
        :security_code => Rails.application.config.fedex_security_code,
@@ -122,37 +128,37 @@ class Address < ActiveRecord::Base
      @address_report = fedex.validate_address(:address => address_hash)
      
      if @address_report[:line_1][:suggested_value] != self.address_line_1 && @address_report[:changes_suggested]
-       errors[:address_line_1] = "\"#{self.address_line_1}\" was not recognized in FedEx systems. Above is a suggested value for address line 1."
+       errors[:address_line_1] = "We didn't recognize the entry \"#{self.address_line_1}\" for this address. Above is a suggested value."
        self.address_line_1 = @address_report[:line_1][:suggested_value]
      end
 
      if @address_report[:line_2][:suggested_value] != self.address_line_2 && @address_report[:changes_suggested]
        if self.address_line_2.blank?
-         errors[:address_line_2] = "FedEx suggested the above text for line 2. If this looks good, click submit again."
+         errors[:address_line_2] = "Our address system suggested the above for this line."
        else
          if @address_report[:line_2][:suggested_value].blank?
-           errors[:address_line_2] = "\"#{self.address_line_2}\" was not recognized in FedEx systems. FedEx suggests that this field be blank. To accept, click 'Create Address'."
+           errors[:address_line_2] = "Our address system suggested a blank for this line instead of \"#{self.address_line_2}\""
          else
-           errors[:address_line_2] = "\"#{self.address_line_2}\" was not recognized in FedEx systems. Above is a suggested value for address line 2."
+           errors[:address_line_2] = "We didn't recognize the entry \"#{self.address_line_2}\" for this address. Above is a suggested value."
          end
        end
        self.address_line_2 = @address_report[:line_2][:suggested_value]
      end
      
      if @address_report[:city][:suggested_value] != self.city && @address_report[:changes_suggested]
-       errors[:city] = "\"#{self.city}\" was not recognized in FedEx systems. Above is a suggested value for city."
+       errors[:city] = "We didn't recognize the entry \"#{self.city}\" for this address. Above is a suggested value."
        self.city = @address_report[:city][:suggested_value]
      end
      
      if @address_report[:postal_code][:suggested_value] != self.zip && @address_report[:changes_suggested]
-       errors[:zip] = "\"#{self.zip}\" was not recognized in FedEx systems. Above is a suggested value for zip."
+       errors[:zip] = "We didn't recognize the entry \"#{self.zip}\" for this address. Above is a suggested value."
        self.zip = @address_report[:postal_code][:suggested_value]
      end
 
      if !@address_report[:success] && @address_report[:changes_suggested]
-       errors[:fedex] = "FedEx was unable to find the address you entered, but offered suggestions. See below  for details and to accept or reject the suggestions."
+       errors[:fedex] = "We were unable to verify the address you entered, but have suggestions. See below for details and to accept or reject the suggestions."
      elsif !@address_report[:success]
-       errors[:fedex] = "FedEx was not able to find the address you entered. Please check your entries, or contact us for questions. At this time we can only accept addresses that FedEx can ship to."
+       errors[:fedex] = "We were unable to verify the address you entered. Please check your entries, or <a href=\"/contact\">contact us</a> for questions. <br>At this time we can only accept addresses that FedEx can ship to."
      end
    end
   

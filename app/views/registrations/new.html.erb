@@ -7,8 +7,20 @@
 <% if @user.errors.size < 3 && @user.errors.size > 0 %>
 	<div class="error_label">
 		<% @user.errors.each do |attr, msg| %>
-			<%= attr %> - <%= msg %><br>
-		<% end %>	
+			<% if attr.to_s.include? "fedex" %>
+				<%= raw msg %><br>
+				<% if !@user.default_shipping_address.external_error_messages.empty? %>
+					The following error messages were returned:<br><br>
+					<% @user.default_shipping_address.external_error_messages.each do |ext_msg| %>
+						<%= ext_msg %><br>
+					<% end %>
+				<% end %>
+			<% else # does not include fedex %>
+				<% sliced_attr = attr.to_s %>
+				<% sliced_attr.slice! "default_shipping_address." %>
+				<%= sliced_attr %> - <%= msg %><br>
+			<% end %>
+		<% end %>
 	</div>
 <% elsif @user.errors.size >= 3 %>
 <div class="error_label">
