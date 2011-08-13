@@ -70,6 +70,15 @@ function utcToLocal(value) {
     return null;
 }
 
+function toggleHIWMenu() {
+	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {	
+		hiw_submenu = document.getElementById("hiw_submenu")
+	
+		hiw_submenu.style.top = (hiw_submenu.style.top == "30px" ? "-999em" : "30px");
+		hiw_submenu.style.zIndex = (hiw_submenu.style.zIndex == "9999" ? "0" : "9999");
+	}
+}
+
 // The following is to slow down image change on stored_item image review
 $(document).ready(function(){
 	// Fades store/portfolio link overlays
