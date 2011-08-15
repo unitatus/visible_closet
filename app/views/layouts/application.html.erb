@@ -122,9 +122,9 @@
                     <a href="/users/register"><img src="/images/signup.gif" alt="Sign Up" /></a> 
                 </div>
 				<% elsif !current_user.cart.nil? && !current_user.cart.empty? %>
-				<div id="cart-display">
+				<!--<div id="cart-display">
                     <p><a href="/account/cart">service requests in cart: <%= current_user.cart.num_items %></a></p>
-                </div>
+                </div>-->
 				<% end %>
             </div>
             <div id="page-content">
