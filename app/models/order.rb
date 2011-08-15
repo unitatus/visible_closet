@@ -72,7 +72,7 @@ class Order < ActiveRecord::Base
     charges = Array.new
     
     order_lines.each do | order_line |
-      charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id)
+      charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id, :order_id => self.id)
     end
     
     charges
@@ -97,6 +97,45 @@ class Order < ActiveRecord::Base
     
     total
   end
+  
+  def destroy_test_order!
+    transactions = PaymentTransaction.find_all_by_order_id(self.id)
+    transactions.each do |transaction|
+      transaction.destroy
+    end
+
+    shipments = Shipment.find_all_by_order_id(self.id)
+    shipments.each do |shipment|
+      shipment.destroy
+    end
+    
+    self.order_lines.each do |order_line|
+      boxes = Box.find_all_by_ordering_order_line_id(order_line.id)
+      boxes.each do |box|
+        box.destroy_test_box!
+      end
+      order_line.destroy
+    end
+    
+    cart = self.cart
+    cart.cart_items.each do |cart_item|
+      cart_item.destroy
+    end
+    cart.destroy
+    
+    charges = Charge.find_all_by_order_id(self.id)
+    charges.each do |charge|
+      charge.destroy
+    end
+    
+    invoices = Invoice.find_all_by_order_id(self.id)
+    invoices.each do |invoice|
+      invoice.destroy
+    end
+    
+    self.destroy
+  end
+  
   
   private
   

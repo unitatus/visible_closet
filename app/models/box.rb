@@ -192,16 +192,19 @@ class Box < ActiveRecord::Base
       indexing_product = Product.find(Rails.application.config.our_box_inventorying_product_id)
     end
     
+    box_count_like_me = Box.count_boxes(self.user, self.status, self.box_type)
+    storage_discount = Discount.new(storage_product, box_count_like_me, (subscription.nil? ? 1 : subscription.duration_in_months))
+    
     if self.indexing_status == NO_INDEXING_REQUESTED
       indexing_fee = 0
     else
-      indexing_fee = indexing_product.price
+      indexing_fee = Discount.new(indexing_product, box_count_like_me, (subscription.nil? ? 1 : subscription.duration_in_months)).unit_price_after_discount
     end
-    
+        
     if self.box_type == CUST_BOX_TYPE
-      return (storage_product.price + indexing_fee) * cubic_feet
+      return (storage_discount.unit_price_after_discount + indexing_fee) * cubic_feet
     else
-      return storage_product.price + indexing_fee
+      return storage_discount.unit_price_after_discount + indexing_fee
     end
   end
   
@@ -231,12 +234,24 @@ class Box < ActiveRecord::Base
     StoredItem.count(:conditions => "box_id = #{self.id}")
   end
   
+  def destroy_test_box!
+    stored_items = StoredItem.find_all_by_box_id(self.id)
+    stored_items.each do |stored_item|
+      stored_item.stored_item_tags.each do |tag|
+        tag.destroy
+      end
+      stored_item.destroy
+    end
+    
+    self.destroy
+  end
+  
   private
   
   def create_shipment
     shipment = Shipment.new
     
-    order = get_order
+    order = get_ordering_order
     
     shipment.box_id = self.id
     shipment.from_address_id = get_from_address_id(order)
@@ -279,7 +294,7 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def get_order
+  def get_ordering_order
     order_line = OrderLine.find(self.ordering_order_line_id)
     order = order_line.order
   end
@@ -292,6 +307,8 @@ class Box < ActiveRecord::Base
     else
       raise "Invalid box type for box " << inspect
     end
+    
+    ordering_line = OrderLine.find(self.ordering_order_line_id)
     
     order = InternalOrder.new
     
@@ -306,6 +323,7 @@ class Box < ActiveRecord::Base
     order_line.product_id = product_id
     order_line.order_id = order.id
     order_line.quantity = 1
+    order_line.committed_months = ordering_line.committed_months.nil? ? 0 : ordering_line.committed_months
     
     if (!order_line.save)
       raise "Failed to save order line " + order_line.inspect + " for box " + inspect

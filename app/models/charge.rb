@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110708041554
+# Schema version: 20110815195751
 #
 # Table name: charges
 #
@@ -9,6 +9,7 @@
 #  product_id     :integer
 #  created_at     :datetime
 #  updated_at     :datetime
+#  order_id       :integer
 #
 
 # Conceptually, a charge can be related to: and order line; a box in storage.
