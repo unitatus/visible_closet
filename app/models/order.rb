@@ -72,7 +72,7 @@ class Order < ActiveRecord::Base
     charges = Array.new
     
     order_lines.each do | order_line |
-      charges << Charge.create!(:user_id => user_id, :total_in_cents => order_line.total_in_cents, :product_id => order_line.product_id)
+      charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id)
     end
     
     charges
@@ -125,8 +125,6 @@ class Order < ActiveRecord::Base
     
     order_lines.each do |order_line|
       product = order_line.product
-
-debugger
 
       if order_line.committed_months.nil? || order_line.committed_months == 0
         subscription = nil

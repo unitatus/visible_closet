@@ -38,7 +38,7 @@ class PaymentTransaction < ActiveRecord::Base
     total_to_pay = 0.0
     
     charges.each do |charge|
-      total_to_pay += (charge.total_in_cents / 100)
+      total_to_pay += (charge.total_in_cents / 100.0)
     end
     
     response = CIM_GATEWAY.create_customer_profile_transaction({:transaction => {:type => :auth_capture,

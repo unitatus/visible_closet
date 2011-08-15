@@ -54,7 +54,7 @@
 	<b>Total Charged (first month's rent): <%= number_to_currency(@order.total_in_cents.to_f/100) %></b>
 </div>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
-<a href="/orders/<%=@order.id%>/print_invoice">Printable Summary &gt;&gt;</a>
+<a href="/orders/<%=@order.id%>/print_invoice" target="new">Printable Summary &gt;&gt;</a>
 </div>
 <br><br>Thank you for placing your order! To keep track of your boxes, see the <a href="/boxes">Browse Boxes</a> menu on the left. 
 <br><br>To learn more about how to pack boxes, <a href="/packing_tips">click here</a>. 
