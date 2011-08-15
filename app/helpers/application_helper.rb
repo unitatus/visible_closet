@@ -109,4 +109,18 @@ module ApplicationHelper
   def vc_address
     address_summary(Address.find(Rails.application.config.fedex_vc_address_id))
   end
+  
+  def box_number_options(product_id)
+    options = Array.new
+    product = Product.find(product_id)
+    
+    (1..30).each do |i|
+      appender = ""
+      discount = Discount.new(product, i, 1)
+      
+      options << [i.to_s + (discount.unit_discount_perc > 0 ? " (" + number_to_percentage(discount.unit_discount_perc*100.0, :precision => 0) + ") savings" : ""), i.to_s]
+    end
+    
+    options
+  end
 end

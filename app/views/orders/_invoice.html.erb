@@ -64,7 +64,7 @@
 				<table width=100%>
 					<thead>
 						<tr>
-							<th width=30% align="left">Item</th><th width=25%>Qty</th><th></th><th width=25%>Unit Price</th><th width=20% align="right">Price</th>
+							<th width=25% align="left">Item</th><th width=15%>Qty</th><th></th><th width=20%>Monthly Cost</th><th></th><th width=20%># Months Paid</th><th width=20% align="right">Price</th>
 						</tr>	
 					</thead>
 					<tbody>
@@ -74,7 +74,9 @@
 								<td><%= line.quantity %></td>
 								<td>x</td>
 								<td><%= number_to_currency(line.unit_price) %></td>
-								<td align="right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.unit_price / 100) %>
+								<td>x</td>
+								<td><%= line.months_paid %></td>
+								<td align="right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.discount.due_at_signup) %>
 							</tr>
 						<% end %>
 					</tbody>
@@ -85,12 +87,14 @@
 			<div class="left_wide_column">
 				Subtotal:<br>
 				Shipping & Handling:<br>
-				Discount:<br>
 			</div>
 			<div class="right_narrow_column">
 				<%= number_to_currency(@invoice.total_in_cents / 100)%><br>
+				<% if @invoice.free_shipping? %>
 				$0.00<br>
-				$0.00<br>
+				<% else %>
+				TBD on shipment date<br>
+				<% end %>
 			</div>
 			<div style="clear: both"></div>
 			<hr>

@@ -12,7 +12,10 @@
 				Quantity
 			</th>
 			<th>
-				Price
+				Cost per month
+			</th>
+			<th>
+				Plan
 			</th>
 			<th>
 				Due now
@@ -27,17 +30,28 @@
 				<%= order_line.quantity %>
 			</td>
 			<td>
-				<%= number_to_currency(product.price) %> <%= product.price_comment %>
+				<%= number_to_currency(order_line.total_in_cents/100) %> <%= product.price_comment %>
+			</td>
+			<td>
+				<% if order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>
+					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>-month plan
+				<% elsif order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>
+					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>-month plan
+				<% elsif order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
+					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>-month plan
+				<% else %>
+					Monthly
+				<% end %>	
 			</td>
 			<td align="right">
-				<%= number_to_currency(product.due_at_signup * order_line.quantity) %>
+				<%= number_to_currency(order_line.discount.due_at_signup) %>
 			</td>
 		</tr><% end %> <!-- end loop -->
 	</table>
 	<br>
 	<hr>
 	<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
-	<b>Total Charged (first month's rent): <%= number_to_currency(@order.total_in_cents/100) %></b>
+	<b>Total Charged (first month's rent): <%= number_to_currency(@order.total_in_cents.to_f/100) %></b>
 </div>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 <a href="/orders/<%=@order.id%>/print_invoice">Printable Summary &gt;&gt;</a>

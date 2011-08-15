@@ -29,10 +29,49 @@ class PagesController < ApplicationController
   
   def pricing
     @top_menu_page = :hiw
-    @vc_box_price = Product.find(Rails.application.config.our_box_product_id).price
-    @cust_box_price = Product.find(Rails.application.config.your_box_product_id).price
-    @vc_box_inventorying_price = Product.find(Rails.application.config.our_box_inventorying_product_id).price
-    @cust_box_inventorying_price = Product.find(Rails.application.config.your_box_inventorying_product_id).price
+    @vc_box = Product.find(Rails.application.config.our_box_product_id)
+    @vc_box_count_1_months_1_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @vc_box_count_2_months_1_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @vc_box_count_3_months_1_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @vc_box_count_1_months_2_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @vc_box_count_2_months_2_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @vc_box_count_3_months_2_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @vc_box_count_1_months_3_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    @vc_box_count_2_months_3_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    @vc_box_count_3_months_3_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    
+    @cust_box = Product.find(Rails.application.config.your_box_product_id)
+    @cust_box_count_1_months_1_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @cust_box_count_2_months_1_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @cust_box_count_3_months_1_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @cust_box_count_1_months_2_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @cust_box_count_2_months_2_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @cust_box_count_3_months_2_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @cust_box_count_1_months_3_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    @cust_box_count_2_months_3_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    @cust_box_count_3_months_3_disc = Discount.new(@cust_box, Discount::CF_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+
+    @vc_inventorying = Product.find(Rails.application.config.our_box_inventorying_product_id)
+    @vc_inventorying_count_1_months_1_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @vc_inventorying_count_2_months_1_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @vc_inventorying_count_3_months_1_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @vc_inventorying_count_1_months_2_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @vc_inventorying_count_2_months_2_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @vc_inventorying_count_3_months_2_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @vc_inventorying_count_1_months_3_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    @vc_inventorying_count_2_months_3_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    @vc_inventorying_count_3_months_3_disc = Discount.new(@vc_inventorying, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+
+    @cust_inventorying = Product.find(Rails.application.config.your_box_inventorying_product_id)
+    @cust_inventorying_count_1_months_1_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @cust_inventorying_count_2_months_1_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @cust_inventorying_count_3_months_1_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
+    @cust_inventorying_count_1_months_2_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @cust_inventorying_count_2_months_2_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @cust_inventorying_count_3_months_2_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2)
+    @cust_inventorying_count_1_months_3_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    @cust_inventorying_count_2_months_3_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    @cust_inventorying_count_3_months_3_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
   end
   
   def contact

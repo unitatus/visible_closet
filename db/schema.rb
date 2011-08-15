@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110812172047) do
+ActiveRecord::Schema.define(:version => 20110815030426) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20110812172047) do
     t.float    "length"
     t.float    "weight"
     t.integer  "box_num"
+    t.integer  "subscription_id"
   end
 
   add_index "boxes", ["assigned_to_user_id"], :name => "index_boxes_on_assigned_to_user_id"
@@ -58,6 +59,7 @@ ActiveRecord::Schema.define(:version => 20110812172047) do
     t.integer  "product_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "committed_months"
   end
 
   add_index "cart_items", ["cart_id"], :name => "index_cart_items_on_cart_id"
@@ -108,6 +110,7 @@ ActiveRecord::Schema.define(:version => 20110812172047) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "committed_months"
   end
 
   add_index "order_lines", ["order_id"], :name => "index_order_lines_on_order_id"
@@ -233,6 +236,15 @@ ActiveRecord::Schema.define(:version => 20110812172047) do
   end
 
   add_index "stored_items", ["box_id"], :name => "index_stored_items_on_box_id"
+
+  create_table "subscriptions", :force => true do |t|
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer  "user_id"
+    t.integer  "duration_in_months"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                                      :default => "",   :null => false

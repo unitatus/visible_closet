@@ -21,9 +21,7 @@ class Cart < ActiveRecord::Base
     total_estimate = 0
 
     cart_items.each do |cart_item|
-      product = Product.find(cart_item.product_id)
-
-      total_estimate += (cart_item.quantity * product.due_at_signup)
+      total_estimate += cart_item.discount.due_at_signup
     end
  
     total_estimate
@@ -74,8 +72,26 @@ class Cart < ActiveRecord::Base
     order = build_order(attributes)
     
     cart_items.each do |cart_item|
-      order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity } )
+      order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity, :committed_months => cart_item.committed_months } )
     end    
     order
   end  
+  
+  def remove_cart_item(product_id)
+    cart_item = cart_items.select { |c| c.product_id == product_id }[0]
+    
+    if (!cart_item.nil?)
+      cart_items.delete(cart_item)
+    end
+  end
+  
+  def add_cart_item(product_id, quantity, committed_months)
+    cart_item = CartItem.new
+    
+    cart_item.product_id = product_id
+    cart_item.quantity = quantity
+    cart_item.committed_months = committed_months
+    
+    cart_items << cart_item
+  end
 end

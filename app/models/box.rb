@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110803210001
+# Schema version: 20110815030426
 #
 # Table name: boxes
 #
@@ -19,6 +19,7 @@
 #  length                 :float
 #  weight                 :float
 #  box_num                :integer
+#  subscription_id        :integer
 #
 
 class Box < ActiveRecord::Base
@@ -42,6 +43,7 @@ class Box < ActiveRecord::Base
   has_many :shipments
   has_one :order_line
   belongs_to :user, :foreign_key => :assigned_to_user_id
+  belongs_to :subscription
   
   # TODO: Figure out internationalization
   def status_en

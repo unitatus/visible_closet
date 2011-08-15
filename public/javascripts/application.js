@@ -22,6 +22,14 @@ function ToggleIndexingLock()
 	document.forms['box_form'].elements['marked_for_indexing'].disabled = document.forms['box_form'].elements['marked_for_indexing_locked'].checked;
 }
 
+function toggleBoxCountSelect()
+{
+	placeholder = document.getElementById("vc_boxes").style.display
+
+	document.getElementById("vc_boxes").style.display = document.getElementById("cust_boxes").style.display
+	document.getElementById("cust_boxes").style.display = placeholder
+}
+
 function showTagsForm(storedItemId)
 {
 	link_div = 'add_tags_link_' + storedItemId;
@@ -111,6 +119,29 @@ $(document).ready(function(){
         }
     });
     
+    $('#pricing .price-box .nav li a').click(function(){ 
+        $($(this)).parent().parent().find(".active").removeClass('active');
+        whichOne = $($(this)).parent().attr('class');
+        $($(this)).parent().parent().parent().parent().find("#box1").hide();
+        $($(this)).parent().parent().parent().parent().find("#box2").hide();
+        $($(this)).parent().parent().parent().parent().find("#box3").hide();
+        $($(this)).parent().parent().parent().parent().find("#box4").hide();
+        $($(this)).parent().parent().parent().parent().find("#"+whichOne).show();
+        $($(this)).parent().addClass('active');
+        return false;
+    });
+    
+    $('.chooser').click(function(){
+        $(".our-boxes").hide();
+        $(".your-boxes").hide();
+        whichOne = $($(this)).attr('id');
+        $("."+whichOne).show();
+        $('#choosebox').find('.active').removeClass('active');
+        $($(this)).addClass('active');
+        return false;
+    });
+
+
     $('#inventory-menu-rightarrow').click(function(){
         if($('#inventory-menu-rightarrow').hasClass('enabled')){
             $('#inventory-menu-rightarrow').removeClass('enabled');
@@ -208,6 +239,30 @@ $(document).ready(function(){
 		'titleShow'		: false,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none'
+	});
+	
+	$("#checkout_plan_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none'
+	});
+
+	$("#discount_synopsis_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 600,
+		'height': 300
+	});
+	
+	$("#pricing_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 400,
+		'height': 55
 	});
 	
 	$("#cust_product_link").fancybox({

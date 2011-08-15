@@ -688,15 +688,16 @@ h1 {
 .graybox .detailtext {
     font-size: 16px;
     text-align: right;
+	vertical-align: middle;
 }
 
 .more-stuff-box-sizing {
-    width: 500px;
+    width: 650px;
 }
 
 .order-boxes {
     text-align: right;
-    width: 500px;
+    width: 650px;
 }
 
 .left-aligned-text td {
@@ -852,6 +853,186 @@ h1 {
 #inventory-menu {
     position: relative;
     height: 150px;
+}
+
+/* pricing REV */
+.price-box {
+    height: 940px;
+    height: 280px;
+    position: relative;
+}
+
+.price-box .nav {
+    width: 150px;
+    height: 280px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.price-box .nav li {
+    width: 150px;
+    height: 90px;
+    display: block;
+    background-image: url('../images/pricing-tab.gif');
+    background-position: 0px 0px;
+    position: relative;
+}
+
+.price-box .nav li.active {
+    background-position: 0px 90px;
+}
+
+.price-box .nav li a {
+    display: block;
+    width: 130px;
+    height: 90px;
+    text-align: center;
+    line-height: 85px;
+    position: relative;
+    left: 20px;
+    font-size: 15px;
+}
+
+.price-box .nav li a strong {
+    font-size: 40px;
+}
+
+.price-box .nav li.active a {
+    color: #fff !important;
+}
+
+.price-box .viewer {
+    width: 790px;
+    height: 280px;
+    position: absolute;
+    top: 0px;
+    left: 150px;
+    background-image: url('../images/pricing-bg.gif');
+}
+
+.price-box .viewer .field1 {
+    display: block;
+    height: 225px;
+    left: 30px;
+    position: absolute;
+    top: 26px;
+    width: 207px;
+}
+
+.price-box .viewer .field2 {
+    display: block;
+    height: 225px;
+    left: 289px;
+    position: absolute;
+    top: 26px;
+    width: 207px;
+}
+
+.price-box .viewer .field3 {
+    display: block;
+    height: 225px;
+    left: 544px;
+    position: absolute;
+    top: 26px;
+    width: 207px;
+}
+
+.price-box .viewer .extra_text {
+    display: block;
+    height: 2em;
+    left: 30px;
+    position: absolute;
+    top: 255px;
+    width: 100%;
+	color: white;
+}
+
+.price-box .viewer .circle-bg {
+    background-image: url('../images/pricing-circle.gif');
+    background-repeat: no-repeat;
+    background-position: top center;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    text-align: center;
+    color: #fff;
+}
+
+.price-box .viewer table {
+    width: 100%;
+    color: white;
+    font-size: 16px;
+}
+
+.price-box .viewer table .pricing-line {
+    padding: 5px 0px 5px 0px;
+    text-align: center;
+}
+
+.price-box .viewer table .pricing-total {
+    padding: 10px 0px 0px 0px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+.price-box .viewer table .pricing-total strong {
+    font-size: 36px;
+}
+
+.price-box .viewer table img {
+    display: inline;
+    vertical-align: text-top;
+}
+
+.price-box .viewer table td {
+    padding: 0px 3px;
+    line-height: 25px;
+}
+
+.price-box .viewer table .firstcol {
+    width: 50px;
+    text-align: center;
+}
+
+#pricing #choosebox {
+    height: 156px;
+    width: 506px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#pricing #our-boxes {
+    width: 243px;
+    height: 156px;
+    background-image: url('../images/our-boxes.jpg');
+    background-position: 0px 0px;
+    display: block;
+    float: left;
+}
+
+#pricing #your-boxes {
+    width: 243px;
+    height: 156px;
+    margin-left: 20px;
+    background-image: url('../images/your-boxes.jpg');
+    background-position: 0px 0px;
+    display: block;
+    float: left;
+}
+
+#pricing .select-text {
+    width: 500px;
+    margin-left: 220px;
+    text-align: center;
+    font-size: 30px;
+    line-height: 50px;
+    color: #333;
+}
+
+#pricing #our-boxes.active, #pricing #your-boxes.active {
+    background-position: 0px 156px;
 }
 
 /* pricing */

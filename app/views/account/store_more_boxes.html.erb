@@ -11,36 +11,34 @@
 			<br>
 		</div>
 	<% end %>
-    <p class="more-heading">Please specify the number of boxes of each type that you would like to store.</p>
 <%= form_tag("/account/order_boxes", :class => "standard") do %>
     <div class="graybox more-stuff-box-sizing">
         <table class="more-stuff-order">
-            <thead>
-                <tr>
-                  <th>&nbsp;</th>
-                  <th>Your Boxes</th>
-                  <th>Our Boxes</th>
-                </tr>
-              </thead>
               <tbody class="top-line">
                 <tr>
-                    <td class="detailtext">Number of boxes you would like to store:</td>
-                    <td>
-	                	<div class="incrementer">
-		                    <span>&nbsp;</span>
-							<%= text_field_tag(:num_boxes_yours, params[:num_boxes_yours].blank? ? @cart.get_quantity(Rails.application.config.your_box_product_id) : params[:num_boxes_yours], :class => "numberbox") %>
-		                    <div class="increment-up"></div>
-		                    <div class="increment-down"></div>
-		                </div>
+                    <td class="detailtext">Would you like to store your own boxes or receive free boxes from The Visible Closet?</td>
+                    <td style="vertical-align: middle">
+	                	<%= radio_button_tag("box_type", "vc_boxes", true, :onclick => "toggleBoxCountSelect()")%> Visible Closet Boxes
 					</td>
-                    <td>
-	                	<div class="incrementer">
-		                    <span>&nbsp;</span>
-							<%= text_field_tag(:num_boxes_ours, params[:num_boxes_ours].blank? ? @cart.get_quantity(Rails.application.config.our_box_product_id) : params[:num_boxes_ours], :class => "numberbox") %>
-		                    <div class="increment-up"></div>
-		                    <div class="increment-down"></div>
-		                </div>
+                    <td style="vertical-align: middle">
+	                	<%= radio_button_tag("box_type", "cust_boxes", false, :onclick => "toggleBoxCountSelect()")%> My Boxes
 					</td>
+                </tr>
+                <tr>
+                    <td class="detailtext">How many boxes would you like to store?</td>
+                    <td colspan="2"  style="vertical-align: middle">
+						<div id="vc_boxes" name="vc_boxes" style="display:block"><%= select "num_vc_boxes", "num_vc_boxes", box_number_options(Rails.application.config.our_box_product_id) %></div>
+						<div id="cust_boxes"  name="cust_boxes" style="display:none"><%= select "num_cust_boxes", "num_cust_boxes", box_number_options(Rails.application.config.your_box_product_id) %></div>
+					</td>
+                </tr>
+                <tr>
+                    <td class="detailtext">How many months would you like to store your items? <a href="#pricing_box_inline" id="pricing_link" title="Visible Closet Box Details" style="font-size: 80%">(why do we ask this?)</a></td>
+                    <td colspan="2"  style="vertical-align: middle">
+							<%= select "num_months", "num_months", options_for_select([["I don't want to commit right now", "Unspecified"], ["Less than 3", "Less than 3"], ["3 - FREE SHIPPING VOUCHER", "3"], ["6 - FREE SHIPPING VOUCHER, SAVE 10%", "6"], ["12 - FREE SHIPPING VOUCHER, SAVE 20%", "12"]]) %>
+					</td>
+                </tr>
+                <tr>
+                    <td colspan="3">Note: for your boxes, box size assumed to be 1 cubic foot when calculating discount. Actual discount depends on the size of your box(es), and will be finalized when we receive your box(es).</td>
                 </tr>
             </tbody>
         </table>
@@ -48,28 +46,9 @@
     <div class="order-boxes"><br>
 		<%= submit_tag("Store Boxes", :class => "button") %>
     </div>
-	<script type="text/javascript" language="JavaScript">
-	document.forms[0].elements['num_boxes_yours'].focus();
-	</script>
-    <div class="order-boxes-notes">
-        <p>All Visible Closet boxes are 12"x12"x24".<br />
-        You will get a chance to inventory boxes later! We Promise!</p>
-        <p><strong>Pricing</strong></p>
-        <div class="graybox more-stuff-box-sizing">
-            <table>
-                <tbody class="left-aligned-text">
-                    <tr>
-                        <td>Storing a Visible Storage box:</td>
-                        <td><%= number_to_currency(@our_box.price) %> <%= @our_box.price_comment %></td>
-                    </tr>
-                    <tr>
-                        <td>Storing your box:</td>
-                        <td><%= number_to_currency(@your_box.price) %> <%= @your_box.price_comment %></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
 <% end %>
 </div>
 <div class="clearer"></div>
+<div style="display: none">
+<div id="pricing_box_inline" style="text-align: center">By choosing more months or boxes,<br> you take advantage of volume discounts. <br>For more details, see our <a href="/pricing"</a> pricing page.</div>
+</div>

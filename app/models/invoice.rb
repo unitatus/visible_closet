@@ -19,7 +19,7 @@ class Invoice < ActiveRecord::Base
   # has_many :charges
   
   class InvoiceLine
-    attr_accessor :product, :quantity, :unit_price
+    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount
   end
   
   def invoice_lines(refresh = false)
@@ -31,7 +31,9 @@ class Invoice < ActiveRecord::Base
         new_invoice_line = InvoiceLine.new()
         new_invoice_line.product = line.product
         new_invoice_line.quantity = line.quantity
-        new_invoice_line.unit_price = line.unit_price
+        new_invoice_line.unit_price = line.unit_price_after_discount
+        new_invoice_line.months_paid = line.discount.months_due_at_signup
+        new_invoice_line.discount = line.discount
         
         @invoice_lines << new_invoice_line
       end
@@ -44,9 +46,19 @@ class Invoice < ActiveRecord::Base
     the_total = 0.0
     
     self.invoice_lines.each do |line|
-      the_total += line.unit_price
+      the_total += line.discount.due_at_signup
     end
     
-    return the_total
+    return the_total*100
+  end
+  
+  def free_shipping?
+    self.invoice_lines.each do |line|
+      if !line.discount.free_shipping?
+        return false
+      end
+    end
+    
+    return true
   end
 end

@@ -25,10 +25,29 @@ class AccountController < ApplicationController
     if (@cart.nil?)
       @cart = Cart.new
       @cart.user_id = current_user.id
+    else
+      @cart.remove_cart_item(Rails.application.config.our_box_product_id)
+      @cart.remove_cart_item(Rails.application.config.your_box_product_id)
     end
     
-    process_cart_item(@cart, Rails.application.config.your_box_product_id, params[:num_boxes_yours])
-    process_cart_item(@cart, Rails.application.config.our_box_product_id, params[:num_boxes_ours])
+    if params[:box_type] == "vc_boxes"
+      product_id = Rails.application.config.our_box_product_id
+      num_boxes = params[:num_vc_boxes][:num_vc_boxes]
+    elsif params[:box_type] == "cust_boxes"
+      product_id = Rails.application.config.your_box_product_id
+      num_boxes = params[:num_cust_boxes][:num_cust_boxes]
+    else
+      raise "Illegal box type selected."
+    end    
+
+    # This is a numeric check. Why doesn't this exist in Ruby?
+    if params[:num_months][:num_months].to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) != nil
+      committed_months = params[:num_months][:num_months]
+    else
+      committed_months = 1
+    end
+
+    @cart.add_cart_item(product_id, num_boxes, committed_months)
 
     if (@cart.save())
       flash[:notice] = "Cart updated. Click the cart option on the left to see cart contents and finalize order."
@@ -211,20 +230,6 @@ class AccountController < ApplicationController
   
   def set_menu
     @top_menu_page = :account
-  end
-  
-  def process_cart_item(cart, product_id, quantity)
-    cart_item = cart.cart_items.select { |c| c.product_id == product_id }[0]
-
-    if (!cart_item && quantity.to_i != 0)
-      cart_item = CartItem.new
-      cart_item.product_id = product_id
-      cart.cart_items << cart_item
-    elsif cart_item && quantity.to_i == 0
-      cart.cart_items.delete(cart_item)
-    end
-
-    cart_item.quantity = quantity unless cart_item.nil?
   end
   
   def get_address_from_session(address_identifier)

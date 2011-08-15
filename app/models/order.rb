@@ -126,6 +126,8 @@ class Order < ActiveRecord::Base
     order_lines.each do |order_line|
       product = order_line.product
       
+      subscription = order_line.committed_months.nil? || order_line.committed_months == 0 ? nil : Subscription.create!(:duration_in_months => order_line.committed_months)
+      
       if product.id.to_s == Rails.application.config.our_box_product_id.to_s
         type = Box::VC_BOX_TYPE
         status = Box::NEW_STATUS
@@ -139,7 +141,8 @@ class Order < ActiveRecord::Base
       end
 
       for i in 1..(order_line.quantity)
-        if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, :indexing_status => Box::NO_INDEXING_REQUESTED)
+        if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, \
+          :indexing_status => Box::NO_INDEXING_REQUESTED, :subscription_id => subscription.nil? ? nil : subscription.id)
           raise "Standard box creation failed."
         end
       end # inner for loop

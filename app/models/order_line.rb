@@ -1,15 +1,16 @@
 # == Schema Information
-# Schema version: 20110705224828
+# Schema version: 20110815025244
 #
 # Table name: order_lines
 #
-#  id         :integer         not null, primary key
-#  order_id   :integer
-#  product_id :integer
-#  quantity   :integer
-#  status     :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  id               :integer         not null, primary key
+#  order_id         :integer
+#  product_id       :integer
+#  quantity         :integer
+#  status           :string(255)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  committed_months :integer
 #
 
 class OrderLine < ActiveRecord::Base
@@ -52,11 +53,15 @@ class OrderLine < ActiveRecord::Base
   end
   
   def total_in_cents
-    quantity * product.due_at_signup * 100
+    self.unit_price_after_discount*self.quantity*100
   end
   
-  def unit_price
-    product.due_at_signup
+  def discount
+    Discount.new(product, quantity, committed_months)
+  end
+  
+  def unit_price_after_discount
+    self.discount.unit_price_after_discount
   end
   
   def ordered_boxes

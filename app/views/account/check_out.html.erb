@@ -56,7 +56,10 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 				Quantity
 			</th>
 			<th>
-				Price
+				Cost 
+			</th>
+			<th>
+			Plan	
 			</th>
 			<th>
 				Due Now
@@ -71,11 +74,31 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 				<%= cart_item.quantity %>
 			</td>
 			<td>
-				<%= number_to_currency(product.price) %> <%= product.price_comment %>
+				<%= number_to_currency(cart_item.discount.total_monthly_price_after_discount) %> per month
+				<a href="#discount_synopsis" id="discount_synopsis_link">
+				<% if cart_item.discount? %>
+					 (<%= number_to_percentage(cart_item.discount.unit_discount_perc*100.0, :precision => 0)%> discount)
+				<% else %>
+					(no discount)
+				<% end %>	
+				</a>
+			</td>
+			<td>
+				<% if cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>
+					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>-month plan
+				<% elsif cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>
+					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>-month plan
+				<% elsif cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
+					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>-month plan
+				<% else %>
+					Monthly
+				<% end %>
 			</td>
 			<td align="right">
-				<%= number_to_currency(product.due_at_signup * cart_item.quantity) %>
-				<% if product.id == Rails.application.config.our_box_product_id %>
+				<%= number_to_currency(cart_item.discount.due_at_signup) %>
+				<% if cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
+					<a href="#plan_inline" id="checkout_plan_link">(why?)</a>
+				<% elsif product.id == Rails.application.config.our_box_product_id %>
 					<a href="#vc_box_inline" id="vc_product_link" title="Visible Closet Box Details">(why?)</a>
 				<% elsif product.id == Rails.application.config.your_box_product_id %>
 					<a href="#cust_box_inline" id="cust_product_link" title="Customer Box Details">(why?)</a>
@@ -99,6 +122,35 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 <% end %> <!-- end form -->
 <div class="clearer"></div>
 <div style="display: none">
-<div id="cust_box_inline" style="text-align: center"><b>Why am I ordering my own box?</b><br><br>We want to make sure that when we receive your box we know who sent it! <br>By clicking "submit" you will create a record of your box in your account, and receive instructions on how to ship it. <br>You can also track your box while it's in transit, and name the box for your own reference. </div>
+<div id="cust_box_inline" style="text-align: center"><b>Why am I ordering my own box?</b><br><br>We want to make sure that when we receive your box we know who sent it! <br>By clicking "Store My Stuff" you will create a record of your box in your account, and receive instructions on how to ship it. <br>You can also track your box while it's in transit, and name the box for your own reference. </div>
 <div id="vc_box_inline" style="text-align: center"><b>Why am I paying for this box?</b><br><br>Ordering a box from The Visible Closet requires that you pay your first month's rent up front. <br>Once you complete your order we will send you your free shipping materials. <br>You do not pay any more storage costs until your box has been in storage for one month.</div>
+<div id="plan_inline" style="text-align: center"><b>Why am I paying right now?</b><br><br>You have signed up for a multi-month plan, which gets you access to your free shipping voucher(s)! All plans require that you pay your first three months' rent up front. Any subsequent months in your plan will be billed at the price indicated above. At the end of your plan you can either sign up for another plan or switch to monthly billing (see <a href="/pricing">pricing</a> page for details on pricing for other plans and for the month-to-month option).</div>
+<div id="discount_synopsis" style="text-align: center"><b>Discount List</b><br><br>
+	<table class="prices_table">
+		<tr><th>Description</th><th>Discount</th></tr>
+		<tr>
+			<td>Store over <%= Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1-1 %> VC Boxes (or over <%= Discount::CF_DISCOUNT_THRESHOLD_1-1 %> cubic feet of your boxes)</td>
+			<td>Additional <%= number_to_percentage(Discount::UNIT_COUNT_THRESHOLD_1_DISCOUNT*100, :precision => 0) %> off</td>
+		</tr>
+		<tr>
+			<td>Store over <%= Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2-1 %> VC Boxes (or over <%= Discount::CF_DISCOUNT_THRESHOLD_2-1 %> cubic feet of your boxes)</td>
+			<td>Additional <%= number_to_percentage(Discount::UNIT_COUNT_THRESHOLD_2_DISCOUNT*100, :precision => 0) %> off</td>
+		</tr>
+		<tr>
+			<td>Store over <%= Discount::BOX_COUNT_DISCOUNT_THRESHOLD_3-1 %> VC Boxes (or over <%= Discount::CF_DISCOUNT_THRESHOLD_3-1 %> cubic feet of your boxes)</td>
+			<td>Additional <%= number_to_percentage(Discount::UNIT_COUNT_THRESHOLD_3_DISCOUNT*100, :precision => 0) %> off</td>
+		</tr>
+		<tr>
+			<td><%= Discount::FREE_SHIPPING_MONTH_THRESHOLD %>-month plan</td>
+			<td>Add free shipping voucher per box</td>
+		</tr>
+		<tr>
+			<td><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>-month plan</td>
+			<td>Additional <%= number_to_percentage(Discount::MONTH_COUNT_THRESHOLD_2_DISCOUNT*100, :precision => 0) %> off</td>
+		</tr>
+		<tr>
+			<td><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>-month plan</td>
+			<td>Additional <%= number_to_percentage(Discount::MONTH_COUNT_THRESHOLD_3_DISCOUNT*100, :precision => 0) %> off</td>
+		</tr>
+	</table>
 </div>
