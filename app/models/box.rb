@@ -36,7 +36,7 @@ class Box < ActiveRecord::Base
   CUST_BOX_TYPE = "cust_box"
   VC_BOX_TYPE = "vc_box"
   
-  attr_accessible :assigned_to_user_id, :ordering_order_line_id, :status, :box_type, :description, :indexing_status
+  attr_accessible :assigned_to_user_id, :ordering_order_line_id, :status, :box_type, :description, :indexing_status, :subscription_id
   after_create :set_box_num
 
   has_many :stored_items

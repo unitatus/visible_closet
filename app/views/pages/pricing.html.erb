@@ -1,3 +1,8 @@
+<div class="slim-centered" >
+	<h1>Pricing</h1><br>
+		Storing your own box with The Visible Closet costs <b><u><%= number_to_currency(@cust_box.price) %> <%= @cust_box.price_comment %></u></b>, and storing one of our boxes costs <b><u><%= number_to_currency(@vc_box.price) %> <%= @vc_box.price_comment %></u></b>. Visible Closet boxes are 12" X 12" X 24". <br><br>Having a box inventoried adds a price of <b><u><%= number_to_currency(@vc_inventorying.price) %> <%= @vc_inventorying.price_comment %></u></b> for Visible Closet boxes, or <b><u><%= number_to_currency(@cust_inventorying.price) %> <%= @cust_inventorying.price_comment %></u></b> for your own boxes. <br><br>Significant volume and time discounts are available! See below for details. 
+</div>
+
 <div id="pricing" >
     <div id="choosebox">
         <a href="#" class="chooser active" id="our-boxes">&nbsp;</a><a href="#" class="chooser" id="your-boxes">&nbsp;</a>

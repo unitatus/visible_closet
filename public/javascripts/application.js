@@ -244,7 +244,19 @@ $(document).ready(function(){
 	$("#checkout_plan_link").fancybox({
 		'titleShow'		: false,
 		'transitionIn'		: 'none',
-		'transitionOut'		: 'none'
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 600,
+		'height': 150
+	});
+
+	$("#cc_expl_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 600,
+		'height': 100
 	});
 
 	$("#discount_synopsis_link").fancybox({

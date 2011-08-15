@@ -128,30 +128,30 @@ class Address < ActiveRecord::Base
      @address_report = fedex.validate_address(:address => address_hash)
      
      if @address_report[:line_1][:suggested_value] != self.address_line_1 && @address_report[:changes_suggested]
-       errors[:address_line_1] = "We didn't recognize the entry \"#{self.address_line_1}\" for this address. Above is a suggested value."
+       errors[:address_line_1] = "We didn't recognize the entry \"#{self.address_line_1}\" for this address. A suggested value has been entered."
        self.address_line_1 = @address_report[:line_1][:suggested_value]
      end
 
      if @address_report[:line_2][:suggested_value] != self.address_line_2 && @address_report[:changes_suggested]
        if self.address_line_2.blank?
-         errors[:address_line_2] = "Our address system suggested the above for this line."
+         errors[:address_line_2] = "Our address system suggested a value for address line 2."
        else
          if @address_report[:line_2][:suggested_value].blank?
-           errors[:address_line_2] = "Our address system suggested a blank for this line instead of \"#{self.address_line_2}\""
+           errors[:address_line_2] = "Our address system suggested a blank for address line 2 instead of \"#{self.address_line_2}\""
          else
-           errors[:address_line_2] = "We didn't recognize the entry \"#{self.address_line_2}\" for this address. Above is a suggested value."
+           errors[:address_line_2] = "We didn't recognize the entry \"#{self.address_line_2}\" for this address. A suggested value has been entered."
          end
        end
        self.address_line_2 = @address_report[:line_2][:suggested_value]
      end
      
      if @address_report[:city][:suggested_value] != self.city && @address_report[:changes_suggested]
-       errors[:city] = "We didn't recognize the entry \"#{self.city}\" for this address. Above is a suggested value."
+       errors[:city] = "We didn't recognize the entry \"#{self.city}\" for this address. A suggested value has been entered."
        self.city = @address_report[:city][:suggested_value]
      end
      
      if @address_report[:postal_code][:suggested_value] != self.zip && @address_report[:changes_suggested]
-       errors[:zip] = "We didn't recognize the entry \"#{self.zip}\" for this address. Above is a suggested value."
+       errors[:zip] = "We didn't recognize the entry \"#{self.zip}\" for this address. A suggested value has been entered."
        self.zip = @address_report[:postal_code][:suggested_value]
      end
 
