@@ -942,16 +942,6 @@ h1 {
     width: 237px;
 }
 
-.price-box .viewer .extra_text {
-    display: block;
-    height: 2em;
-    left: 30px;
-    position: absolute;
-    top: 310px;
-    width: 100%;
-	color: white;
-}
-
 .price-box .viewer .circle-bg {
     background-image: url('../images/pricing-circle.gif');
     background-repeat: no-repeat;
