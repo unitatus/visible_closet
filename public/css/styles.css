@@ -858,7 +858,7 @@ h1 {
 /* pricing REV */
 .price-box {
     height: 940px;
-    height: 280px;
+    height: 370px;
     position: relative;
 }
 
@@ -872,7 +872,7 @@ h1 {
 
 .price-box .nav li {
     width: 150px;
-    height: 90px;
+    height: 80px;
     display: block;
     background-image: url('../images/pricing-tab.gif');
     background-position: 0px 0px;
@@ -880,15 +880,15 @@ h1 {
 }
 
 .price-box .nav li.active {
-    background-position: 0px 90px;
+    background-position: 0px 80px;
 }
 
 .price-box .nav li a {
     display: block;
     width: 130px;
-    height: 90px;
+    height: 80px;
     text-align: center;
-    line-height: 85px;
+    line-height: 80px;
     position: relative;
     left: 20px;
     font-size: 15px;
@@ -904,38 +904,42 @@ h1 {
 
 .price-box .viewer {
     width: 790px;
-    height: 280px;
+    height: 330px;
     position: absolute;
     top: 0px;
     left: 150px;
     background-image: url('../images/pricing-bg.gif');
 }
 
+.price-box .viewer-onebox {
+    background-image: url('../images/pricing-bg-ctr-only.gif');
+}
+
 .price-box .viewer .field1 {
     display: block;
     height: 225px;
-    left: 30px;
+    left: 15px;
     position: absolute;
     top: 26px;
-    width: 207px;
+    width: 237px;
 }
 
 .price-box .viewer .field2 {
     display: block;
     height: 225px;
-    left: 289px;
+    left: 274px;
     position: absolute;
     top: 26px;
-    width: 207px;
+    width: 237px;
 }
 
 .price-box .viewer .field3 {
     display: block;
     height: 225px;
-    left: 544px;
+    left: 529px;
     position: absolute;
     top: 26px;
-    width: 207px;
+    width: 237px;
 }
 
 .price-box .viewer .extra_text {
@@ -943,7 +947,7 @@ h1 {
     height: 2em;
     left: 30px;
     position: absolute;
-    top: 255px;
+    top: 310px;
     width: 100%;
 	color: white;
 }
@@ -989,11 +993,12 @@ h1 {
 .price-box .viewer table td {
     padding: 0px 3px;
     line-height: 25px;
+    font-size: 15px;
 }
 
 .price-box .viewer table .firstcol {
-    width: 50px;
-    text-align: center;
+    width: 75px;
+    text-align: right;
 }
 
 #pricing #choosebox {
@@ -1033,6 +1038,20 @@ h1 {
 
 #pricing #our-boxes.active, #pricing #your-boxes.active {
     background-position: 0px 156px;
+}
+
+#pricing input[type=checkbox]{
+    display: inline;
+}
+
+#pricing form {
+    display: inline;
+}
+
+#pricing .order-button {
+    position: absolute;
+    top: 240px;
+    left: 27px;
 }
 
 /* pricing */

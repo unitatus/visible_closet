@@ -28,7 +28,7 @@ class PagesController < ApplicationController
   end
   
   def pricing
-    @top_menu_page = :hiw
+    @top_menu_page = :pricing
     @vc_box = Product.find(Rails.application.config.our_box_product_id)
     @vc_box_count_1_months_1_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
     @vc_box_count_2_months_1_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
@@ -72,6 +72,11 @@ class PagesController < ApplicationController
     @cust_inventorying_count_1_months_3_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
     @cust_inventorying_count_2_months_3_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
     @cust_inventorying_count_3_months_3_disc = Discount.new(@cust_inventorying, Discount::CF_DISCOUNT_THRESHOLD_3, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3)
+    
+    @vc_box_no_discount_disc = Discount.new(@vc_box, 1, 1)
+    @vc_inv_no_discount_disc = Discount.new(@vc_inventorying, 1, 1)
+    @cust_box_no_discount_disc = Discount.new(@cust_box, 1, 1)
+    @cust_inv_no_discount_disc = Discount.new(@cust_inventorying, 1, 1)
   end
   
   def contact

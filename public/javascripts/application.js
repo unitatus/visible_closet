@@ -126,9 +126,30 @@ $(document).ready(function(){
         $($(this)).parent().parent().parent().parent().find("#box2").hide();
         $($(this)).parent().parent().parent().parent().find("#box3").hide();
         $($(this)).parent().parent().parent().parent().find("#box4").hide();
+		if (whichOne == "box4") {
+			$($(this)).parent().parent().parent().parent().find("#price-box-viewer").addClass('viewer-onebox');
+		} else {
+			$($(this)).parent().parent().parent().parent().find("#price-box-viewer").removeClass('viewer-onebox');
+		}
         $($(this)).parent().parent().parent().parent().find("#"+whichOne).show();
         $($(this)).parent().addClass('active');
         return false;
+    });
+    
+    $('#pricing .price-box input[type=checkbox]').change(function(){
+        addValue = $($(this)).attr('value');
+        baseValue = $($(this)).parent().parent().parent().parent().find("#base").attr('value');
+		origValue = $($(this)).parent().parent().parent().parent().find("#orig").attr('value');
+        var n = $($(this)).parent().find(":checked").length;
+        if(n>0){
+            formattedValue = origValue;
+	        $($(this)).parent().parent().parent().parent().find("strong").text(formattedValue);
+	        $($(this)).parent().parent().parent().find(".to-strike").css('text-decoration','none');
+        }else{
+            formattedValue = baseValue;
+	        $($(this)).parent().parent().parent().parent().find("strong").text(formattedValue);
+	        $($(this)).parent().parent().parent().find(".to-strike").css('text-decoration','line-through');
+        }
     });
     
     $('.chooser').click(function(){
@@ -140,8 +161,7 @@ $(document).ready(function(){
         $($(this)).addClass('active');
         return false;
     });
-
-
+    
     $('#inventory-menu-rightarrow').click(function(){
         if($('#inventory-menu-rightarrow').hasClass('enabled')){
             $('#inventory-menu-rightarrow').removeClass('enabled');
@@ -223,6 +243,7 @@ $(document).ready(function(){
             $('#inventory-menu-rightarrow').addClass('disabled');
         }
       });
+
 
 ///////////////////////Start Fancybox
 

@@ -101,6 +101,10 @@ class Discount
     return self.month_count >= FREE_SHIPPING_MONTH_THRESHOLD
   end
   
+  def free_shipping_materials?
+    return @product.id == Rails.application.config.our_box_product_id
+  end
+  
   private 
   
   def determine_thresholds

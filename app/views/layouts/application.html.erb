@@ -1,10 +1,12 @@
 <% active_top_str = " class='current-menu-item'" %>
-<% home_class = ""; hiw_class = ""; blog_class = ""; contact_class = ""; account_class = ""; %>
+<% home_class = ""; hiw_class = ""; pricing_class = ""; blog_class = ""; contact_class = ""; account_class = ""; %>
 <% case @top_menu_page %>
 <% when :home %>
 <%   home_class = active_top_str %>
 <% when :hiw %>
 <%   hiw_class = active_top_str %>
+<% when :pricing %>
+<%   pricing_class = active_top_str %>
 <% when :blog %>
 <%   blog_class = active_top_str %>
 <% when :contact %>
@@ -97,12 +99,11 @@
     							<li><a href="/how_it_works">Overview</a></li>
     
     							<li><a href="/right_for_me">Is this right for me?</a></li>
-    							<li><a href="/pricing">Pricing</a></li>
     							<li><a href="/faq">FAQ</a></li>
     							<li><a href="restrictions">Restrictions</a></li>
     						</ul>
     					</li>
-    					
+    					<li<%= pricing_class %>><a href="/pricing">Pricing</a></li>
     					<li<%= contact_class %>><a href="/contact">Contact</a></li>
 						<% if user_signed_in? %>
 						  <li<%= account_class %>><a href="/account/home">Account</a></li>

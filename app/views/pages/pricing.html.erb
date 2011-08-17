@@ -1,8 +1,3 @@
-<div class="slim-centered" >
-	<h1>Pricing</h1><br>
-		Storing your own box with The Visible Closet costs <b><u><%= number_to_currency(@cust_box.price) %> <%= @cust_box.price_comment %></u></b>, and storing one of our boxes costs <b><u><%= number_to_currency(@vc_box.price) %> <%= @vc_box.price_comment %></u></b>. Visible Closet boxes are 12" X 12" X 24". <br><br>Having a box inventoried adds a price of <b><u><%= number_to_currency(@vc_inventorying.price) %> <%= @vc_inventorying.price_comment %></u></b> for Visible Closet boxes, or <b><u><%= number_to_currency(@cust_inventorying.price) %> <%= @cust_inventorying.price_comment %></u></b> for your own boxes. <br><br>Significant volume and time discounts are available! See below for details. 
-</div>
-
 <div id="pricing" >
     <div id="choosebox">
         <a href="#" class="chooser active" id="our-boxes">&nbsp;</a><a href="#" class="chooser" id="your-boxes">&nbsp;</a>
@@ -14,280 +9,31 @@
             <ul>
                 <li class="box1 active"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %></strong> month</a></li>
                 <li class="box2"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %></strong> month</a></li>
-                <li class="box3"><a href="#">Ad hoc</a></li>
+                <li class="box3"><a href="#"><strong><%= Discount::FREE_SHIPPING_MONTH_THRESHOLD %></strong> month</a></li>
+				<li class="box4"><a href="#">Ad Hoc</a></li>
             </ul>
         </div>
-        <div class="viewer">
+        <div class="viewer" id="price-box-viewer">
             <div id="box1">
-                <div class="field1">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_1_months_3_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_1_months_3_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_1_months_3_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_1_months_3_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_1_months_3_disc.unit_price_after_discount + @vc_inventorying_count_1_months_3_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="field2">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_2_months_3_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_2_months_3_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_2_months_3_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_2_months_3_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_2_months_3_disc.unit_price_after_discount + @vc_inventorying_count_2_months_3_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="field3">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_3_months_3_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_3_months_3_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_3_months_3_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_3_months_3_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_3_months_3_disc.unit_price_after_discount + @vc_inventorying_count_3_months_3_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @vc_box_count_1_months_3_disc, :inventory_discount => @vc_inventorying_count_1_months_3_disc } %>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @vc_box_count_2_months_3_disc, :inventory_discount => @vc_inventorying_count_2_months_3_disc } %>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @vc_box_count_3_months_3_disc, :inventory_discount => @vc_inventorying_count_3_months_3_disc } %>
             </div>
             <div id="box2" style="display:none">
-                <div class="field1">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_1_months_2_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_1_months_2_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_1_months_2_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_1_months_2_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_1_months_2_disc.unit_price_after_discount + @vc_inventorying_count_1_months_2_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="field2">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_2_months_2_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_2_months_2_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_2_months_2_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_2_months_2_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_2_months_2_disc.unit_price_after_discount + @vc_inventorying_count_2_months_2_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="field3">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_3_months_2_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_3_months_2_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_3_months_2_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_3_months_2_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_3_months_2_disc.unit_price_after_discount + @vc_inventorying_count_3_months_2_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @vc_box_count_1_months_2_disc, :inventory_discount => @vc_inventorying_count_1_months_2_disc } %>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @vc_box_count_2_months_2_disc, :inventory_discount => @vc_inventorying_count_2_months_2_disc } %>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @vc_box_count_3_months_2_disc, :inventory_discount => @vc_inventorying_count_3_months_2_disc } %>
             </div>
             <div id="box3" style="display:none">
-                <div class="field1">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_1_months_1_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_1_months_1_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_1_months_1_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_1_months_1_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_1_months_1_disc.unit_price_after_discount + @vc_inventorying_count_1_months_1_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="field2">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_2_months_1_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_2_months_1_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_2_months_1_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_2_months_1_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_2_months_1_disc.unit_price_after_discount + @vc_inventorying_count_2_months_1_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="field3">
-                    <table>
-                        <tr>
-                            <td colspan="2" class="circle-bg"><%= @vc_box_count_3_months_1_disc.product_count %> Box - Save <%= number_to_percentage(@vc_box_count_3_months_1_disc.unit_discount_perc * 100, :precision => 0)%></td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_box_count_3_months_1_disc.unit_price_after_discount) %></td>
-                            <td>storage</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><%= number_to_currency(@vc_inventorying_count_3_months_1_disc.unit_price_after_discount) %></td>
-                            <td>inventoried</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>shipping to us</td>
-                        </tr>
-                        <tr>
-                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-                            <td>packing materials</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@vc_box_count_3_months_1_disc.unit_price_after_discount + @vc_inventorying_count_3_months_1_disc.unit_price_after_discount) %></strong> per box</td>
-                        </tr>
-                    </table>
-                </div>
-					<div class="extra_text">*Free shipping offer requires a minimum commitment of 3 months.</div>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @vc_box_count_1_months_1_disc, :inventory_discount => @vc_inventorying_count_1_months_1_disc } %>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @vc_box_count_2_months_1_disc, :inventory_discount => @vc_inventorying_count_2_months_1_disc } %>
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @vc_box_count_3_months_1_disc, :inventory_discount => @vc_inventorying_count_3_months_1_disc } %>
             </div>
-        </div>
-    </div>
+            <div id="box4" style="display:none">
+				<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @vc_box_no_discount_disc, :inventory_discount => @vc_inv_no_discount_disc } %>
+             </div>
+           </div>
+       </div>
 <!-- END PRICE BOX FOR OUR BOXES -->
 <!-- PRICE BOX FOR YOUR BOXES -->
     <div class="price-box your-boxes" style="display:none">
@@ -296,276 +42,27 @@
 	                <li class="box1 active"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %></strong> month</a></li>
 	                <li class="box2"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %></strong> month</a></li>
 	                <li class="box3"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %></strong> month</a></li>
+					<li class="box4"><a href="#">Ad Hoc</a></li>
 	            </ul>
 	        </div>
-	        <div class="viewer">
+	        <div class="viewer" id="price-box-viewer">
 	            <div id="box1">
-	                <div class="field1">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_1_months_3_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_1_months_3_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_1_months_3_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_1_months_3_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_1_months_3_disc.unit_price_after_discount + @cust_inventorying_count_1_months_3_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
-	                <div class="field2">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_2_months_3_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_2_months_3_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_2_months_3_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_2_months_3_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_2_months_3_disc.unit_price_after_discount + @cust_inventorying_count_2_months_3_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
-	                <div class="field3">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_3_months_3_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_3_months_3_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_3_months_3_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_3_months_3_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_3_months_3_disc.unit_price_after_discount + @cust_inventorying_count_3_months_3_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @cust_box_count_1_months_3_disc, :inventory_discount => @cust_inventorying_count_1_months_3_disc } %>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @cust_box_count_2_months_3_disc, :inventory_discount => @cust_inventorying_count_2_months_3_disc } %>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @cust_box_count_3_months_3_disc, :inventory_discount => @cust_inventorying_count_3_months_3_disc } %>
 	            </div>
 	            <div id="box2" style="display:none">
-	                <div class="field1">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_1_months_2_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_1_months_2_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_1_months_2_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_1_months_2_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_1_months_2_disc.unit_price_after_discount + @cust_inventorying_count_1_months_2_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
-	                <div class="field2">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_2_months_2_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_2_months_2_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_2_months_2_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_2_months_2_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_2_months_2_disc.unit_price_after_discount + @cust_inventorying_count_2_months_2_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
-	                <div class="field3">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_3_months_2_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_3_months_2_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_3_months_2_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_3_months_2_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_3_months_2_disc.unit_price_after_discount + @cust_inventorying_count_3_months_2_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @cust_box_count_1_months_2_disc, :inventory_discount => @cust_inventorying_count_1_months_2_disc } %>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @cust_box_count_2_months_2_disc, :inventory_discount => @cust_inventorying_count_2_months_2_disc } %>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @cust_box_count_3_months_2_disc, :inventory_discount => @cust_inventorying_count_3_months_2_disc } %>
 	            </div>
 	            <div id="box3" style="display:none">
-	                <div class="field1">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_1_months_1_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_1_months_1_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_1_months_1_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_1_months_1_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us*</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_1_months_1_disc.unit_price_after_discount + @cust_inventorying_count_1_months_1_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
-	                <div class="field2">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_2_months_1_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_2_months_1_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_2_months_1_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_2_months_1_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us*</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_2_months_1_disc.unit_price_after_discount + @cust_inventorying_count_2_months_1_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
-	                <div class="field3">
-	                    <table>
-	                        <tr>
-	                            <td colspan="2" class="circle-bg"><%= @cust_box_count_3_months_1_disc.product_count %> Cubic Feet - Save <%= number_to_percentage(@cust_box_count_3_months_1_disc.unit_discount_perc * 100, :precision => 0)%></td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_box_count_3_months_1_disc.unit_price_after_discount) %></td>
-	                            <td>storage</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><%= number_to_currency(@cust_inventorying_count_3_months_1_disc.unit_price_after_discount) %></td>
-	                            <td>inventoried</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>shipping to us*</td>
-	                        </tr>
-	                        <tr>
-	                            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
-	                            <td>packing materials</td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
-	                        </tr>
-	                        <tr>
-	                            <td colspan="2" class="pricing-total"><strong><%= number_to_currency(@cust_box_count_3_months_1_disc.unit_price_after_discount + @cust_inventorying_count_3_months_1_disc.unit_price_after_discount) %></strong> / cubic foot</td>
-	                        </tr>
-	                    </table>
-	                </div>
-					<div class="extra_text">*Free shipping offer requires a minimum commitment of 3 months.</div>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @cust_box_count_1_months_3_disc, :inventory_discount => @cust_inventorying_count_1_months_3_disc } %>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @cust_box_count_2_months_3_disc, :inventory_discount => @cust_inventorying_count_2_months_3_disc } %>
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @cust_box_count_3_months_3_disc, :inventory_discount => @cust_inventorying_count_3_months_3_disc } %>
+	            </div>
+	            <div id="box4" style="display:none">
+					<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @cust_inv_no_discount_disc, :inventory_discount => @cust_inv_no_discount_disc } %>
 	            </div>
 	        </div>
 	    </div>

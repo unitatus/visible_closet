@@ -1,0 +1,55 @@
+<div class="<%= field_name %>">
+    <table>
+        <tr>
+            <td colspan="2" class="circle-bg">
+				<% if storage_discount.unit_discount_perc > 0 %>
+				<%= storage_discount.product_count %> Box - Save <%= number_to_percentage(storage_discount.unit_discount_perc * 100, :precision => 0)%>
+				<% else %>
+					Ad Hoc - Per Box
+				<% end %>
+			</td>
+        </tr>
+        <tr>
+            <td class="firstcol"><%= number_to_currency(storage_discount.unit_price_after_discount) %></td>
+            <td>storage</td>
+        </tr>
+        <tr>
+            <td class="firstcol to-strike">
+				<form><input type="checkbox" name="checker" id="checker" value="<%= inventory_discount.unit_price_after_discount %>" checked/></form>
+				<%= number_to_currency(inventory_discount.unit_price_after_discount) %>
+			</td>
+            <td class="to-strike">inventoried</td>
+        </tr>
+		<% if storage_discount.free_shipping? %>
+        <tr>
+            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
+            <td>shipping to us</td>
+        </tr>
+		<% end %>
+		<% if storage_discount.free_shipping_materials? %>
+        <tr>
+            <td class="firstcol"><img src="images/free.gif" alt="free" /></td>
+            <td>packing materials</td>
+        </tr>
+		<% end %>
+        <tr>
+            <td colspan="2" class="pricing-line"><img src="images/pricing-line.gif" alt="" /></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pricing-total">
+				<form>
+					<input type="hidden" name="base" id="base" value="<%= number_to_currency(storage_discount.unit_price_after_discount) %>" />
+					<input type="hidden" name="orig" id="orig" value="<%= number_to_currency(storage_discount.unit_price_after_discount + inventory_discount.unit_price_after_discount) %>" />
+				</form>
+				<p><strong><%= number_to_currency(storage_discount.unit_price_after_discount + inventory_discount.unit_price_after_discount) %></strong> 
+				<% if storage_discount.free_shipping_materials? # free shipping materials means vc box %>
+					per box
+				<% else %>
+					/ cubic foot
+				<% end %>
+				</p>
+			</td>
+        </tr>
+    </table>
+    <a href="#"><img src="images/pricing-button.gif" alt="Order Package" class="order-button" /></a>
+</div>
