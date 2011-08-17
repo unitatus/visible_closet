@@ -25,4 +25,16 @@ class Product < ActiveRecord::Base
       0.0
     end
   end
+  
+  def vc_box?
+    id == Rails.application.config.our_box_product_id
+  end
+  
+  def cust_box?
+    id == Rails.application.config.your_box_product_id
+  end
+  
+  def box?
+    vc_box? || cust_box?
+  end
 end

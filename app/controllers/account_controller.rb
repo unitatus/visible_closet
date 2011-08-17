@@ -28,13 +28,15 @@ class AccountController < ApplicationController
     else
       @cart.remove_cart_item(Rails.application.config.our_box_product_id)
       @cart.remove_cart_item(Rails.application.config.your_box_product_id)
+      @cart.remove_cart_item(Rails.application.config.our_box_inventorying_product_id)
+      @cart.remove_cart_item(Rails.application.config.your_box_inventorying_product_id)
     end
     
     if params[:box_type] == "vc_boxes"
-      product_id = Rails.application.config.our_box_product_id
+      box_product_id = Rails.application.config.our_box_product_id
       num_boxes = params[:num_vc_boxes][:num_vc_boxes]
     elsif params[:box_type] == "cust_boxes"
-      product_id = Rails.application.config.your_box_product_id
+      box_product_id = Rails.application.config.your_box_product_id
       num_boxes = params[:num_cust_boxes][:num_cust_boxes]
     else
       raise "Illegal box type selected."
@@ -47,8 +49,9 @@ class AccountController < ApplicationController
       committed_months = 1
     end
 
-    @cart.add_cart_item(product_id, num_boxes, committed_months)
-
+    @cart.add_cart_item(box_product_id, num_boxes, committed_months)
+    
+    # The following code is for the cart maintenance pages, which as of 8/17/2011 are turned off.
     if (@cart.save())
       flash[:notice] = "Cart updated. Click the cart option on the left to see cart contents and finalize order."
     else

@@ -87,7 +87,6 @@ function toggleHIWMenu() {
 	}
 }
 
-// The following is to slow down image change on stored_item image review
 $(document).ready(function(){
 	// Fades store/portfolio link overlays
 	
@@ -256,13 +255,103 @@ $(document).ready(function(){
 		}
 	});
 
-	$("#cf_explainer_link").fancybox({
+	$("#cf_explainer_link_1").fancybox({
 		'titleShow'		: false,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',
 		'autoDimensions': false, 
 		'width': 350,
 		'height': 50
+	});
+	
+	$("#cf_explainer_link_2").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#cf_explainer_link_3").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#cf_explainer_link_4").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#cf_explainer_link_5").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#cf_explainer_link_6").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#cf_explainer_link_7").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#cf_explainer_link_8").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#cf_explainer_link_9").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#cf_explainer_link_10").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
+	
+	$("#co_inv_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 650,
+		'height': 200
 	});
 	
 	$("#vc_product_link").fancybox({

@@ -80,8 +80,9 @@ class Cart < ActiveRecord::Base
   def remove_cart_item(product_id)
     cart_item = cart_items.select { |c| c.product_id == product_id }[0]
     
-    if (!cart_item.nil?)
+    while !cart_item.nil?
       cart_items.delete(cart_item)
+      cart_item = cart_items.select { |c| c.product_id == product_id }[0]
     end
   end
   

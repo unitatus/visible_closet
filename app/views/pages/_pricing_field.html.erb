@@ -4,18 +4,18 @@
             <td colspan="2" class="circle-bg">
 				<% if storage_discount.unit_discount_perc > 0 %>
 					<%= storage_discount.product_count %> 
-					<% if storage_discount.free_shipping_materials? %>
+					<% if storage_discount.product.vc_box? %>
 						Box
 					<% else %>
-						<a href="#cf_explainer" id="cf_explainer_link" style="color: white; text-decoration: underline;">CF</a>
+						<a href="#cf_explainer" id="cf_explainer_link_<%= fb_incrementer %>" style="color: white; text-decoration: underline;">CF</a>
 					<% end %>
 					 - Save <%= number_to_percentage(storage_discount.unit_discount_perc * 100, :precision => 0)%>
 				<% else %>
 					Ad Hoc - Per 
-					<% if storage_discount.free_shipping_materials? %>
+					<% if storage_discount.product.vc_box? %>
 						Box
 					<% else %>
-						CF
+						<a href="#cf_explainer" id="cf_explainer_link_<%= fb_incrementer %>" style="color: white; text-decoration: underline;">CF</a>
 					<% end %>
 				<% end %>
 			</td>
@@ -26,7 +26,8 @@
         </tr>
         <tr>
             <td class="firstcol to-strike">
-				<form><input type="checkbox" name="checker" id="checker" value="<%= inventory_discount.unit_price_after_discount %>" checked/></form>
+				<%= form_tag("https://" + request.domain + "/account/order_boxes") do %>
+				<input type="checkbox" name="inventorying_checker" id="inventorying_checker" value="<%= inventory_discount.unit_price_after_discount %>" checked/>
 				<%= number_to_currency(inventory_discount.unit_price_after_discount) %>
 			</td>
             <td class="to-strike">inventoried</td>
@@ -48,12 +49,12 @@
         </tr>
         <tr>
             <td colspan="2" class="pricing-total">
-				<form>
+				<!-- The following hidden fields are used for dynamic recalculation -->
 					<input type="hidden" name="base" id="base" value="<%= number_to_currency(storage_discount.unit_price_after_discount) %>" />
 					<input type="hidden" name="orig" id="orig" value="<%= number_to_currency(storage_discount.unit_price_after_discount + inventory_discount.unit_price_after_discount) %>" />
-				</form>
+				
 				<p><strong><%= number_to_currency(storage_discount.unit_price_after_discount + inventory_discount.unit_price_after_discount) %></strong> 
-				<% if storage_discount.free_shipping_materials? # free shipping materials means vc box %>
+				<% if storage_discount.product.vc_box? # free shipping materials means vc box %>
 					per box
 				<% else %>
 					/ cubic foot
@@ -63,11 +64,11 @@
         </tr>
     </table>
 	<% if user_signed_in? %>
-		<%= form_tag("https://" + request.domain + "/account/order_boxes") do %>
-			<%= hidden_field_tag 'box_type', (storage_discount.free_shipping_materials? ? "vc_boxes" : "cust_boxes") %>
-			<%= hidden_field_tag (storage_discount.free_shipping_materials? ? "num_vc_boxes[num_vc_boxes]" : "num_cust_boxes[num_cust_boxes]"), storage_discount.product_count %>
+		
+			<%= hidden_field_tag 'box_type', (storage_discount.product.vc_box? ? "vc_boxes" : "cust_boxes") %>
+			<%= hidden_field_tag (storage_discount.product.vc_box? ? "num_vc_boxes[num_vc_boxes]" : "num_cust_boxes[num_cust_boxes]"), storage_discount.product_count %>
 			<%= hidden_field_tag 'num_months[num_months]', storage_discount.month_count %>
     		<%= image_submit_tag "pricing-button.gif", :class => "order-button" %>
-		<% end %>
 	<% end %>
+	<% end # form tag %>
 </div>
