@@ -255,6 +255,15 @@ $(document).ready(function(){
 		    type	: "GET"
 		}
 	});
+
+	$("#cf_explainer_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 350,
+		'height': 50
+	});
 	
 	$("#vc_product_link").fancybox({
 		'titleShow'		: false,
