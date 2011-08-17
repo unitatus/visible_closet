@@ -62,5 +62,12 @@
 			</td>
         </tr>
     </table>
-    <a href="#"><img src="images/pricing-button.gif" alt="Order Package" class="order-button" /></a>
+	<% if user_signed_in? %>
+		<%= form_tag("https://" + request.domain + "/account/order_boxes") do %>
+			<%= hidden_field_tag 'box_type', (storage_discount.free_shipping_materials? ? "vc_boxes" : "cust_boxes") %>
+			<%= hidden_field_tag (storage_discount.free_shipping_materials? ? "num_vc_boxes[num_vc_boxes]" : "num_cust_boxes[num_cust_boxes]"), storage_discount.product_count %>
+			<%= hidden_field_tag 'num_months[num_months]', storage_discount.month_count %>
+    		<%= image_submit_tag "pricing-button.gif", :class => "order-button" %>
+		<% end %>
+	<% end %>
 </div>

@@ -11,7 +11,7 @@ class AccountController < ApplicationController
   def index
 
   end
-
+  
   def store_more_boxes
     @your_box = Product.find(Rails.application.config.your_box_product_id)
     @our_box = Product.find(Rails.application.config.our_box_product_id)
