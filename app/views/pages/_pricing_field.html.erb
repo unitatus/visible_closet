@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <td class="firstcol to-strike">
-				<%= form_tag("https://" + request.domain + "/account/order_boxes") do %>
+				<%= form_tag("https://" + (request.subdomain.blank? ? "" : (request.subdomain + ".")) + request.domain + "/account/order_boxes") do %>
 				<input type="checkbox" name="inventorying_checker" id="inventorying_checker" value="<%= inventory_discount.unit_price_after_discount %>" />
 				<%= number_to_currency(inventory_discount.unit_price_after_discount) %>
 			</td>
