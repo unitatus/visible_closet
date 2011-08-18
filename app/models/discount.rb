@@ -58,7 +58,7 @@ class Discount
   end
   
   def unit_discount_dollars
-    return ((@product.price * self.unit_discount_perc)*100.0).floor/100.0
+    return ((((@product.price * self.unit_discount_perc)*1000.0).round)/10).round/100.0
   end
   
   def unit_price_after_discount

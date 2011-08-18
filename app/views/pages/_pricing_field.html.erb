@@ -3,11 +3,11 @@
         <tr>
             <td colspan="2" class="circle-bg">
 				<% if storage_discount.unit_discount_perc > 0 %>
-					<%= storage_discount.product_count %> 
+					<%= storage_discount.product_count %> / 
 					<% if storage_discount.product.vc_box? %>
 						Box
 					<% else %>
-						<a href="#cf_explainer" id="cf_explainer_link_<%= fb_incrementer %>" style="color: white; text-decoration: underline;">CF</a>
+						<a href="#cf_explainer" id="cf_explainer_link_<%= fb_incrementer %>" style="color: white; text-decoration: underline;">CuFt</a>
 					<% end %>
 					 - Save <%= number_to_percentage(storage_discount.unit_discount_perc * 100, :precision => 0)%>
 				<% else %>
@@ -15,7 +15,7 @@
 					<% if storage_discount.product.vc_box? %>
 						Box
 					<% else %>
-						<a href="#cf_explainer" id="cf_explainer_link_<%= fb_incrementer %>" style="color: white; text-decoration: underline;">CF</a>
+						<a href="#cf_explainer" id="cf_explainer_link_<%= fb_incrementer %>" style="color: white; text-decoration: underline;">CuFt</a>
 					<% end %>
 				<% end %>
 			</td>
@@ -27,7 +27,7 @@
         <tr>
             <td class="firstcol to-strike">
 				<%= form_tag("https://" + request.domain + "/account/order_boxes") do %>
-				<input type="checkbox" name="inventorying_checker" id="inventorying_checker" value="<%= inventory_discount.unit_price_after_discount %>" checked/>
+				<input type="checkbox" name="inventorying_checker" id="inventorying_checker" value="<%= inventory_discount.unit_price_after_discount %>" />
 				<%= number_to_currency(inventory_discount.unit_price_after_discount) %>
 			</td>
             <td class="to-strike">inventoried</td>
@@ -50,10 +50,10 @@
         <tr>
             <td colspan="2" class="pricing-total">
 				<!-- The following hidden fields are used for dynamic recalculation -->
-					<input type="hidden" name="base" id="base" value="<%= number_to_currency(storage_discount.unit_price_after_discount) %>" />
-					<input type="hidden" name="orig" id="orig" value="<%= number_to_currency(storage_discount.unit_price_after_discount + inventory_discount.unit_price_after_discount) %>" />
+					<input type="hidden" name="sans_inv" id="sans_inv" value="<%= number_to_currency(storage_discount.unit_price_after_discount) %>" />
+					<input type="hidden" name="with_inv" id="with_inv" value="<%= number_to_currency(storage_discount.unit_price_after_discount + inventory_discount.unit_price_after_discount) %>" />
 				
-				<p><strong><%= number_to_currency(storage_discount.unit_price_after_discount + inventory_discount.unit_price_after_discount) %></strong> 
+				<p><strong><%= number_to_currency(storage_discount.unit_price_after_discount) %></strong> 
 				<% if storage_discount.product.vc_box? # free shipping materials means vc box %>
 					per box
 				<% else %>
@@ -64,11 +64,12 @@
         </tr>
     </table>
 	<% if user_signed_in? %>
-		
 			<%= hidden_field_tag 'box_type', (storage_discount.product.vc_box? ? "vc_boxes" : "cust_boxes") %>
 			<%= hidden_field_tag (storage_discount.product.vc_box? ? "num_vc_boxes[num_vc_boxes]" : "num_cust_boxes[num_cust_boxes]"), storage_discount.product_count %>
 			<%= hidden_field_tag 'num_months[num_months]', storage_discount.month_count %>
     		<%= image_submit_tag "pricing-button.gif", :class => "order-button" %>
+	<% else %>
+		<a href="users/register"><img src="images/pricing-sign-up.gif" alt="Sign Up" class="order-button" /></a>
 	<% end %>
 	<% end # form tag %>
 </div>

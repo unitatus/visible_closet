@@ -136,18 +136,17 @@ $(document).ready(function(){
     });
     
     $('#pricing .price-box input[type=checkbox]').change(function(){
-        addValue = $($(this)).attr('value');
-        baseValue = $($(this)).parent().parent().parent().parent().find("#base").attr('value');
-		origValue = $($(this)).parent().parent().parent().parent().find("#orig").attr('value');
+        sansInvValue = $($(this)).parent().parent().parent().parent().find("#sans_inv").attr('value');
+		withInvValue = $($(this)).parent().parent().parent().parent().find("#with_inv").attr('value');
         var n = $($(this)).parent().find(":checked").length;
         if(n>0){
-            formattedValue = origValue;
+            formattedValue = withInvValue;
 	        $($(this)).parent().parent().parent().parent().find("strong").text(formattedValue);
-	        $($(this)).parent().parent().parent().find(".to-strike").css('text-decoration','none');
+	        // $($(this)).parent().parent().parent().find(".to-strike").css('text-decoration','none');
         }else{
-            formattedValue = baseValue;
+            formattedValue = sansInvValue;
 	        $($(this)).parent().parent().parent().parent().find("strong").text(formattedValue);
-	        $($(this)).parent().parent().parent().find(".to-strike").css('text-decoration','line-through');
+	        // $($(this)).parent().parent().parent().find(".to-strike").css('text-decoration','line-through');
         }
     });
     
