@@ -1,0 +1,44 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Orders for User #<%= @user.id %> (<%= @user.first_name %> <%= @user.last_name %>)</h1><br>
+	<table class="prices_table">
+		<tr>
+			<% if params[:sort_by] == "id" && params[:desc].nil? %>
+				<% id_desc_string = "&desc=true" %>
+			<% end %>
+			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=id<%= id_desc_string %>">#</a></th>
+			<% if params[:sort_by] == "created_at" && params[:desc].nil? %>
+				<% created_at_desc_string = "&desc=true" %>
+			<% end %>
+			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=created_at<%= created_at_desc_string %>">Order Date</a></th>
+			<th>Status</th>
+			<th>Ordered</th>
+			<th>Total Charged</th>
+			<th>Total Paid</th>
+			<% if current_user.admin? %>
+			<th>Destroy?</th>
+			<% end %>
+		</tr>
+		<% @orders.each do |order| %>
+			<tr>
+				<td><%= order.id %></td>
+				<td><%= order.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
+				<td><%= order.status %></td>
+				<td>
+				<% order.order_lines.each_with_index do |order_line, index| %>
+				<% if index > 0 %>
+					<br>
+				<% end %>
+				Qty: <%= order_line.quantity %>; Product: <%= order_line.product.name %>
+				<% end %>	
+				</td>
+				<td><%= number_to_currency order.amount_charged %></td>
+				<td><%= number_to_currency order.amount_paid %></td>
+				<% if current_user.admin? %>
+				<td><a href="/admin/user/<%= @user.id %>/order/<%=order.id%>/destroy" data-confirm="This will delete all shipments, boxes, charges, EVERYTHING for this order. Are you SURE?" data-method="delete" rel="nofollow">Clear Test Data</a></td>
+				<% end %>
+			</tr>
+		<% end %>
+	</table>
+</div>
+<div class="clearer"></div>

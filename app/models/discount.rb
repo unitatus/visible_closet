@@ -47,12 +47,13 @@ class Discount
     
     count_threshold_1, count_threshold_2, count_threshold_3 = determine_thresholds
     
-    discount_perc += UNIT_COUNT_THRESHOLD_1_DISCOUNT if @product_count >= count_threshold_1
-    discount_perc += UNIT_COUNT_THRESHOLD_2_DISCOUNT if @product_count >= count_threshold_2
-    discount_perc += UNIT_COUNT_THRESHOLD_3_DISCOUNT if @product_count >= count_threshold_3
-    discount_perc += MONTH_COUNT_THRESHOLD_1_DISCOUNT if @month_count >= MONTH_COUNT_DISCOUNT_THRESHOLD_1
-    discount_perc += MONTH_COUNT_THRESHOLD_2_DISCOUNT if @month_count >= MONTH_COUNT_DISCOUNT_THRESHOLD_2
-    discount_perc += MONTH_COUNT_THRESHOLD_3_DISCOUNT if @month_count >= MONTH_COUNT_DISCOUNT_THRESHOLD_3
+    # The to_f's are for the case where product count or month count are not set
+    discount_perc += UNIT_COUNT_THRESHOLD_1_DISCOUNT if @product_count.to_f >= count_threshold_1
+    discount_perc += UNIT_COUNT_THRESHOLD_2_DISCOUNT if @product_count.to_f >= count_threshold_2
+    discount_perc += UNIT_COUNT_THRESHOLD_3_DISCOUNT if @product_count.to_f >= count_threshold_3
+    discount_perc += MONTH_COUNT_THRESHOLD_1_DISCOUNT if @month_count.to_f >= MONTH_COUNT_DISCOUNT_THRESHOLD_1
+    discount_perc += MONTH_COUNT_THRESHOLD_2_DISCOUNT if @month_count.to_f >= MONTH_COUNT_DISCOUNT_THRESHOLD_2
+    discount_perc += MONTH_COUNT_THRESHOLD_3_DISCOUNT if @month_count.to_f >= MONTH_COUNT_DISCOUNT_THRESHOLD_3
     
     return discount_perc
   end
@@ -82,7 +83,7 @@ class Discount
   end
   
   def months_due_at_signup
-    if @month_count >= FREE_SHIPPING_MONTH_THRESHOLD
+    if @month_count.to_f >= FREE_SHIPPING_MONTH_THRESHOLD
       return FREE_SHIPPING_MONTH_THRESHOLD
     else
       return 1
@@ -90,7 +91,7 @@ class Discount
   end
   
   def due_at_signup
-    if product.first_due == Product::AT_SIGNUP || self.month_count >= FREE_SHIPPING_MONTH_THRESHOLD
+    if product.first_due == Product::AT_SIGNUP || self.month_count.to_f >= FREE_SHIPPING_MONTH_THRESHOLD
 			self.total_monthly_price_after_discount * months_due_at_signup
 		else
 		  return 0.0

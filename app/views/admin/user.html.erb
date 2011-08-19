@@ -1,5 +1,6 @@
 <%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
+	<h1>User #<%= @user.id %></h1><br>
 <table class="lightly_padded_table">
 	<tr>
 		<td><b>First Name: </b></td><td><%= @user.first_name %></td>
@@ -41,7 +42,7 @@
 		<tr>
 	<% end %>
 	<td>
-	<%= raw address_summary(address, true) %>
+	<b>Address <%= address.id %></b><br><%= raw address_summary(address, true) %>
 	<% if address.id == @user.default_shipping_address_id %>
 		<br><b>(Default shipping address)</b>
 	<% end %>

@@ -19,7 +19,7 @@ class OrderLine < ActiveRecord::Base
   
   belongs_to :order
   belongs_to :product
-  has_many :boxes, :foreign_key => :ordering_order_line_id
+  has_many :boxes, :foreign_key => :ordering_order_line_id, :dependent => :destroy
   
   after_initialize :init_status
   

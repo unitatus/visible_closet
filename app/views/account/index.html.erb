@@ -20,7 +20,7 @@
 <div class="simple_header">Account Info</div>
 <% payment_profile = current_user.default_payment_profile %>
 <b>Default credit card on file:</b>
-<% if payment_profile.nil? %>
+<% if payment_profile.nil? || payment_profile.id.nil? %>
 none.
 <% else %>
 <%= payment_profile.cc_type.capitalize %></b>, ************<%= payment_profile.last_four_digits %>, exp <%= payment_profile.month %>/<%= payment_profile.year %>. 

@@ -15,8 +15,6 @@ class Invoice < ActiveRecord::Base
   belongs_to :user
   belongs_to :order
   belongs_to :payment_transaction
-  # TODO: Implement charges relationship, and give a charge a quantity and an invoice id
-  # has_many :charges
   
   class InvoiceLine
     attr_accessor :product, :quantity, :unit_price, :months_paid, :discount

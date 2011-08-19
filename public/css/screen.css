@@ -691,7 +691,7 @@ table.prices_table
 {
         margin-left:auto;
         margin-right:auto;
-        text-align:left;
+        text-align:center;
         border-spacing:0px;
         border: solid black 1px;
 }
@@ -700,11 +700,15 @@ table.prices_table th
     border: solid black 1px;
 	padding: 5px 5px 5px 5px;
 	font-weight: bold;
+    text-align:center;
+	vertical-align: middle;
 }
 table.prices_table td
 {
         border: solid black 1px;
 		padding: 5px 5px 5px 5px;
+        text-align:center;
+		vertical-align: middle;
 }
 table.check_out_cart_summary
 {

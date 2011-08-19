@@ -50,8 +50,31 @@ class AdminController < ApplicationController
     @user = User.find(params[:id])
   end
   
-  def user_addresses
+  def user_orders
     @user = User.find(params[:id])
+    
+    order_by = params[:sort_by]
+        
+    if params[:desc] && order_by
+      order_by += " DESC"
+    end
+    
+    if order_by.blank?
+      @orders = Order.find_all_by_user_id(@user.id, :order => "created_at DESC")
+    else
+      @orders = Order.find_all_by_user_id(@user.id, :order => order_by)
+    end
+  end
+  
+  def delete_user_order
+    order = Order.find_by_user_id_and_id(params[:user_id], params[:order_id])
+    order.destroy_test_order!
+    
+    params[:id] = params[:user_id]
+    
+    user_orders
+    
+    render :user_orders
   end
 
 private

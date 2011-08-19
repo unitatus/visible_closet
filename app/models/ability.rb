@@ -36,6 +36,9 @@ class Ability
       can :home, :admin
       can :send_boxes, :admin
       can :process_orders, :admin
+      can :users, :admin
+      can :user_orders, :admin
+      can :user, :admin
       can :receive_box, Box
       can :inventory_box, Box
       can :inventory_boxes, Box

@@ -1,5 +1,6 @@
 <%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
+	<h1>All Users</h1><br>
 	<table class="prices_table">
 		<tr>
 			<% if params[:sort_by] == "id" && params[:desc].nil? %>
@@ -13,7 +14,11 @@
 			<% if params[:sort_by] == "last_name" && params[:desc].nil? %>
 				<% lname_desc_string = "&desc=true" %>
 			<% end %>
-			<td><a href="<%= request.fullpath.split("?")[0] %>?sort_by=last_name<%= lname_desc_string %>">Last</a></th>
+			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=last_name<%= lname_desc_string %>">Last</a></th>
+			<% if params[:sort_by] == "role" && params[:desc].nil? %>
+				<% role_desc_string = "&desc=true" %>
+			<% end %>
+			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=role<%= role_desc_string %>">Role</a></th>
 			<th>Orders</th>
 			<th>Boxes</th>
 			<th>Shipments</th>
@@ -28,6 +33,7 @@
 			<td><a href="/admin/user/<%= user.id %>"><%= user.id %></a></td>
 			<td><%= user.first_name %></td>
 			<td><%= user.last_name %></td>
+			<td><%= user.role %></td>
 			<td><a href="/admin/user/<%= user.id %>/orders">Orders</a></td>
 			<td><a href="/admin/user/<%= user.id %>/boxes">Boxes</a></td>
 			<td><a href="/admin/user/<%= user.id %>/shipments">Shipments</a></td>

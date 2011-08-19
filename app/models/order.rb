@@ -14,10 +14,13 @@
 
 class Order < ActiveRecord::Base
   belongs_to :cart
-  has_many :payment_transactions
+  has_many :payment_transactions, :dependent => :destroy
   has_many :order_lines, :dependent => :destroy
   belongs_to :user
   belongs_to :shipping_address, :class_name => "Address"
+  has_many :charges, :dependent => :destroy
+  has_many :shipments, :dependent => :destroy
+  has_many :invoices, :dependent => :destroy
 
   attr_accessible :user_id, :created_at
 
@@ -43,7 +46,33 @@ class Order < ActiveRecord::Base
   end
 
   def total_in_cents
-    (cart.estimated_total*100).round
+    the_total = 0.0
+    
+    order_lines.each do |order_line|
+      the_total += order_line.total_in_cents
+    end
+    
+    the_total
+  end
+  
+  def amount_paid
+    the_amount = 0.0
+    
+    payment_transactions.each do |transaction|
+      the_amount += transaction.amount
+    end
+    
+    return the_amount
+  end
+  
+  def amount_charged
+    the_amount = 0.0
+    
+    charges.each do |charge|
+      the_amount += charge.total_in_cents
+    end
+    
+    return the_amount/100
   end
   
   def build_order_line(attributes={})
@@ -79,58 +108,38 @@ class Order < ActiveRecord::Base
   end
   
   def vc_box_count
-    total = 0
-    
-    order_lines.each do |order_line|
-      total += order_line.quantity if order_line.product_id == Rails.application.config.our_box_product_id
-    end
-    
-    total
+    count_lines(Rails.application.config.our_box_product_id)
   end
   
   def cust_box_count
+    count_lines(Rails.application.config.your_box_product_id)
+  end
+  
+  def inv_box_count
+    count_lines(Rails.application.config.our_box_inventorying_product_id) + count_lines(Rails.application.config.your_box_inventorying_product_id)
+  end
+  
+  def count_lines(product_id)
     total = 0
     
     order_lines.each do |order_line|
-      total += order_line.quantity if order_line.product_id == Rails.application.config.your_box_product_id
+      total += order_line.quantity if order_line.product_id == product_id
     end
     
     total
   end
-  
-  def destroy_test_order!
-    transactions = PaymentTransaction.find_all_by_order_id(self.id)
-    transactions.each do |transaction|
-      transaction.destroy
-    end
-
-    shipments = Shipment.find_all_by_order_id(self.id)
-    shipments.each do |shipment|
-      shipment.destroy
-    end
     
-    self.order_lines.each do |order_line|
-      boxes = Box.find_all_by_ordering_order_line_id(order_line.id)
-      boxes.each do |box|
-        box.destroy_test_box!
-      end
-      order_line.destroy
-    end
-    
+  # Typically, we would just do a before_destroy, or destroy the cart first. Two problems: (1) the order is usually the starting point for administration,
+  # so it doesn't make sense to destroy the cart first; and (2) Webrick dies when I call order.destroy directly for who knows what reason. Same thing if I 
+  # call self.destroy as the first call in my method. I have to do the cart stuff first. Bizarre.
+  def destroy_test_order! 
     cart = self.cart
-    cart.cart_items.each do |cart_item|
-      cart_item.destroy
-    end
-    cart.destroy
-    
-    charges = Charge.find_all_by_order_id(self.id)
-    charges.each do |charge|
-      charge.destroy
-    end
-    
-    invoices = Invoice.find_all_by_order_id(self.id)
-    invoices.each do |invoice|
-      invoice.destroy
+    # inventory orders don't have a cart
+    if cart
+      cart.cart_items.each do |cart_item|
+        cart_item.destroy
+      end
+      cart.destroy
     end
     
     self.destroy

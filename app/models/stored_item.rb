@@ -16,7 +16,7 @@
 
 class StoredItem < ActiveRecord::Base
   belongs_to :box
-  has_many :stored_item_tags
+  has_many :stored_item_tags, :dependent => :destroy
   attr_accessible :file
   before_create :generate_access_token
   

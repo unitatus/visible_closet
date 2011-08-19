@@ -1,12 +1,12 @@
 # == Schema Information
-# Schema version: 20110729175338
+# Schema version: 20110819212810
 #
 # Table name: payment_transactions
 #
 #  id                 :integer         not null, primary key
 #  order_id           :integer
 #  action             :string(255)
-#  amount             :integer
+#  amount             :float
 #  success            :boolean
 #  authorization      :string(255)
 #  message            :string(255)

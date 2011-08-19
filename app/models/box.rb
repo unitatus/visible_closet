@@ -39,8 +39,8 @@ class Box < ActiveRecord::Base
   attr_accessible :assigned_to_user_id, :ordering_order_line_id, :status, :box_type, :description, :indexing_status, :subscription_id
   after_create :set_box_num
 
-  has_many :stored_items
-  has_many :shipments
+  has_many :stored_items, :dependent => :destroy
+  has_many :shipments, :dependent => :destroy
   has_one :order_line
   belongs_to :user, :foreign_key => :assigned_to_user_id
   belongs_to :subscription
@@ -232,18 +232,6 @@ class Box < ActiveRecord::Base
   
   def item_count
     StoredItem.count(:conditions => "box_id = #{self.id}")
-  end
-  
-  def destroy_test_box!
-    stored_items = StoredItem.find_all_by_box_id(self.id)
-    stored_items.each do |stored_item|
-      stored_item.stored_item_tags.each do |tag|
-        tag.destroy
-      end
-      stored_item.destroy
-    end
-    
-    self.destroy
   end
   
   private
