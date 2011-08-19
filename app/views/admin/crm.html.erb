@@ -1,0 +1,29 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<table class="prices_table">
+		<tr>
+			<th>Cust #</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Addresses</th>
+			<th>Orders</th>
+			<th>Boxes</th>
+			<th>Shipments</th>
+			<th>Payments & Charges</th>
+			<th>Clear Test Data</th>
+		</tr>
+		<% @users.each do |user| %>
+		<tr>
+			<td><%= user.id %></td>
+			<td><%= user.first_name %> <%= user.last_name %></td>
+			<td><a href="mailto:<%= user.email %>"><%= user.email %></a></td>
+			<td><a href="/admin/user/<%= user.id %>/addresses">Addresses</a></td>
+			<td><a href="/admin/user/<%= user.id %>/orders">Orders</a></td>
+			<td><a href="/admin/user/<%= user.id %>/boxes">Boxes</a></td>
+			<td><a href="/admin/user/<%= user.id %>/shipments">Shipments</a></td>
+			<td><a href="/admin/user/<%= user.id %>/payments_and_charges">Payments & Charges</a></td>
+			<td><a href="/admin/user/<%= user.id %>" data-confirm="This will delete all orders, shipments, boxes, charges, EVERYTHING for this user. Are you SURE?" data-method="delete" rel="nofollow">Clear Test Data</a></td>
+		</tr>
+		<% end %>
+	</table>
+</div>

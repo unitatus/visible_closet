@@ -64,6 +64,9 @@ VisibleCloset::Application.routes.draw do
   get "admin/inventory_boxes"
   get "admin/process_orders"
   post "admin/send_boxes_user_search"
+  get "admin/users"
+  match "admin/user/:id/addresses" => "admin#user_addresses"
+  match "admin/user/:id" => "admin#user"
   
   # Account
   get "account/store_more_boxes"

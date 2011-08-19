@@ -186,6 +186,14 @@ class User < ActiveRecord::Base
     end
   end
   
+  def admin?
+    return self.role == ADMIN
+  end
+  
+  def manager?
+    return self.role == ADMIN || self.role == MANAGER
+  end
+  
   private 
 
   def delete_cim_profile

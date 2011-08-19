@@ -683,6 +683,10 @@ html {
 }
 
 /**************** Tables **************/
+table.lightly_padded_table td
+{
+	padding: 2px 5px 2px 5px;
+}
 table.prices_table
 {
         margin-left:auto;

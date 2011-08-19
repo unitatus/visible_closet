@@ -26,6 +26,33 @@ class AdminController < ApplicationController
     
     @orders = get_orders(order_lines)
   end
+  
+  def users
+    @admin_page = :users
+    order_by = params[:sort_by]
+    
+    if order_by && order_by != "id"
+      order_by = "LOWER(" + order_by + ")"
+    end
+    
+    if params[:desc] && order_by
+      order_by += " DESC"
+    end
+    
+    if order_by.blank?
+      @users = User.all
+    else
+      @users = User.find(:all, :order => order_by)
+    end
+  end
+  
+  def user
+    @user = User.find(params[:id])
+  end
+  
+  def user_addresses
+    @user = User.find(params[:id])
+  end
 
 private
 

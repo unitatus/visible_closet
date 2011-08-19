@@ -1,0 +1,58 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+<table class="lightly_padded_table">
+	<tr>
+		<td><b>First Name: </b></td><td><%= @user.first_name %></td>
+	</tr>
+	<tr>
+		<td><b>Last Name: </b></td><td><%= @user.last_name %></td>
+	</tr>
+	<tr>
+		<td><b>Email: </b></td><td><a href="mailto:<%= @user.email %>"><%= @user.email %></a></td>
+	</tr>
+	<tr>
+		<td><b>Sign In Count: </b></td><td><%= @user.sign_in_count %></td>
+	</tr>
+	<tr>
+		<td><b>Last Signed In: </b></td><td><%= @user.last_sign_in_at.strftime('%m/%d/%Y %l:%M %p') if !@user.last_sign_in_at.nil? %></td>
+	</tr>
+	<tr>
+		<td><b>Confirmed At: </b></td><td><%= @user.confirmed_at.strftime('%m/%d/%Y %l:%M %p') if !@user.confirmed_at.nil? %></td>
+	</tr>
+	<tr>
+		<td><b>Failed Attempts: </b></td><td><%= @user.failed_attempts %></td>
+	</tr>
+	<tr>
+		<td><b>Locked At: </b></td><td><%= @user.locked_at.strftime('%m/%d/%Y %l:%M %p') if !@user.locked_at.nil? %></td>
+	</tr>
+	<tr>
+		<td><b>Role: </b></td><td><%= @user.role %></td>
+	</tr>
+	<tr>
+		<td><b>CIM Identifier: </b></td><td><%= @user.cim_id %></td>
+	</tr>
+</table>
+
+<br><hr>
+<b>Addresses:</b><br><br>
+<table class="prices_table">
+<% @user.addresses.each_with_index do |address, index| %>
+	<% if (index) % 3 == 0 %>
+		<tr>
+	<% end %>
+	<td>
+	<%= raw address_summary(address, true) %>
+	<% if address.id == @user.default_shipping_address_id %>
+		<br><b>(Default shipping address)</b>
+	<% end %>
+	</td>
+	<% if (index + 1) % 3 == 0 %>
+		</tr>
+	<% end %>
+<% end %>
+<% if @user.addresses.size > 0 && @user.addresses.size % 3 != 0 %>
+</tr>
+<% end %>
+</table>
+</div>
+<div class="clearer"></div>

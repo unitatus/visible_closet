@@ -1,0 +1,43 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<table class="prices_table">
+		<tr>
+			<% if params[:sort_by] == "id" && params[:desc].nil? %>
+				<% id_desc_string = "&desc=true" %>
+			<% end %>
+			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=id<%= id_desc_string %>">#</a></th>
+			<% if params[:sort_by] == "first_name" && params[:desc].nil? %>
+				<% fname_desc_string = "&desc=true" %>
+			<% end %>
+			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=first_name<%= fname_desc_string %>">First</a></th>
+			<% if params[:sort_by] == "last_name" && params[:desc].nil? %>
+				<% lname_desc_string = "&desc=true" %>
+			<% end %>
+			<td><a href="<%= request.fullpath.split("?")[0] %>?sort_by=last_name<%= lname_desc_string %>">Last</a></th>
+			<th>Orders</th>
+			<th>Boxes</th>
+			<th>Shipments</th>
+			<th>Billing</th>
+			<% if current_user.admin? %>
+				<th>Clear Test Data</th>
+				<th>Delete</th>
+			<% end %>
+		</tr>
+		<% @users.each do |user| %>
+		<tr>
+			<td><a href="/admin/user/<%= user.id %>"><%= user.id %></a></td>
+			<td><%= user.first_name %></td>
+			<td><%= user.last_name %></td>
+			<td><a href="/admin/user/<%= user.id %>/orders">Orders</a></td>
+			<td><a href="/admin/user/<%= user.id %>/boxes">Boxes</a></td>
+			<td><a href="/admin/user/<%= user.id %>/shipments">Shipments</a></td>
+			<td><a href="/admin/user/<%= user.id %>/billing">Billing</a></td>
+			<% if current_user.admin? %>
+				<td><a href="/admin/user/<%= user.id %>" data-confirm="This will delete all orders, shipments, boxes, charges, EVERYTHING for this user. Are you SURE?" data-method="delete" rel="nofollow">Clear Test Data</a></td>
+				<td><a href="/admin/user/<%= user.id %>/destroy" data-confirm="This will delete this user ENTIRELY, including all related records. Are you SURE?" data-method="delete" rel="nofollow">Delete</a></td>
+			<% end %>
+		</tr>
+		<% end %>
+	</table>
+</div>
+<div class="clearer"></div>
