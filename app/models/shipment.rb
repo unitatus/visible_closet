@@ -82,6 +82,16 @@ class Shipment < ActiveRecord::Base
      :country => receiving_address.country,
      :residential => false
     }
+    email_recipients = [{
+      :email_address => shipping_address.user.nil? ? Rails.application.config.admin_email : shipping_address.user.email, 
+      :type => Fedex::EMailNotificationRecipientTypes::SHIPPER
+    },
+    {
+      :email_address => receiving_address.user.nil? ? Rails.application.config.admin_email : receiving_address.user.email, 
+      :type => Fedex::EMailNotificationRecipientTypes::RECIPIENT
+    }]
+     
+    
     pkg_count = 1
     weight = Rails.application.config.fedex_default_shipping_weight_lbs
     service_type = Fedex::ServiceTypes::FEDEX_GROUND
@@ -105,7 +115,8 @@ class Shipment < ActiveRecord::Base
       :weight => weight,
       :service_type => service_type,
       :customer_reference => customer_reference,
-      :po_reference => po_reference
+      :po_reference => po_reference,
+      :update_emails => email_recipients
      )
 
      return save

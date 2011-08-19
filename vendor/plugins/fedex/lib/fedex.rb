@@ -91,6 +91,7 @@ module Fedex #:nodoc:
     #   :units              - One of Fedex::WeightUnits.  Defaults to WeightUnits::LB
     #   :currency           - One of Fedex::CurrencyTypes.  Defaults to CurrencyTypes::USD
     #   :debug              - Enable or disable debug (wiredump) output.  Defaults to false.
+    #   :update_emails      - array of hashes, each one containing an entry for :email_address and an entry for :type that matches EMailNotificationRecipientTypes 
     def initialize(options = {})
       check_required_options(:base, options)
       
@@ -317,6 +318,8 @@ module Fedex #:nodoc:
       customer_reference  = options[:customer_reference]
       po_reference         = options[:po_reference]
       
+      update_emails       = options[:update_emails]
+      
       # Create the driver
       driver = create_driver(:ship)
       options = common_options.merge(
@@ -396,6 +399,10 @@ module Fedex #:nodoc:
       
       if @label_stock_type
         options[:RequestedShipment][:LabelSpecification][:LabelStockType] = @label_stock_type
+      end
+      
+      if !update_emails.nil?
+        options[:RequestedShipment][:SpecialServicesRequested] = create_update_email_services(update_emails)
       end
             
       result = driver.processShipment(options)
@@ -489,6 +496,39 @@ module Fedex #:nodoc:
         :ClientDetail => { :AccountNumber => @account_number, :MeterNumber => @meter_number },
         :Version => version
       }
+    end
+  
+    def create_update_email_services(emails_array)
+      return_hash = Hash.new
+      
+      return_hash[:SpecialServiceTypes] = ShipmentSpecialServiceTypes::EMAIL_NOTIFICATION
+      return_hash[:EMailNotificationDetail] = {
+        :Recipients => create_email_service_recipients(emails_array)
+      }
+      
+      return_hash
+    end
+    
+    def create_email_service_recipients(emails_array)
+      return_array = Array.new
+      
+      emails_array.each do |email_data|
+        recipient = {
+          :EMailNotificationRecipientType => email_data[:type],
+          :EMailAddress => email_data[:email_address],
+          :NotifyOnShipment => true,
+          :NotifyOnException => true,
+          :NotifyOnDelivery => true,
+          :Format => "HTML",
+          :Localization => {
+            :LanguageCode => 'EN'
+          }
+        }
+        
+        return_array << recipient
+      end
+      
+      return_array
     end
   
     # Checks the supplied options for a given method or field and throws an exception if anything is missing

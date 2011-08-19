@@ -1676,7 +1676,7 @@
               <xs:documentation>A message that will be included in the email notifications</xs:documentation>
             </xs:annotation>
           </xs:element>
-          <xs:element name="Recipients" type="ns:EMailNotificationRecipient" minOccurs="1">
+          <xs:element name="Recipients" type="ns:EMailNotificationRecipient" minOccurs="1" maxOccurs="unbounded">
             <xs:annotation>
               <xs:documentation>Information describing the destination of the email, format of the email and events to be notified on</xs:documentation>
             </xs:annotation>
