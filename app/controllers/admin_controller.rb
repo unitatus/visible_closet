@@ -9,10 +9,13 @@ class AdminController < ApplicationController
 
   end
 
-  def send_boxes
+  def shipping
     order_lines = OrderLine.find_all_by_status_and_product_id(OrderLine::NEW_STATUS, Rails.application.config.our_box_product_id)
             
     @orders = get_orders(order_lines)
+    
+    @shipments = Shipment.find_all_by_state(Shipment::ACTIVE)
+    
     # set for navigation
     @admin_page = :shipping
         
@@ -66,6 +69,11 @@ class AdminController < ApplicationController
     end
   end
   
+  def user_shipments
+    @user = User.find(params[:id])
+    @shipments = @user.shipments
+  end
+  
   def delete_user_order
     order = Order.find_by_user_id_and_id(params[:user_id], params[:order_id])
     order.destroy_test_order!
@@ -74,7 +82,21 @@ class AdminController < ApplicationController
     
     user_orders
     
-    render :user_orders
+    redirect_to :action => :user_orders
+  end
+  
+  def delete_shipment
+    shipment = Shipment.find(params[:id])
+    shipment.destroy
+    
+    redirect_to :action => :shipping
+  end
+  
+  def delete_user_shipment
+    shipment = Shipment.find(params[:shipment_id])
+    shipment.destroy
+    
+    redirect_to :action => :user_shipments
   end
 
 private

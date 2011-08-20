@@ -194,6 +194,10 @@ class User < ActiveRecord::Base
     return self.role == ADMIN || self.role == MANAGER
   end
   
+  def shipments
+    Shipment.find_all_by_user_id(id)
+  end
+  
   private 
 
   def delete_cim_profile

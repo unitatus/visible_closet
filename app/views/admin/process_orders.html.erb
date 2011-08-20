@@ -1,6 +1,7 @@
 
 <%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
+<h1>Orders to Process</h1>
 <% if @orders.size > 0 %>
 	<table class="prices_table">
 	  <tr>
@@ -45,5 +46,8 @@
 <% else %>
 <br><br>There are no orders to process.
 <% end %>
+<br><br>
+<h1>Outstanding Shipments</h1>
+<%= render :partial => "shipments", :locals => { :delete_pre_url => "/admin/shipment/" } %>
 </div>
 <div class="clearer"></div>

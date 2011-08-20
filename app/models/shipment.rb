@@ -38,6 +38,18 @@ class Shipment < ActiveRecord::Base
     shipment
   end
   
+  def Shipment.find_all_by_user_id(user_id)
+    find_by_sql("SELECT DISTINCT shipments.* FROM shipments, boxes, orders WHERE (shipments.box_id = boxes.id OR shipments.order_id = orders.id) AND boxes.assigned_to_user_id = #{user_id} AND orders.user_id = #{user_id}")
+  end
+  
+  def user
+    if self.order_id.nil?
+      return self.box.nil? ? nil : self.box.user
+    else
+      return self.order.nil? ? nil : self.order.user
+    end
+  end
+  
   def generate_fedex_label(box = nil)
     shipping_address = Address.find(self.from_address_id)
     receiving_address = Address.find(self.to_address_id)
@@ -49,7 +61,7 @@ class Shipment < ActiveRecord::Base
       label_image_type = Rails.application.config.fedex_customer_label_image_type
     end
         
-     @fedex = Fedex::Base.new(
+     fedex = Fedex::Base.new(
        :auth_key => Rails.application.config.fedex_auth_key,
        :security_code => Rails.application.config.fedex_security_code,
        :account_number => Rails.application.config.fedex_account_number,
@@ -108,7 +120,7 @@ class Shipment < ActiveRecord::Base
       po_reference = nil
     end
 
-    self.shipment_label, self.tracking_number = @fedex.label(
+    self.shipment_label, self.tracking_number = fedex.label(
       :shipper => { :contact => shipper, :address => origin },
       :recipient => { :contact => recipient, :address => destination },
       :count => pkg_count,
@@ -174,10 +186,31 @@ class Shipment < ActiveRecord::Base
       AWS::S3::S3Object.delete(shipment_label_file_name, Rails.application.config.s3_labels_bucket)
     end
     
+    cancel_fedex_shipment
+    
     super
   end
   
   private
+  
+  def cancel_fedex_shipment
+    if tracking_number.blank?
+      return true
+    end
+    
+     fedex = Fedex::Base.new(
+       :auth_key => Rails.application.config.fedex_auth_key,
+       :security_code => Rails.application.config.fedex_security_code,
+       :account_number => Rails.application.config.fedex_account_number,
+       :meter_number => Rails.application.config.fedex_meter_number, 
+       :debug => Rails.application.config.fedex_debug)
+       
+    # It's possible for each shipment that it's actually been shipped, in which case this code will cancel it.
+    # If it has not been shipped then the FedEx system will return an error, which at most we want to log.
+     if !fedex.cancel(:tracking_number => tracking_number)
+       puts "Unable to cancel FedEx package identified by tracking number " + tracking_number
+     end
+  end
   
   def epl_label?
     return (box.nil? || box.status != Box::BEING_PREPARED_STATUS)

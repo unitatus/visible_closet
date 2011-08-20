@@ -60,7 +60,7 @@ VisibleCloset::Application.routes.draw do
   
   # Admin
   match "admin/home" => "admin#process_orders"
-  get "admin/send_boxes"
+  get "admin/shipping"
   get "admin/inventory_boxes"
   get "admin/process_orders"
   post "admin/send_boxes_user_search"
@@ -69,6 +69,9 @@ VisibleCloset::Application.routes.draw do
   match "admin/user/:id" => "admin#user"
   match "admin/user/:id/orders" => "admin#user_orders"
   match "admin/user/:user_id/order/:order_id/destroy" => "admin#delete_user_order"
+  match "admin/shipment/:id/destroy" => "admin#delete_shipment"
+  match "admin/user/:id/shipments" => "admin#user_shipments"
+  match "admin/user/:id/shipment/:shipment_id/destroy" => "admin#delete_user_shipment"
   
   # Account
   get "account/store_more_boxes"

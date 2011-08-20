@@ -439,7 +439,11 @@ module Fedex #:nodoc:
       driver = create_driver(:ship)
       
       result = driver.deleteShipment(common_options.merge(
-        :TrackingNumber => tracking_number
+        :TrackingId => {
+          :TrackingIdType => "GROUND",
+          :TrackingNumber => tracking_number
+        },
+        :DeletionControl => DeletionControlTypes::DELETE_ONE_PACKAGE
       ))
 
       return successful?(result)
