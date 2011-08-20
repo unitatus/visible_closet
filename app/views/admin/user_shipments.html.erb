@@ -1,6 +1,6 @@
 
 <%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
-<div id="internal-right">
+<div id="internal-right" style="margin-left: -50px;">
 <h1>User Shipments</h1>
 <%= render :partial => "shipments", :locals => { :delete_pre_url => "/admin/user/#{@user.id}/shipment/" } %>
 </div>

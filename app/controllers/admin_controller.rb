@@ -98,6 +98,18 @@ class AdminController < ApplicationController
     
     redirect_to :action => :user_shipments
   end
+  
+  def shipment
+    @shipment = Shipment.find(params[:id])
+  end
+  
+  def refresh_shipment_events
+    @shipment = Shipment.find(params[:id])
+    
+    @shipment.refresh_fedex_events
+    
+    redirect_to :action => :shipment
+  end
 
 private
 

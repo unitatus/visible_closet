@@ -15,12 +15,12 @@
 		</tr>
 	<% @shipments.each do |shipment| %>
 		<tr>
-			<td><%= shipment.id %></td>
+			<td><a href="/admin/shipment/<%= shipment.id %>"><%= shipment.id %></a></td>
 			<td><%= shipment.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
 			<td><%= shipment.tracking_number %></td>
 			<td><a href="/admin/user/<%= shipment.user.id %>"><%= shipment.user.first_name %> <%= shipment.user.last_name %></a></td>
-			<td><%= raw address_summary shipment.from_address %></td>
-			<td><%= raw address_summary shipment.to_address %></td>
+			<td><%= shipment.from_address.user == shipment.user ? "User" : "TVC" %></td>
+			<td><%= shipment.to_address.user == shipment.user ? "User" : "TVC" %></td>
 			<td>TBD</td>
 			<td><a href="/shipment/<%=shipment.id%>/get_label">Label</a></td>
 			<% if current_user.admin? %>

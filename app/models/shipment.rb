@@ -61,15 +61,10 @@ class Shipment < ActiveRecord::Base
       label_image_type = Rails.application.config.fedex_customer_label_image_type
     end
         
-     fedex = Fedex::Base.new(
-       :auth_key => Rails.application.config.fedex_auth_key,
-       :security_code => Rails.application.config.fedex_security_code,
-       :account_number => Rails.application.config.fedex_account_number,
-       :meter_number => Rails.application.config.fedex_meter_number, 
-       :debug => Rails.application.config.fedex_debug,
+     fedex = Fedex::Base.new(basic_fedex_options.merge(
        :label_image_type => label_image_type,
        :label_stock_type => label_stock_type
-     )
+     ))
 
      shipper = {
        :name => shipping_address.first_name + " " + shipping_address.last_name,
@@ -198,12 +193,7 @@ class Shipment < ActiveRecord::Base
       return true
     end
     
-     fedex = Fedex::Base.new(
-       :auth_key => Rails.application.config.fedex_auth_key,
-       :security_code => Rails.application.config.fedex_security_code,
-       :account_number => Rails.application.config.fedex_account_number,
-       :meter_number => Rails.application.config.fedex_meter_number, 
-       :debug => Rails.application.config.fedex_debug)
+    fedex = Fedex::Base.new(basic_fedex_options)
        
     # It's possible for each shipment that it's actually been shipped, in which case this code will cancel it.
     # If it has not been shipped then the FedEx system will return an error, which at most we want to log.
@@ -214,5 +204,15 @@ class Shipment < ActiveRecord::Base
   
   def epl_label?
     return (box.nil? || box.status != Box::BEING_PREPARED_STATUS)
+  end
+  
+  def basic_fedex_options
+    { 
+       :auth_key => Rails.application.config.fedex_auth_key,
+       :security_code => Rails.application.config.fedex_security_code,
+       :account_number => Rails.application.config.fedex_account_number,
+       :meter_number => Rails.application.config.fedex_meter_number, 
+       :debug => Rails.application.config.fedex_debug
+     }
   end
 end

@@ -34,19 +34,22 @@ module Fedex #:nodoc:
       :contact     => [ :name, :phone_number ],
       :address     => [ :country, :street_lines, :city, :state, :zip ],
       :ship_cancel => [ :tracking_number ],
-      :validate_address => [ :address ]
+      :validate_address => [ :address ],
+      :get_tracking_events => [ :tracking_number ]
     }
     
     # Defines the relative path to the WSDL files.  Defaults assume lib/wsdl under plugin directory.
     WSDL_PATHS = {
       :rate => 'wsdl/RateService_v9.wsdl',
       :ship => 'wsdl/ShipService_v9.wsdl',
-      :validate_address => 'wsdl/AddressValidationService_v2.wsdl'
+      :validate_address => 'wsdl/AddressValidationService_v2.wsdl',
+      :get_tracking_events => 'wsdl/TrackService_v5.wsdl'
     }
     
     # Defines the Web Services version implemented.
     WS_VERSION = { :Major => 9, :Intermediate => 0, :Minor => 0, :ServiceId => 'ship' }
     ADDRESS_VERSION = { :Major => 2, :Intermediate => 0, :Minor => 0, :ServiceId => 'aval'}
+    TRACKING_VERSION = { :Major => 5, :Intermediate => 0, :Minor => 0, :ServiceId => 'trck'}
     
     SUCCESSFUL_RESPONSES = ['SUCCESS', 'WARNING', 'NOTE'] #:nodoc:
     
@@ -492,6 +495,33 @@ module Fedex #:nodoc:
       end
     end
     
+    # The below should work, but I don't think we will need it for The Visible Closet.
+    # Note that when you request the tracking information it only gives you the latest status.
+    # def get_tracking_events(options = {})
+    #   check_required_options(:get_tracking_events, options)
+    # 
+    #   tracking_number = options[:tracking_number]
+    #   
+    #   driver = create_driver(:get_tracking_events)
+    # 
+    #   result = driver.track(common_options(TRACKING_VERSION).merge(
+    #     :PackageIdentifier => {
+    #       :Value => tracking_number,
+    #       :Type => TrackIdentifierTypes::TRACKING_NUMBER_OR_DOORTAG
+    #     }
+    #   ))
+    #   
+    #   successful = successful?(result)
+    #   
+    #   msg = error_msg(result, false)
+    #   if successful && msg !~ /There are no valid services available/
+    #     process_tracking_reply(result)
+    #   else
+    #     puts("Requested tracking information for tracking number " + tracking_number + " but found nothing.")
+    #     return nil
+    #   end
+    # end
+    
   private
     # Options that go along with each request
     def common_options(version=WS_VERSION)
@@ -597,6 +627,10 @@ module Fedex #:nodoc:
       when 15
         'FDXG'
       end
+    end
+    
+    def process_tracking_reply(request)
+      Array.new
     end
     
     def process_address_validation_reply(reply)
