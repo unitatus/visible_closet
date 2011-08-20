@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110726022608
+# Schema version: 20110820213039
 #
 # Table name: shipments
 #
@@ -14,6 +14,7 @@
 #  shipment_label_updated_at :datetime
 #  state                     :string(255)
 #  order_id                  :integer
+#  payor                     :string(255)
 #
 
 # Note: at this time there is no need for a shipment line, because we don't have the need to track shipment line items.
@@ -28,14 +29,42 @@ class Shipment < ActiveRecord::Base
   belongs_to :from_address, :class_name => "Address"
   belongs_to :order
   belongs_to :box
+  has_one :charge
   
+  symbolize :state
+  
+  # state
   ACTIVE = :active
   INACTIVE = :inactive
+  
+  # payor
+  CUSTOMER = :customer
+  TVC = :tvc
     
   def Shipment.new()
     shipment = super
     shipment.state = ACTIVE
+    shipment.payor = TVC
     shipment
+  end
+  
+  def payor_english
+    if payor == CUSTOMER
+      return "Customer"
+    elsif payor == TVC
+      return "The Visible Closet"
+    else
+      return nil
+    end
+  end
+  
+  def payor
+    return_val = read_attribute(:payor)
+    if return_val.nil?
+      return_val = TVC
+    end
+    
+    return return_val
   end
   
   def Shipment.find_all_by_user_id(user_id)
@@ -184,6 +213,19 @@ class Shipment < ActiveRecord::Base
     cancel_fedex_shipment
     
     super
+  end
+  
+  # this doesn't do anything right now because we don't need it yet
+  def refresh_fedex_status
+    # if tracking_number.blank?
+    #   return false
+    # end
+    # 
+    # fedex = Fedex::Base.new(basic_fedex_options)
+    # 
+    # results = fedex.get_latest_tracking_event(:tracking_number => tracking_number)
+    # 
+    # process_fedex_tracking_results
   end
   
   private

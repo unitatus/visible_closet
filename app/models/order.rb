@@ -44,6 +44,41 @@ class Order < ActiveRecord::Base
 
     return transaction_successful
   end
+  
+  def ship_order_lines(order_line_ids)
+    @order_lines = Array.new
+    
+    self.transaction do
+  
+      order_line_ids.each do |order_line_id|
+        order_line = OrderLine.find(order_line_id)
+    
+        # will save the order line
+        order_line.ship
+    
+        @order_lines << order_line
+      end
+    
+      # Need to create shipment for the empty boxes
+      @order_shipment = Shipment.new
+    
+      @order_shipment.order_id = self.id
+      @order_shipment.from_address_id = Rails.application.config.fedex_vc_address_id
+      @order_shipment.to_address_id = self.shipping_address_id
+
+      if !@order_shipment.save
+        raise "Error saving shipment; errors: " << @order_shipment.errors.inspect
+      end    
+
+      if !@order_shipment.generate_fedex_label
+        raise "Error generating shipment and saving; errors: " << @order_shipment.errors.inspect
+      end
+    
+      UserMailer.shipping_materials_sent(@order.user, @order_shipment, @order_lines).deliver
+      
+      return [@order_lines, @order_shipment]
+    end # end transaction
+  end
 
   def total_in_cents
     the_total = 0.0

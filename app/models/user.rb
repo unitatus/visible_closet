@@ -195,7 +195,7 @@ class User < ActiveRecord::Base
   end
   
   def shipments
-    Shipment.find_all_by_user_id(id)
+    Shipment.find_all_by_user_id(id, :order => "created_at DESC")
   end
   
   private 

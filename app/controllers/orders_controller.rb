@@ -95,43 +95,14 @@ class OrdersController < ApplicationController
   end
   
   def ship_order_lines
-    @order_lines = Array.new
     @order = Order.find(params[:order_id])
 
     if params[:order_line_ids].empty?
       render :process_order
       return
     end
-    
-    @order.transaction do
-  
-      params[:order_line_ids].each do |order_line_id|
-        order_line = OrderLine.find(order_line_id)
-    
-        # will save the order line
-        order_line.ship
-    
-        @order_lines << order_line
-      end
-    
-      # Need to create shipment for the empty boxes
-      @order_shipment = Shipment.new
-    
-      @order_shipment.order_id = @order.id
-      @order_shipment.from_address_id = Rails.application.config.fedex_vc_address_id
-      @order_shipment.to_address_id = @order.shipping_address_id
 
-      if !@order_shipment.save
-        raise "Error saving shipment; errors: " << @order_shipment.errors.inspect
-      end    
-
-      # Turned off until address correction can be made
-      if !@order_shipment.generate_fedex_label
-        raise "Error generating shipment and saving; errors: " << @order_shipment.errors.inspect
-      end
-    
-      UserMailer.shipping_materials_sent(@order.user, @order_shipment, @order_lines).deliver
-    end # end transaction
+    @order_lines, @order_shipment = @order.ship_all_order_lines(params[:order_line_ids])
   end
   
   def print_invoice

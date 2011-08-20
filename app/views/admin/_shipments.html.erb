@@ -1,4 +1,4 @@
-<% if @shipments.size > 0 %>
+<% if !@shipments.nil? && @shipments.size > 0 %>
 	<table class="prices_table">
 		<tr>
 			<th>Id</th>
@@ -17,11 +17,19 @@
 		<tr>
 			<td><a href="/admin/shipment/<%= shipment.id %>"><%= shipment.id %></a></td>
 			<td><%= shipment.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
-			<td><%= shipment.tracking_number %></td>
+			<td><a href="http://www.fedex.com/Tracking?tracknumbers=<%=shipment.tracking_number%>" target="new"><%= shipment.tracking_number %></a></td>
 			<td><a href="/admin/user/<%= shipment.user.id %>"><%= shipment.user.first_name %> <%= shipment.user.last_name %></a></td>
 			<td><%= shipment.from_address.user == shipment.user ? "User" : "TVC" %></td>
 			<td><%= shipment.to_address.user == shipment.user ? "User" : "TVC" %></td>
-			<td>TBD</td>
+			<td>
+				<% if !shipment.charge.nil? %>
+					<%= number_to_currency shipment.charge.total_in_cents/100 %>
+				<% elsif shipment.payor == Shipment::TVC %>
+					NA
+				<% else %>
+					Not charged yet
+				<% end %>
+			</td>
 			<td><a href="/shipment/<%=shipment.id%>/get_label">Label</a></td>
 			<% if current_user.admin? %>
 			<td><a href="<%= delete_pre_url %><%= shipment.id %>/destroy" data-confirm="This will delete the shipment and cancel it with FedEx. Are you SURE?" data-method="delete" rel="nofollow">Delete</a></td>

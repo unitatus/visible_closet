@@ -180,6 +180,7 @@ class Box < ActiveRecord::Base
   end
   
   def monthly_fee
+    # Box is not returned yet -- can't calculate fee
     if self.box_type == CUST_BOX_TYPE && cubic_feet.nil?
       return nil
     end
@@ -244,6 +245,10 @@ class Box < ActiveRecord::Base
     shipment.box_id = self.id
     shipment.from_address_id = get_from_address_id(order)
     shipment.to_address_id = get_to_address_id(order)
+    
+    if subscription.nil? || subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD
+      shipment.payor = Shipment::CUSTOMER
+    end
 
     if (!shipment.save)
       raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect

@@ -497,30 +497,30 @@ module Fedex #:nodoc:
     
     # The below should work, but I don't think we will need it for The Visible Closet.
     # Note that when you request the tracking information it only gives you the latest status.
-    # def get_tracking_events(options = {})
-    #   check_required_options(:get_tracking_events, options)
-    # 
-    #   tracking_number = options[:tracking_number]
-    #   
-    #   driver = create_driver(:get_tracking_events)
-    # 
-    #   result = driver.track(common_options(TRACKING_VERSION).merge(
-    #     :PackageIdentifier => {
-    #       :Value => tracking_number,
-    #       :Type => TrackIdentifierTypes::TRACKING_NUMBER_OR_DOORTAG
-    #     }
-    #   ))
-    #   
-    #   successful = successful?(result)
-    #   
-    #   msg = error_msg(result, false)
-    #   if successful && msg !~ /There are no valid services available/
-    #     process_tracking_reply(result)
-    #   else
-    #     puts("Requested tracking information for tracking number " + tracking_number + " but found nothing.")
-    #     return nil
-    #   end
-    # end
+    def get_latest_tracking_event(options = {})
+      check_required_options(:get_tracking_events, options)
+    
+      tracking_number = options[:tracking_number]
+      
+      driver = create_driver(:get_tracking_events)
+    
+      result = driver.track(common_options(TRACKING_VERSION).merge(
+        :PackageIdentifier => {
+          :Value => tracking_number,
+          :Type => TrackIdentifierTypes::TRACKING_NUMBER_OR_DOORTAG
+        }
+      ))
+      
+      successful = successful?(result)
+      
+      msg = error_msg(result, false)
+      if successful && msg !~ /There are no valid services available/
+        process_tracking_reply(result)
+      else
+        puts("Requested tracking information for tracking number " + tracking_number + " but found nothing.")
+        return nil
+      end
+    end
     
   private
     # Options that go along with each request

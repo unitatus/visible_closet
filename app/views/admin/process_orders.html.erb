@@ -46,8 +46,10 @@
 <% else %>
 <br><br>There are no orders to process.
 <% end %>
-<br><br>
-<h1>Outstanding Shipments</h1>
-<%= render :partial => "shipments", :locals => { :delete_pre_url => "/admin/shipment/" } %>
+<% if !@shipments.nil? %>
+	<br><br>
+	<h1>Outstanding Shipments</h1>
+	<%= render :partial => "shipments", :locals => { :delete_pre_url => "/admin/shipment/" } %>
+<% end %>
 </div>
 <div class="clearer"></div>
