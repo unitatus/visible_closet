@@ -7,7 +7,7 @@
 			<th>Customer</th>
 			<th>From</th>
 			<th>To</th>
-			<th>Charge Customer</th>
+			<th>Customer Charge</th>
 			<th>Label</th>
 			<% if current_user.admin? %>
 			<th>Delete?</th>
@@ -23,9 +23,11 @@
 			<td><%= shipment.to_address.user == shipment.user ? "User" : "TVC" %></td>
 			<td>
 				<% if !shipment.charge.nil? %>
-					<%= number_to_currency shipment.charge.total_in_cents/100 %>
+					<%= number_to_currency shipment.charge.total_in_cents/100.0 %>
 				<% elsif shipment.payor == Shipment::TVC %>
 					NA
+				<% elsif !shipment.box.nil? && shipment.box.status == Box::IN_STORAGE_STATUS %>
+					<b><a href="/admin/shipment/<%= shipment.id %>">CUSTOMER MUST BE CHARGED</a></b>
 				<% else %>
 					Not charged yet
 				<% end %>

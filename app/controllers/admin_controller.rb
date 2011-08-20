@@ -74,6 +74,19 @@ class AdminController < ApplicationController
     @shipments = @user.shipments
   end
   
+  def set_shipment_charge
+    @shipment = Shipment.find(params[:id])
+    amount = params[:amount]
+    
+    if amount.blank?
+      @error_message = "Please specify a charge."
+    else
+      @shipment.set_charge(amount.to_f)
+    end
+    
+    render :shipment
+  end
+  
   def delete_user_order
     order = Order.find_by_user_id_and_id(params[:user_id], params[:order_id])
     order.destroy_test_order!

@@ -47,6 +47,26 @@
 			<% end %>
 		</td>
 	</tr>
+	<tr>
+		<td><b>Customer Charge:</b></td>
+		<td>
+			<% if !@shipment.charge.nil? %>
+				<%= number_to_currency @shipment.charge.total_in_cents/100.0 %>
+			<% elsif @shipment.payor == Shipment::TVC %>
+				Not Applicable - TVC pays
+			<% elsif !@shipment.box.nil? && @shipment.box.status != Box::IN_STORAGE_STATUS %>
+				Not received yet - no charge yet
+			<% else %>
+				<%= form_tag "/admin/shipment/#{@shipment.id}/set_charge" do %>
+					<%= text_field_tag :amount %>
+					<%= submit_tag "Submit", :confirm => "This will charge the customer for the shipment. Are you sure?" %>
+					<% if @error_message %>
+						<div class="error_label"><%= @error_message %></div>
+					<% end %>
+				<% end %>
+			<% end %>
+		</td>
+	</tr>
 </table>
 </div>
 <div class="clearer"></div>

@@ -192,6 +192,14 @@ class Shipment < ActiveRecord::Base
     end
   end
   
+  def set_charge(amount)
+    if !charge.nil?
+      raise "Cannot reset charge for a shipment."
+    end
+    
+    self.charge = Charge.create!(:user_id => user.id, :total_in_cents => amount*100, :shipment_id => id)
+  end
+  
   def shipment_label_file_name_short
     return_val = shipment_label_file_name
     return_val.slice! Rails.application.config.s3_labels_path
