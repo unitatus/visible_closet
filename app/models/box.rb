@@ -44,6 +44,7 @@ class Box < ActiveRecord::Base
   has_one :order_line
   belongs_to :user, :foreign_key => :assigned_to_user_id
   belongs_to :subscription
+  before_destroy :destroy_subscriptions
   
   # TODO: Figure out internationalization
   def status_en
@@ -233,6 +234,14 @@ class Box < ActiveRecord::Base
   
   def item_count
     StoredItem.count(:conditions => "box_id = #{self.id}")
+  end
+  
+  # Called before destroy; destroys related subscriptions if this is the last box in the subscription
+  def destroy_subscriptions
+    if !subscription.nil? && subscription.boxes.size == 1
+      subscription.destroy
+      self.subscription = nil
+    end
   end
   
   private

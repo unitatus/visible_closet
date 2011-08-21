@@ -95,7 +95,7 @@ class AdminController < ApplicationController
     
     user_orders
     
-    redirect_to :action => :user_orders
+    redirect_to "/admin/user/#{order.user_id}/orders"
   end
   
   def delete_shipment
