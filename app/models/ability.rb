@@ -38,6 +38,12 @@ class Ability
       can :process_orders, :admin
       can :users, :admin
       can :user_orders, :admin
+      can :new_user_address, :admin
+      can :create_user_address, :admin
+      can :shipping, :admin
+      can :user_shipments, :admin
+      can :set_shipment_charge, :admin
+      can :shipment, :admin
       can :user, :admin
       can :receive_box, Box
       can :inventory_box, Box

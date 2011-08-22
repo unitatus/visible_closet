@@ -1,0 +1,24 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<div style="width: 500px">
+	<h1>New Address for User #<%= @user.id %> (<%= @user.first_name%> <%= @user.last_name %>)</h1><br>
+	<% if !@address.errors[:fedex].empty? %>
+	<br>
+		<div class="error_label"><%= @address.errors[:fedex][0] %></div>
+		<br>
+	<% end %>
+	<% if !@address.external_error_messages.empty? %>
+	<div class="error_label">The following error messages were returned:<br>
+		<ul>
+		<% @address.external_error_messages.each do |msg| %>
+			<li><%= msg %></li>
+		<% end %>
+		</ul>
+	</div>
+	<% end %>
+	<%= form_for(@address, :url => "/admin/user/#{@user.id}/create_address", :html => { :class => "standard" }) do |f| %>
+		<% render :partial => 'addresses/form_guts', :locals => { :f => f } %>
+	<% end %>
+	</div>
+</div>
+<div class="clearer"></div>

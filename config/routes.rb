@@ -75,6 +75,8 @@ VisibleCloset::Application.routes.draw do
   match "admin/shipment/:id" => "admin#shipment"
   match "admin/shipment/:id/refresh_fedex_events" => "admin#refresh_shipment_events"
   match "admin/shipment/:id/set_charge" => "admin#set_shipment_charge"
+  match "admin/user/:id/new_address" => "admin#new_user_address"
+  match "admin/user/:id/create_address" => "admin#create_user_address"
   
   # Account
   get "account/store_more_boxes"
