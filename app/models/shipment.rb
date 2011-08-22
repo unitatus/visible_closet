@@ -25,8 +25,8 @@ class Shipment < ActiveRecord::Base
   require 'aws/s3'
   require 'soap/wsdlDriver'
   
-  belongs_to :to_address, :class_name => "Address"
-  belongs_to :from_address, :class_name => "Address"
+  belongs_to :to_address, :class_name => "ShipmentAddress", :dependent => :destroy, :autosave => true
+  belongs_to :from_address, :class_name => "ShipmentAddress", :dependent => :destroy, :autosave => true
   belongs_to :order
   belongs_to :box
   has_one :charge
@@ -80,6 +80,48 @@ class Shipment < ActiveRecord::Base
       return self.order.nil? ? nil : self.order.user
     end
   end
+  
+  def to_address_id=(value)
+    self.to_address = Address.find(value)
+  end
+  
+  def to_address_with_extension=(value)
+    target_attributes = value.attributes
+    
+    target_attributes["user_id"] = nil
+    target_attributes.delete("created_at")
+    target_attributes.delete("updated_at")
+    
+    # The convoluted check on address should never be needed, but is included just in case there's a data problem so we can never overwrite a customer's address info.
+    if to_address.nil? || (!to_address.user.nil? || to_address_id == Rails.application.config.fedex_vc_address_id)
+      self.to_address_without_extension = ShipmentAddress.new(target_attributes)
+    else
+      self.to_address.attributes = target_attributes
+    end
+  end
+  
+  alias_method_chain :to_address=, :extension
+  
+  def from_address_id=(value)
+    self.from_address = Address.find(value)
+  end
+  
+  def from_address_with_extension=(value)
+    target_attributes = value.attributes
+    
+    target_attributes["user_id"] = nil
+    target_attributes.delete("created_at")
+    target_attributes.delete("updated_at")
+    
+    # The convoluted check on address should never be needed, but is included just in case there's a data problem so we can never overwrite a customer's address info.
+    if from_address.nil? || (!from_address.user.nil? || from_address_id == Rails.application.config.fedex_vc_address_id)
+      self.from_address_without_extension = ShipmentAddress.new(target_attributes)
+    else
+      self.from_address.attributes = target_attributes
+    end
+  end
+  
+  alias_method_chain :from_address=, :extension
   
   def generate_fedex_label(box = nil)
     shipping_address = Address.find(self.from_address_id)
