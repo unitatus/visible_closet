@@ -312,7 +312,7 @@ class Box < ActiveRecord::Base
     
     ordering_line = OrderLine.find(self.ordering_order_line_id)
     
-    order = InternalOrder.new
+    order = Order.new
     
     order.user_id = assigned_to_user_id
     
