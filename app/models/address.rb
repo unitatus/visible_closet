@@ -194,7 +194,7 @@ class Address < ActiveRecord::Base
     when "APARTMENT_NUMBER_NOT_FOUND"
       return "Apartment Number Not Found"
     when "APARTMENT_NUMBER_REQUIRED"
-      return "Apartmnet Number Required"
+      return "Apartment Number Required"
     when "NORMALIZED"
       return nil
     when "REMOVED_DATA"

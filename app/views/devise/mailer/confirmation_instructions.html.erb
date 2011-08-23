@@ -1,5 +1,9 @@
-<p>Welcome <%= @resource.email %>!</p>
+<p>Welcome <%= @resource.first_name %>!</p>
 
-<p>You can confirm your account through the link below:</p>
+<p>By signing up at thevisiblecloset.com you have been granted access for 1 day. To protect against email theft, however, you must confirm your email for permanent access.
+	
+	Please click the link below to confirm your account within 24 hours of signing up. You need only click the link once. After you have confirmed your email address you may discard this email.
+	
+</p>
 
 <p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>

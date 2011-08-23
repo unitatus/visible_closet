@@ -1,5 +1,5 @@
 <div style="width: 100%; text-align: center">
-<% if @user.errors.empty? %>
+<% if @user.errors.empty? && @billing_address.errors.empty? %>
 	<h1>Welcome to your organized life!</h1>
 
 	<p>We're glad you're joining us. Fill out the form below to get started.</p>
@@ -9,15 +9,15 @@
 	<h1>Whoops!</h1>
 	<p>There were a few errors with the information you entered ... see below:</p><br>
 <% end %>
-<% if @user.errors.size < 3 && @user.errors.size > 0 %>
+<% if (@user.errors.size + @billing_address.errors.size) < 3 && (@user.errors.size + @billing_address.errors.size) > 0 %>
 	<div class="error_label">
-		<% @user.errors.each do |attr, msg| %>
+		<% @user.errors.merge(@billing_address.errors).each do |attr, msg| %>
 			<% if attr.to_s.include? "fedex" %>
 				<%= raw msg %><br>
-				<% if !@user.default_shipping_address.external_error_messages.empty? %>
+				<% if !(@user.default_shipping_address.external_error_messages | @billing_address.external_error_messages).empty? %>
 					The following error messages were returned:<br><br>
-					<% @user.default_shipping_address.external_error_messages.each do |ext_msg| %>
-						<%= ext_msg %><br>
+					<% (@user.default_shipping_address.external_error_messages | @billing_address.external_error_messages).each do |ext_msg| %>
+						<%= raw ext_msg %><br>
 					<% end %>
 				<% end %>
 			<% else # does not include fedex %>
@@ -32,105 +32,319 @@
 Please correct the errors below before continuing.
 </div>
 <% end %>
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => "standard" }) do |f| %>
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => "registration" }) do |f| %>
 <div style="width:45%; float:left; padding: 10px">
-	<div style="width: 443px; margin: -11px -11px 15px -11px "><div class="simple_header", style="text-align: center">Login Information</div>
-	</div>
-		<div class="field clearfix">
-			<%= f.label "First Name*"%>
-			<% class_name = @user.errors[:first_name].nil? ? "error" : "textbox" %>
-	   		<%= f.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (@user.errors[:first_name].empty? ? "": " error"), :style => "width: 200px;" %>
-			<%= error_messages_for_attribute(@user, :first_name) %>
-		</div><!--//field-->
-		<div class="field clearfix">
-			<%= f.label "Last Name*" %>
-			<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (@user.errors[:last_name].empty? ? "": " error"), :style => "width: 200px;" %>
-			<%= error_messages_for_attribute(@user, :last_name) %>
-		</div><!--//field-->
-		<div class="field clearfix">
-			<%= f.label "Email (username):*" %>
-			<%= f.email_field :email, :placeholder => "your@email.com", :class => "textbox" + (@user.errors[:email].empty? ? "": " error"), :style => "width: 200px;" %>
-			<%= error_messages_for_attribute(@user, :email) %>
-		</div><!--//field-->
-		<p>
-		<div class="field clearfix">
-			<%= f.label "Password:*" %>
-			<%= f.password_field :password, :placeholder => "Password", :class => "textbox" + (@user.errors[:password].empty? ? "": " error"), :style => "width: 200px;" %>
-			<%= error_messages_for_attribute(@user, :password) %>
-		</div><!--//field-->
-		<div class="field clearfix">
-			<%= f.label "Password Confirmation:*" %>
-			<%= f.password_field :password_confirmation, :placeholder => "Retype Password", :class => "textbox" + (@user.errors[:password_confirmation].empty? ? "": " error"), :style => "width: 200px;" %>
-			<%= error_messages_for_attribute(@user, :password_cofirmation) %>
-		</div><!--//field-->						
+
+	<table class="registration_table">
+		<tr>
+			<th colspan="2">
+				<div class="simple_header" style="text-align: center">Account Information<br><br></div>
+			</th>
+		</tr>
+		<tr>
+			<td>
+				First Name:
+			</td>
+			<td>
+				Last Name:
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<% class_name = @user.errors[:first_name].nil? ? "error" : "textbox" %>
+		   		<%= f.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (@user.errors[:first_name].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@user, :first_name) %>
+			</td>
+			<td>
+				<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (@user.errors[:last_name].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@user, :last_name) %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Email (username):
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<%= f.email_field :email, :placeholder => "your@email.com", :class => "textbox" + (@user.errors[:email].empty? ? "": " error"), :style => "width: 428px;" %>
+				<%= error_messages_for_attribute(@user, :email) %>	
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Password:
+			</td>
+			<td>
+				Password Confirmation:
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= f.password_field :password, :placeholder => "Password", :class => "textbox" + (@user.errors[:password].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@user, :password) %>
+			</td>
+			<td>
+				<%= f.password_field :password_confirmation, :placeholder => "Retype Password", :class => "textbox" + (@user.errors[:password_confirmation].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@user, :password_cofirmation) %>
+			</td>
+		</tr>
+	</table>
 	</div>
 	<div style="width:45%; float:right; padding: 10px">
-		<div style="width: 443px; margin: -11px -11px 15px -11px ">
-			<div class="simple_header", style="text-align: center">Credit Card<br><a href="#credit_card_expl_inline" id="cc_expl_link" style="font-size: 75%">(why do we need this?)</a></div>
-		</div>
 		<%= f.fields_for :default_payment_profile do |pp_form| %>
-		<%= render :partial => 'payment_profiles/form_cc_guts', :locals => { :f => pp_form, :profile => @user.default_payment_profile } %>
-		<% end %>
+		<% profile = @user.default_payment_profile %>
+		<table class="registration_table">
+			<tr>
+				<th colspan="2">
+					<div class="simple_header" style="text-align: center">Credit Card</div> <a href="#credit_card_expl_inline" id="cc_expl_link" style="font-size: 75%; text-decoration: underline">(why do we need this?)</a>
+				</th>
+			</tr>
+			<tr>
+				<td>Cardholder First Name:</td>
+				<td>Cardholder Last Name:</td>
+			</tr>
+			<tr>
+				<td>
+					<%= pp_form.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (profile.errors[:first_name].empty? ? "": " error"), :style => "width: 200px;" %>
+					<%= error_messages_for_attribute(profile, :first_name) %>
+				</td>
+				<td>
+					<%= pp_form.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (profile.errors[:last_name].empty? ? "": " error"), :style => "width: 200px;" %>
+					<%= error_messages_for_attribute(profile, :last_name) %>
+				</td>
+			</tr>
+			<tr>
+				<td>Card Type:</td>
+				<td>Card Number:</td>
+			</tr>
+			<tr>
+				<td>
+					<%= pp_form.select :cc_type, options_for_select([["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]], profile.cc_type) %>
+					<%= error_messages_for_attribute(profile, :cc_type) %>
+				</td>
+				<td>
+					<%= pp_form.text_field :number, :placeholder => "#################", :class => "textbox" + (profile.errors[:number].empty? ? "": " error"), :style => "width: 200px;" %>
+					<%= error_messages_for_attribute(profile, :number) %>
+				</td>
+			</tr>
+			<tr>
+				<td>Expiration Date:</td>
+				<td>Verification Value (CVV) <a href="/pcCardCode.html" id="cvv_link" title="Verification Value"style="font-size: 80%">What's this?</a></td>
+			</tr>
+			<tr>
+				<td>
+					<%= pp_form.select :month, options_for_select([["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December"]], :selected => profile.month) %>
+					<%= pp_form.select :year, options_for_select(year_array, profile.year) %>
+					<%= error_messages_for_attribute(profile, :month) %>
+					<%= error_messages_for_attribute(profile, :year) %>
+				</td>
+				<td>
+					<%= pp_form.text_field :verification_value, :placeholder => "###", :class => "textbox" + (profile.errors[:verification_value].empty? ? "": " error"), :style => "width: 150px;" %>
+					<%= error_messages_for_attribute(profile, :verification_value) %>
+				</td>
+			</tr>
+		</table>
+		<% end # end subform %>
 	</div>
 	<div class="clearer"></div>
-<div style="width: 100%; ">
-	<div style="width: 938px; margin: -11px -11px 15px -11px ">
-		<div class="simple_header", style="text-align: center">Billing Address</div>
-	</div>
-		<%= f.fields_for :default_shipping_address do |address_form| %>
-		<div style="width: 45%; float: left">
-			<div class="field clearfix">
-				<%= address_form.label "First Name*"%>
+	<div style="width:45%; float:left; padding: 10px">
+	<%= f.fields_for :default_shipping_address do |address_form| %>
+	<table class="registration_table">
+		<tr>
+			<th colspan="2">
+			<div class="simple_header" style="text-align: center">Shipping Address</div>
+			</th>
+		</tr>
+		<tr>
+			<td>
+				Shipping Address First Name:
+			</td>
+			<td>
+				Shipping Address Last Name:
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<%= address_form.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (@user.default_shipping_address.errors[:first_name].empty? ? "": " error"), :style => "width: 200px;" %>
 				<%= error_messages_for_attribute(@user.default_shipping_address, :first_name) %>
-			</div><!--//field-->
-			<div class="field clearfix">
-				<%= address_form.label "Last Name*"%>
+			</td>
+			<td>
 				<%= address_form.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (@user.default_shipping_address.errors[:last_name].empty? ? "": " error"), :style => "width: 200px;" %>
 				<%= error_messages_for_attribute(@user.default_shipping_address, :last_name) %>
-			</div><!--//field-->
-			<div class="field clearfix">
-				<%= address_form.label "Day Phone*"%>
-				<%= address_form.text_field :day_phone, :placeholder => "###-###-####", :class => "textbox" + (@user.default_shipping_address.errors[:day_phone].empty? ? "": " error"), :style => "width: 200px;" %>
-				<%= error_messages_for_attribute(@user.default_shipping_address, :day_phone) %>
-			</div><!--//field-->
-			<div class="field clearfix">
-				<%= address_form.label "Evening Phone"%>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Day Phone:
+			</td>
+			<td>
+				Evening Phone (optional):
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<%= address_form.text_field :day_phone, :placeholder => "###-###-####", :class => "textbox" + (@user.default_shipping_address.errors[:day_phone].empty? ? "": " error"), :style => "width: 200px;" %>
+			<%= error_messages_for_attribute(@user.default_shipping_address, :day_phone) %>
+			</td>
+			<td>
 				<%= address_form.text_field :evening_phone, :placeholder => "###-###-####", :class => "textbox" + (@user.default_shipping_address.errors[:evening_phone].empty? ? "": " error"), :style => "width: 200px;" %>
 				<%= error_messages_for_attribute(@user.default_shipping_address, :evening_phone) %>
-			</div><!--//field-->
-		</div>
-		<div style="width: 45%; float: right">
-			<div class="field clearfix">
-				<%= address_form.label "Address Line 1*"%>
-				<%= address_form.text_field :address_line_1, :placeholder => "Address Line 1", :class => "textbox" + (@user.default_shipping_address.errors[:address_line_1].empty? ? "": " error"), :style => "width: 200px;" %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Shipping Address Line 1:
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<%= address_form.text_field :address_line_1, :placeholder => "Address Line 1", :class => "textbox" + (@user.default_shipping_address.errors[:address_line_1].empty? ? "": " error"), :style => "width: 428px;" %>
 				<%= error_messages_for_attribute(@user.default_shipping_address, :address_line_1) %>
-			</div><!--//field-->
-			<div class="field clearfix">
-				<%= address_form.label "Address Line 2"%>
-				<%= address_form.text_field :address_line_2, :placeholder => "Apt #, Suite, etc", :class => "textbox" + (@user.default_shipping_address.errors[:address_line_2].empty? ? "": " error"), :style => "width: 200px;" %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Shipping Address Line 2:
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<%= address_form.text_field :address_line_2, :placeholder => "Apt #, Suite, etc", :class => "textbox" + (@user.default_shipping_address.errors[:address_line_2].empty? ? "": " error"), :style => "width: 428px;" %>
 				<%= error_messages_for_attribute(@user.default_shipping_address, :address_line_2) %>
-			</div><!--//field-->
-			<div class="field clearfix">
-				<%= address_form.label "City*"%>
-				<%= address_form.text_field :city, :placeholder => "Sometown", :class => "textbox" + (@user.default_shipping_address.errors[:city].empty? ? "": " error"), :style => "width: 200px;" %>
-				<%= error_messages_for_attribute(@user.default_shipping_address, :city) %>
-			</div><!--//field-->
-			<div class="field clearfix">
-				<%= address_form.label "State*"%>
-				<%= address_form.select :state, options_for_select(states_array, @user.default_shipping_address.state), :include_blank => true, :class => (@user.default_shipping_address.errors[:state].empty? ? "": "error") %>
-				<%= error_messages_for_attribute(@user.default_shipping_address, :state) %>
-			</div><!--//field-->
-			<div class="field clearfix">
-				<%= address_form.label "Zip*"%>
-				<%= address_form.text_field :zip, :placeholder => "#####", :class => "textbox" + (@user.default_shipping_address.errors[:zip].empty? ? "": " error"), :style => "width: 200px;" %>
-				<%= error_messages_for_attribute(@user.default_shipping_address, :zip) %>
-			</div><!--//field-->
-		</div>
-		<% end %>
-			<div class="clearer"></div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<table>
+					<tr>
+						<td>
+							City:
+						</td>
+						<td>
+							State:
+						</td>
+						<td>
+							Zip:
+						</td>
+					</tr>
+						<td>
+							<%= address_form.text_field :city, :placeholder => "Sometown", :class => "textbox" + (@user.default_shipping_address.errors[:city].empty? ? "": " error"), :style => "width: 200px;" %>
+							<%= error_messages_for_attribute(@user.default_shipping_address, :city) %>
+						</td>
+						<td>
+							<%= address_form.select :state, options_for_select(states_array, @user.default_shipping_address.state), :include_blank => true, :class => (@user.default_shipping_address.errors[:state].empty? ? "": "error") %>
+							<%= error_messages_for_attribute(@user.default_shipping_address, :state) %>
+						</td>
+						<td>
+							<%= address_form.text_field :zip, :placeholder => "#####", :class => "textbox" + (@user.default_shipping_address.errors[:zip].empty? ? "": " error"), :style => "width: 100px;" %>
+							<%= error_messages_for_attribute(@user.default_shipping_address, :zip) %>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+		<% end # form for address %>
+			
 	</div>
-	
+	<div style="width:45%; float:right; padding: 10px">
+	<table class="registration_table">
+		<tr>
+			<th colspan="2">
+			<div class="simple_header" style="text-align: center">Billing Address</div>
+			</th>
+		</tr>
+		<tr>
+			<td>
+				Billing Address First Name:
+			</td>
+			<td>
+				Billing Address Last Name:
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= text_field_tag :baddress_first_name, @billing_address.first_name, :placeholder => "First Name", :class => "textbox" + (@billing_address.errors[:first_name].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@billing_address, :first_name) %>
+			</td>
+			<td>
+				<%= text_field_tag :baddress_last_name, @billing_address.last_name, :placeholder => "Last Name", :class => "textbox" + (@billing_address.errors[:last_name].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@billing_address, :last_name) %>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Day Phone:
+			</td>
+			<td>
+				Evening Phone (optional):
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<%= text_field_tag :baddress_day_phone, @billing_address.day_phone, :placeholder => "###-###-####", :class => "textbox" + (@billing_address.errors[:day_phone].empty? ? "": " error"), :style => "width: 200px;" %>
+			<%= error_messages_for_attribute(@billing_address, :day_phone) %>
+			</td>
+			<td>
+				<%= text_field_tag :baddress_evening_phone, @billing_address.evening_phone, :placeholder => "###-###-####", :class => "textbox" + (@billing_address.errors[:evening_phone].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@billing_address, :evening_phone) %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Billing Address Line 1:
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<%= text_field_tag :baddress_address_line_1, @billing_address.address_line_1, :placeholder => "Address Line 1", :class => "textbox" + (@billing_address.errors[:address_line_1].empty? ? "": " error"), :style => "width: 428px;" %>
+				<%= error_messages_for_attribute(@billing_address, :address_line_1) %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Billing Address Line 2:
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<%= text_field_tag :baddress_address_line_2, @billing_address.address_line_2, :placeholder => "Apt #, Suite, etc", :class => "textbox" + (@billing_address.errors[:address_line_2].empty? ? "": " error"), :style => "width: 428px;" %>
+				<%= error_messages_for_attribute(@billing_address, :address_line_2) %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<table>
+					<tr>
+						<td>
+							City:
+						</td>
+						<td>
+							State:
+						</td>
+						<td>
+							Zip:
+						</td>
+					</tr>
+						<td>
+							<%= text_field_tag :baddress_city, @billing_address.city, :placeholder => "Sometown", :class => "textbox" + (@billing_address.errors[:city].empty? ? "": " error"), :style => "width: 200px;" %>
+							<%= error_messages_for_attribute(@billing_address, :city) %>
+						</td>
+						<td>
+							<%= select_tag :baddress_state, options_for_select(states_array, @billing_address.state), :include_blank => true, :class => (@billing_address.errors[:state].empty? ? "": "error") %>
+							<%= error_messages_for_attribute(@billing_address, :state) %>
+						</td>
+						<td>
+							<%= text_field_tag :baddress_zip, @billing_address.zip, :placeholder => "#####", :class => "textbox" + (@billing_address.errors[:zip].empty? ? "": " error"), :style => "width: 100px;" %>
+							<%= error_messages_for_attribute(@billing_address, :zip) %>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>			
+	</div>
 	<div class="clearer"></div>
 		<br>
 	<div style="width: 100%; text-align: right">

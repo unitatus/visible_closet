@@ -564,7 +564,70 @@ form.standard .button {
 	background: #fafafa;
 }
 
+/*	Registration Form Fields
+___________________________________________________________________ */
+form.registration .field {
+	font-weight:bold;
+	text-align: right;
+	padding: 0 0 20px 0;
+	position: relative;
+}
 
+form.registration .form_value {
+	text-align: left; 
+	padding: 5px 0 0 150px; 
+	font-weight: normal
+}
+
+form.registration label {
+	position: absolute;
+	top: 5px;
+	left: 0px;
+}
+form.registration .label_right {
+	position: absolute;
+	top: 5px;
+	right: 20px;	
+}
+form.registration .textbox,
+form.registration .textarea,
+form.registration .button {
+	padding: 8px 8px;
+	background: #fff;
+	border: 1px solid #ccc;
+	
+	-webkit-box-shadow:0 0 3px #fafafa;
+	-moz-box-shadow:0 0 3px #fafafa;
+	box-shadow:0 0 3px #fafafa;
+}
+form.registration .textbox,
+form.registration .textarea {
+	width: 320px;
+}
+form.registration .numberbox {
+	width: 50px;
+	height: 20px;
+}
+form.registration .textarea {
+	font-family: inherit;
+	font-size:12px;
+	height: 170px;
+}
+form.registration .textbox:focus,
+form.registration .button:focus,
+form.registration .numberbox:focus,
+form.registration .textarea:focus {
+	border-color: #999;
+}
+form.registration .error,
+form.registration .error {
+	border-color: #ffcfcf;
+	background: #fff5f5;
+}
+
+form.registration .button {
+	background: #fafafa;
+}
 
 /*	General Use Styles / Other Helpers
 ___________________________________________________________________ */
@@ -686,6 +749,16 @@ html {
 table.lightly_padded_table td
 {
 	padding: 2px 5px 2px 5px;
+}
+table.registration_table {
+	border: 1px solid #25aae1
+}
+table.registration_table th {
+	border-bottom: 1px solid #25aae1;
+	text-align: center
+}
+table.registration_table td {
+	padding: 5px 5px 5px 5px;
 }
 table.prices_table
 {
