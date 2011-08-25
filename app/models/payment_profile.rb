@@ -91,12 +91,13 @@ class PaymentProfile < ActiveRecord::Base
         self.last_four_digits = nil
       else
         self.last_four_digits = value[-4,4]
+        self.cc_type = calculate_cc_type(value)
       end
       @number = value
     end
 
     def credit_card
-      ActiveMerchant::Billing::CreditCard.new(:number => self.number, :type => self.cc_type, :month => self.month, :year => self.year, \
+      ActiveMerchant::Billing::CreditCard.new(:number => self.number, :month => self.month, :year => self.year, \
       :first_name => self.first_name, :last_name => self.last_name, :verification_value => self.verification_value)
     end
       
@@ -237,5 +238,27 @@ class PaymentProfile < ActiveRecord::Base
       end
       
       return true
+    end
+    
+    def calculate_cc_type(number)
+      length = number.size
+      
+      if length == 15 && number =~ /^(34|37)/
+        "amex"
+      elsif length == 16 && number =~ /^6011/
+        "discover"
+      elsif length == 16 && number =~ /^5[1-5]/
+        "mastercard"
+      elsif (length == 13 || length == 16) && number =~ /^4/
+        "visa"
+      elsif length == 14 && number =~ /^(300|301|302|303|304|305)/
+        "diners club carte blanche"
+      elsif length == 14 && number =~ /^(30|36|38|39)/
+        "diners club international"
+      elsif length == 16 && number =~ /^(54|55)/
+        "diners club US & Canada"
+      else
+        nil
+      end
     end
 end

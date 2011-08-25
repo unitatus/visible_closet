@@ -1,6 +1,11 @@
 <% @menu_page = :account %>
 <%= render 'account_nav', :locals => { :menu_page => @menu_page } %>
 <div id="internal-right">
+	<% if current_user.order_count == 1 %>
+	<div style="text-align: center; margin: 0 0 0 0; padding: 0 0 0 0">
+		<img src="/images/breadcrumb6.jpg"><br><br>
+	</div>
+	<% end %>
 <div class="simple_header">Order Complete!</div><br>
 <hr>
 	<table class="check_out_cart_summary">

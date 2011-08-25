@@ -163,6 +163,10 @@ class User < ActiveRecord::Base
   def box_count
     Box.count(:conditions => "assigned_to_user_id = #{self.id}")
   end
+  
+  def order_count
+    Order.count(:conditions => "user_id = #{self.id}")
+  end
     
   def last_box_num
     if box_count == 0

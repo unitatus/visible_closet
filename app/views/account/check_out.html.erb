@@ -6,6 +6,9 @@ function openMemberAgreement() {
             }
 </script>
 <div id="internal-right">
+	<% if current_user.box_count == 0 %>
+		<img src="/images/breadcrumb5.jpg"><br><br>
+	<% end %>
 	<h1>Confirm Order</h1>
 	<% @order.errors.each do |attr, message| %>
 	  <div class="error_label"><%= message %></div><br>

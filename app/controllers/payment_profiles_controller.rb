@@ -47,6 +47,8 @@ class PaymentProfilesController < ApplicationController
       end
       render :new_default_payment_profile
     else
+      @profile.user.default_payment_profile = @profile
+      @profile.user.save
       redirect_to "/account/store_more_boxes"
     end
   end
