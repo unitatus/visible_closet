@@ -1,7 +1,7 @@
 <% @menu_page = :store_more_stuff %>
 <%= render 'account_nav', :locals =>  { :menu_page => @menu_page }%>
 <div id="internal-right">
-	<% if current_user.box_count == 0 %>
+	<% if current_user.order_count == 0 %>
 		<img src="/images/breadcrumb4.jpg"><br><br>
 	<% end %>
 	<% if @cart.errors.size > 0 %>

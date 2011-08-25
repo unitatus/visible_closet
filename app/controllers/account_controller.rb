@@ -13,6 +13,13 @@ class AccountController < ApplicationController
   end
   
   def store_more_boxes
+    # If you circumvented the normal sign-up procedures then you must take care of those now
+    if current_user.default_shipping_address.nil?
+      redirect_to "/addresses/new_default_shipping_address" and return
+    elsif current_user.default_payment_profile.nil?
+      redirect_to "/payment_profiles/new_default_payment_profile" and return
+    end
+    
     @your_box = Product.find(Rails.application.config.your_box_product_id)
     @our_box = Product.find(Rails.application.config.our_box_product_id)
 
@@ -68,11 +75,7 @@ class AccountController < ApplicationController
       @cart.errors[:cart] = "Please enter at least one positive integer."
       render :store_more_boxes
     else
-      if Address.find_active(current_user.id).nil?
-        redirect_to :action => 'new', :controller => 'addresses'
-      else
-        redirect_to :action => 'check_out'
-      end
+      redirect_to :action => 'check_out'
     end
   end
   
@@ -136,10 +139,6 @@ class AccountController < ApplicationController
       @address = Address.new
       render :action => "add_new_shipping_address"
       return
-    end
-    
-    if current_user.default_payment_profile.nil?
-      redirect_to "/payment_profiles/new?source_c=account&source_a=check_out" and return
     end
     
     @shipping_address = get_address_from_session(:shipping_address)

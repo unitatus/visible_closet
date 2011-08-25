@@ -47,6 +47,7 @@ class Address < ActiveRecord::Base
   validates_numericality_of :day_phone, :message => "Please enter only numbers for the phone", :unless => :skip_day_content_validation
   validates_length_of :evening_phone, :minimum => 10, :maximum => 10, :message => "Please enter a 10-digit phone number", :unless => :skip_evening_content_validation
   validates_numericality_of :evening_phone, :message => "Please enter only numbers for the phone", :unless => :skip_evening_content_validation
+  validates_format_of :zip, :with => /^\d{5}(-?\d{4})?$/, :message => "must be 5 numbers like 123345, or 9 numbers formatted like 12345-6789"
 
   def skip_day_content_validation
     day_phone.blank?

@@ -58,7 +58,7 @@
 						<%= f.select :state, options_for_select(states_array, @address.state), :include_blank => true, :class => (@address.errors[:state].empty? ? "": "error") %>
 						<%= error_messages_for_attribute(@address, :state) %>
 					</td>
-					<td>
+					<td style="width: 169px">
 						<%= f.text_field :zip, :placeholder => "######", :class => "textbox" + (@address.errors[:zip].empty? ? "": " error"), :style => "width: 169px;" %>
 						<%= error_messages_for_attribute(@address, :zip) %>
 					</td>

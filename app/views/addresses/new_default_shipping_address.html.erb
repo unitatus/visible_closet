@@ -1,9 +1,12 @@
 <div style="width: 100%; text-align: center">
-	<% if current_user.box_count == 0 %>
+	<% if current_user.order_count == 0 %>
 		<img src="/images/breadcrumb2.jpg">
 	<% end %>
 <br><br>
 <h1>Set Shipping Address</h1>
+<% if flash[:notice] %>
+<div class="error_label"><%= flash[:notice] %></div>
+<% end %>
 <% if @address.errors.empty? %>
 	Please enter a default shipping address
 <% else %>
