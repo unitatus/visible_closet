@@ -15,9 +15,14 @@ class AccountController < ApplicationController
   def store_more_boxes
     # If you circumvented the normal sign-up procedures then you must take care of those now
     if current_user.default_shipping_address.nil?
-      redirect_to "/addresses/new_default_shipping_address" and return
+      @address = Address.new
+      @user = current_user
+      flash[:notice] = "You must create a default shipping address first."
+      render "addresses/new_default_shipping_address" and return
     elsif current_user.default_payment_profile.nil?
-      redirect_to "/payment_profiles/new_default_payment_profile" and return
+      @profile = PaymentProfile.new
+      @addresses = current_user.addresses
+      render "payment_profiles/new_default_payment_profile" and return
     end
     
     @your_box = Product.find(Rails.application.config.your_box_product_id)
