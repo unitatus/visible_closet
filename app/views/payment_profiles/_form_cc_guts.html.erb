@@ -1,34 +1,69 @@
-<div class="field clearfix">
-	<%= f.label "Card type*"%>
-	<%= f.select :cc_type, options_for_select([["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]], profile.cc_type) %>
-	<%= error_messages_for_attribute(profile, :cc_type) %>
-</div><!--//field-->
-<div class="field clearfix">
-	<%= f.label "Cardholder First Name*" %>
-	<%= f.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (profile.errors[:first_name].empty? ? "": " error"), :style => "width: 200px;" %>
-	<%= error_messages_for_attribute(profile, :first_name) %>
-</div><!--//field-->
-<div class="field clearfix">
-	<%= f.label "Cardholder Last Name*" %>
-	<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (profile.errors[:last_name].empty? ? "": " error"), :style => "width: 200px;" %>
-	<%= error_messages_for_attribute(profile, :last_name) %>
-</div><!--//field-->
-<div class="field clearfix">
-<%= f.label "Number*" %>
-<%= f.text_field :number, :placeholder => "#################", :class => "textbox" + (profile.errors[:number].empty? ? "": " error"), :style => "width: 200px;" %>
-<%= error_messages_for_attribute(profile, :number) %>
-</div>
-<div class="field clearfix">
-<%= f.label "Verification Value (CVV/CID)*" %> <a href="/pcCardCode.html" id="cvv_link" title="Verification Value"style="font-size: 80%">What's this?</a>
-<%= f.text_field :verification_value, :placeholder => "###", :class => "textbox" + (profile.errors[:verification_value].empty? ? "": " error"), :style => "width: 150px;" %>
-<%= error_messages_for_attribute(profile, :verification_value) %>
-</div>
-<div class="field clearfix">
-<%= f.label "Expiration:" %>
-	<div style="position:relative; right:160px; top:4px;">
-<%= f.select :month, options_for_select([["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December"]], :selected => profile.month) %>
-<%= f.select :year, options_for_select(year_array, profile.year) %>
-<%= error_messages_for_attribute(profile, :month) %>
-<%= error_messages_for_attribute(profile, :year) %>
+<table class="registration_table">
+	<tr><td colspan="5"><hr></td></tr>
+	<tr>
+		<td>Cardholder First Name:</td>
+		<td>Cardholder Last Name:</td>
+		<td>Card Number</td>
+		<td>Expiration</td>
+		<td>Verification (CVV) <a href="/pcCardCode.html" id="cvv_link" title="Verification Value"style="font-size: 80%">(What's this?)</a></td>
+	</tr>
+	<tr>
+		<td>
+			<%= f.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (profile.errors[:first_name].empty? ? "": " error"), :style => "width: 150px;" %>
+			<%= error_messages_for_attribute(profile, :first_name) %>
+		</td>
+		<td>
+			<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (profile.errors[:last_name].empty? ? "": " error"), :style => "width: 150px;" %>
+			<%= error_messages_for_attribute(profile, :last_name) %>
+		</td>
+		<td>
+			<%= f.text_field :number, :placeholder => "#################", :class => "textbox" + (profile.errors[:number].empty? ? "": " error"), :style => "width: 150px;" %>
+			<%= error_messages_for_attribute(profile, :number) %>
+		</td>
+		<td>
+			<%= f.select :month, options_for_select([["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December"]], :selected => profile.month) %>
+			<%= f.select :year, options_for_select(year_array, profile.year) %>
+			<%= error_messages_for_attribute(profile, :month) %>
+			<%= error_messages_for_attribute(profile, :year) %>
+		</td>
+		<td>
+			<%= f.text_field :verification_value, :placeholder => "###", :class => "textbox" + (profile.errors[:verification_value].empty? ? "": " error"), :style => "width: 40px;" %>
+			<%= error_messages_for_attribute(profile, :verification_value) %>
+		</td>
+	</tr>
+	<tr><td colspan="5"><br><hr></td></tr>
+</table>
+	<% if !@addresses.empty? %>
+	<div style="text-align: left; margin-left: 100px">Please select an address:</div>
+	<%= error_messages_for_attribute(profile, :billing_address) %><br>
+			<table style="margin-left: auto; margin-right: auto">
+				<% @addresses << Address.new(:first_name => "", :last_name => "", :address_line_1 => "New Address", :city => "", :state => "", :zip => "") %>
+				<% @addresses.each_with_index do |address, index| %>
+					<% if index % 4 == 0 %>
+						<tr>
+					<% end %>
+					<td style="vertical-align: middle; padding-left: 20px">
+						<%= radio_button(:payment_profile, :billing_address_id, address.id, :checked => (params[:payment_profile].nil? ? false : (address.id.nil? ? params[:payment_profile][:billing_address_id] == "on" : params[:payment_profile][:billing_address_id] == address.id.to_s)), :onclick => "addressSelected()")%>
+					</td>
+					<td style="text-align: left">
+						<%= raw address_summary address %>
+					</td>
+					<% if index % 4 == 3 || index + 1 == @addresses.size %>
+						</tr>
+					<% end %>
+				<% end %>
+			</table>
+
+	<% end %>
+	<div style="display: <%= (params[:payment_profile].nil? ? false : params[:payment_profile][:billing_address_id] == "on") ? 'block' : 'none' %>" id="billing_address_div">
+		<br>
+			<%= f.fields_for :billing_address do |address_form| %>
+			<table class="registration_table">
+				<% @address = @profile.billing_address %>
+				<%= render :partial => "addresses/new_form_guts", :locals => { :f => address_form } %>
+			</table>
+			<% end # billing address form %>
 	</div>
-</div>
+	<br>
+			<%= f.submit "Save and Continue", :class => "button" %>
+	<br><br>

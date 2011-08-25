@@ -57,12 +57,6 @@ module VisibleCloset
     config.volume_uom = 'cubic feet'
     config.weight_uom = 'lbs'
     
-    # Production account
-    # config.fedex_auth_key = 'bHbI4jcejTh58tHK'
-    # config.fedex_security_code = 'Cr52GqtoTfnp48MEzaSRUP7M6'
-    # config.fedex_account_number = '299468437'
-    # config.fedex_meter_number = '103089427' # this is the one they emailed me about
-    # config.fedex_meter_number = '103065644' # this is the one they started labeling certification for erroneously.
     config.fedex_debug = true
     config.fedex_customer_label_image_type = 'PDF'
     config.fedex_vc_label_image_type = 'PNG'
@@ -87,7 +81,6 @@ module VisibleCloset
       :password => "83zM4HAnrm84D4pB" # "Transaction Key"
     )
     
-
     # Indicate the log-in and sign-up screens that need to be SSL-required
     config.to_prepare { Devise::SessionsController.ssl_required :new, :create }
   end

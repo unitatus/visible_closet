@@ -20,8 +20,8 @@ class ApplicationController < ActionController::Base
   end
   
   def after_sign_in_path_for(resource_or_scope)
-    if resource_or_scope.is_a?(User) && resource_or_scope.sign_in_count < 2
-      "/account/store_more_boxes"
+    if resource_or_scope.is_a?(User) && resource_or_scope.sign_in_count < 2 && resource.default_shipping_address.nil?
+      "/addresses/new_default_shipping_address"
     else
       super
     end

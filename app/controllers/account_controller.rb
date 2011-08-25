@@ -75,6 +75,10 @@ class AccountController < ApplicationController
       end
     end
   end
+  
+  def external_addresses_validate
+    
+  end
 
   def cart
     @cart = Cart.find_active_by_user_id(current_user.id)

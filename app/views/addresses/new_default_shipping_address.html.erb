@@ -1,0 +1,15 @@
+<div style="width: 100%; text-align: center">
+	<% if current_user.box_count == 0 %>
+		<img src="/images/breadcrumb2.jpg">
+	<% end %>
+<br><br>
+<h1>Set Shipping Address</h1>
+<% if @address.errors.empty? %>
+	Please enter a default shipping address
+<% else %>
+	<div class="error_label">There <%= @address.errors.size > 1 ? "were a few errors" : "was an error" %> with the information you entered ... see below:</div>
+<% end %>
+<br><br>
+<% url = @address.id.blank? ? "/addresses/set_default_shipping_address" : "/addresses/#{@address.id}/update_default_shipping_address" %>
+<%= render :partial => "addresses/new_form", :locals => { :url => url } %>
+</div>

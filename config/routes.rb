@@ -17,7 +17,14 @@ VisibleCloset::Application.routes.draw do
   match "payment_profiles/:id/set_default" => "payment_profiles#set_default"
   match "addresses/:id/set_default_shipping" => "addresses#set_default_shipping"
   match "m" => "pages#marketing_hit"
-    
+  get "addresses/new_default_shipping_address"
+  post "addresses/set_default_shipping_address"
+  match "addresses/:id/update_default_shipping_address" => "addresses#set_default_shipping_address"
+  match "addresses/:id/override_fedex" => "addresses#override_fedex"
+  get "addresses/confirm_new_default_shipping_address"
+  get "payment_profiles/new_default_payment_profile"
+  post "payment_profiles/create_default_payment_profile"
+  
   resources :boxes
   resources :addresses
   resources :payment_profiles
@@ -96,6 +103,7 @@ VisibleCloset::Application.routes.draw do
   post "account/choose_new_shipping_address"
   post "account/choose_new_billing_address"
   match "orders/:id/print_invoice" => "orders#print_invoice"
+  get "account/external_addresses_validate"
   
   post "boxes/create_stored_item"
   get "account/closet_main"

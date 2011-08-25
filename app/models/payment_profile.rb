@@ -20,22 +20,25 @@
 
 class PaymentProfile < ActiveRecord::Base
     belongs_to :user
-    belongs_to :billing_address, :class_name => 'Address'
+    belongs_to :billing_address, :class_name => 'Address', :dependent => :destroy, :autosave => true
+    accepts_nested_attributes_for :billing_address, :allow_destroy => true
     
     attr_accessor :number, :verification_value
-    
+        
     # Really we should be validating billing address, but then rails won't let us automatically set a billing address, so we can't create the payment profile
     # using Devise. The right solution to this is to have Devise allow for customization of create, but that isn't possible. Arg!
-    validates_presence_of :last_four_digits, :year, :first_name, :last_name, :cc_type, :month
+    validates_presence_of :last_four_digits, :year, :first_name, :last_name, :month
+    validates_presence_of :billing_address, :message => "Billing address must be selected."
     validate :validate_card, :on => :create
 
-    def PaymentProfile.new(params=nil)
-      payment = super(params)
-      payment.active ||= true
-
-      payment
+    def PaymentProfile.new(attributes=nil)
+      profile = super(attributes)
+      profile.active = true
+      profile.billing_address = Address.new
+      
+      profile
     end
-
+    
     def PaymentProfile.new_from(profile)
       new_profile = PaymentProfile.new
       new_profile.billing_address_id = profile.billing_address_id
@@ -55,6 +58,33 @@ class PaymentProfile < ActiveRecord::Base
       
       new_profile      
     end
+    
+    def billing_address_id=(value)
+      # a bit of a hack, gets around rails auto-setting fields when that would be inappropriate in some cases
+      if value.to_f == 0.0
+        write_attribute(:billing_address_id, nil)
+        self.billing_address_without_extension = nil
+      else
+        self.billing_address = Address.find(value)
+      end
+    end
+    
+    def billing_address_with_extension=(value)
+      target_attributes = value.attributes
+
+      target_attributes["user_id"] = nil
+      target_attributes.delete("created_at")
+      target_attributes.delete("updated_at")
+
+      # The convoluted check on address should never be needed, but is included just in case there's a data problem so we can never overwrite a customer's address info.
+      if billing_address.nil? || (!billing_address.user.nil? || billing_address_id == Rails.application.config.fedex_vc_address_id)
+        self.billing_address_without_extension = Address.new(target_attributes)
+      else
+        self.billing_address.attributes = target_attributes
+      end
+    end
+    
+    alias_method_chain :billing_address=, :extension
 
     def number=(value)
       if value.nil?
@@ -175,16 +205,6 @@ class PaymentProfile < ActiveRecord::Base
         end
       end
     end
-    
-    # def validate_save_billing_address_id
-    #   if billing_address.nil?
-    #     if user.nil? || user.default_shipping_address.nil?
-    #       errors.add(:billing_address_id, "Billing address id must be set or user with default shipping address must be associated.")
-    #     else
-    #       billing_address = user.default_shipping_address
-    #     end
-    #   end
-    # end
 
     # Updates are not allowed, but this method is kept around just in case, since it may prove useful.
     # def update_payment_profile

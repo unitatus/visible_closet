@@ -79,6 +79,12 @@ class Ability
       can :choose_new_shipping_address, :account
       can :choose_new_billing_address, :account
       can :closet_main, :account
+      can :new_default_shipping_address, Address
+      can :set_default_shipping_address, Address
+      can :override_fedex, Address
+      can :new_default_payment_profile, PaymentProfile
+      can :create_default_payment_profile, PaymentProfile
+      can :confirm_new_default_shipping_address, Address
       can :print_invoice, Order
       
       # boxes

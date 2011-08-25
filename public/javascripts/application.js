@@ -16,6 +16,14 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 			objCheckBoxes[i].checked = CheckValue;
 }
 
+function addressSelected()
+{
+	if (document.getElementById("payment_profile_billing_address_id").checked)
+		document.getElementById("billing_address_div").style.display = 'block'
+	else
+		document.getElementById("billing_address_div").style.display = 'none'
+}
+
 function ToggleIndexingLock()
 {
 	document.forms['box_form'].elements['marked_for_indexing'].checked = document.forms['box_form'].elements['marked_for_indexing_locked'].checked;

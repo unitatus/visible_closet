@@ -1,0 +1,60 @@
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div id="internal-right">
+<h1 style="font-size: 178%">Address Validation</h1>
+We use FedEx for shipping and address validation. FedEx has found some issues with the information you entered. What would you like to do?<br><br>
+<table class="address_validation_table">
+	<% @addresses_to_validate.each_with_index do |address, index| %>
+		<% if index > 0 %>
+			<tr><td colspan="3" style="border-bottom: 1px solid black"></tr>
+		<% end %>
+		<% if @addresses_to_validate.size > 1 %>
+			<tr>
+				<td colspan="3">
+					<h1>Address <%= index + 1 %></h1>
+				</td>
+			</tr>
+		<% end %>
+		<tr>
+			<th>YOU ENTERED:</th>
+			<th>FEDEX SUGGESTED:</th>
+			<th>Edit?</th>
+		</tr>
+		<tr>
+			<td style="width: 33%">
+				<%= raw address_summary address %>
+			</td>
+			<td style="width: 33%">
+				<%= raw address_summary address.suggested_address %>
+			</td>
+			<td style="vertical-align: middle; width: 33%">
+				<a href="#">Change entered address</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= form_for address, :html => { :class => "standard"} do |f| %>
+					<%= f.hidden_field :address_line_1, :value => address.suggested_address.address_line_1 %>
+					<%= f.hidden_field :address_line_2, :value => address.suggested_address.address_line_2 %>
+					<%= f.hidden_field :city, :value => address.suggested_address.city %>
+					<%= f.hidden_field :state, :value => address.suggested_address.state %>
+					<%= f.hidden_field :zip, :value => address.suggested_address.zip %>
+					<%= f.hidden_field :first_name %>
+					<%= f.hidden_field :last_name %>
+					<%= f.hidden_field :day_phone %>
+					<%= f.hidden_field :evening_phone %>
+					<%= f.hidden_field :comment %>
+					<%= f.submit "Accept Suggestions", :class => "button" %>
+				<% end %>
+			</td>
+			<td>
+				<%= form_tag "/address/#{address.id}/override_fedex", :class => "standard" do %>
+					<%= submit_tag "Use Original Address", :class => "button" %>
+				<% end %>
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+	<% end # end loop %>
+</table>
+</div>
+<div class="clearer"></div>

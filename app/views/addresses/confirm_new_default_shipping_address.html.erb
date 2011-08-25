@@ -1,0 +1,63 @@
+<div style="width: 70%; text-align: center; margin-left: auto; margin-right: auto">
+	<% if current_user.box_count == 0 %>
+		<img src="/images/breadcrumb2.jpg">
+	<% end %>
+<br><br>
+<h1>Confirm Shipping Address</h1>
+	We use FedEx to validate shipping addresses. This increases the likelihood that when we mail you your stuff it reaches you quickly and correctly.<br><br>
+<% if @address.changes_suggested? %>
+	The FedEx address confirmation service has suggested the following modifications to your address. <br>You may accept these changes for your address, reject these changes and accept the information you originally submitted, or provide new information for your address.<br><br>
+<% else %>
+	For some reason, the FedEx system was unable to identify your address. Hey, it's only a computer, and computers make mistakes. You have two options: either modify the address below and re-submit it, or accept the address as you originally entered it.<br><br>
+<% end %>
+What would you like to do?<br><br>
+<table class="address_validation_table">
+	<tr>
+		<th>YOU ENTERED:</th>
+		<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+		<th>FEDEX SUGGESTED:</th>
+	</tr>
+	<tr>
+		<td>
+			<%= raw address_summary @address %>
+		</td>
+		<td></td>
+		<td>
+			<%= raw address_summary @address.suggested_address %>
+		</td>
+	</tr>
+	<tr>
+		<td style="text-align: left; padding-left: 0">
+			<%= form_tag "/addresses/#{@address.id}/override_fedex", :class => "standard" do %>
+				<%= submit_tag "Use Original Address", :class => "button" %>
+			<% end %>
+		</td>
+		<td></td>
+		<td style="text-align: left; padding-left: 5px">
+			<%= form_for @address, :url => "/addresses/#{@address.id}/update_default_shipping_address", :html => { :class => "standard"} do |f| %>
+				<%= f.hidden_field :address_line_1, :value => @address.suggested_address.address_line_1 %>
+				<%= f.hidden_field :address_line_2, :value => @address.suggested_address.address_line_2 %>
+				<%= f.hidden_field :city, :value => @address.suggested_address.city %>
+				<%= f.hidden_field :state, :value => @address.suggested_address.state %>
+				<%= f.hidden_field :zip, :value => @address.suggested_address.zip %>
+				<%= f.hidden_field :state %>
+				<%= f.hidden_field :first_name %>
+				<%= f.hidden_field :last_name %>
+				<%= f.hidden_field :day_phone %>
+				<%= f.hidden_field :evening_phone %>
+				<%= f.hidden_field :comment %>
+				<%= f.submit "Accept Suggestions", :class => "button" %>
+			<% end %>
+		</td>
+	</tr>
+</table>
+<br><hr>
+<% if @address.errors.empty? %>
+	Or modify and re-submit your address info:
+<% else %>
+	There <%= @address.errors.size > 1 ? "were a few errors" : "was an error" %> with the information you entered ... see below:
+<% end %>
+<br><br>
+<%= render :partial => "addresses/new_form", :locals => { :url => "/addresses/#{@address.id}/update_default_shipping_address" } %>
+
+</div>

@@ -1,29 +1,35 @@
 # == Schema Information
-# Schema version: 20110810161902
+# Schema version: 20110824175202
 #
 # Table name: addresses
 #
-#  id             :integer         not null, primary key
-#  first_name     :string(255)
-#  last_name      :string(255)
-#  day_phone      :string(255)
-#  evening_phone  :string(255)
-#  address_line_1 :string(255)
-#  address_line_2 :string(255)
-#  city           :string(255)
-#  state          :string(255)
-#  zip            :string(255)
-#  created_at     :datetime
-#  updated_at     :datetime
-#  address_name   :string(255)
-#  user_id        :integer
-#  country        :string(255)
-#  status         :string(255)
-#  comment        :string(255)
+#  id                      :integer         not null, primary key
+#  first_name              :string(255)
+#  last_name               :string(255)
+#  day_phone               :string(255)
+#  evening_phone           :string(255)
+#  address_line_1          :string(255)
+#  address_line_2          :string(255)
+#  city                    :string(255)
+#  state                   :string(255)
+#  zip                     :string(255)
+#  created_at              :datetime
+#  updated_at              :datetime
+#  address_name            :string(255)
+#  user_id                 :integer
+#  country                 :string(255)
+#  status                  :string(255)
+#  comment                 :string(255)
+#  fedex_validation_status :string(255)
 #
 
 class Address < ActiveRecord::Base
   require 'soap/wsdlDriver'
+  
+  # Fedex validation statuses
+  NOT_CHECKED = "not_checked"
+  VALID = "valid"
+  NOT_VALID = "not_valid"
 
   belongs_to :user
 
@@ -36,7 +42,6 @@ class Address < ActiveRecord::Base
   validates_presence_of :city, :message => "can't be blank"
   validates_presence_of :state, :message => "State must be selected"
   validates_presence_of :zip, :message => "can't be blank"
-  validate :external_validation, :on => :create
 
   validates_length_of :day_phone, :minimum => 10, :maximum => 10, :message => "Please enter a 10-digit phone number", :unless => :skip_day_content_validation
   validates_numericality_of :day_phone, :message => "Please enter only numbers for the phone", :unless => :skip_day_content_validation
@@ -64,6 +69,7 @@ class Address < ActiveRecord::Base
     new_address = super(params)
     new_address.country = "US"
     new_address.status = "active"
+    new_address.fedex_validation_status = NOT_CHECKED
     
     new_address
   end
@@ -101,7 +107,7 @@ class Address < ActiveRecord::Base
     super
   end
   
-  def external_validation
+  def externally_valid?
     if !errors.empty?
       # there are errors. Back out -- these can cause fatal consequences in fedex call.
       return false
@@ -127,43 +133,71 @@ class Address < ActiveRecord::Base
      # and maybe even using the airbrake interface to send an email?
      @address_report = fedex.validate_address(:address => address_hash)
      
+     @suggested_address = Address.new
+     
+     @suggested_address.first_name = self.first_name
+     @suggested_address.last_name = self.last_name
+     @suggested_address.day_phone = self.day_phone
+     @suggested_address.evening_phone = self.evening_phone
+     
      if @address_report[:line_1][:suggested_value] != self.address_line_1 && @address_report[:changes_suggested]
-       errors[:address_line_1] = "We didn't recognize the entry \"#{self.address_line_1}\" for this address. A suggested value has been entered."
-       self.address_line_1 = @address_report[:line_1][:suggested_value]
+       @suggested_address.errors[:address_line_1] = "We didn't recognize the entry \"#{self.address_line_1}\" for this address. A suggested value has been entered."
+       @suggested_address.address_line_1 = @address_report[:line_1][:suggested_value]
+     else
+      @suggested_address.address_line_1 = self.address_line_1
      end
 
      if @address_report[:line_2][:suggested_value] != self.address_line_2 && @address_report[:changes_suggested]
        if self.address_line_2.blank?
-         errors[:address_line_2] = "Our address system suggested a value for address line 2."
+         @suggested_address.errors[:address_line_2] = "Our address system suggested a value for address line 2."
        else
          if @address_report[:line_2][:suggested_value].blank?
-           errors[:address_line_2] = "Our address system suggested a blank for address line 2 instead of \"#{self.address_line_2}\""
+           @suggested_address.errors[:address_line_2] = "Our address system suggested a blank for address line 2 instead of \"#{self.address_line_2}\""
          else
-           errors[:address_line_2] = "We didn't recognize the entry \"#{self.address_line_2}\" for this address. A suggested value has been entered."
+           @suggested_address.errors[:address_line_2] = "We didn't recognize the entry \"#{self.address_line_2}\" for this address. A suggested value has been entered."
          end
        end
-       self.address_line_2 = @address_report[:line_2][:suggested_value]
+       
+       @suggested_address.address_line_2 = @address_report[:line_2][:suggested_value]
+     else
+       @suggested_address.address_line_2 = self.address_line_2
      end
      
      if @address_report[:city][:suggested_value] != self.city && @address_report[:changes_suggested]
-       errors[:city] = "We didn't recognize the entry \"#{self.city}\" for this address. A suggested value has been entered."
-       self.city = @address_report[:city][:suggested_value]
+       @suggested_address.errors[:city] = "We didn't recognize the entry \"#{self.city}\" for this address. A suggested value has been entered."
+       @suggested_address.city = @address_report[:city][:suggested_value]
+     else
+       @suggested_address.city = self.city
      end
      
      if @address_report[:postal_code][:suggested_value] != self.zip && @address_report[:changes_suggested]
-       errors[:zip] = "We didn't recognize the entry \"#{self.zip}\" for this address. A suggested value has been entered."
-       self.zip = @address_report[:postal_code][:suggested_value]
+       @suggested_address.errors[:zip] = "We didn't recognize the entry \"#{self.zip}\" for this address. A suggested value has been entered."
+       @suggested_address.zip = @address_report[:postal_code][:suggested_value]
+     else
+       @suggested_address.zip = self.zip
      end
 
      if !@address_report[:success] && @address_report[:changes_suggested]
-       errors[:fedex] = "We were unable to verify the address you entered, but have suggestions. See below for details and to accept or reject the suggestions."
+       @suggested_address.errors[:fedex] = "We were unable to verify the address you entered, but have suggestions. See below for details and to accept or reject the suggestions."
      elsif !@address_report[:success]
-       errors[:fedex] = "We were unable to verify the address you entered. Please check your entries, or <a href=\"/contact\">contact us</a> for questions. <br>At this time we can only accept addresses that FedEx can ship to."
+       @suggested_address.errors[:fedex] = "We were unable to verify the address you entered. Please check your entries, or <a href=\"/contact\">contact us</a> for questions. <br>At this time we can only accept addresses that FedEx can ship to."
      end
+     
+     fedex_validation_status = @address_report[:success] ? VALID : NOT_VALID
+     
+     return @suggested_address.errors.empty?
    end
+  
+  def was_externally_valid?
+    @address_report.nil? ? externally_valid? : @address_report[:success]
+  end
   
   def changes_suggested?
     @address_report.nil? ? false : @address_report[:changes_suggested]
+  end
+  
+  def suggested_address
+    @suggested_address
   end
   
   def submitted_value(value)

@@ -82,6 +82,7 @@ class Shipment < ActiveRecord::Base
   end
   
   def to_address_id=(value)
+    write_attribute(:to_address_id, value)
     self.to_address = Address.find(value)
   end
   
@@ -101,8 +102,10 @@ class Shipment < ActiveRecord::Base
   end
   
   alias_method_chain :to_address=, :extension
-  
+
+  # Allow errors if nil passed; should never be nil
   def from_address_id=(value)
+    write_attribute(:from_address_id, value)
     self.from_address = Address.find(value)
   end
   

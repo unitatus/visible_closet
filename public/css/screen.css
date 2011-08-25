@@ -750,12 +750,20 @@ table.lightly_padded_table td
 {
 	padding: 2px 5px 2px 5px;
 }
-table.registration_table {
-	border: 1px solid #25aae1
+table.address_validation_table {
+	margin-left: auto;
+	margin-right: auto;	
 }
-table.registration_table th {
-	border-bottom: 1px solid #25aae1;
-	text-align: center
+table.address_validation_table td {
+	padding: 5px 5px 5px 5px;
+}
+table.address_validation_table th {
+	padding: 5px 5px 5px 5px;
+	font-weight: bold;
+}
+table.registration_table {
+	margin-left: auto;
+	margin-right: auto;
 }
 table.registration_table td {
 	padding: 5px 5px 5px 5px;

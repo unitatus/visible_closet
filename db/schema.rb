@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110820215747) do
+ActiveRecord::Schema.define(:version => 20110824175202) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20110820215747) do
     t.string   "country"
     t.string   "status"
     t.string   "comment"
+    t.string   "fedex_validation_status"
   end
 
   create_table "boxes", :force => true do |t|

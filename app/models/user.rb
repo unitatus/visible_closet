@@ -75,12 +75,14 @@ class User < ActiveRecord::Base
   
   def after_initialize 
     self.role ||= NORMAL
-    self.default_shipping_address ||= Address.new
-    self.default_payment_profile ||= PaymentProfile.new
   end
   
   def cart
     Cart.find_active_by_user_id(self.id)
+  end
+  
+  def addresses
+    Address.find_active(self.id, :order => :first_name)
   end
   
   def cim_id
@@ -150,10 +152,6 @@ class User < ActiveRecord::Base
     return false
   end
   
-  def payment_profiles
-    PaymentProfile.find_all_by_active_and_user_id(true, self.id)
-  end
-  
   def active_address_count
     Address.count(:conditions => "status = 'active' AND user_id = #{self.id}")
   end
@@ -164,10 +162,6 @@ class User < ActiveRecord::Base
   
   def box_count
     Box.count(:conditions => "assigned_to_user_id = #{self.id}")
-  end
-  
-  def addresses
-    Address.find_all_by_status_and_user_id("active", self.id)
   end
     
   def last_box_num

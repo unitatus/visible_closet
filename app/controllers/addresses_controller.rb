@@ -15,6 +15,46 @@ class AddressesController < ApplicationController
       format.xml  { render :xml => @addresses }
     end
   end
+  
+  def new_default_shipping_address
+    @user = current_user
+    @address = Address.new
+  end
+  
+  def set_default_shipping_address
+    @user = current_user
+    if params[:id].blank?
+      @address = Address.new(params[:address])
+    else
+      @address = Address.find_active_by_id_and_user_id(params[:id], @user.id)
+      @address.update_attributes(params[:address])
+    end
+    
+    @address.user = @user
+    @user.default_shipping_address = @address
+    
+    if @address.save
+      @user.save
+      if @address.externally_valid?
+        @address.save #save validation status
+        redirect_to :controller => "payment_profiles", :action => "new_default_payment_profile" and return
+      else
+        @address.save #save validation status
+        render :action => "confirm_new_default_shipping_address" and return
+      end
+    else
+      render :action => "new_default_shipping_address" and return
+    end
+  end
+  
+  def override_fedex
+    # We have already checked on validation and saved, so just move forward
+    redirect_to :controller => "payment_profiles", :action => "new_default_payment_profile" and return
+  end
+  
+  def confirm_new_default_shipping_address
+    
+  end
 
   # # GET /boxes/1
   # # GET /boxes/1.xml
