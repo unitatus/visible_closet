@@ -4,6 +4,6 @@
 	<div class="simple_header">Edit Address</div>
 	(<%= link_to 'See all addresses', addresses_path %>)
 <br><br>
-<%= render 'form' %>
+<%= render :partial => 'new_form', :locals => { :url => "/addresses/#{@address.id}"} %>
 </div>
 <div class="clearer"></div>

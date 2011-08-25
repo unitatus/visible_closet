@@ -1,12 +1,14 @@
 <% @menu_page = :account %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 <div id="internal-right" style="width: 50%">
-<div class="simple_header">Create New Card</div>
+<h1>Create New Card</h1>
 (<%= link_to 'see all credit cards', payment_profiles_path %>)
 <% if @profile.errors.size > 0 %>
 <% # If there is a credit card error, it is always followed by garbage. %>
   <div class="error_label"><%= @profile.errors[:cc_response][0] %></div><br>
 <% end %>
+<div style="width: 100%">
 <%= render 'form', :locals => { :profile => @profile } %>
+</div>
 </div>
 <div class="clearer"></div>

@@ -39,26 +39,6 @@ class PaymentProfile < ActiveRecord::Base
       profile
     end
     
-    def PaymentProfile.new_from(profile)
-      new_profile = PaymentProfile.new
-      new_profile.billing_address_id = profile.billing_address_id
-      new_profile.user_id = profile.user_id
-      new_profile.year = profile.year
-      new_profile.first_name = profile.first_name
-      new_profile.last_name = profile.last_name
-      new_profile.billing_address_id = profile.billing_address_id
-      new_profile.cc_type = profile.cc_type
-      new_profile.month = profile.month
-      new_profile.verification_value = profile.verification_value
-      new_profile.number = profile.number
-      
-      profile.errors.each do |attr, msg|
-        new_profile.errors.add(attr, msg)
-      end
-      
-      new_profile      
-    end
-    
     def billing_address_id=(value)
       # a bit of a hack, gets around rails auto-setting fields when that would be inappropriate in some cases
       if value.to_f == 0.0

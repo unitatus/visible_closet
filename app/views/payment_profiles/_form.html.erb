@@ -1,57 +1,8 @@
-<%= form_for(@profile, :url => "/payment_profiles", :html => { :class => "standard" }) do |f| %>
+<%= form_for(@profile, :url => "/payment_profiles", :html => { :class => "registration" }) do |f| %>
 <%= render :partial => 'form_cc_guts', :locals => { :f => f, :profile => @profile } %>
-
-<div class="field clearfix" style="padding: 0 321px 0 0 ">
-	<% if current_user.payment_profile_count != 0 %>
-		<%= f.label "Default Card?" %>
-		<%= hidden_field_tag :default, 0 %>
-		<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1" %>
-	<% end %>
-</div><br>
-<div class="graybox">
-<table>
-	<thead>
-		<tr>
-			<th colspan="6" style="font-size: 145%">
-			<% if !@profile.errors[:billing_address_id].blank? %>
-				<div class="error_label">Please select a billing address</div>
-			<% elsif current_user.active_address_count > 1 %>
-				Select a billing address
-			<% else %>
-				Billing address
-			<% end %></th>
-		</tr>
-	</thead>
-	<tbody class="top-line bottom-line"> 
-<% current_user.addresses.each_with_index do |address, index| %>
-	<% if index % 3 == 0 %>
-	<tr>
-	<% end %>
-	<td style="vertical-align: middle">
-	<% if (@profile.billing_address.nil? && index == 0) || @profile.billing_address == address %>
-		<%= radio_button(:payment_profile, :billing_address_id, address.id, :checked => true)%>	
-	<% else %>
-		<%= radio_button(:payment_profile, :billing_address_id, address.id)%>	
-	<% end %>
-	</td>
-	<td style="text-align: left">
-		<%= address.first_name %> <%= address.last_name %><br>
-		<%= address.address_line_1 %><br>
-		<% if not address.address_line_2.blank? %>
-		<%= address.address_line_2 %><br>
-		<% end %>
-		<%= address.city %>, <%= address.state %>, <%= address.zip %>
-	</td>
-	<% if index % 3 == 2 %>
-	</tr>
-	<% end %>
-<% end %>
-	</tbody>
-	<tr><td colspan="6" style="text-align: right;"><a href="/addresses">Manage your addresses &gt;&gt;</a></td></tr>
-</table>
-</div><br>
-	<div class="field clearfix">
-    <%= f.submit "Submit", :class => 'button' %>
-	</div>
-
+<div style="text-align: right; margin-right: 150px"><br>
+		<%= f.submit "Save", :class => "button" %>
+</div>
+</div>
+<br><br>
 <% end %>

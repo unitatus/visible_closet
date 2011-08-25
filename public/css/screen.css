@@ -766,7 +766,10 @@ table.registration_table {
 	margin-right: auto;
 }
 table.registration_table td {
-	padding: 5px 5px 5px 5px;
+	padding: 5px 0 5px 5px;
+}
+table.registration_table th {
+	padding: 5px 0 0 5px;
 }
 table.prices_table
 {

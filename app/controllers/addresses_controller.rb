@@ -22,50 +22,26 @@ class AddressesController < ApplicationController
   end
   
   def set_default_shipping_address
-    @user = current_user
-    if params[:id].blank?
-      @address = Address.new(params[:address])
-    else
-      @address = Address.find_active_by_id_and_user_id(params[:id], @user.id)
-      @address.update_attributes(params[:address])
-    end
-    
-    @address.user = @user
-    @user.default_shipping_address = @address
-    
-    if @address.save
-      @user.save
-      if @address.externally_valid?
-        @address.save #save validation status
-        redirect_to :controller => "payment_profiles", :action => "new_default_payment_profile" and return
-      else
-        @address.save #save validation status
-        render :action => "confirm_new_default_shipping_address" and return
-      end
-    else
-      render :action => "new_default_shipping_address" and return
-    end
+    do_create("/payment_profiles/new_default_payment_profile", "confirm_new_default_shipping_address", "new_default_shipping_address")
   end
   
   def override_fedex
-    # We have already checked on validation and saved, so just move forward
-    redirect_to :controller => "payment_profiles", :action => "new_default_payment_profile" and return
+    if current_user.default_payment_profile.nil?
+      # We have already checked on validation and saved, so just move forward
+      redirect_to :controller => "payment_profiles", :action => "new_default_payment_profile" and return
+    else
+      @addresses = Address.find_active(current_user.id, :order => :first_name)
+      render :action => "index"
+    end
   end
   
   def confirm_new_default_shipping_address
     
   end
-
-  # # GET /boxes/1
-  # # GET /boxes/1.xml
-  # def show
-  #   @address = Address.find(params[:id])
-  # 
-  #   respond_to do |format|
-  #     format.html # show.html.erb
-  #     format.xml  { render :xml => @address }
-  #   end
-  # end
+  
+  def confirm_address
+    
+  end
   
   # GET /addresses/new
   # GET /addresses/new.xml
@@ -92,23 +68,7 @@ class AddressesController < ApplicationController
   # POST /addresses
   # POST /addresses.xml
   def create
-    @address = Address.new(params[:address])
-    @address.user_id = current_user.id
-
-    if @address.save
-      if current_user.default_shipping_address_id.nil?
-        current_user.update_attribute(:default_shipping_address_id, @address.id)
-      end
-      if not (session[:source_c].blank?) # we came from somewhere; return there
-        redirect_to :controller => session[:source_c], :action => session[:source_a]
-        session[:source_c] = nil
-        session[:source_a] = nil
-      else
-        redirect_to(addresses_url)
-      end        
-    else
-      render :action => "new"
-    end
+    do_create(addresses_url, "confirm_address", "new")
   end
 
   # PUT /addresses/1
@@ -116,14 +76,16 @@ class AddressesController < ApplicationController
   def update
     @address = Address.find_active_by_id_and_user_id(params[:id], current_user.id)
 
-    respond_to do |format|
-      if @address.update_attributes(params[:address])
-        format.html { redirect_to(addresses_url) }
-        format.xml  { head :ok }
+    if @address.update_attributes(params[:address])
+      if @address.externally_valid?
+        @address.save # save validation status
+        redirect_to(addresses_url)
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @address.errors, :status => :unprocessable_entity }
+        @address.save # save validation status
+        render :action => "confirm_address"
       end
+    else
+      render :action => "edit"
     end
   end
 
@@ -154,5 +116,39 @@ class AddressesController < ApplicationController
     @addresses = Address.find_active(current_user.id, :order => :first_name)
     
     render :index
+  end
+  
+  private
+  
+  def do_create(success_redirect, confirmation_action, failure_action)
+    @user = current_user
+    if params[:id].blank?
+      @address = Address.new(params[:address])
+    else
+      @address = Address.find_active_by_id_and_user_id(params[:id], @user.id)
+      @address.update_attributes(params[:address])
+    end
+    
+    @address.user = @user
+    @user.default_shipping_address = @address
+    
+    if @address.save
+      @user.save
+      if @address.externally_valid?
+        @address.save #save validation status
+        if not (session[:source_c].blank?) # we came from somewhere; return there
+          redirect_to :controller => session[:source_c], :action => session[:source_a]
+          session[:source_c] = nil
+          session[:source_a] = nil
+        else
+          redirect_to(success_redirect) and return
+        end
+      else
+        @address.save #save validation status
+        render :action => confirmation_action and return
+      end
+    else
+      render :action => failure_action and return
+    end
   end
 end

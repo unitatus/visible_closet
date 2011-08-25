@@ -89,14 +89,14 @@ module ApplicationHelper
       return_str << (address.first_name.blank? ? "" : address.first_name)
       return_str << " "
       return_str << (address.last_name.blank? ? "" : address.last_name)
-      return_str << "<br>"
+      return_str << "<br>" if !return_str.blank?
     end
     return_str << (address.address_line_1.blank? ? "" : address.address_line_1)
     if (not address.address_line_2.blank?)
-      return_str << "<br>"
+      return_str << "<br>" if !return_str.blank?
       return_str << address.address_line_2
     end
-    return_str << "<br>"
+    return_str << "<br>" if !return_str.blank?
     return_str << (address.city.blank? ? "" : address.city + ", ")
     return_str << (address.state.blank? ? "" : address.state)
     return_str << " "

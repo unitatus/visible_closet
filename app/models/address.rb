@@ -170,6 +170,13 @@ class Address < ActiveRecord::Base
        @suggested_address.city = self.city
      end
      
+     if @address_report[:state_or_province][:suggested_value] != self.state && @address_report[:changes_suggested]
+       @suggested_address.errors[:state] = "We didn't recognize the entry \"#{self.state}\" for this address. A suggested value has been entered."
+       @suggested_address.state = @address_report[:state_or_province][:suggested_value]
+     else
+       @suggested_address.state = self.state
+     end
+     
      if @address_report[:postal_code][:suggested_value] != self.zip && @address_report[:changes_suggested]
        @suggested_address.errors[:zip] = "We didn't recognize the entry \"#{self.zip}\" for this address. A suggested value has been entered."
        @suggested_address.zip = @address_report[:postal_code][:suggested_value]

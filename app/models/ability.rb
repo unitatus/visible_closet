@@ -85,6 +85,7 @@ class Ability
       can :new_default_payment_profile, PaymentProfile
       can :create_default_payment_profile, PaymentProfile
       can :confirm_new_default_shipping_address, Address
+      can :confirm_address, Address
       can :print_invoice, Order
       
       # boxes

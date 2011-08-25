@@ -5,7 +5,7 @@
 <br><br>
 <h1>Default Billing Information</h1>
 <% if @profile.errors.empty? %>
-	Please enter information for the default card you want to use for all payments. You may change this later if you wish. <br>Credit card information is stored safely and securely with ActiveMerchant.com.
+	Please enter information for the default card you want to use for all payments. You may change this later if you wish. <br>Credit card information is stored safely and securely with Authorize.net.
 <% else %>
 	<div class="error_label">
 		There <%= @profile.errors.size > 1 ? "were a few errors" : "was an error" %> with the information you entered ... see below:
@@ -14,5 +14,9 @@
 <br><br>
 <%= form_for @profile, :url => "/payment_profiles/create_default_payment_profile", :html => { :class => "registration" } do |f| %>
 	<%= render :partial => "payment_profiles/form_cc_guts", :locals => { :f => f, :profile => @profile } %>
+	<div style="text-align: right; margin-right: 50px"><br>
+	<%= f.submit "Save and Continue", :class => "button" %>
+	</div>
+	<br><br>
 <% end %>
 </div>
