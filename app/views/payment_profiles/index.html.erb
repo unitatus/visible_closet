@@ -15,7 +15,7 @@
 			<table><thead style="font-size: 125%"><tr><td>Type</td><td>Number</td><td>Exp Date</td><td>Cardholder Name</td><td>Billing Address</td><td>Default?</td><td>Delete?</td></tr></thead>
 				<tbody class="top-line bottom-line">
 			<% profiles.each do |profile| %>
-			<% address = Address.find(profile.billing_address_id) %>
+			<% address = profile.billing_address %>
 			<tr>
 				<td><%= profile.cc_type %></td>
 				<td>************<%= profile.last_four_digits %></td>

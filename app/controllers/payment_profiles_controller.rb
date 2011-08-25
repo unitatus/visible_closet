@@ -9,7 +9,7 @@ class PaymentProfilesController < ApplicationController
   end
   
   def new
-    if current_user.default_payment_profile.nil?
+    if current_user.default_shipping_address.nil?
       flash[:notice] = "You must create a default shipment address first."
       @user = current_user
       @address = Address.new
@@ -26,11 +26,11 @@ class PaymentProfilesController < ApplicationController
   end
   
   def new_default_payment_profile
-    if current_user.default_payment_profile.nil?
+    if current_user.default_shipping_address.nil?
       flash[:notice] = "You must create a default shipment address first."
       @user = current_user
       @address = Address.new
-      render :controller => "addresses", :action => "new_default_shipping_address" and return
+      render :action => "addresses/new_default_shipping_address" and return
     end
     
     @profile = PaymentProfile.new

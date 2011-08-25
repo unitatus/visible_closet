@@ -29,7 +29,7 @@ class AddressesController < ApplicationController
     if current_user.default_payment_profile.nil?
       # We have already checked on validation and saved, so just move forward
       redirect_to :controller => "payment_profiles", :action => "new_default_payment_profile" and return
-    elsif current_user.orders_count == 0
+    elsif current_user.order_count == 0
       redirect_to :controller => "account", :action => "store_more_boxes"
     else
       @addresses = Address.find_active(current_user.id, :order => :first_name)
