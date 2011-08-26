@@ -32,7 +32,7 @@ class Order < ActiveRecord::Base
         raise ActiveRecord::Rollback
       end
       
-      if total_in_cents > 0
+      if total_in_cents > 0.0
         charges, payment_transaction = pay_for_order
       end
       
@@ -84,7 +84,7 @@ class Order < ActiveRecord::Base
     the_total = 0.0
     
     order_lines.each do |order_line|
-      the_total += order_line.total_in_cents
+      the_total += order_line.discount.due_at_signup
     end
     
     the_total

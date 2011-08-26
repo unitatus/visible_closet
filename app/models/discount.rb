@@ -85,8 +85,10 @@ class Discount
   def months_due_at_signup
     if @month_count.to_f >= FREE_SHIPPING_MONTH_THRESHOLD
       return FREE_SHIPPING_MONTH_THRESHOLD
-    else
+    elsif product.first_due == Product::AT_SIGNUP
       return 1
+    else
+      return 0
     end
   end
   
