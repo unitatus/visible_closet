@@ -84,7 +84,7 @@ class Order < ActiveRecord::Base
     the_total = 0.0
     
     order_lines.each do |order_line|
-      the_total += order_line.discount.due_at_signup
+      the_total += order_line.discount.due_at_signup*100
     end
     
     the_total
