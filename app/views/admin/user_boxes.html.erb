@@ -54,7 +54,7 @@
 					<td><a href="/admin/user/<%= @user.id %>/subscriptions/<%= box.subscription_id %>"><%= box.subscription_id %></a></td>
 				<% end %>
 				<% if current_user.admin? %>
-				<td><a href="/admin/user/<%= @user.id %>/box/<%=box.id%>/destroy" data-confirm="This will delete all inventory, EVERYTHING for this box. Are you SURE?" data-method="delete" rel="nofollow">Clear Test Data</a></td>
+				<td><a href="/admin/user/<%= @user.id %>/boxes/<%=box.id%>/destroy" data-confirm="This will delete all inventory, associated inventory orders, EVERYTHING for this box. Are you SURE?" data-method="delete" rel="nofollow">Clear Test Data</a></td>
 				<% end %>
 			</tr>
 		<% end %>

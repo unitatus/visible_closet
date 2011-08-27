@@ -42,7 +42,7 @@ class Box < ActiveRecord::Base
   has_many :stored_items, :dependent => :destroy
   has_many :shipments, :dependent => :destroy
   belongs_to :ordering_order_line, :class_name => "OrderLine"
-  belongs_to :inventorying_order_line, :class_name => "OrderLine"
+  belongs_to :inventorying_order_line, :class_name => "OrderLine", :foreign_key => :indexing_order_line_id
   belongs_to :user, :foreign_key => :assigned_to_user_id
   belongs_to :subscription
   before_destroy :destroy_certain_parents

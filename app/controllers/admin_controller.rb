@@ -121,11 +121,18 @@ class AdminController < ApplicationController
     order = Order.find_by_user_id_and_id(params[:user_id], params[:order_id])
     order.destroy_test_order!
     
+    redirect_to "/admin/user/#{params[:user_id]}/orders"
+  end
+  
+  def delete_user_box
+    box = Box.find_by_assigned_to_user_id_and_id(params[:user_id], params[:box_id])
+    box.destroy
+    
     params[:id] = params[:user_id]
     
-    user_orders
+    user_boxes
     
-    redirect_to "/admin/user/#{order.user_id}/orders"
+    redirect_to "/admin/user/#{params[:user_id]}/boxes"
   end
   
   def delete_shipment
