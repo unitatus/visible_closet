@@ -46,7 +46,7 @@ class Order < ActiveRecord::Base
   end
   
   def ship_order_lines(order_line_ids)
-    @order_lines = Array.new
+    order_lines = Array.new
     
     self.transaction do
   
@@ -56,27 +56,27 @@ class Order < ActiveRecord::Base
         # will save the order line
         order_line.ship
     
-        @order_lines << order_line
+        order_lines << order_line
       end
     
       # Need to create shipment for the empty boxes
-      @order_shipment = Shipment.new
+      order_shipment = Shipment.new
     
-      @order_shipment.order_id = self.id
-      @order_shipment.from_address_id = Rails.application.config.fedex_vc_address_id
-      @order_shipment.to_address_id = self.shipping_address_id
+      order_shipment.order_id = self.id
+      order_shipment.from_address_id = Rails.application.config.fedex_vc_address_id
+      order_shipment.to_address_id = self.shipping_address_id
 
-      if !@order_shipment.save
-        raise "Error saving shipment; errors: " << @order_shipment.errors.inspect
+      if !order_shipment.save
+        raise "Error saving shipment; errors: " << order_shipment.errors.inspect
       end    
 
-      if !@order_shipment.generate_fedex_label
-        raise "Error generating shipment and saving; errors: " << @order_shipment.errors.inspect
+      if !order_shipment.generate_fedex_label
+        raise "Error generating shipment and saving; errors: " << order_shipment.errors.inspect
       end
     
-      UserMailer.shipping_materials_sent(@order.user, @order_shipment, @order_lines).deliver
+      UserMailer.shipping_materials_sent(user, order_shipment, order_lines).deliver
       
-      return [@order_lines, @order_shipment]
+      return [order_lines, order_shipment]
     end # end transaction
   end
 
@@ -180,6 +180,18 @@ class Order < ActiveRecord::Base
     self.destroy
   end
   
+  def latest_invoice
+    the_invoices = invoices
+    
+    if the_invoices.size == 0
+      return nil
+    # elsif the_invoices.size == 1
+    #   return the_invoices[0]
+    else
+      sorted_invoices = the_invoices.sort {|x,y| y.created_at <=> x.created_at }
+      return sorted_invoices.last
+    end
+  end
   
   private
   

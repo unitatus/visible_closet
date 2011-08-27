@@ -41,7 +41,7 @@ VisibleCloset::Application.routes.draw do
   match "stored_item_tags/add_tag" => "stored_item_tags#add_tag"
 
   # Devise stuff
-  devise_for :users, :path_names => { :sign_up => "register" }, :controllers => { :registrations => "registrations" }
+  devise_for :users, :path_names => { :sign_up => "register" }, :controllers => { :registrations => "registrations", :confirmations => "confirmations" }
   # this redirects users after logging in to their account home
   match '/user' => "account#index", :as => :user_root
 
@@ -85,6 +85,7 @@ VisibleCloset::Application.routes.draw do
   match "admin/shipment/:id/set_charge" => "admin#set_shipment_charge"
   match "admin/user/:id/new_address" => "admin#new_user_address"
   match "admin/user/:id/create_address" => "admin#create_user_address"
+  match "admin/double_post"
   
   # Account
   get "account/store_more_boxes"
@@ -105,6 +106,7 @@ VisibleCloset::Application.routes.draw do
   post "account/choose_new_billing_address"
   match "orders/:id/print_invoice" => "orders#print_invoice"
   get "account/external_addresses_validate"
+  match "email_confirmation" => "account#email_confirmation"
   
   post "boxes/create_stored_item"
   get "account/closet_main"

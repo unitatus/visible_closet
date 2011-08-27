@@ -12,6 +12,10 @@ class AccountController < ApplicationController
 
   end
   
+  def email_confirmation
+    
+  end
+  
   def store_more_boxes
     # If you circumvented the normal sign-up procedures then you must take care of those now
     if current_user.default_shipping_address.nil?

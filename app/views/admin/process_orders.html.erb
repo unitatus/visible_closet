@@ -30,9 +30,7 @@
 	      <%= user.email %>
 	    </td>
 		<td>
-			<% javascript_tag do %>
-			document.write(utcToLocal("<%=order.created_at%>"))
-			<% end %>
+			<%= order.created_at.strftime '%m/%d/%Y %l:%M %p' %>
 		</td>
 		<td>
 			<%= order.status %>

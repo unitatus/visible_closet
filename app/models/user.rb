@@ -85,6 +85,15 @@ class User < ActiveRecord::Base
     Address.find_active(self.id, :order => :first_name)
   end
   
+  # This is to avoid a rather interesting bug. If we call this right after create the cim id will be saved. If we wait, then it's possible that
+  # cim_id will get called for the first time when doing another action as part of a transaction. If this happens, then the rollback will delete the
+  # cim_id from the database, but will not delete it from authorize.net, and the next time we try to set the cim_id we will be "setting it for the first time"
+  # from our perspective, but authorize.net will see that an id already exists and will throw an error. This can happen especially if there is a failure of
+  # some sort on payment_profile create, since that is generally the first time that cim_id is called in the normal flow.
+  def after_create
+    self.cim_id
+  end
+  
   def cim_id
     if read_attribute(:cim_id)
       return read_attribute(:cim_id)

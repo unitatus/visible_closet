@@ -8,6 +8,10 @@ class AdminController < ApplicationController
   def home
 
   end
+  
+  def double_post
+    
+  end
 
   def shipping
     order_lines = OrderLine.find_all_by_status_and_product_id(OrderLine::NEW_STATUS, Rails.application.config.our_box_product_id)
