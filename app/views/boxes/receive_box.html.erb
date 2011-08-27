@@ -21,7 +21,7 @@
 			</div>
 		<% end %>		
 		<br><br><br>
-		<%= form_tag "", :class => "standard", :id => "box_form" do %>
+		<%= form_tag "", :class => "standard", :id => "box_form", :onsubmit => "cf_submit.disabled=true;" do %>
 			<div class="field clearfix">
 				Box ID:
 				<%= text_field_tag :box_id, "", :class => "textbox", :value => params[:box_id] %>
@@ -45,7 +45,7 @@
 				<%= check_box_tag :marked_for_indexing_locked, "1", @marked_for_indexing_locked, :onclick => "ToggleIndexingLock();"  %>
 			</div>
 			<div class="field clearfix">
-				<%= submit_tag :submit, :class => "button" %>
+				<%= submit_tag :submit, :class => "button", :id => "cf_submit", :onclick => "return formMonitor();" %>
 			</div>
 		<% end %>
 		<br>
