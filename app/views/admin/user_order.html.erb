@@ -1,0 +1,116 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Order #<%= @order.id %> (for user <%= @order.user.first_name %> <%= @order.user.last_name %>)</h1><br>
+<table class="lightly_padded_table">
+	<tr>
+		<td><b>Created At: </b></td><td><%= @order.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
+	</tr>
+	<tr>
+		<td><b>Status: </b></td><td><%= @order.status %></td>
+	</tr>
+	<tr>
+		<td><b>Total Charged: </b></td><td><%= number_to_currency @order.amount_charged %></td>
+	</tr>
+	<tr>
+		<td><b>Total Paid: </b></td><td><%= number_to_currency @order.amount_paid %></td>
+	</tr>
+	<tr>
+		<td><b>Lines: </b></td>
+		<td>
+			<% @order.order_lines.each do |line| %>
+				Line Id: <%= line.id %><br>
+				Qty: <%= line.quantity %><br>
+				Product: <%= line.product.name %><br>
+				Boxes: 
+				<% if line.boxes.empty? %>
+					NA
+				<% else %>
+					<% line.boxes.each_with_index do |box, index| %>
+					<% if index > 0 %>
+					, 
+					<% end %>
+						<a href="/admin/user/<%= @order.user.id %>/boxes/<%= box.id %>"><%= box.id %></a>
+					<% end %>
+				<% end %>
+				<br><br>
+			<% end %>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Cart: </b></td>
+		<td>
+			<% if @order.cart_id.nil? %>
+				NA
+			<% else %>
+			Cart ID:<%= @order.cart_id %><br>
+				<% @order.cart.cart_items.each do |line| %>
+					Qty: <%= line.quantity %><br>
+					Product: <%= line.product.name %><br><br>			
+				<% end %>
+			<% end %>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Charges: </b></td>
+		<td>
+			<% @order.charges.each do |charge| %>
+				Id: <%= charge.id %><br>
+				Product: <%= charge.product_id %><br>
+				Amt: <%= number_to_currency charge.total_in_cents/100.0 %><br><br>
+			<% end %>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Payment Transactions: </b></td>
+		<td>
+			<% if @order.payment_transactions.empty? %>
+				NA
+			<% else %>
+				<% @order.payment_transactions.each_with_index do |transaction, index| %>
+					<% if index > 0 %>
+						<hr>
+					<% end %>
+					Action: <%= transaction.action %><br>
+					Amount: <%= number_to_currency transaction.amount %><br>
+					Success: <%= transaction.success %><br>
+					Authorization: <%= transaction.authorization %><br>
+					Params: <%= transaction.params %><br>
+					Message: <%= transaction.message %><br>
+					Last four digits: <%= transaction.payment_profile.last_four_digits %><br>
+				<% end %>
+			<% end %>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Shipments: </b></td>
+		<td>
+			<% if @order.shipments.empty? %>
+				NA
+			<% else %>
+				<% @order.shipments.each_with_index do |shipment, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<a href="/admin/shipment/<%= shipment.id %>"><%= shipment.id %></a>
+				<% end %>
+			<% end %>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Invoices: </b></td>
+		<td>
+			<% if @order.invoices.empty? %>
+			NA
+			<% else %>
+				<% @order.invoices.each_with_index do |invoice, index| %>
+					<% if index > 0 %>
+					, 
+					<% end %>
+					<a href="/admin/invoices/<%= invoice.id %>" target="new"><%= invoice.id %></a>
+				<% end %>
+			<% end %>
+		</td>
+	</tr>
+</table>
+</div>
+<div class="clearer"></div>

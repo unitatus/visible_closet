@@ -21,7 +21,7 @@
 		</tr>
 		<% @orders.each do |order| %>
 			<tr>
-				<td><%= order.id %></td>
+				<td><a href="/admin/user/<%= @user.id %>/orders/<%= order.id %>"><%= order.id %></a></td>
 				<td><%= order.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
 				<td><%= order.status %></td>
 				<td>

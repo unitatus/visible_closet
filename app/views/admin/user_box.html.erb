@@ -28,19 +28,34 @@
 		<td><b>Customer Box Number: </b></td><td><%= @box.box_num %></td>
 	</tr>
 	<tr>
-		<td><b>Height: </b></td><td><%= pluralize @box.height, "inch" %></td>
+		<td><b>Height: </b></td><td><%= @box.height.nil? ? "?" : pluralize(@box.height, "inch") %></td>
 	</tr>
 	<tr>
-		<td><b>Width: </b></td><td><%= pluralize @box.width, "inch" %></td>
+		<td><b>Width: </b></td><td><%= @box.width.nil? ? "?" : pluralize(@box.width, "inch") %></td>
 	</tr>
 	<tr>
-		<td><b>Length: </b></td><td><%= pluralize @box.length, "inch" %></td>
+		<td><b>Length: </b></td><td><%= @box.length.nil? ? "?" : pluralize(@box.length, "inch") %></td>
 	</tr>
 	<tr>
-		<td><b>Cubic Feet: </b></td><td><%= pluralize @box.cubic_feet, "foot" %></td>
+		<td><b>Cubic Feet: </b></td><td><%= @box.cubic_feet.nil? ? "?" : pluralize(@box.cubic_feet, "foot") %></td>
 	</tr>
 	<tr>
-		<td><b>Weight: </b></td><td><%= pluralize @box.weight, "lb" %></td>
+		<td><b>Weight: </b></td><td><%= @box.weight.nil? ? "?" : pluralize(@box.weight, "lb") %></td>
+	</tr>
+	<tr>
+		<td><b>Shipments: </b></td>
+		<td>
+			<% if @box.shipments.empty? %>
+				None
+			<% else %>
+				<% @box.shipments.each_with_index do |shipment, index| %>
+					<% if index > 0 %>
+					, 
+					<% end %>
+					<a href="/admin/shipment/<%= shipment.id %>"><%= shipment.id %></a><br>
+				<% end %>
+			<% end %>
+		</td>
 	</tr>
 </table>
 
@@ -53,6 +68,18 @@
 	<% end %>
 	<td>
 	<b>Item# <%= stored_item.id %></b><br>
+	<div class="imgteaser"> 
+	<%= image_tag(stored_item.photo.url(:thumb)) %>
+	<% if stored_item.stored_item_tags.size > 0 %>
+	<br>Tags:<br>
+	<% stored_item.stored_item_tags.each_with_index do |tag, index| %>
+		<% if index > 0 %>
+		 | 
+		<% end %>
+		<%= tag.tag %>
+	<% end %>
+	<% end %>
+	</div>
 	</td>
 	<% if (index + 1) % 3 == 0 %>
 		</tr>
