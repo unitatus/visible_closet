@@ -20,7 +20,7 @@ class OrderLine < ActiveRecord::Base
   belongs_to :order
   belongs_to :product
   has_many :boxes, :foreign_key => :ordering_order_line_id, :dependent => :destroy
-  has_many :inventoried_boxes, :foreign_key => :indexing_order_line_id, :class_name => "Box"
+  has_many :inventoried_boxes, :foreign_key => :inventorying_order_line_id, :class_name => "Box"
   
   after_initialize :init_status
   before_destroy :dissociate_inventoried_boxes
@@ -88,7 +88,7 @@ class OrderLine < ActiveRecord::Base
   
   def dissociate_inventoried_boxes
     inventoried_boxes.each do |box|
-      box.update_attribute(:indexing_order_line_id, nil)
+      box.update_attribute(:inventorying_order_line_id, nil)
     end
   end
 end

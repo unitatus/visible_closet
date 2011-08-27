@@ -37,19 +37,19 @@
 				<%= text_field_tag :weight, "", :class => "textbox", :style => "width: 6", :placeholder => "weight", :value => params[:weight] %>&nbsp;
 			</div>
 			<div class="field clearfix">
-				Box marked for indexing:
-				<%= check_box_tag :marked_for_indexing, "1", @marked_for_indexing_locked, :disabled => @marked_for_indexing_locked %>
+				Box marked for inventorying:
+				<%= check_box_tag :marked_for_inventorying, "1", @marked_for_inventorying_locked, :disabled => @marked_for_inventorying_locked %>
 			</div>
 			<div class="field clearfix">
-				Lock indexing checkbox
-				<%= check_box_tag :marked_for_indexing_locked, "1", @marked_for_indexing_locked, :onclick => "ToggleIndexingLock();"  %>
+				Lock inventorying checkbox
+				<%= check_box_tag :marked_for_inventorying_locked, "1", @marked_for_inventorying_locked, :onclick => "ToggleIndexingLock();"  %>
 			</div>
 			<div class="field clearfix">
 				<%= submit_tag :submit, :class => "button", :id => "cf_submit", :onclick => "return formMonitor();" %>
 			</div>
 		<% end %>
 		<br>
-<h5>This page is used for rapid-fire scanning of box id's. Use the checkbox to indicate that a box was indicated for invoicing. If a box was specified for invoicing and you do not select the checkbox the box will still be invoiced -- users who selected invoicing online have already committed to it, so you can't turn it off here (they have to explicitly turn it off).<br><br>To scan a series of boxes that are all marked for indexing, click the "index indicator lock" checkbox.		
+<h5>This page is used for rapid-fire scanning of box id's. Use the checkbox to indicate that a box was indicated for invoicing. If a box was specified for invoicing and you do not select the checkbox the box will still be invoiced -- users who selected invoicing online have already committed to it, so you can't turn it off here (they have to explicitly turn it off).<br><br>To scan a series of boxes that are all marked for inventorying, click the "index indicator lock" checkbox.		
 <script type="text/javascript" language="JavaScript">
 document.forms['box_form'].elements['box_id'].focus();
 </script>

@@ -36,7 +36,7 @@
       <%= order_line.id %>
     </td>
 	<td class="<%= class_name %>">
-		<% box = Box.find_by_indexing_order_line_id(order_line.id) %>
+		<% box = Box.find_by_inventorying_order_line_id(order_line.id) %>
 		<% if box.nil? %>
 			<% box = Box.find_by_ordering_order_line_id(order_line.id) %>
 		<% end %>

@@ -8,6 +8,6 @@ class StoredItemsController < ApplicationController
   def index
     @top_menu_page = :account
     @stored_items = StoredItem.find_all_by_assigned_to_user_id(current_user.id, params[:box_id])
-    @boxes = Box.find_all_by_assigned_to_user_id_and_indexing_status(current_user.id, Box::INDEXED)
+    @boxes = Box.find_all_by_assigned_to_user_id_and_inventorying_status(current_user.id, Box::INVENTORIED)
   end
 end

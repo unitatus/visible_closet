@@ -31,13 +31,13 @@
 			<% elsif box.status == Box::IN_TRANSIT_TO_TVC_STATUS %>
 				<% image_file = "status-inventory-to-us" %>
 				<% alt = "In Transit" %>			
-			<% elsif box.status == Box::IN_STORAGE_STATUS && box.indexing_status == Box::NO_INDEXING_REQUESTED %>
+			<% elsif box.status == Box::IN_STORAGE_STATUS && box.inventorying_status == Box::NO_INVENTORYING_REQUESTED %>
 				<% image_file = "status-inventory-storage" %>
 				<% alt = "In Storage" %>
-			<% elsif box.status == Box::IN_STORAGE_STATUS && box.indexing_status == Box::INDEXING_REQUESTED %>
+			<% elsif box.status == Box::IN_STORAGE_STATUS && box.inventorying_status == Box::INVENTORYING_REQUESTED %>
 				<% image_file = "status-inventory-processing" %>
 				<% alt = "Inventory Being Processed" %>
-			<% elsif box.status == Box::IN_STORAGE_STATUS && box.indexing_status == Box::INDEXED %>
+			<% elsif box.status == Box::IN_STORAGE_STATUS && box.inventorying_status == Box::INVENTORIED %>
 				<% image_file = "status-inventory-complete" %>
 				<% alt = "Inventory Complete" %>
 			<% elsif box.status == Box::BEING_PREPARED_STATUS %>
@@ -47,7 +47,7 @@
             <img src="/images/<%= image_file %>.jpg" alt="<%= alt %>" />
             <p><strong>Box Status: </strong><%= box.status_en %></p>
             <p><strong>Number of Items: </strong>
-			<% if box.indexing_status == Box::INDEXED %>
+			<% if box.inventorying_status == Box::INVENTORIED %>
 				<%= box.item_count %></p>
 			<% else %>
 				Unknown
@@ -65,7 +65,7 @@
 						<% if box.status == Box::IN_STORAGE_STATUS %>
                         <li><a href="#">return this box</a></li>
 						<% end %>
-						<% if box.indexing_status == Box::INDEXED %>
+						<% if box.inventorying_status == Box::INVENTORIED %>
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>
 						<% end %>
 						<% if box.box_type == Box::CUST_BOX_TYPE && box.status == Box::BEING_PREPARED_STATUS %>

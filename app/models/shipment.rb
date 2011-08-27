@@ -25,8 +25,8 @@ class Shipment < ActiveRecord::Base
   require 'aws/s3'
   require 'soap/wsdlDriver'
   
-  belongs_to :to_address, :class_name => "ShipmentAddress", :dependent => :destroy, :autosave => true
-  belongs_to :from_address, :class_name => "ShipmentAddress", :dependent => :destroy, :autosave => true
+  belongs_to :to_address, :class_name => "Address", :dependent => :destroy, :autosave => true
+  belongs_to :from_address, :class_name => "Address", :dependent => :destroy, :autosave => true
   belongs_to :order
   belongs_to :box
   has_one :charge
@@ -95,7 +95,7 @@ class Shipment < ActiveRecord::Base
     
     # The convoluted check on address should never be needed, but is included just in case there's a data problem so we can never overwrite a customer's address info.
     if to_address.nil? || (!to_address.user.nil? || to_address_id == Rails.application.config.fedex_vc_address_id)
-      self.to_address_without_extension = ShipmentAddress.new(target_attributes)
+      self.to_address_without_extension = Address.new(target_attributes)
     else
       self.to_address.attributes = target_attributes
     end
@@ -118,7 +118,7 @@ class Shipment < ActiveRecord::Base
     
     # The convoluted check on address should never be needed, but is included just in case there's a data problem so we can never overwrite a customer's address info.
     if from_address.nil? || (!from_address.user.nil? || from_address_id == Rails.application.config.fedex_vc_address_id)
-      self.from_address_without_extension = ShipmentAddress.new(target_attributes)
+      self.from_address_without_extension = Address.new(target_attributes)
     else
       self.from_address.attributes = target_attributes
     end

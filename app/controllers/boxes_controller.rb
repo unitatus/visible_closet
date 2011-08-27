@@ -112,7 +112,7 @@ class BoxesController < ApplicationController
   def receive_box
     @error_messages = Array.new
     @messages = Array.new
-    @marked_for_indexing_locked = (params[:marked_for_indexing_locked] == "1")
+    @marked_for_inventorying_locked = (params[:marked_for_inventorying_locked] == "1")
     
     if params[:box_id].blank?
       return
@@ -163,10 +163,10 @@ class BoxesController < ApplicationController
       box.height = params[:height].to_f
     end 
     
-    raise ("Error on save with box: " << box.inspect) if !box.receive(params[:marked_for_indexing] == "1" || params[:marked_for_indexing_locked] == "1")
+    raise ("Error on save with box: " << box.inspect) if !box.receive(params[:marked_for_inventorying] == "1" || params[:marked_for_inventorying_locked] == "1")
         
-    if box.indexing_status == Box::INDEXING_REQUESTED
-      @error_messages << "WARNING!!! Indexing requested! Please send this box for indexing!"
+    if box.inventorying_status == Box::INVENTORYING_REQUESTED
+      @error_messages << "WARNING!!! Indexing requested! Please send this box for inventorying!"
     end
     
     @messages << ("Box " + box.id.to_s + " processed.")
@@ -187,7 +187,7 @@ class BoxesController < ApplicationController
   end
   
   def inventory_boxes
-    @boxes = Box.find_all_by_indexing_status(Box::INDEXING_REQUESTED)
+    @boxes = Box.find_all_by_inventorying_status(Box::INVENTORYING_REQUESTED)
   end
   
   def create_stored_item
@@ -271,11 +271,11 @@ class BoxesController < ApplicationController
   def finish_inventorying
     @box = Box.find(params[:id])
     
-    @box.indexing_status = Box::INDEXED
+    @box.inventorying_status = Box::INVENTORIED
     
     @box.save!
     
-    @order_line = OrderLine.find(@box.indexing_order_line_id)
+    @order_line = OrderLine.find(@box.inventorying_order_line_id)
     @order_line.status = OrderLine::PROCESSED_STATUS
     @order_line.save!
     
