@@ -20,8 +20,10 @@ class OrderLine < ActiveRecord::Base
   belongs_to :order
   belongs_to :product
   has_many :boxes, :foreign_key => :ordering_order_line_id, :dependent => :destroy
+  has_many :inventoried_boxes, :foreign_key => :indexing_order_line_id, :class_name => "Box"
   
   after_initialize :init_status
+  before_destroy :dissociate_inventoried_boxes
   
   def init_status
     if status.blank?
@@ -80,5 +82,13 @@ class OrderLine < ActiveRecord::Base
     end
     
     total_quantity
+  end
+  
+  private
+  
+  def dissociate_inventoried_boxes
+    inventoried_boxes.each do |box|
+      box.update_attribute(:indexing_order_line_id, nil)
+    end
   end
 end

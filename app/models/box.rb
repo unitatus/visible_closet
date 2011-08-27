@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110815030426
+# Schema version: 20110827184810
 #
 # Table name: boxes
 #
@@ -14,9 +14,9 @@
 #  indexing_status        :string(255)
 #  indexing_order_line_id :integer
 #  received_at            :datetime
-#  height                 :float
-#  width                  :float
-#  length                 :float
+#  box_height             :float
+#  box_width              :float
+#  box_length             :float
 #  weight                 :float
 #  box_num                :integer
 #  subscription_id        :integer
@@ -41,10 +41,11 @@ class Box < ActiveRecord::Base
 
   has_many :stored_items, :dependent => :destroy
   has_many :shipments, :dependent => :destroy
-  has_one :order_line
+  belongs_to :ordering_order_line, :class_name => "OrderLine"
+  belongs_to :inventorying_order_line, :class_name => "OrderLine"
   belongs_to :user, :foreign_key => :assigned_to_user_id
   belongs_to :subscription
-  before_destroy :destroy_subscriptions
+  before_destroy :destroy_certain_parents
   
   # TODO: Figure out internationalization
   def status_en
@@ -78,7 +79,7 @@ class Box < ActiveRecord::Base
   # Want to make sure we don't get any data errors.
   def height
     if self.box_type == Box::VC_BOX_TYPE
-      update_attribute(:height, Rails.application.config.vc_box_height)
+      return Rails.application.config.vc_box_height
     end
     return read_attribute(:height)
   end
@@ -86,7 +87,7 @@ class Box < ActiveRecord::Base
   # Want to make sure we don't get any data errors.
   def width
     if self.box_type == Box::VC_BOX_TYPE
-      update_attribute(:width, Rails.application.config.vc_box_width)
+      return Rails.application.config.vc_box_width
     end
     
     return read_attribute(:width)
@@ -95,50 +96,40 @@ class Box < ActiveRecord::Base
   # Want to make sure we don't get any data errors.
   def length
     if self.box_type == Box::VC_BOX_TYPE
-      update_attribute(:length, Rails.application.config.vc_box_length)
+      return Rails.application.config.vc_box_length
     end
     return read_attribute(:length)
   end
   
-  # def height=(value)
-  #   if box_type == VC_BOX_TYPE
-  #     raise "Cannot reset Visible Closet box height."
-  #   else 
-  #     super(value)
-  #   end
-  # end
-  # 
-  # def width=(value)
-  #   if box_type == VC_BOX_TYPE
-  #     raise "Cannot reset Visible Closet box width."
-  #   else 
-  #     super(value)
-  #   end
-  # end
-  # 
-  # def length=(value)
-  #   if box_type == VC_BOX_TYPE
-  #     raise "Cannot reset Visible Closet box length."
-  #   else 
-  #     super(value)
-  #   end
-  # end 
+  def ordering_order
+    ordering_order_line.order
+  end
+  
+  def inventorying_order
+    if inventorying_order_line.nil?
+      return nil
+    else
+      return inventorying_order_line.order
+    end
+  end
   
   def receive(indexing_requested = false)
     self.transaction do
       
-    # need to check for both, since one disables the other which means that it is not posted
-    if indexing_requested
-      if self.indexing_status == Box::NO_INDEXING_REQUESTED
-        generate_indexing_order
+      # need to check for both, since one disables the other which means that it is not posted
+      if indexing_requested
+        # this check exists to ensure that customers are not double-charged if we restart the inventorying process. You only get the indexing order
+        # if you move from "no indexing requested" to "indexing requested"
+        if self.indexing_status == Box::NO_INDEXING_REQUESTED
+          generate_indexing_order
+        end
+        self.indexing_status = Box::INDEXING_REQUESTED
       end
-      self.indexing_status = Box::INDEXING_REQUESTED
-    end
     
-    self.status = Box::IN_STORAGE_STATUS
-    self.received_at = Time.now
+      self.status = Box::IN_STORAGE_STATUS
+      self.received_at = Time.now
       
-    return self.save
+      return self.save
     end # end transaction
   end
   
@@ -211,11 +202,12 @@ class Box < ActiveRecord::Base
   end
   
   def cubic_feet
-    if self.length.nil? || self.width.nil? || self.height.nil?
-      return nil
-    else
-      return self.length * self.width * self.height
-    end
+    # if self.length.nil? || self.width.nil? || self.height.nil?
+    #   return nil
+    # else
+    #   return (self.length/12.0) * (self.width/12.0) * (self.height/12.0)
+    # end
+    return self.length
   end
   
   def Box.count_boxes(user, status=nil, type=nil)
@@ -237,10 +229,20 @@ class Box < ActiveRecord::Base
   end
   
   # Called before destroy; destroys related subscriptions if this is the last box in the subscription
-  def destroy_subscriptions
+  def destroy_certain_parents
     if !subscription.nil? && subscription.boxes.size == 1
       subscription.destroy
       self.subscription = nil
+    end
+    
+    if !inventorying_order_line.nil?
+      order = inventorying_order_line.order
+      
+      if order.order_lines.size == 1 # this is the last line
+        order.destroy
+      else
+        the_line.destroy
+      end
     end
   end
   

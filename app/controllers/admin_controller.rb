@@ -66,11 +66,19 @@ class AdminController < ApplicationController
       order_by += " DESC"
     end
     
-    if order_by.blank?
-      @orders = Order.find_all_by_user_id(@user.id, :order => "created_at DESC")
-    else
-      @orders = Order.find_all_by_user_id(@user.id, :order => order_by)
+    @orders = Order.find_all_by_user_id(@user.id, :order => order_by.blank? ? "created_at DESC" : order_by)
+  end
+  
+  def user_boxes
+    @user = User.find(params[:id])
+    
+    order_by = params[:sort_by]
+        
+    if params[:desc] && order_by
+      order_by += " DESC"
     end
+    
+    @boxes = Box.find_all_by_assigned_to_user_id(@user.id, :order => order_by.blank? ? "created_at DESC" : order_by)
   end
   
   def new_user_address
