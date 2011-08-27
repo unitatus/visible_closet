@@ -202,12 +202,11 @@ class Box < ActiveRecord::Base
   end
   
   def cubic_feet
-    # if self.length.nil? || self.width.nil? || self.height.nil?
-    #   return nil
-    # else
-    #   return (self.length/12.0) * (self.width/12.0) * (self.height/12.0)
-    # end
-    return self.length
+    if self.length.nil? || self.width.nil? || self.height.nil?
+      return nil
+    else
+      return (self.length/12.0) * (self.width/12.0) * (self.height/12.0)
+    end
   end
   
   def Box.count_boxes(user, status=nil, type=nil)

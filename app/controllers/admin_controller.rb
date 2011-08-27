@@ -104,6 +104,11 @@ class AdminController < ApplicationController
     @shipments = @user.shipments
   end
   
+  def user_box
+    @user = User.find(params[:user_id])
+    @box = Box.find_by_assigned_to_user_id_and_id(params[:user_id], params[:box_id])
+  end
+  
   def set_shipment_charge
     @shipment = Shipment.find(params[:id])
     amount = params[:amount]
