@@ -1,9 +1,9 @@
-<%= form_for(@address, :url => url, :html => { :class => "registration" }) do |f| %>
+<%= form_for(@address, :url => url, :html => { :class => "registration", :onsubmit => "cf_submit.disabled=true;" }) do |f| %>
 <table class="registration_table">
 <%= render :partial => "addresses/new_form_guts", :locals => { :f => f } %>
 	<tr>
 		<td colspan="2" style="text-align: right; padding-right: 20px">
-			<%= f.submit "Next", :class => 'button', :id => 'cf_submit' %>
+			<%= f.submit "Next", :class => 'button', :id => 'cf_submit', :onclick => "return formMonitor(this);" %>
 		</td>
 	</tr>
 </table>

@@ -1,4 +1,4 @@
-<%= form_for(@agreement_version) do |f| %>
+<%= form_for(@agreement_version, :html => { :onsubmit => "cf_submit.disabled=true;" }) do |f| %>
   <% if @agreement_version.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@agreement_version.errors.count, "error") %> prohibited this agreement version from being saved:</h2>
@@ -19,6 +19,6 @@
     <%= text_area :rental_agreement_version, :agreement_text, :cols => 60, :rows => 30, :value => text_area_value %>
   </div>
   <div class="actions">
-    <%= f.submit "Submit" %>
+    <%= f.submit "Submit", :id => "cf_submit", :onclick => "return formMonitor();" %>
   </div>
 <% end %>

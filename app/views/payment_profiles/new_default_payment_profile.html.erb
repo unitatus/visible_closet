@@ -12,10 +12,10 @@
 	</div>
 <% end %>
 <br><br>
-<%= form_for @profile, :url => "/payment_profiles/create_default_payment_profile", :html => { :class => "registration" } do |f| %>
+<%= form_for @profile, :url => "/payment_profiles/create_default_payment_profile", :html => { :class => "registration", :onsubmit => "cf_submit.disabled=true;" } do |f| %>
 	<%= render :partial => "payment_profiles/form_cc_guts", :locals => { :f => f, :profile => @profile } %>
 	<div style="text-align: right; margin-right: 50px"><br>
-	<%= f.submit "Save and Continue", :class => "button" %>
+	<%= f.submit "Save and Continue", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();" %>
 	</div>
 	<br><br>
 <% end %>

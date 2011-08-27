@@ -13,7 +13,7 @@
 			<br>
 		</div>
 	<% end %>
-<%= form_tag("/account/order_boxes", :class => "standard") do %>
+<%= form_tag("/account/order_boxes", :class => "standard", :onsubmit => "cf_submit.disabled=true;") do %>
     <div class="graybox more-stuff-box-sizing">
         <table class="more-stuff-order">
               <tbody class="top-line">
@@ -46,7 +46,7 @@
         </table>
     </div>
     <div class="order-boxes"><br>
-		<%= submit_tag("Store Boxes", :class => "button") %>
+		<%= submit_tag("Store Boxes", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();") %>
     </div>
 <% end %>
 </div>

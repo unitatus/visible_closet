@@ -127,9 +127,6 @@ class Shipment < ActiveRecord::Base
   alias_method_chain :from_address=, :extension
   
   def generate_fedex_label(box = nil)
-    shipping_address = Address.find(self.from_address_id)
-    receiving_address = Address.find(self.to_address_id)
-    
     if epl_label?
       label_stock_type = Fedex::LabelStockTypes::STOCK_4X6 # Fedex::LabelStockTypes::PAPER_4X6
       label_image_type = Fedex::LabelSpecificationImageTypes::EPL2
@@ -143,34 +140,34 @@ class Shipment < ActiveRecord::Base
      ))
 
      shipper = {
-       :name => shipping_address.first_name + " " + shipping_address.last_name,
-       :phone_number => shipping_address.day_phone
+       :name => from_address.first_name + " " + from_address.last_name,
+       :phone_number => from_address.day_phone
      }
      recipient = {
-       :name => receiving_address.first_name + " " + receiving_address.last_name,
-       :phone_number => receiving_address.day_phone
+       :name => to_address.first_name + " " + to_address.last_name,
+       :phone_number => to_address.day_phone
      }
      origin = {
-       :street_lines => (shipping_address.address_line_2.blank? ? [shipping_address.address_line_1] : [shipping_address.address_line_1, shipping_address.address_line_2]),
-       :city => shipping_address.city,
-       :state => shipping_address.state,
-       :zip => shipping_address.zip,
-       :country => shipping_address.country
+       :street_lines => (from_address.address_line_2.blank? ? [from_address.address_line_1] : [from_address.address_line_1, from_address.address_line_2]),
+       :city => from_address.city,
+       :state => from_address.state,
+       :zip => from_address.zip,
+       :country => from_address.country
      }
     destination = {
-      :street_lines => (receiving_address.address_line_2.blank? ? [receiving_address.address_line_1] : [receiving_address.address_line_1, receiving_address.address_line_2]),
-      :city => receiving_address.city,
-      :state => receiving_address.state,
-     :zip => receiving_address.zip,
-     :country => receiving_address.country,
+      :street_lines => (to_address.address_line_2.blank? ? [to_address.address_line_1] : [to_address.address_line_1, to_address.address_line_2]),
+      :city => to_address.city,
+      :state => to_address.state,
+     :zip => to_address.zip,
+     :country => to_address.country,
      :residential => false
     }
     email_recipients = [{
-      :email_address => shipping_address.user.nil? ? Rails.application.config.admin_email : shipping_address.user.email, 
+      :email_address => from_address.user.nil? ? Rails.application.config.admin_email : from_address.user.email, 
       :type => Fedex::EMailNotificationRecipientTypes::SHIPPER
     },
     {
-      :email_address => receiving_address.user.nil? ? Rails.application.config.admin_email : receiving_address.user.email, 
+      :email_address => to_address.user.nil? ? Rails.application.config.admin_email : to_address.user.email, 
       :type => Fedex::EMailNotificationRecipientTypes::RECIPIENT
     }]
      

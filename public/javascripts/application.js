@@ -16,6 +16,18 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 			objCheckBoxes[i].checked = CheckValue;
 }
 
+submit_counter = 0
+function formMonitor(obj)
+{	
+	submit_counter++;
+	if (submit_counter > 1) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
 function addressSelected()
 {
 	if (document.getElementById("payment_profile_billing_address_id").checked)

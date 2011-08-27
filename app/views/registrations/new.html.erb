@@ -16,7 +16,7 @@
 		<% end %>
 	</div>
 <% end %>
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => "registration" }) do |f| %>
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => "registration", :onsubmit => "cf_submit.disabled=true;" }) do |f| %>
 	<table class="registration_table">
 		<tr>
 			<td>
@@ -68,7 +68,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align: right; padding-right: 20px">
-				<%= f.submit "Next", :class => 'button', :id => 'cf_submit' %>
+				<%= f.submit "Next", :class => 'button', :id => 'cf_submit', :onclick => "return formMonitor();" %>
 			</td>
 		</tr>
 	</table>

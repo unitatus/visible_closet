@@ -1,7 +1,7 @@
-<%= form_for(@profile, :url => "/payment_profiles", :html => { :class => "registration" }) do |f| %>
+<%= form_for(@profile, :url => "/payment_profiles", :html => { :class => "registration", :onsubmit => "cf_submit.disabled=true;" }) do |f| %>
 <%= render :partial => 'form_cc_guts', :locals => { :f => f, :profile => @profile } %>
 <div style="text-align: right; margin-right: 150px"><br>
-		<%= f.submit "Save", :class => "button" %>
+		<%= f.submit "Save", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();" %>
 </div>
 </div>
 <br><br>
