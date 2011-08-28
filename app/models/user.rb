@@ -159,10 +159,10 @@ class User < ActiveRecord::Base
   end
 
   def destroy
-    if delete_cim_profile and super
-      return true
-    end
-    return false
+    # since we are deleting, we don't really care if we get a cim error; it's most likely because we had a failure in the past and the
+    # cim_id was deleted in authorize.net
+    delete_cim_profile
+    super
   end
   
   def active_address_count
