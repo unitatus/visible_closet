@@ -12,7 +12,7 @@
 #
 
 class Cart < ActiveRecord::Base
-  has_many :cart_items, :autosave => true
+  has_many :cart_items, :autosave => true, :dependent => :destroy
   has_one :order, :dependent => :destroy
 
   attr_accessible :id

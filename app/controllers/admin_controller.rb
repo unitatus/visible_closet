@@ -57,6 +57,22 @@ class AdminController < ApplicationController
     @user = User.find(params[:id])
   end
   
+  def clear_user_data
+    @user = User.find(params[:id])
+    
+    @user.clear_test_data
+    
+    redirect_to "/admin/users"
+  end
+  
+  def destroy_user
+    @user = User.find(params[:id])
+    
+    @user.destroy
+    
+    redirect_to "/admin/users"
+  end
+  
   def user_orders
     @user = User.find(params[:id])
     

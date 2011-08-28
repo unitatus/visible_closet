@@ -75,6 +75,8 @@ VisibleCloset::Application.routes.draw do
   get "admin/users"
   match "admin/user/:id/addresses" => "admin#user_addresses"
   match "admin/user/:id" => "admin#user"
+  match "admin/user/:id/clear_test_data" => "admin#clear_user_data"
+  match "admin/user/:id/destroy" => "admin#destroy_user"
   match "admin/user/:id/orders" => "admin#user_orders"
   match "admin/user/:user_id/order/:order_id/destroy" => "admin#delete_user_order"
   match "admin/shipment/:id/destroy" => "admin#delete_shipment"

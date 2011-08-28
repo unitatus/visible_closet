@@ -58,10 +58,14 @@ class User < ActiveRecord::Base
 
   symbolize :role
 
-  has_many :boxes, :foreign_key => :assigned_to_user_id
-  has_many :payment_profiles
-  has_many :addresses
-  has_many :orders
+  has_many :boxes, :foreign_key => :assigned_to_user_id, :dependent => :destroy
+  has_many :payment_profiles, :dependent => :destroy
+  has_many :addresses, :dependent => :destroy
+  has_many :orders, :dependent => :destroy
+  has_many :carts, :dependent => :destroy
+  has_many :charges, :dependent => :destroy
+  has_many :payment_transactions, :dependent => :destroy
+  has_many :subscriptions, :dependent => :destroy
   has_and_belongs_to_many :rental_agreement_versions
 
   validates :first_name, :presence => true
@@ -203,6 +207,40 @@ class User < ActiveRecord::Base
   
   def shipments
     Shipment.find_all_by_user_id(id, :order => "created_at DESC")
+  end
+  
+  def clear_test_data
+    orders.each do |order|
+      order.destroy
+    end
+    
+    carts.each do |cart|
+      cart.destroy
+    end
+    
+    charges.each do |charge|
+      charge.destroy
+    end
+    
+    payment_profiles.each do |profile|
+      if profile != default_payment_profile
+        profile.destroy
+      end
+    end
+    
+    addresses.each do |address|
+      if address != default_shipping_address
+        address.destroy
+      end
+    end
+    
+    payment_transactions.each do |transaction|
+      transaction.destroy
+    end
+    
+    subscriptions.each do |subscription|
+      subscription.destroy
+    end
   end
   
   private 
