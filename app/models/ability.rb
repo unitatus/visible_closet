@@ -38,6 +38,7 @@ class Ability
       can :process_orders, :admin
       can :users, :admin
       can :user_orders, :admin
+      can :user_order, :admin
       can :new_user_address, :admin
       can :create_user_address, :admin
       can :shipping, :admin
@@ -45,6 +46,9 @@ class Ability
       can :set_shipment_charge, :admin
       can :shipment, :admin
       can :user, :admin
+      can :user_boxes, :admin
+      can :user_box, :admin
+      can :user_billing, :admin
       can :receive_box, Box
       can :inventory_box, Box
       can :inventory_boxes, Box
@@ -57,6 +61,7 @@ class Ability
       can :finish_inventorying, Box
       can :process_order, Order
       can :ship_order_lines, Order
+      can :show_invoice, Order
       can :get_order_label, Shipment
     end
     

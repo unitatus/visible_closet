@@ -31,7 +31,7 @@
 		<td><b>Box Id: </b></td>
 		<td>
 			<% if @shipment.box_id %>
-				<a href="/admin/box/<%= @shipment.box_id %>"><%= @shipment.box_id %></a>
+				<a href="/admin/user/<%= @shipment.user.id %>/boxes/<%= @shipment.box_id %>"><%= @shipment.box_id %></a>
 			<% else %>
 				None
 			<% end %>

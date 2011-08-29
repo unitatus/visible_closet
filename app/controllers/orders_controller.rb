@@ -43,7 +43,7 @@ class OrdersController < ApplicationController
     if @order.payment_transactions.size > 0 # only one really
       @payment_profile = @order.payment_transactions.first.payment_profile 
     else
-      @payment_profile = current_user.default_payment_profile
+      @payment_profile = @order.user.default_payment_profile
     end
 
     @billing_address = @payment_profile.billing_address
