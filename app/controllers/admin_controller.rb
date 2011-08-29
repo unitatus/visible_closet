@@ -102,6 +102,10 @@ class AdminController < ApplicationController
     @transactions = @user.transaction_history
   end
   
+  def user_subscription
+    @subscription = Subscription.find_by_id_and_user_id(params[:subscription_id], params[:user_id])
+  end
+  
   def new_user_address
     @address = Address.new
     @address.user_id = params[:id]

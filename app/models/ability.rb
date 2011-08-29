@@ -49,6 +49,7 @@ class Ability
       can :user_boxes, :admin
       can :user_box, :admin
       can :user_billing, :admin
+      can :user_subscription, :admin
       can :receive_box, Box
       can :inventory_box, Box
       can :inventory_boxes, Box

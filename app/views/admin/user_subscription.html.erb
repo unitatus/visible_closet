@@ -1,0 +1,19 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Subscription #<%= @subscription.id %> (for user <%= @subscription.user.first_name %> <%= @subscription.user.last_name %>)</h1><br>
+<table class="lightly_padded_table">
+	<tr>
+		<td><b>Created At: </b></td><td><%= @subscription.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
+	</tr>
+	<tr>
+		<td><b>Start Date: </b></td><td><%= @subscription.start_date.nil? ? "TBD" : @subscription.start_date.strftime('%m/%d/%Y %l:%M %p') %></td>
+	</tr>
+	<tr>
+		<td><b>End Date: </b></td><td><%= @subscription.end_date.nil? ? "TBD" : @subscription.end_date.strftime('%m/%d/%Y %l:%M %p') %></a></td>
+	</tr>
+	<tr>
+		<td><b>Duration: </b></td><td><%= pluralize @subscription.duration_in_months, "month" %></td>
+	</tr>
+</table>
+</div>
+<div class="clearer"></div>
