@@ -1,0 +1,38 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Billing & Payment History for User #<%= @user.id %> (<%= @user.first_name %> <%= @user.last_name %>)</h1><br>
+	<table class="lightly_padded_table">
+		<tr>
+			<th style="text-align: center"><b>Date</b></th>
+			<th style="text-align: center"><b>Txion Id</b></th>
+			<th style="width: 250px; text-align: center"><b>Description</b></th>
+			<th style="text-align: center"><b>Debit</b></th>
+			<th style="text-align: center"><b>Credit</b></th>
+			<th style="text-align: center"><b>Running Total</b></th>
+		</tr>
+		<% running_total = 0.0 %>
+		<% @transactions.each do |transaction| %>
+		<tr>
+			<td style="text-align: center"><%= transaction.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
+			<td style="text-align: center"><%= transaction.id %></td>
+			<td style="text-align: center">
+				<% if transaction.core_transaction.is_a?(PaymentTransaction) %>
+					payment - card ending in <%= transaction.core_transaction.payment_profile.last_four_digits %>
+				<% else %>
+				charge for 
+				  <% if !transaction.core_transaction.order_id.nil? %>
+				      order <a href="/admin/user/<%= @user.id %>/orders/<%= transaction.core_transaction.order_id %>">#<%= transaction.core_transaction.order_id %></a> for product <%= transaction.core_transaction.product.name %>
+				  <% else %>
+				      shipment <a href="/admin/shipment/<%= transaction.core_transaction.shipment_id %>">#<%= transaction.core_transaction.shipment_id %></a>
+				  <% end %>
+				<% end %>
+			</td>
+			<td style="text-align: center"><%= number_to_currency transaction.debit %></td>
+			<td style="text-align: center"><%= number_to_currency transaction.credit %></td>
+			<% running_total += transaction.value %></td>
+			<td style="text-align: center"><%= number_to_currency running_total %></td>
+		</tr>
+		<% end %>
+	</table>
+</div>
+<div class="clearer"></div>

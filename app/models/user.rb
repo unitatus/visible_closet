@@ -157,6 +157,12 @@ class User < ActiveRecord::Base
       update_cim_profile
     end    
   end
+  
+  def transaction_history
+    unsorted_transactions = GenericTransaction.find_all_by_user_id(self.id)
+    
+    unsorted_transactions.sort {|x,y| x.created_at <=> y.created_at }
+  end
 
   def destroy
     # since we are deleting, we don't really care if we get a cim error; it's most likely because we had a failure in the past and the

@@ -97,6 +97,11 @@ class AdminController < ApplicationController
     @boxes = Box.find_all_by_assigned_to_user_id(@user.id, :order => order_by.blank? ? "created_at DESC" : order_by)
   end
   
+  def user_billing
+    @user = User.find(params[:id])
+    @transactions = @user.transaction_history
+  end
+  
   def new_user_address
     @address = Address.new
     @address.user_id = params[:id]
