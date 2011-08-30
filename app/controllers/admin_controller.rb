@@ -67,7 +67,6 @@ class AdminController < ApplicationController
   
   def destroy_user
     @user = User.find(params[:id])
-    debugger
     @user.destroy
     
     redirect_to "/admin/users"

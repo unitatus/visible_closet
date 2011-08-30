@@ -32,8 +32,6 @@ class AddressesController < ApplicationController
   end
   
   def admin_create_address
-    debugger
-    
     do_create("/admin/user/#{params[:user_id]}", "admin_confirm_address", "admin_new_address", false, true)
   end
 
