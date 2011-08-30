@@ -191,7 +191,7 @@ class Address < ActiveRecord::Base
        @suggested_address.errors[:fedex] = "We were unable to verify the address you entered. Please check your entries, or <a href=\"/contact\">contact us</a> for questions. <br>At this time we can only accept addresses that FedEx can ship to."
      end
      
-     fedex_validation_status = @address_report[:success] ? VALID : NOT_VALID
+     self.fedex_validation_status = @address_report[:success] ? VALID : NOT_VALID
      
      return @suggested_address.errors.empty?
    end
