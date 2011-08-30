@@ -1,0 +1,21 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<div style="width: 500px">
+	<h1>New Address for User #<%= @user.id %> (<%= @user.first_name%> <%= @user.last_name %>)</h1><br>
+<% url = "/admin/user/#{@user.id}/create_address" %>
+<% if !@address.id.nil? %>
+	<% url +=  ("/" + @address.id.to_s)%>
+<% end %>
+	<%= form_for(@address, :url => url, :html => { :class => "standard", :onsubmit => "cf_submit.disabled=true;" }) do |f| %>
+	<table class="registration_table">
+		<%= render :partial => 'addresses/new_form_guts', :locals => { :f => f } %>
+		<tr>
+			<td colspan="2" style="text-align: right; padding-right: 20px">
+				<%= f.submit "Next", :class => 'button', :id => 'cf_submit', :onclick => "return formMonitor(this);" %>
+			</td>
+		</tr>
+	</table>
+	<% end %>
+	</div>
+</div>
+<div class="clearer"></div>

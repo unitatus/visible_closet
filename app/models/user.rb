@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
   end
   
   def addresses
-    Address.find_active(self.id, :order => :first_name)
+    Address.find_active(self.id, :order => :created_at)
   end
   
   # This is to avoid a rather interesting bug. If we call this right after create the cim id will be saved. If we wait, then it's possible that

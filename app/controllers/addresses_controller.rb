@@ -22,9 +22,21 @@ class AddressesController < ApplicationController
   end
   
   def set_default_shipping_address
-    do_create("/payment_profiles/new_default_payment_profile", "confirm_new_default_shipping_address", "new_default_shipping_address")
+    do_create("/payment_profiles/new_default_payment_profile", "confirm_new_default_shipping_address", "new_default_shipping_address", true, false)
   end
   
+  def admin_new_address
+    @address = Address.new
+    @address.user_id = params[:user_id]
+    @user = User.find(params[:user_id])
+  end
+  
+  def admin_create_address
+    debugger
+    
+    do_create("/admin/user/#{params[:user_id]}", "admin_confirm_address", "admin_new_address", false, true)
+  end
+
   def override_fedex
     if current_user.default_payment_profile.nil?
       # We have already checked on validation and saved, so just move forward
@@ -37,11 +49,20 @@ class AddressesController < ApplicationController
     end
   end
   
+  def admin_fedex_override
+    @address = Address.find(params[:address_id])
+    redirect_to "/admin/user/#{@address.user_id}"
+  end
+  
   def confirm_new_default_shipping_address
     
   end
   
   def confirm_address
+    
+  end
+  
+  def admin_confirm_address
     
   end
   
@@ -70,7 +91,7 @@ class AddressesController < ApplicationController
   # POST /addresses
   # POST /addresses.xml
   def create
-    do_create(addresses_url, "confirm_address", "new")
+    do_create(addresses_url, "confirm_address", "new", false, false)
   end
 
   # PUT /addresses/1
@@ -122,8 +143,8 @@ class AddressesController < ApplicationController
   
   private
   
-  def do_create(success_redirect, confirmation_action, failure_action)
-    @user = current_user
+  def do_create(success_redirect, confirmation_action, failure_action, set_default_shipping_address, admin)
+    @user = admin ? User.find(params[:user_id]) : current_user
     if params[:id].blank?
       @address = Address.new(params[:address])
     else
@@ -132,7 +153,10 @@ class AddressesController < ApplicationController
     end
     
     @address.user = @user
-    @user.default_shipping_address = @address
+    
+    if set_default_shipping_address
+      @user.default_shipping_address = @address
+    end
     
     if @address.save
       @user.save

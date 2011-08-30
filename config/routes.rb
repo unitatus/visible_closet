@@ -25,6 +25,7 @@ VisibleCloset::Application.routes.draw do
   get "addresses/confirm_address"
   get "payment_profiles/new_default_payment_profile"
   post "payment_profiles/create_default_payment_profile"
+  post "addresses/admin_fedex_override"
   
   resources :boxes
   resources :addresses
@@ -85,8 +86,10 @@ VisibleCloset::Application.routes.draw do
   match "admin/shipment/:id" => "admin#shipment"
   match "admin/shipment/:id/refresh_fedex_events" => "admin#refresh_shipment_events"
   match "admin/shipment/:id/set_charge" => "admin#set_shipment_charge"
-  match "admin/user/:id/new_address" => "admin#new_user_address"
-  match "admin/user/:id/create_address" => "admin#create_user_address"
+  match "admin/user/:user_id/new_address" => "addresses#admin_new_address"
+  match "admin/user/:user_id/create_address/:id" => "addresses#admin_create_address"
+  match "admin/user/:user_id/create_address" => "addresses#admin_create_address"
+  match "admin/user/:user_id/confirm_address" => "addresses#admin_confirm_address"
   match "admin/double_post"
   match "admin/user/:id/boxes" => "admin#user_boxes"
   match "admin/user/:user_id/boxes/:box_id/destroy" => "admin#delete_user_box"

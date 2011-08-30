@@ -1,0 +1,6 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<% url = "/admin/user/#{@user.id}/create_address" %>
+<% if !@address.id.nil? %>
+	<% url +=  ("/" + @address.id.to_s)%>
+<% end %>
+<%= render :partial => "confirm_address", :locals => { :update_url => url, :fedex_override_url => "/addresses/admin_fedex_override" } %>

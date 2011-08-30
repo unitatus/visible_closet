@@ -42,7 +42,8 @@ What would you like to do?<br><br>
 	</tr>
 	<tr>
 		<td style="text-align: left; padding-left: 0">
-			<%= form_tag "/addresses/#{@address.id}/override_fedex", :class => "standard" do %>
+			<%= form_tag fedex_override_url, :class => "standard" do %>
+				<%= hidden_field_tag :address_id, @address.id %>
 				<%= submit_tag "Use Original Address", :class => "button" %>
 			<% end %>
 		</td>

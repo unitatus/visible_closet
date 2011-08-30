@@ -106,24 +106,6 @@ class AdminController < ApplicationController
     @subscription = Subscription.find_by_id_and_user_id(params[:subscription_id], params[:user_id])
   end
   
-  def new_user_address
-    @address = Address.new
-    @address.user_id = params[:id]
-    @user = User.find(params[:id])
-  end
-  
-  def create_user_address
-    @address = Address.new(params[:address])
-    @user = User.find(params[:id])
-    @address.user = @user
-
-    if @address.save
-      redirect_to "/admin/user/#{@user.id}"
-    else
-      render :action => "new_user_address"
-    end
-  end
-  
   def user_shipments
     @user = User.find(params[:id])
     @shipments = @user.shipments
