@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110820213039
+# Schema version: 20110830021545
 #
 # Table name: shipments
 #
@@ -15,6 +15,7 @@
 #  state                     :string(255)
 #  order_id                  :integer
 #  payor                     :string(255)
+#  charge_requested          :boolean
 #
 
 # Note: at this time there is no need for a shipment line, because we don't have the need to track shipment line items.
@@ -31,10 +32,11 @@ class Shipment < ActiveRecord::Base
   belongs_to :box
   has_one :charge
   
-  symbolize :state
+  symbolize :state, :payor
   
   # state
   ACTIVE = :active
+  DELIVERED = :delivered
   INACTIVE = :inactive
   
   # payor
@@ -45,6 +47,7 @@ class Shipment < ActiveRecord::Base
     shipment = super
     shipment.state = ACTIVE
     shipment.payor = TVC
+    shipment.charge_requested = false
     shipment
   end
   
@@ -62,6 +65,8 @@ class Shipment < ActiveRecord::Base
     return_val = read_attribute(:payor)
     if return_val.nil?
       return_val = TVC
+    else
+      return_val = return_val.to_sym
     end
     
     return return_val

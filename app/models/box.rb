@@ -129,6 +129,22 @@ class Box < ActiveRecord::Base
       self.status = Box::IN_STORAGE_STATUS
       self.received_at = Time.now
       
+      shipment = get_active_shipment
+      
+      # This if check is to allow for multiple receiving of the same box, in case an error was made.
+      if !shipment.nil?
+        shipment.state = Shipment::DELIVERED
+        # the only way for the customer avoiding paying for a box coming in is if the box is on a subscription of sufficient duration
+        if self.subscription.nil? || self.subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD
+          shipment.charge_requested = true
+        end
+      
+        shipment.save
+      end
+      
+      self.subscription.start_date = Time.now
+      self.subscription.save
+      
       return self.save
     end # end transaction
   end
@@ -246,6 +262,16 @@ class Box < ActiveRecord::Base
   end
   
   private
+  
+  def get_active_shipment
+    active_shipments = Shipment.find_all_by_box_id_and_state(self.id, Shipment::ACTIVE)
+    
+    if active_shipments.size > 1
+      raise "Improper process flow: somehow a box has multiple active shipments."
+    else
+      active_shipments[0]
+    end
+  end
   
   def create_shipment
     shipment = Shipment.new

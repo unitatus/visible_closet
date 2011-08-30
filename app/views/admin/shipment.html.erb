@@ -54,8 +54,6 @@
 				<%= number_to_currency @shipment.charge.total_in_cents/100.0 %>
 			<% elsif @shipment.payor == Shipment::TVC %>
 				Not Applicable - TVC pays
-			<% elsif !@shipment.box.nil? && @shipment.box.status != Box::IN_STORAGE_STATUS %>
-				Not received yet - no charge yet
 			<% else %>
 				<%= form_tag "/admin/shipment/#{@shipment.id}/set_charge" do %>
 					<%= text_field_tag :amount %>

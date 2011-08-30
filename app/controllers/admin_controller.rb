@@ -18,7 +18,7 @@ class AdminController < ApplicationController
             
     @orders = get_orders(order_lines)
     
-    @shipments = Shipment.find_all_by_state(Shipment::ACTIVE, :order => "created_at DESC")
+    @shipments = Shipment.all(:conditions => "state = 'active' or state = 'delivered'", :order => "created_at DESC")
     
     # set for navigation
     @admin_page = :shipping

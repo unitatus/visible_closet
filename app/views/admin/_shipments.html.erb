@@ -26,7 +26,7 @@
 					<%= number_to_currency shipment.charge.total_in_cents/100.0 %>
 				<% elsif shipment.payor == Shipment::TVC %>
 					NA
-				<% elsif !shipment.box.nil? && shipment.box.status == Box::IN_STORAGE_STATUS %>
+				<% elsif shipment.charge_requested %>
 					<b><a href="/admin/shipment/<%= shipment.id %>">CUSTOMER MUST BE CHARGED</a></b>
 				<% else %>
 					Not charged yet

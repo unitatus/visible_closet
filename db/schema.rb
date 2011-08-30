@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110827191553) do
+ActiveRecord::Schema.define(:version => 20110830021545) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -216,6 +216,7 @@ ActiveRecord::Schema.define(:version => 20110827191553) do
     t.string   "state"
     t.integer  "order_id"
     t.string   "payor"
+    t.boolean  "charge_requested"
   end
 
   add_index "shipments", ["box_id"], :name => "index_shipments_on_box_id"
