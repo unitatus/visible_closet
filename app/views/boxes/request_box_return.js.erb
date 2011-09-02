@@ -1,0 +1,34 @@
+<% first_box = (current_user.cart.nil? ? true : (current_user.cart.num_box_return_requests == 1)) %>
+// Change the clicked box image
+var box_img = document.getElementById('box_img_<%= @box.id %>')
+<% if @box.status == Box::IN_STORAGE_STATUS && @box.inventorying_status == Box::NO_INVENTORYING_REQUESTED %>
+	box_img.src = '/images/status-inventory-storage-rr.jpg';
+<% elsif @box.status == Box::IN_STORAGE_STATUS && @box.inventorying_status == Box::INVENTORYING_REQUESTED %>
+	box_img.src = '/images/status-inventory-processing-rr.jpg';
+<% elsif @box.status == Box::IN_STORAGE_STATUS && @box.inventorying_status == Box::INVENTORIED %>
+	box_img.src = '/images/status-inventory-complete-rr.jpg';
+<% end %>
+// Since the user is probably still hovering over the box, make the menu disappear. It will reappear when they mouse over or click again.
+document.getElementById('box_<%= @box.id %>_menu').style.display = 'none';
+
+// reconfigure menu items on mouse-over menu for this box
+var return_link_element = document.getElementById('box_<%= @box.id %>_return_link');
+return_link_element.innerHTML = 'cancel return request';
+return_link_element.href = '/boxes/<%=@box.id%>/cancel_box_return_request';
+
+var container = document.getElementById("box_<%=@box.id%>_menu_list");
+var new_element = document.createElement('li');
+new_element.innerHTML = '<a href="/account/checkout">proceed to checkout</a>';
+new_element.id = 'box_<%=@box.id%>_checkout';
+container.insertBefore(new_element, container.lastChild);
+
+// refresh the cart image at the top of the screen
+<% if !current_user.cart.nil? && !current_user.cart.empty? %>
+	var cart_display = document.getElementById("cart-display");
+	cart_display.innerHTML = '<p><a href="/account/cart">service requests in cart: <%= current_user.cart.num_items %></a></p>';
+	cart_display.style.display = 'block';
+<% end %>
+
+<% if first_box %> 
+	$("#first_box_return_link").trigger('click');
+<% end %>

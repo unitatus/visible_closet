@@ -69,7 +69,8 @@ module VisibleCloset
     config.s3_labels_path = '/public/system/labels/'
     config.s3_labels_bucket = 'shipment_labels'
     
-    config.admin_email = 'admin@thevisiblecloset.com'
+    # config.admin_email = 'admin@thevisiblecloset.com'
+    config.admin_email = "anthonyvalente2007@u.northwestern.edu"
     
     ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
       :login => "5Fe5e8GF6z7H", # "API Login ID"
