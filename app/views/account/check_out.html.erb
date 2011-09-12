@@ -98,6 +98,9 @@ function openMemberAgreement() {
 			<% end %>
 		</td>
 		<td>
+			<% if cart_item.get_or_pull_address.fedex_validation_status != Address::VALID %>
+			<b><a href="#explain_invalid_address" onclick='$("#explain_invalid_address_link").trigger("click");'>UNVALIDATED ADDRESS</a></b><br>
+			<% end %>
 			<%= raw address_summary cart_item.get_or_pull_address %><br>
 			<a href="/account/new_checkout_shipping_address?cart_item_id=<%= cart_item.id %>">Choose Other Address</a>
 		</td>
@@ -158,4 +161,6 @@ function openMemberAgreement() {
 		</tr>
 	</table>
 </div>
+<a href="#explain_invalid_address" id="explain_invalid_address_link"></a>
+<div id="explain_invalid_address" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center"><b>Invalid Address</b><br><br>This address has not been validated as legitimate by FedEx. We don't recommend shipping to this address. Instead, we recommend clicking the "Choose Other Address" link to enter or select a different address.<br><br>Of course, FedEx is not perfect -- perhaps this is a fine address. If you choose to ship to this address we may need to amend your shipping charge as part of the shipping process.</div>
 </div>

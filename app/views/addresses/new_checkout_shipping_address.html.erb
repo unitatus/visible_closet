@@ -23,7 +23,11 @@
 								<%= radio_button_tag(:shipping_address_id, address.id, (address.id.nil? ? params[:shipping_address_id] == "on" : params[:shipping_address_id] == address.id.to_s), :onclick => "addressSelected('shipping_address_id_', 'new_address_div')") %>
 							</td>
 							<td style="text-align: left; vertical-align: middle">
-								<%= raw address_summary address %>
+								<% if address.id.blank? %>
+								  <%= raw address_summary address %>
+								<% else %>
+								  <%= raw address_summary_with_fedex address %>
+								<% end %>
 							</td>
 							<% if index + 1 == @addresses.size %>
 								<% (2 - (index % 3)).times {  %>

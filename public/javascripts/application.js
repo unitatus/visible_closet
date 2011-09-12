@@ -431,5 +431,7 @@ $(document).ready(function(){
 	});
 	
 	$("#first_box_return_link").fancybox();
+	
+	$("#explain_invalid_address_link").fancybox();
 
 });

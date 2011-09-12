@@ -77,7 +77,7 @@ class AddressesController < ApplicationController
   def choose_new_shipping_address
     session[:shipping_address] = params[:address_id]      
     
-    redirect_to :action => 'check_out'
+    redirect_to '/account/check_out'
   end
   
   def closet_main
@@ -124,7 +124,7 @@ class AddressesController < ApplicationController
       cart_item.address = Address.find(params[:shipping_address_id])
       cart_item.save
       
-      redirect_to :action => 'check_out' and return
+      redirect_to '/account/check_out' and return
     end
   end
   

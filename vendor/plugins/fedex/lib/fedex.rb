@@ -47,7 +47,8 @@ module Fedex #:nodoc:
     }
     
     # Defines the Web Services version implemented.
-    WS_VERSION = { :Major => 9, :Intermediate => 0, :Minor => 0, :ServiceId => 'ship' }
+    SHIP_VERSION = { :Major => 9, :Intermediate => 0, :Minor => 0, :ServiceId => 'ship' }
+    RATE_VERSION = { :Major => 9, :Intermediate => 0, :Minor => 0, :ServiceId => 'crs' }
     ADDRESS_VERSION = { :Major => 2, :Intermediate => 0, :Minor => 0, :ServiceId => 'aval'}
     TRACKING_VERSION = { :Major => 5, :Intermediate => 0, :Minor => 0, :ServiceId => 'trck'}
     
@@ -182,7 +183,7 @@ module Fedex #:nodoc:
       service_type        = resolve_service_type(service_type, residential) if service_type
       # Create the driver
       driver = create_driver(:rate)
-      options = common_options.merge(
+      options = common_options(RATE_VERSION).merge(
         :RequestedShipment => {
           :Shipper => {
             :Contact => {
@@ -228,6 +229,8 @@ module Fedex #:nodoc:
           :RequestedPackageLineItems => [
             :SequenceNumber => 1,
             :Weight => { :Units => @units, :Value => weight }
+            # Need to account for multiple packages
+            # Need to account for package dimensions, I think?
           ]
         }
       )
@@ -325,7 +328,7 @@ module Fedex #:nodoc:
       
       # Create the driver
       driver = create_driver(:ship)
-      options = common_options.merge(
+      options = common_options(SHIP_VERSION).merge(
         :RequestedShipment => {
           :ShipTimestamp => time,
           :DropoffType => @dropoff_type,
@@ -379,14 +382,6 @@ module Fedex #:nodoc:
           }
         }
       )
-      
-      # recipient_address[:street_lines].each_with_index do |line, index|
-      #   options[:RequestedShipment][:Recipient][:Address][1] << {:StreetLines => line} if index != 0
-      # end
-      # 
-      # shipper_address[:street_lines].each_with_index do |line, index|
-      #   options[:RequestedShipment][:Shipper][:Address][1] << {:StreetLines => line} if index != 0
-      # end
       
       if customer_reference
         options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] = [
