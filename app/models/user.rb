@@ -85,6 +85,16 @@ class User < ActiveRecord::Base
     Cart.find_active_by_user_id(self.id)
   end
   
+  def get_or_create_cart
+    return_cart = self.cart
+    if return_cart.nil?
+      return_cart = Cart.new
+      return_cart.user = self
+    end
+    
+    return_cart
+  end
+  
   def addresses
     Address.find_active(self.id, :order => :created_at)
   end

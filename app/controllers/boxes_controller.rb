@@ -268,6 +268,30 @@ class BoxesController < ApplicationController
     end
   end
   
+  def request_box_return
+    @box = Box.find(params[:id])
+    @cart = current_user.get_or_create_cart
+    
+    @cart.add_return_request_for(@box)
+    @cart.save
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def cancel_box_return_request
+    @box = Box.find(params[:id])
+    @cart = current_user.cart
+    
+    @cart.remove_return_box(@box)
+    @cart.save
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
   def finish_inventorying
     @box = Box.find(params[:id])
     

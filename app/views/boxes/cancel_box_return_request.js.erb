@@ -1,0 +1,25 @@
+// Change the clicked box image
+var box_img = document.getElementById('box_img_<%= @box.id %>');
+box_img.src = box_img.src.replace("-rr", "");
+
+// Since the user is probably still hovering over the box, make the menu disappear. It will reappear when they mouse over or click again.
+document.getElementById('box_<%= @box.id %>_menu').style.display = 'none';
+
+// reconfigure menu items on mouse-over menu for this box
+var return_link_element = document.getElementById('box_<%= @box.id %>_return_link');
+return_link_element.innerHTML = 'return this box';
+return_link_element.href = '/boxes/<%=@box.id%>/request_box_return';
+
+var container = document.getElementById("box_<%=@box.id%>_menu_list");
+var checkout_element = document.getElementById("box_<%=@box.id%>_checkout")
+container.removeChild(checkout_element)
+
+// refresh the cart image at the top of the screen
+<% if !current_user.cart.nil? && !current_user.cart.empty? %>
+	var cart_display = document.getElementById("cart-display");
+	cart_display.innerHTML = '<p><a href="/account/cart">service requests in cart: <%= current_user.cart.num_items %></a></p>';
+	cart_display.style.display = 'block';
+<% else %>
+	var cart_display = document.getElementById("cart-display");
+	cart_display.style.display = 'none';
+<% end %>

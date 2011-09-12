@@ -134,6 +134,11 @@ class AccountController < ApplicationController
     render 'cart'
   end
 
+  def check_out_remove_cart_item
+    CartItem.delete(params[:id])
+    redirect_to :action => "check_out"
+  end
+
   def check_out
     @cart = Cart.find_active_by_user_id(current_user.id)
     
@@ -148,11 +153,6 @@ class AccountController < ApplicationController
       @address = Address.new
       render :action => "add_new_shipping_address"
       return
-    end
-    
-    @shipping_address = get_address_from_session(:shipping_address)
-    if (@shipping_address.nil?)
-      @shipping_address = get_last_shipping_address @addresses
     end
     
     @order = Order.new
@@ -216,66 +216,13 @@ class AccountController < ApplicationController
   end
   
   def fail_checkout
-    @addresses = Address.find_active(current_user.id, :order => :first_name)
-    @shipping_address = get_address_from_session(:shipping_address)
-    if (@shipping_address.nil?)
-      @shipping_address = get_last_shipping_address @addresses
-    end
-
     render 'check_out'    
-  end
-  
-  def select_new_shipping_address
-    @addresses = Address.find_active(current_user.id, :order => :first_name)
-    @action = "shipping"
-    render 'select_new_address'
-  end
-  
-  def choose_new_shipping_address
-    session[:shipping_address] = params[:address_id]      
-    
-    redirect_to :action => 'check_out'
-  end
-  
-  def closet_main
-    
   end
   
   private 
   
   def set_menu
     @top_menu_page = :account
-  end
-  
-  def get_address_from_session(address_identifier)
-    if session[address_identifier].blank?
-      nil
-    else
-      return_address = Address.find_active_by_id_and_user_id(session[address_identifier], current_user.id)
-      if (return_address.nil?) # potential bug w/ mult users on same computer
-        @addresses.first
-      else
-        return_address
-      end
-    end
-  end
-  
-  def get_last_shipping_address(user_id=nil, addresses)
-    last_order = get_last_order(user_id, "shipping_address_id")
-    if last_order
-      last_order.shipping_address
-    else
-      shipping_address = current_user.default_shipping_address
-      if shipping_address.nil?
-        if current_user.active_address_count == 0
-          return nil
-        else
-          shipping_address = current_user.addresses[0]
-          current_user.update_attribute(:default_shipping_address_id, shipping_address.id)
-        end
-      end
-      shipping_address
-    end
   end
   
   def get_last_order(user_id=nil, not_null_field)

@@ -13,7 +13,7 @@
 #  shipment_id    :integer
 #
 
-# Conceptually, a charge can be related to: and order line; a box in storage.
+# Conceptually, a charge can be related to: a product ordered; a box in storage (storage charge); or a shipment (shipping charge).
 class Charge < ActiveRecord::Base
   belongs_to :order
   belongs_to :shipment

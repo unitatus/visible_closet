@@ -88,7 +88,12 @@ class Shipment < ActiveRecord::Base
   
   def to_address_id=(value)
     write_attribute(:to_address_id, value)
-    self.to_address = Address.find(value)
+    
+    if value.nil?
+      to_address_without_extension = nil
+    else
+      self.to_address = Address.find(value)
+    end
   end
   
   def to_address_with_extension=(value)
@@ -111,7 +116,12 @@ class Shipment < ActiveRecord::Base
   # Allow errors if nil passed; should never be nil
   def from_address_id=(value)
     write_attribute(:from_address_id, value)
-    self.from_address = Address.find(value)
+    
+    if value.nil?
+      self.from_address_without_extension = nil
+    else
+      self.from_address = Address.find(value)
+    end
   end
   
   def from_address_with_extension=(value)

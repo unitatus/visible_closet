@@ -32,6 +32,9 @@ class Address < ActiveRecord::Base
   NOT_VALID = "not_valid"
 
   belongs_to :user
+  has_many :cart_items
+  has_many :to_shipments, :class_name => "Shipment", :foreign_key => :to_address_id
+  has_many :from_shipments, :class_name => "Shipment", :foreign_key => :from_address_id
 
   validates_presence_of :first_name, :message => "can't be blank"
   validates_presence_of :last_name, :message => "can't be blank"
@@ -102,10 +105,34 @@ class Address < ActiveRecord::Base
   end
   
   def destroy
+    # for each of these we update the attribute to circumvent validation, since obviously an address deletion is an admin action
     if !user.nil? && user.default_shipping_address == self
       user.update_attribute(:default_shipping_address_id, nil)
     end
+    
+    self.from_shipments.each do |from_shipment|
+      puts("Warning! Removing 'from address' with id #{self.id} from shipment with id #{from_shipment.id}.")
+      from_shipment.update_attribute(:from_address_id, nil)
+    end
+    
+    self.to_shipments.each do |to_shipment|
+      puts("Warning! Removing 'to address' with id #{self.id} from shipment with id #{to_shipment.id}.")
+      to_shipment.update_attribute(:to_address_id, nil)
+    end
+    
+    self.cart_items.each do |cart_item|
+      puts("Warning! Removing address with id #{self.id} from cart item with id #{cart_item.id}.")
+      cart_item.update_attribute(:address_id, nil)
+      cart_item.address = nil
+    end
+    
     super
+  end
+  
+  def externally_valid_with_save?
+    return_val = self.externally_valid?
+    self.save
+    return return_val
   end
   
   def externally_valid?

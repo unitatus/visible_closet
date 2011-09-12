@@ -43,26 +43,9 @@
 		<br><br>
 	<% end %>
 	<% if !@addresses.empty? %>
-	<div style="text-align: left"><h1 style="font-size: 125%">Billing Address:</h1></div>
-	<%= error_messages_for_attribute(profile, :billing_address) %><br>
-			<table style="margin-left: auto; margin-right: auto">
-				<% @addresses << Address.new(:first_name => "", :last_name => "", :address_line_1 => "New Address", :city => "", :state => "", :zip => "") %>
-				<% @addresses.each_with_index do |address, index| %>
-					<% if index % 4 == 0 %>
-						<tr>
-					<% end %>
-					<td style="vertical-align: middle; padding: 20px 10px">
-						<%= radio_button(:payment_profile, :billing_address_id, address.id, :checked => (params[:payment_profile].nil? ? false : (address.id.nil? ? params[:payment_profile][:billing_address_id] == "on" : params[:payment_profile][:billing_address_id] == address.id.to_s)), :onclick => "addressSelected()")%>
-					</td>
-					<td style="text-align: left; vertical-align: middle">
-						<%= raw address_summary address %>
-					</td>
-					<% if index % 4 == 3 || index + 1 == @addresses.size %>
-						</tr>
-					<% end %>
-				<% end %>
-			</table>
-
+		<div style="text-align: left"><h1 style="font-size: 125%">Billing Address:</h1></div>
+		<%= error_messages_for_attribute(profile, :billing_address) %><br>
+		<%= render :partial => "addresses/address_list" %> 
 	<% end %>
 	<div style="display: <%= (params[:payment_profile].nil? ? false : params[:payment_profile][:billing_address_id] == "on") ? 'block' : 'none' %>" id="billing_address_div">
 		<br>

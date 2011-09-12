@@ -14,6 +14,7 @@
 class Cart < ActiveRecord::Base
   has_many :cart_items, :autosave => true, :dependent => :destroy
   has_one :order, :dependent => :destroy
+  belongs_to :user
 
   attr_accessible :id
 
@@ -86,6 +87,26 @@ class Cart < ActiveRecord::Base
     end
   end
   
+  def remove_return_box(box)
+    cart_items_to_remove = cart_items.select { |c| c.box == box }
+    
+    cart_items_to_remove.each do |cart_item|
+      cart_items.delete(cart_item)
+    end
+  end
+  
+  def contains_return_request_for(box)
+    found_items = cart_items.select { |c| c.box == box }
+    
+    return !found_items.empty?
+  end
+  
+  def num_box_return_requests
+    cart_items_with_boxes = cart_items.select { |c| !c.box.nil? }
+    puts("cart items with boxes is " + cart_items_with_boxes.inspect)
+    cart_items_with_boxes.size
+  end
+  
   def add_cart_item(product_id, quantity, committed_months)
     cart_item = CartItem.new
     
@@ -94,5 +115,24 @@ class Cart < ActiveRecord::Base
     cart_item.committed_months = committed_months
     
     cart_items << cart_item
+  end
+  
+  def add_return_request_for(obj)
+    if obj.is_a?(Box)
+      cart_item = CartItem.new
+      
+      cart_item.product_id = Rails.application.config.return_box_product_id
+      cart_item.quantity = 1
+      cart_item.box = obj
+      
+      cart_items << cart_item
+    else
+      raise "Invalid cart item object."
+    end
+  end
+  
+  def contains_new_boxes
+    new_box_cart_items = cart_items.select { |c| c.product_id == Rails.application.config.your_box_product_id || c.product_id == Rails.application.config.our_box_product_id }
+    return !new_box_cart_items.empty?
   end
 end

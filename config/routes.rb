@@ -13,6 +13,8 @@ VisibleCloset::Application.routes.draw do
   match "boxes/add_tags" => "boxes#add_tags"
   match "boxes/add_tag" => "boxes#add_tag"
   match "boxes/delete_tag" => "boxes#delete_tag"
+  match "boxes/:id/request_box_return" => "boxes#request_box_return"
+  match "boxes/:id/cancel_box_return_request" => "boxes#cancel_box_return_request"
   match "boxes/finish_inventorying_box" => "boxes#finish_inventorying"
   match "payment_profiles/:id/set_default" => "payment_profiles#set_default"
   match "addresses/:id/set_default_shipping" => "addresses#set_default_shipping"
@@ -26,6 +28,11 @@ VisibleCloset::Application.routes.draw do
   get "payment_profiles/new_default_payment_profile"
   post "payment_profiles/create_default_payment_profile"
   post "addresses/admin_fedex_override"
+  # these paths exist so as to avoid confusing the user -- we want address processing in one controller (addresses), but this address maintenance only happens
+  # during checkout, when everything is account/
+  match "account/set_checkout_shipping_address" => "addresses#set_checkout_shipping_address"
+  match "account/new_checkout_shipping_address" => "addresses#new_checkout_shipping_address"
+  match "/account/update_new_checkout_shipping_address/:id" => "addresses#update_new_checkout_shipping_address"
   
   resources :boxes
   resources :addresses
@@ -106,6 +113,8 @@ VisibleCloset::Application.routes.draw do
   post "account/update_cart_item"
   get "account/remove_cart_item"
   get "account/check_out"
+  post "account/check_out" # for overriding fedex address suggestions when changing shipping address during checkout
+  get "account/check_out_remove_cart_item"
   post "account/finalize_check_out"
   post "account/update_checkout_address"
   get "account/add_new_billing_address"
