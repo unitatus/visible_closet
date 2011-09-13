@@ -105,6 +105,13 @@ class Box < ActiveRecord::Base
     ordering_order_line.order
   end
   
+  def mark_for_return
+    update_attribute(:status, IN_TRANSIT_TO_YOU_STATUS)
+    if !subscription.nil?
+      subscription.end_subscription
+    end
+  end
+  
   def inventorying_order
     if inventorying_order_line.nil?
       return nil
@@ -142,8 +149,9 @@ class Box < ActiveRecord::Base
         shipment.save
       end
       
-      self.subscription.start_date = Time.now
-      self.subscription.save
+      if !subscription.nil?
+        self.subscription.start_subscription
+      end
       
       return self.save
     end # end transaction
@@ -276,11 +284,9 @@ class Box < ActiveRecord::Base
   def create_shipment
     shipment = Shipment.new
     
-    order = get_ordering_order
-    
     shipment.box_id = self.id
-    shipment.from_address_id = get_from_address_id(order)
-    shipment.to_address_id = get_to_address_id(order)
+    shipment.from_address_id = get_from_address_id(ordering_order_line)
+    shipment.to_address_id = get_to_address_id(ordering_order_line)
     
     if subscription.nil? || subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD
       shipment.payor = Shipment::CUSTOMER
@@ -303,11 +309,11 @@ class Box < ActiveRecord::Base
     shipment
   end
   
-  def get_from_address_id(order)
+  def get_from_address_id(order_line)
     if self.status == BEING_PREPARED_STATUS && self.box_type == CUST_BOX_TYPE    
-      order.shipping_address_id
+      order_line.shipping_address_id
     elsif self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
-      order.shipping_address_id
+      order_line.shipping_address_id
     else
       raise "Unimplemented box state for shipping"
     end    
@@ -321,11 +327,6 @@ class Box < ActiveRecord::Base
     else
       raise "Unimplemented box state for shipping"
     end
-  end
-  
-  def get_ordering_order
-    order_line = OrderLine.find(self.ordering_order_line_id)
-    order = order_line.order
   end
   
   def generate_inventorying_order

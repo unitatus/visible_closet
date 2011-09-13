@@ -1,16 +1,18 @@
 # == Schema Information
-# Schema version: 20110815025244
+# Schema version: 20110913042727
 #
 # Table name: order_lines
 #
-#  id               :integer         not null, primary key
-#  order_id         :integer
-#  product_id       :integer
-#  quantity         :integer
-#  status           :string(255)
-#  created_at       :datetime
-#  updated_at       :datetime
-#  committed_months :integer
+#  id                  :integer         not null, primary key
+#  order_id            :integer
+#  product_id          :integer
+#  quantity            :integer
+#  status              :string(255)
+#  created_at          :datetime
+#  updated_at          :datetime
+#  committed_months    :integer
+#  shipping_address_id :integer
+#  service_box_id      :integer
 #
 
 class OrderLine < ActiveRecord::Base
@@ -19,6 +21,8 @@ class OrderLine < ActiveRecord::Base
   
   belongs_to :order
   belongs_to :product
+  belongs_to :shipping_address, :class_name => 'Address'
+  belongs_to :service_box, :class_name => 'Box'
   has_many :boxes, :foreign_key => :ordering_order_line_id, :dependent => :destroy
   has_many :inventoried_boxes, :foreign_key => :inventorying_order_line_id, :class_name => "Box"
   

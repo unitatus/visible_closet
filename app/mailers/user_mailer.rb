@@ -8,11 +8,6 @@ class UserMailer < ActionMailer::Base
     @order = invoice.order
     @invoice = invoice
     
-    if @order
-      @shipping_address = @order.shipping_address
-    else
-      @shipping_address = user.default_shipping_address
-    end
     @vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
     
     if @invoice.payment_transaction
@@ -27,7 +22,7 @@ class UserMailer < ActionMailer::Base
       mail(:to => user.email, :subject => "Invoice from The Visible Closet")
     else
       user_email = mail(:to => user.email, :subject => "Invoice from The Visible Closet")
-      AdminMailer.new_order(@user, @order, @invoice, @shipping_address, @vc_address, @payment_profile, @billing_address).deliver
+      AdminMailer.new_order(@user, @order, @invoice, @vc_address, @payment_profile, @billing_address).deliver
       return user_email
     end
   end

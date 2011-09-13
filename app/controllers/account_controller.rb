@@ -140,14 +140,14 @@ class AccountController < ApplicationController
   end
 
   def check_out
-    @cart = Cart.find_active_by_user_id(current_user.id)
+    @cart = current_user.cart
     
     if !@cart || @cart.cart_items.empty?
       redirect_to :action => :store_more_boxes
       return
     end
     
-    @addresses = Address.find_active(current_user.id, :order => :first_name)
+    @addresses = current_user.addresses
     
     if @addresses.nil? || @addresses.empty?
       @address = Address.new
@@ -180,35 +180,36 @@ class AccountController < ApplicationController
   end
 
   def finalize_check_out
-    @cart = Cart.find_active_by_user_id(current_user.id)
+    @cart = current_user.cart
     
     # The most likely reason why a cart would not be found is because the submit button was clicked twice, and the order previously committed.
     # That means we should render nicely as though it did.
-    if (!@cart)
+    if @cart.nil?
       @order = Order.find_all_by_user_id(current_user.id, :first, :order => 'created_at DESC').first
       return
     end
     
-    @order = @cart.build_order_properly(params[:order])
+    @order = @cart.build_order(params[:order])
 
     @order.ip_address = request.remote_ip
-    @order.shipping_address_id = params[:shipping_address_id]
-    @order.user_id = current_user.id
+    @order.user = current_user
     
-    # the only way to get to this function is if the user saw the member agreement; take note of that
-    if params[:agreed] == "1"
-      current_agreement = RentalAgreementVersion.latest
-      user = current_user
-      if !user.rental_agreement_versions.include? current_agreement
-        user.rental_agreement_versions << current_agreement
+    if @order.contains_box_orders?
+      # the only way to get to this function is if the user saw the member agreement; take note of that
+      if params[:agreed] == "1"
+        current_agreement = RentalAgreementVersion.latest
+        user = current_user
+        if !user.rental_agreement_versions.include? current_agreement
+          user.rental_agreement_versions << current_agreement
+        end
+      else
+        @order.errors.add(:agreement, "You must agree to the rental agreement to proceed.")
+        fail_checkout
+        return
       end
-    else
-      @order.errors.add(:agreement, "You must agree to the rental agreement to proceed.")
-      fail_checkout
-      return
     end
     
-    if (!@order.purchase)
+    if (!@order.purchase) # this saves the order
       fail_checkout
     end
     

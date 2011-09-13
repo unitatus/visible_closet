@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110913030008) do
+ActiveRecord::Schema.define(:version => 20110913051413) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -87,6 +87,7 @@ ActiveRecord::Schema.define(:version => 20110913030008) do
     t.datetime "updated_at"
     t.integer  "order_id"
     t.integer  "shipment_id"
+    t.string   "comments"
   end
 
   add_index "charges", ["shipment_id"], :name => "index_charges_on_shipment_id"
@@ -119,6 +120,8 @@ ActiveRecord::Schema.define(:version => 20110913030008) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "committed_months"
+    t.integer  "shipping_address_id"
+    t.integer  "service_box_id"
   end
 
   add_index "order_lines", ["order_id"], :name => "index_order_lines_on_order_id"
@@ -130,7 +133,7 @@ ActiveRecord::Schema.define(:version => 20110913030008) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "shipping_address_id"
+    t.float    "initial_charged_shipping_cost"
   end
 
   add_index "orders", ["cart_id"], :name => "index_orders_on_cart_id"

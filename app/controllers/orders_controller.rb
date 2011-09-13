@@ -38,7 +38,6 @@ class OrdersController < ApplicationController
   
   def do_show_invoice(invoice)
     @order = invoice.order
-    @shipping_address = @order.shipping_address
     @vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
     if @order.payment_transactions.size > 0 # only one really
       @payment_profile = @order.payment_transactions.first.payment_profile 

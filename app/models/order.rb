@@ -1,15 +1,15 @@
 # == Schema Information
-# Schema version: 20110729155026
+# Schema version: 20110913051413
 #
 # Table name: orders
 #
-#  id                  :integer         not null, primary key
-#  cart_id             :integer
-#  ip_address          :string(255)
-#  user_id             :integer
-#  created_at          :datetime
-#  updated_at          :datetime
-#  shipping_address_id :integer
+#  id                            :integer         not null, primary key
+#  cart_id                       :integer
+#  ip_address                    :string(255)
+#  user_id                       :integer
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  initial_charged_shipping_cost :float
 #
 
 class Order < ActiveRecord::Base
@@ -28,6 +28,8 @@ class Order < ActiveRecord::Base
     transaction_successful = false
 
     self.transaction do
+      self.initial_charged_shipping_cost = cart.quoted_shipping_cost      
+      
       if (!save)
         raise ActiveRecord::Rollback
       end
@@ -87,7 +89,7 @@ class Order < ActiveRecord::Base
       the_total += order_line.discount.due_at_signup*100
     end
     
-    the_total
+    the_total + self.initial_charged_shipping_cost*100
   end
   
   def amount_paid
@@ -112,7 +114,7 @@ class Order < ActiveRecord::Base
   
   def build_order_line(attributes={})
     order_line = order_lines.build(:attributes => attributes)
-    
+
     order_line.order_id = id
     
     order_line
@@ -136,7 +138,13 @@ class Order < ActiveRecord::Base
     charges = Array.new
     
     order_lines.each do | order_line |
-      charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id, :order_id => self.id)
+      if order_line.discount.due_at_signup > 0.0
+        charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
+      end
+    end
+    
+    if cart.quoted_shipping_cost > 0.0
+      charges << Charge.create!(:user_id => user_id, :total_in_cents => (self.initial_charged_shipping_cost*100).ceil, :order_id => self.id, :comments => "Shipping charge")
     end
     
     charges
@@ -193,6 +201,18 @@ class Order < ActiveRecord::Base
     end
   end
   
+  def contains_box_orders?
+    return box_order_lines.size > 0
+  end
+  
+  def box_order_lines
+    order_lines.select { |order_line| order_line.product_id == Rails.application.config.your_box_product_id || order_line.product_id == Rails.application.config.our_box_product_id }
+  end
+  
+  def box_return_lines
+    order_lines.select { |order_line| order_line.product_id == Rails.application.config.return_box_product_id }
+  end
+    
   private
   
   # This method saves the transactions
@@ -218,34 +238,8 @@ class Order < ActiveRecord::Base
       raise "Unable to save cart. Cart: " << cart.inspect
     end
     
-    order_lines.each do |order_line|
-      product = order_line.product
-
-      if order_line.committed_months.nil? || order_line.committed_months == 0
-        subscription = nil
-      else
-        subscription = Subscription.create!(:duration_in_months => order_line.committed_months, :user_id => self.user_id)
-      end
-      
-      if product.id.to_s == Rails.application.config.our_box_product_id.to_s
-        type = Box::VC_BOX_TYPE
-        status = Box::NEW_STATUS
-      elsif product.id.to_s == Rails.application.config.your_box_product_id.to_s
-        type = Box::CUST_BOX_TYPE
-        status = Box::BEING_PREPARED_STATUS
-        order_line.status = OrderLine::PROCESSED_STATUS
-        order_line.save
-      else
-        raise "Bad configuration - no match on product " << product.inspect << ", for which product.id returned " << product.id.to_s << "."
-      end
-
-      for i in 1..(order_line.quantity)
-        if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, \
-          :inventorying_status => Box::NO_INVENTORYING_REQUESTED, :subscription_id => (subscription.nil? ? nil : subscription.id))
-          raise "Standard box creation failed."
-        end
-      end # inner for loop
-    end
+    process_box_orders
+    process_box_returns
     
     invoice = create_invoice(charges, payment_transaction)
 
@@ -264,5 +258,37 @@ class Order < ActiveRecord::Base
     end
     
     invoice
+  end
+  
+  def process_box_returns
+    box_return_lines.each do |order_line|
+      order_line.service_box.mark_for_return
+    end
+  end
+  
+  def process_box_orders
+    box_order_lines.each do |order_line|
+      if order_line.committed_months.nil? || order_line.committed_months == 0
+        subscription = nil
+      else
+        subscription = Subscription.create!(:duration_in_months => order_line.committed_months, :user_id => self.user_id)
+      end
+      
+      if order_line.product_id == Rails.application.config.our_box_product_id
+        type = Box::VC_BOX_TYPE
+        status = Box::NEW_STATUS
+      elsif order_line.product_id == Rails.application.config.your_box_product_id
+        type = Box::CUST_BOX_TYPE
+        status = Box::BEING_PREPARED_STATUS
+        order_line.update_attribute(:status, OrderLine::PROCESSED_STATUS) # no further work by us is necessary
+      end
+
+      for i in 1..(order_line.quantity)
+        if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, \
+          :inventorying_status => Box::NO_INVENTORYING_REQUESTED, :subscription_id => (subscription.nil? ? nil : subscription.id))
+          raise "Standard box creation failed."
+        end
+      end # inner for loop
+    end
   end
 end

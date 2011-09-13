@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110820215747
+# Schema version: 20110913041338
 #
 # Table name: charges
 #
@@ -11,9 +11,10 @@
 #  updated_at     :datetime
 #  order_id       :integer
 #  shipment_id    :integer
+#  comments       :string(255)
 #
 
-# Conceptually, a charge can be related to: a product ordered; a box in storage (storage charge); or a shipment (shipping charge).
+# Conceptually, a charge can be related to: a product ordered; a box in storage (storage charge); a shipment (shipping charge); or an order (total shipping cost).
 class Charge < ActiveRecord::Base
   belongs_to :order
   belongs_to :shipment

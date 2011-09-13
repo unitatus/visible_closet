@@ -68,16 +68,17 @@ class Cart < ActiveRecord::Base
     cart_items.size
   end
 
-  # you can't override the build_order method, as ActiveRecord actually adds it to this class, not the parent, so if you override you lose the method!
-  # That's polymorphism in rails I guess! :(  
-  def build_order_properly(attributes={})
-    order = build_order(attributes)
+  def build_order_with_extension(attributes={})
+    order = build_order_without_extension(attributes)
     
     cart_items.each do |cart_item|
-      order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity, :committed_months => cart_item.committed_months } )
+      order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity, \
+        :committed_months => cart_item.committed_months, :shipping_address_id => cart_item.address_id, :service_box_id => cart_item.box_id } )
     end    
     order
-  end  
+  end
+  
+  alias_method_chain :build_order, :extension
   
   def remove_cart_item(product_id)
     cart_item = cart_items.select { |c| c.product_id == product_id }[0]
