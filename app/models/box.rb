@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110827191553
+# Schema version: 20110913203644
 #
 # Table name: boxes
 #
@@ -20,6 +20,7 @@
 #  weight                     :float
 #  box_num                    :integer
 #  subscription_id            :integer
+#  return_requested_at        :datetime
 #
 
 class Box < ActiveRecord::Base
@@ -107,6 +108,7 @@ class Box < ActiveRecord::Base
   
   def mark_for_return
     update_attribute(:status, IN_TRANSIT_TO_YOU_STATUS)
+    update_attribute(:return_requested_at, Time.now)
     if !subscription.nil?
       subscription.end_subscription
     end

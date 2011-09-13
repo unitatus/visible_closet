@@ -21,11 +21,15 @@
 	width: 120px; 
 	text-align: right;
 }
+.matrix_table td {
+	text-align: center;
+	padding-top: 5px;
+}
 </style>
 		<!-- SIDE MENU HTML --> 
 		<body>
 			<div style="text-align: center">
-<div style="text-align: center; margin: auto; width: 700px">
+<div style="text-align: center; margin: auto; width: 750px">
 	<div style="width: auto; padding: 10px; ">
 		<a href="/"><img src="https://www.thevisiblecloset.com/images/vcLogo_beta.gif" alt="Visible Closet" /></a><br><br>
 		<strong>The Visible Closet</strong><br>
@@ -34,47 +38,50 @@
 		<% if @invoice.nil? %>
 			Invoice not found
 		<% else %>
-			<div style="width: auto; text-align: right">
 				<% if @order %>
 				<strong>Order #: <%= @order.id %></strong><br>
 				<% end %>
 				<strong>Invoice #: <%= @invoice.id %></strong><br>
 				<strong>Invoice Date: <%= @invoice.created_at.strftime("%m/%d/%Y") %></strong></br>
-			</div>
 			<br><br>
-			<div style="float: left; text-align: left; padding-left: 130px">
+			<div style="text-align: left">
 			<strong>Customer Name: </strong><%= @invoice.user.first_name %> <%= @invoice.user.last_name %>
 			<br><br>
 			<strong>Billing Address</strong><br>
 			<%= raw address_summary(@billing_address) %>
 			<br><hr>
+			</div>
 			<div style="clear: both"></div>
 			<div style="width: 100%">
 				<br>
-				<table width=100%>
+				<table width=100% class="matrix_table">
 					<thead>
 						<tr>
 							<th align="left">Item</th>
 							<th>Ship To</th>
 							<th style="text-align: center">Qty</th>
 							<th>&nbsp;</th>
-							<th style="text-align: center">Monthly Cost</th>
+							<th style="text-align: center">Cost</th>
 							<th>&nbsp;</th>
-							<th style="text-align: center"># Months Paid</th>
+							<% if @invoice.contains_ordered_boxes %>
+								<th style="text-align: center"># Months Paid</th>
+							<% end %>
 							<th align="right">Price</th>
 						</tr>	
 					</thead>
 					<tbody>
 						<% @invoice.invoice_lines.each do |line| %>
 							<tr>
-								<td align="left"><%= line.product.name %></td>
-								<td align="left"><%= raw address_summary line.shipping_address %></td>
+								<td style="text-align: left"><%= line.description %></td>
+								<td style="text-align: center"><%= raw address_summary line.shipping_address %></td>
 								<td style="text-align: center"><%= line.quantity %></td>
 								<td>x</td>
-								<td  style="text-align: center"><%= number_to_currency(line.unit_price) %></td>
+								<td  style="text-align: center"><%= number_to_currency line.unit_price %><%= line.product.price_comment %></td>
 								<td>x</td>
-								<td style="text-align: center"><%= line.months_paid %></td>
-								<td align="right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.discount.due_at_signup) %>
+								<% if @invoice.contains_ordered_boxes %>
+									<td style="text-align: center"><%= line.months_paid %></td>
+								<% end %>
+								<td style="text-align: right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.discount.due_at_signup) %>
 							</tr>
 						<% end %>
 					</tbody>

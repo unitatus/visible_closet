@@ -17,7 +17,15 @@ class Invoice < ActiveRecord::Base
   belongs_to :payment_transaction
   
   class InvoiceLine
-    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount, :shipping_address
+    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount, :shipping_address, :service_box
+    
+    def description
+      if product.id == Rails.application.config.return_box_product_id
+        product.name + " for box " + service_box.box_num.to_s
+      else
+        product.name
+      end
+    end
   end
   
   def invoice_lines(refresh = false)
@@ -33,6 +41,7 @@ class Invoice < ActiveRecord::Base
         new_invoice_line.months_paid = line.discount.months_due_at_signup
         new_invoice_line.discount = line.discount
         new_invoice_line.shipping_address = line.shipping_address
+        new_invoice_line.service_box = line.service_box
         
         @invoice_lines << new_invoice_line
       end

@@ -59,8 +59,10 @@
 			<% end %>
 			<% if box.status == Box::IN_STORAGE_STATUS %>
 			<p><strong>Date Received: </strong><%=box.received_at.blank? ? "unknown" : box.received_at.strftime('%m/%d/%Y')%></p>
-			<% else %>
+			<% elsif box.received_at.nil? %>
 				<p><strong>Date Ordered: </strong><%=box.created_at.strftime('%m/%d/%Y')%></p>
+			<% else %>
+				<p><strong>Return Requested: </strong><%= box.return_requested_at.strftime('%m/%d/%Y')%></p>
 			<% end %>
             <div class="browse-box-menu">
                 <div class="browse-box-menu-contents" id="box_<%=box.id%>_menu">
