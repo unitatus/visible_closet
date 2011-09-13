@@ -109,6 +109,13 @@ function openMemberAgreement() {
 </table>
 <hr>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
+	Shipping Cost: 
+	<% begin %>
+		<%= number_to_currency @cart.quote_shipping %>
+	<% rescue Fedex::FedexError => e %>
+		<a href="#explain_tbd_shipping" id="explain_tbd_shipping_link">TBD</a>
+	<% end %>
+	<br><br>
 	<b>Total Due Now: <%= number_to_currency(@cart.estimated_total) %></b>
 </div><br>
 <% if @cart.contains_new_boxes %> 
@@ -163,4 +170,8 @@ function openMemberAgreement() {
 </div>
 <a href="#explain_invalid_address" id="explain_invalid_address_link"></a>
 <div id="explain_invalid_address" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center"><b>Invalid Address</b><br><br>This address has not been validated as legitimate by FedEx. We don't recommend shipping to this address. Instead, we recommend clicking the "Choose Other Address" link to enter or select a different address.<br><br>Of course, FedEx is not perfect -- perhaps this is a fine address. If you choose to ship to this address we may need to amend your shipping charge as part of the shipping process.</div>
+<div id="explain_tbd_shipping" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center">
+	<b>TBD Shipping Costs</b><br><br>
+	FedEx is unable to provide shipping costs for the address(es) you provided. We recommend that you provide another address for all order lines with an unvalidated address. <br><br>If you proceed forward with the current addresses you will be charged for shipping later.
+	</div>
 </div>

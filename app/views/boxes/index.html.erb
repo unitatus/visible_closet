@@ -67,7 +67,7 @@
                     <p class="browse-box-menu-contents-head">Box Options</p>
                     <ul id="box_<%= box.id %>_menu_list">
                         <li><a href="/boxes/<%= box.id %>/edit">edit description</a></li>
-						<% if box.status == Box::IN_STORAGE_STATUS && !current_user.cart.nil? && !current_user.cart.contains_return_request_for(box) %>
+						<% if box.status == Box::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_return_request_for(box)) %>
                         <li><%= link_to "return this box", "/boxes/#{box.id}/request_box_return", :remote => true, :id => "box_#{box.id}_return_link" %></li>
 						<% elsif !current_user.cart.nil? && current_user.cart.contains_return_request_for(box) %>
 							<li><%= link_to "cancel return request", "/boxes/#{box.id}/cancel_box_return_request", :remote => true, :id => "box_#{box.id}_return_link" %></li>

@@ -433,5 +433,7 @@ $(document).ready(function(){
 	$("#first_box_return_link").fancybox();
 	
 	$("#explain_invalid_address_link").fancybox();
+	
+	$("#explain_tbd_shipping_link").fancybox();
 
 });

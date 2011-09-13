@@ -26,10 +26,11 @@ class CartItem < ActiveRecord::Base
   
   def get_or_pull_address
     if self.address.nil?
-      return cart.user.default_shipping_address
-    else
-      return self.address
-    end
+      update_attribute(:address_id, cart.user.default_shipping_address_id)
+      self.address = cart.user.default_shipping_address
+    end 
+    
+    return self.address
   end
   
   def discount?
@@ -45,6 +46,14 @@ class CartItem < ActiveRecord::Base
       product.name
     else
       product.name + " for box " + box.box_num.to_s
+    end
+  end
+  
+  def weight
+    if box
+      box.weight * self.quantity
+    else
+      raise "Weight not known."
     end
   end
 end
