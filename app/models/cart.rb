@@ -164,6 +164,8 @@ class Cart < ActiveRecord::Base
       total_shipping_cost += get_shipping_price(fedex, vc_address, cart_item_group[:to_address], cart_item_group[:cart_items])
     end
     
+    total_shipping_cost = total_shipping_cost * (1 + Rails.application.config.shipping_up_percent)
+    
     update_attribute(:quoted_shipping_cost, total_shipping_cost) # this saves the value
     
     return total_shipping_cost
