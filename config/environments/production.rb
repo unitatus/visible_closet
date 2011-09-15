@@ -52,6 +52,7 @@ VisibleCloset::Application.configure do
   config.your_box_product_id = 3
   config.our_box_inventorying_product_id = 5
   config.your_box_inventorying_product_id = 6
+  config.return_box_product_id = 7
 
   config.fedex_vc_address_id = 6
 
