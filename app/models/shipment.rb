@@ -73,15 +73,15 @@ class Shipment < ActiveRecord::Base
   
   def Shipment.find_all_by_user_id(user_id, options = Hash.new)
     order_by = options[:order_by].nil? ? "" : options[:order_by]
-    sql = "SELECT DISTINCT shipments.* FROM shipments, boxes, orders WHERE (shipments.box_id = boxes.id OR shipments.order_id = orders.id) AND boxes.assigned_to_user_id = #{user_id} AND orders.user_id = #{user_id} " + order_by
+    sql = "SELECT DISTINCT shipments.* FROM shipments, boxes, order_lines, orders WHERE (shipments.box_id = boxes.id OR shipments.id = order_lines.shipment_id) AND boxes.assigned_to_user_id = #{user_id} AND orders.user_id = #{user_id} AND orders.id = order_lines.order_id " + order_by
     find_by_sql(sql)
   end
   
   def user
-    if self.order_id.nil?
+    if self.order_line.nil?
       return self.box.nil? ? nil : self.box.user
     else
-      return self.order.nil? ? nil : self.order.user
+      return self.order_line.order.user
     end
   end
   

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110913203644
+# Schema version: 20110915215733
 #
 # Table name: boxes
 #
@@ -14,9 +14,9 @@
 #  inventorying_status        :string(255)
 #  inventorying_order_line_id :integer
 #  received_at                :datetime
-#  box_height                 :float
-#  box_width                  :float
-#  box_length                 :float
+#  height                     :float
+#  width                      :float
+#  length                     :float
 #  weight                     :float
 #  box_num                    :integer
 #  subscription_id            :integer
@@ -256,10 +256,10 @@ class Box < ActiveRecord::Base
   end
   
   def cubic_feet
-    if self.box_length.nil? || self.box_width.nil? || self.box_height.nil?
+    if self.length.nil? || self.width.nil? || self.height.nil?
       return nil
     else
-      return (self.box_length/12.0) * (self.box_width/12.0) * (self.box_height/12.0)
+      return (self.length/12.0) * (self.width/12.0) * (self.height/12.0)
     end
   end
   

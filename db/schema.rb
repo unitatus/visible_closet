@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110915040308) do
+ActiveRecord::Schema.define(:version => 20110915215733) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -43,9 +43,9 @@ ActiveRecord::Schema.define(:version => 20110915040308) do
     t.string   "inventorying_status"
     t.integer  "inventorying_order_line_id"
     t.datetime "received_at"
-    t.float    "box_height"
-    t.float    "box_width"
-    t.float    "box_length"
+    t.float    "height"
+    t.float    "width"
+    t.float    "length"
     t.float    "weight"
     t.integer  "box_num"
     t.integer  "subscription_id"

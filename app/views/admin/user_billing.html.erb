@@ -20,7 +20,7 @@
 					payment - card ending in <%= transaction.core_transaction.payment_profile.last_four_digits %>
 				<% else %>
 				charge for 
-				  <% if !transaction.core_transaction.order_id.nil? %>
+				  <% if transaction.core_transaction.shipment_id.nil? %>
 				      order <a href="/admin/user/<%= @user.id %>/orders/<%= transaction.core_transaction.order_id %>">#<%= transaction.core_transaction.order_id %></a> for product <%= transaction.core_transaction.product.name %>
 				  <% else %>
 				      shipment <a href="/admin/shipment/<%= transaction.core_transaction.shipment_id %>">#<%= transaction.core_transaction.shipment_id %></a>

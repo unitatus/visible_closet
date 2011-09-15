@@ -158,9 +158,9 @@ class BoxesController < ApplicationController
     box.weight = params[:weight].to_f
     
     if box.box_type == Box::CUST_BOX_TYPE
-      box.box_width = params[:width].to_f
-      box.box_length = params[:length].to_f
-      box.box_height = params[:height].to_f
+      box.width = params[:width].to_f
+      box.length = params[:length].to_f
+      box.height = params[:height].to_f
     end 
     
     raise ("Error on save with box: " << box.inspect) if !box.receive(params[:marked_for_inventorying] == "1" || params[:marked_for_inventorying_locked] == "1")
