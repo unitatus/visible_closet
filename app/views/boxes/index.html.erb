@@ -28,6 +28,9 @@
 			<% elsif box.status == Box::IN_TRANSIT_TO_YOU_STATUS %>
 				<% image_file = "status-inventory-to-you" %>
 				<% alt = "In Transit" %>
+			<% elsif box.status == Box::RETURN_REQUESTED_STATUS %>
+				<% image_file = "status-inventory-to-you" %>
+				<% alt = "In Transit" %>			
 			<% elsif box.status == Box::IN_TRANSIT_TO_TVC_STATUS %>
 				<% image_file = "status-inventory-to-us" %>
 				<% alt = "In Transit" %>			
@@ -44,8 +47,13 @@
 				<% image_file = "status-inventory-packed" %>
 				<% alt = "Being Prepared by You" %>
 			<% end %>
-            <img src="/images/<%= image_file %>.jpg" alt="<%= alt %>" />
-            <p><strong>Box Status: </strong><%= box.status_en %></p>
+			
+			<% if !current_user.cart.nil? && current_user.cart.contains_return_request_for(box) %>
+				<% image_file += "-rr" %>
+			<% end %>
+			
+            <img src="/images/<%= image_file %>.jpg" alt="<%= alt %>" id="box_img_<%=box.id%>"/>
+            <p><strong>Status: </strong><%= box.status_en %></p>
             <p><strong>Number of Items: </strong>
 			<% if box.inventorying_status == Box::INVENTORIED %>
 				<%= box.item_count %></p>
@@ -54,16 +62,21 @@
 			<% end %>
 			<% if box.status == Box::IN_STORAGE_STATUS %>
 			<p><strong>Date Received: </strong><%=box.received_at.blank? ? "unknown" : box.received_at.strftime('%m/%d/%Y')%></p>
-			<% else %>
+			<% elsif box.received_at.nil? %>
 				<p><strong>Date Ordered: </strong><%=box.created_at.strftime('%m/%d/%Y')%></p>
+			<% else %>
+				<p><strong>Return Requested: </strong><%= box.return_requested_at.strftime('%m/%d/%Y')%></p>
 			<% end %>
             <div class="browse-box-menu">
-                <div class="browse-box-menu-contents">
+                <div class="browse-box-menu-contents" id="box_<%=box.id%>_menu">
                     <p class="browse-box-menu-contents-head">Box Options</p>
-                    <ul>
+                    <ul id="box_<%= box.id %>_menu_list">
                         <li><a href="/boxes/<%= box.id %>/edit">edit description</a></li>
-						<% if box.status == Box::IN_STORAGE_STATUS %>
-                        <li><a href="#">return this box</a></li>
+						<% if box.status == Box::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_return_request_for(box)) %>
+                        <li><%= link_to "return this box", "/boxes/#{box.id}/request_box_return", :remote => true, :id => "box_#{box.id}_return_link" %></li>
+						<% elsif !current_user.cart.nil? && current_user.cart.contains_return_request_for(box) %>
+							<li><%= link_to "cancel return request", "/boxes/#{box.id}/cancel_box_return_request", :remote => true, :id => "box_#{box.id}_return_link" %></li>
+							<li id="box_<%= box.id %>_checkout"><a href="/account/check_out">proceed to checkout</a></li>
 						<% end %>
 						<% if box.inventorying_status == Box::INVENTORIED %>
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>
@@ -80,3 +93,17 @@
 	<% end %>        
     </div>
 <div class="clearer"></div>
+<div style="display: none">
+	<a href="#first_box_return_div" id="first_box_return_link"></a>
+	<div id="first_box_return_div" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center">
+		You have selected to return a box to you. No problem! You can choose to select more boxes to return, or you can proceed to checkout immediately to see the total estimated shipping cost and indicate where we should ship your box(es).
+		<br><br>
+		If you choose to select more boxes to return, simply click the "cart" box at the top of the screen to proceed to checkout.
+		<br><br>
+		What would you like to do?<br><br>
+		<%= form_tag "/account/check_out", :class => "standard", :method => "get" do  %>
+			<input type="submit" class="button" value="Return More Boxes" onclick="$.fancybox.close(); return false;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="submit" class="button" value="Go to Checkout">
+		<% end %>
+	</div>
+</div>

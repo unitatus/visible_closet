@@ -8,11 +8,10 @@ class AdminMailer < ActionMailer::Base
     mail(:subject => "New Interested Person")
   end
   
-  def new_order(user, order, invoice, shipping_address, vc_address, payment_profile, billing_address)
+  def new_order(user, order, invoice, vc_address, payment_profile, billing_address)
     @order = order
     @user = user
     @invoice = invoice
-    @shipping_address = shipping_address
     @vc_address = vc_address
     @payment_profile = payment_profile
     @billing_address = billing_address

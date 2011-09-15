@@ -801,11 +801,15 @@ table.check_out_cart_summary
 table.check_out_cart_summary td
 {
         text-align: center;
+		border-top: 1px solid LightGray;
+		padding: 3px 0 3px 0;
+		vertical-align: middle;
 }
 table.check_out_cart_summary th
 {
         text-align: center;
 		font-weight: bold;
+		padding-bottom: 3px;
 }
 table.cart_summary
 {
@@ -828,6 +832,14 @@ table.cart_summary td
     color: #454444;
     font-size: 12px;
     line-height: 20px;
+}
+table.address_select_table {
+	margin-left: auto;
+	margin-right: auto;
+}
+table.address_select_table td {
+	padding: 5px 5px 5px 5px;
+	border-bottom: 1px solid LightGray;
 }
 .imgteaser {
 	margin: 0;

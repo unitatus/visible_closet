@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110827191553
+# Schema version: 20110913203644
 #
 # Table name: boxes
 #
@@ -20,6 +20,7 @@
 #  weight                     :float
 #  box_num                    :integer
 #  subscription_id            :integer
+#  return_requested_at        :datetime
 #
 
 class Box < ActiveRecord::Base
@@ -28,6 +29,7 @@ class Box < ActiveRecord::Base
   IN_TRANSIT_TO_TVC_STATUS = "in_transit_to_tvc"
   IN_STORAGE_STATUS = "in_storage"
   BEING_PREPARED_STATUS = "being_prepared"
+  RETURN_REQUESTED_STATUS = "return_requested"
   
   NO_INVENTORYING_REQUESTED = "no_inventorying_requested"
   INVENTORYING_REQUESTED = "inventorying_requested"
@@ -41,6 +43,7 @@ class Box < ActiveRecord::Base
 
   has_many :stored_items, :dependent => :destroy
   has_many :shipments, :dependent => :destroy
+  has_one :servicing_order_line, :class_name => "OrderLine", :foreign_key => :service_box_id
   belongs_to :ordering_order_line, :class_name => "OrderLine"
   belongs_to :inventorying_order_line, :class_name => "OrderLine", :foreign_key => :inventorying_order_line_id
   belongs_to :user, :foreign_key => :assigned_to_user_id
@@ -60,6 +63,8 @@ class Box < ActiveRecord::Base
       return "In Storage"
     when BEING_PREPARED_STATUS
       return "Being prepared by you"
+    when RETURN_REQUESTED_STATUS
+      return "Return requested"
     else
       raise "Illegal status " << status
     end
@@ -105,11 +110,27 @@ class Box < ActiveRecord::Base
     ordering_order_line.order
   end
   
+  def mark_for_return
+    update_attribute(:status, RETURN_REQUESTED_STATUS)
+    update_attribute(:return_requested_at, Time.now)
+    if !subscription.nil?
+      subscription.end_subscription
+    end
+  end
+  
   def inventorying_order
     if inventorying_order_line.nil?
       return nil
     else
       return inventorying_order_line.order
+    end
+  end
+  
+  def servicing_order
+    if servicing_order_line.nil?
+      return nil
+    else
+      return servicing_order_line.order
     end
   end
   
@@ -129,7 +150,7 @@ class Box < ActiveRecord::Base
       self.status = Box::IN_STORAGE_STATUS
       self.received_at = Time.now
       
-      shipment = get_active_shipment
+      shipment = self.active_shipment
       
       # This if check is to allow for multiple receiving of the same box, in case an error was made.
       if !shipment.nil?
@@ -142,49 +163,66 @@ class Box < ActiveRecord::Base
         shipment.save
       end
       
-      self.subscription.start_date = Time.now
-      self.subscription.save
+      if !subscription.nil?
+        self.subscription.start_subscription
+      end
       
       return self.save
     end # end transaction
   end
   
-  # This method will either find its associated active shipment or, if there is none, use its current state and type
-  # to figure out how to create one, complete with label. Since it is creating a shipment with label, 
-  # this method must save the shipment, so it cannot be called on a new box.
-  def get_or_create_shipment
+  def create_shipment
     if self.id.nil?
       raise "Cannot create a shipment on a brand new box"
     end
     
-    # All shipments must have labels. When they are cleared the shipments go inactive.
-    shipment = Shipment.find_by_box_id_and_state(self.id, Shipment::ACTIVE)
+    if !self.active_shipment.nil?
+      raise "This box has a shipment that was never processed."
+    end
     
-    if !shipment
-      shipment = create_shipment
+    shipment = Shipment.new
+    
+    shipment.box_id = self.id
+    shipment.from_address_id = get_shipping_from_address_id
+    shipment.to_address_id = get_shipping_to_address_id
+    
+    if subscription.nil? || subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD || self.status == RETURN_REQUESTED_STATUS 
+      shipment.payor = Shipment::CUSTOMER
+    end
+
+    if (!shipment.save)
+      raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+    end
+    
+    begin
+      if !shipment.generate_fedex_label(self)
+        shipment.destroy
+        raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+      end
+    rescue Exception => e
+      shipment.destroy
+      raise e
     end
     
     shipment
   end
   
   def ship
-    if self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
-      # In this status the shipment that is created is for the shipment back
-      get_or_create_shipment
+    if (self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE) || (self.status == RETURN_REQUESTED_STATUS)
+      shipment = create_shipment
       self.update_attribute(:status, Box::IN_TRANSIT_TO_YOU_STATUS)
+      return shipment
     else
       raise "Attempted to ship in invalid status, for box " << self.inspect
     end
   end
   
   def Box.find_by_ordering_order_lines(order_lines)
-    order_ids = Array.new
-    
-    order_lines.each do |order_line|
-      order_ids << order_line.id
-    end
-    
-    Box.where(:ordering_order_line_id => order_ids)
+    Box.where(:ordering_order_line_id => convert_to_id_array(order_lines))
+  end
+  
+  def Box.find_by_service_order_lines(order_lines)
+    Box.joins(:servicing_order_line).where('order_lines.id' => convert_to_id_array(order_lines)).all
   end
   
   def monthly_fee
@@ -218,10 +256,10 @@ class Box < ActiveRecord::Base
   end
   
   def cubic_feet
-    if self.length.nil? || self.width.nil? || self.height.nil?
+    if self.box_length.nil? || self.box_width.nil? || self.box_height.nil?
       return nil
     else
-      return (self.length/12.0) * (self.width/12.0) * (self.height/12.0)
+      return (self.box_length/12.0) * (self.box_width/12.0) * (self.box_height/12.0)
     end
   end
   
@@ -261,9 +299,7 @@ class Box < ActiveRecord::Base
     end
   end
   
-  private
-  
-  def get_active_shipment
+  def active_shipment
     active_shipments = Shipment.find_all_by_box_id_and_state(self.id, Shipment::ACTIVE)
     
     if active_shipments.size > 1
@@ -273,59 +309,40 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def create_shipment
-    shipment = Shipment.new
-    
-    order = get_ordering_order
-    
-    shipment.box_id = self.id
-    shipment.from_address_id = get_from_address_id(order)
-    shipment.to_address_id = get_to_address_id(order)
-    
-    if subscription.nil? || subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD
-      shipment.payor = Shipment::CUSTOMER
-    end
-
-    if (!shipment.save)
-      raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
-    end
-    
-    begin
-      if !shipment.generate_fedex_label(self)
-        shipment.destroy
-        raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
-      end
-    rescue Exception => e
-      shipment.destroy
-      raise e
-    end
-    
-    shipment
-  end
+  private
   
-  def get_from_address_id(order)
-    if self.status == BEING_PREPARED_STATUS && self.box_type == CUST_BOX_TYPE    
-      order.shipping_address_id
-    elsif self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
-      order.shipping_address_id
+  def Box.convert_to_id_array(objects)
+    object_ids = Array.new
+    
+    objects.each do |object|
+      object_ids << object.id
+    end
+    
+    object_ids
+  end
+    
+  def get_shipping_from_address_id
+    if self.status == BEING_PREPARED_STATUS && self.box_type == CUST_BOX_TYPE # we are generating the shipment to send in the box for the first time
+      self.ordering_order_line.shipping_address_id
+    elsif self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE # we are generating the shipment to send in the vc box for the first time
+      self.ordering_order_line.shipping_address_id
+    elsif self.status = RETURN_REQUESTED_STATUS # we are returning the box to the customer
+      Rails.application.config.fedex_vc_address_id
     else
       raise "Unimplemented box state for shipping"
     end    
   end
   
-  def get_to_address_id(order)
+  def get_shipping_to_address_id
     if self.status == BEING_PREPARED_STATUS && self.box_type == CUST_BOX_TYPE    
       Rails.application.config.fedex_vc_address_id
     elsif self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE
       Rails.application.config.fedex_vc_address_id
+    elsif self.status = RETURN_REQUESTED_STATUS
+      self.servicing_order_line.shipping_address_id
     else
       raise "Unimplemented box state for shipping"
     end
-  end
-  
-  def get_ordering_order
-    order_line = OrderLine.find(self.ordering_order_line_id)
-    order = order_line.order
   end
   
   def generate_inventorying_order

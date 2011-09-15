@@ -28,13 +28,13 @@
 		<td><b>Customer Box Number: </b></td><td><%= @box.box_num %></td>
 	</tr>
 	<tr>
-		<td><b>Height: </b></td><td><%= @box.height.nil? ? "?" : pluralize(@box.height, "inch") %></td>
+		<td><b>Height: </b></td><td><%= @box.box_height.nil? ? "?" : pluralize(@box.height, "inch") %></td>
 	</tr>
 	<tr>
-		<td><b>Width: </b></td><td><%= @box.width.nil? ? "?" : pluralize(@box.width, "inch") %></td>
+		<td><b>Width: </b></td><td><%= @box.box_width.nil? ? "?" : pluralize(@box.width, "inch") %></td>
 	</tr>
 	<tr>
-		<td><b>Length: </b></td><td><%= @box.length.nil? ? "?" : pluralize(@box.length, "inch") %></td>
+		<td><b>Length: </b></td><td><%= @box.box_length.nil? ? "?" : pluralize(@box.length, "inch") %></td>
 	</tr>
 	<tr>
 		<td><b>Cubic Feet: </b></td><td><%= @box.cubic_feet.nil? ? "?" : pluralize(@box.cubic_feet, "foot") %></td>

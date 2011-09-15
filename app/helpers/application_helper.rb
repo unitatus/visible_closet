@@ -105,6 +105,11 @@ module ApplicationHelper
     return_str
   end
   
+  def address_summary_with_fedex(address, show_name=true)
+    return_str = address_summary(address, show_name)
+    return return_str + (address.fedex_validation_status == Address::VALID ? "" : "<br>FEDEX UNVALIDATED")
+  end
+  
   def vc_address
     address_summary(Address.find(Rails.application.config.fedex_vc_address_id))
   end

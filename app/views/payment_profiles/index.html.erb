@@ -22,12 +22,9 @@
 				<td><%= profile.month %>/<%= profile.year %></td>
 				<td><%= profile.first_name %> <%= profile.last_name %></td>
 				<td>
-				<%= address.first_name %> <%= address.last_name %><br>
-				<%= address.address_line_1 %><br>
-				<% if not address.address_line_2.blank? %>
-				<%= address.address_line_2 %><br>
-				<% end %>
-				<%= address.city %>, <%= address.state %>, <%= address.zip %>
+					<% if !address.nil? %>
+					<%= raw address_summary address %>
+					<% end %>
 				</td>
 				<td>
 					<% if current_user.default_payment_profile_id == profile.id  %>

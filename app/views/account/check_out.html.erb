@@ -1,11 +1,8 @@
-<% @menu_page = :account %>
-<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 <script language=javascript>
 function openMemberAgreement() {
                 window.radopen("membership_agrement", "Agreement");
             }
 </script>
-<div id="internal-right">
 	<% if current_user.order_count == 0 %>
 		<img src="/images/breadcrumb5.jpg"><br><br>
 	<% end %>
@@ -15,83 +12,69 @@ function openMemberAgreement() {
 	<% end %>
 	
 <%= form_for @order, :url => "/account/finalize_check_out", :html => { :class => "standard", :onsubmit => "cf_submit.disabled=true;" } do |f| %>
-<div id="upper">
-<div style="width: 200px; float: left;">
-	<div class="simple_header">Shipping Address</div><br>
-	<%= hidden_field_tag :shipping_address_id, @shipping_address.id %>
-	<%= @shipping_address.first_name %> <%= @shipping_address.last_name %>
-	<br><%= @shipping_address.address_line_1 %>
-	<% if !@shipping_address.address_line_2.blank? %>
-	<br><%= @shipping_address.address_line_2 %>
-	<% end %>
-	<br><%= @shipping_address.city %>, <%= @shipping_address.state %>
-	<br><%= @shipping_address.zip %>
-	<br>Day Phone: <%= number_to_phone(@shipping_address.day_phone) %>
-	<% if !@shipping_address.evening_phone.nil? %>
-	<br>Evening Phone: <%= number_to_phone(@shipping_address.evening_phone) %>
-	<% end %>
-	<br><br>
-	<% if @addresses.size > 1 %>
-	<a href="/account/select_new_shipping_address">Choose other address</a><br>
-	<% end %>
-	<a href="/account/add_new_shipping_address">Enter new address</a>
-</div>
-<div style="width: 300px; float: right; margin-right: 100px">
-	<br>
-<div class="simple_header" style="padding: 0 0 0 0">Credit Card (default on file)</div><br>
-<% profile = current_user.default_payment_profile %>
-<b><%= profile.cc_type.capitalize %></b> ending in <%= profile.last_four_digits %>.<br>
-Name on card: <%= profile.first_name %> <%= profile.last_name %><br>
-Expires on: <%= profile.month %>/<%= profile.year %><br><br>
-	<a href="/payment_profiles">Manage your cards</a> | <a href="/payment_profiles/new?source_c=account&source_a=check_out">Enter new default card</a>
-</div>
-<div style="clear: both">
-</div>
+<div id="upper" style="padding-left: 20px">
+		<br>
+		<div class="simple_header" style="padding: 0 0 0 0">
+			Default Payment Method
+		</div><br>
+		<% profile = current_user.default_payment_profile %>
+		<b><%= profile.cc_type.capitalize %></b> ending in <%= profile.last_four_digits %><br>
+		Name on card: <%= profile.first_name %> <%= profile.last_name %><br>
+		Expires on: <%= profile.month %>/<%= profile.year %><br><br>
+		<a href="/payment_profiles">Manage your cards</a> | <a href="/payment_profiles/new?source_c=account&source_a=check_out">Enter new default card</a>
+		<br><br>
+		<div class="simple_header" style="padding: 0 0 0 0">
+			Details
+		</div>
 </div>
 <br><br>
-<hr>
-	<table class="check_out_cart_summary">
-		<tr>
-			<th>
-				Item
-			</th>
-			<th>
-				Quantity
-			</th>
-			<th>
-				Cost 
-			</th>
-			<th>
-			Plan	
-			</th>
-			<th>
-				Due Now
-			</th>
-		</tr><% @cart.cart_items.each do |cart_item| %>
-			<% product = Product.find(cart_item.product_id) %>
-		<tr>
-			<td align="left">
-				<%= product.name %>
-				<% if product.vc_box? %>
-					<br> <a href="#checkout_inventorying_vcbox_inline" id="co_inv_link">(what about inventorying?)<a/>
-				<% elsif product.cust_box? %>
-					<br> <a href="#checkout_inventorying_custbox_inline" id="co_inv_link">(what about inventorying?)<a/>
-				<% end %>
-			</td>
-			<td>
-				<%= cart_item.quantity %>
-			</td>
-			<td>
-				<%= number_to_currency(cart_item.discount.total_monthly_price_after_discount) %> per month
+
+<table class="check_out_cart_summary">
+	<tr>
+		<th>
+			Service
+		</th>
+		<th>
+			Quantity
+		</th>
+		<th>
+			Cost 
+		</th>
+		<th>
+			Notes
+		</th>
+		<th>
+			Due Now
+		</th>
+		<th>Shipping Address</th>
+		<th>Remove?</th>
+	</tr><% @cart.cart_items.each do |cart_item| %>
+	<tr>
+		<td align="left">
+			<%= cart_item.description %>
+			<% if cart_item.product.vc_box? %>
+				<br> <a href="#checkout_inventorying_vcbox_inline" id="co_inv_link">(what about inventorying?)<a/>
+			<% elsif cart_item.product.cust_box? %>
+				<br> <a href="#checkout_inventorying_custbox_inline" id="co_inv_link">(what about inventorying?)<a/>
+			<% end %>
+		</td>
+		<td>
+			<%= cart_item.quantity %>
+		</td>
+		<td>
+				<%= number_to_currency(cart_item.discount.total_monthly_price_after_discount) %> <%= cart_item.product.price_comment %>
 				<a href="#discount_synopsis" id="discount_synopsis_link">
-				<% if cart_item.discount? %>
-					 (<%= number_to_percentage(cart_item.discount.unit_discount_perc*100.0, :precision => 0)%> discount)
-				<% else %>
-					(no discount)
-				<% end %>	
+					<% if cart_item.discount? %>
+						 <br>(<%= number_to_percentage(cart_item.discount.unit_discount_perc*100.0, :precision => 0)%> discount)
+					<% elsif cart_item.product.price > 0 %>
+						<br>(no discount)
+					<% end %>	
 				</a>
-			</td>
-			<td>
+		</td>
+		<td>
+			<% if cart_item.committed_months.nil? %>
+				NA
+			<% else %>
 				<% if cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>
 					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>-month plan
 				<% elsif cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>
@@ -101,37 +84,62 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 				<% else %>
 					Monthly
 				<% end %>
-			</td>
-			<td align="right">
-				<%= number_to_currency(cart_item.discount.due_at_signup) %>
-				<% if cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
-					<a href="#plan_inline" id="checkout_plan_link">(why?)</a>
-				<% elsif product.id == Rails.application.config.our_box_product_id %>
-					<a href="#vc_box_inline" id="vc_product_link" title="Visible Closet Box Details">(why?)</a>
-				<% elsif product.id == Rails.application.config.your_box_product_id %>
-					<a href="#cust_box_inline" id="cust_product_link" title="Customer Box Details">(why?)</a>
-				<% end %>
-			</td>
-		</tr><% end %> <!-- end loop -->
-	</table>
+			<% end %>
+		</td>
+		<td align="right">
+			<%= number_to_currency(cart_item.discount.due_at_signup) %>
+			<br>
+			<% if !cart_item.committed_months.nil? && cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
+				<a href="#plan_inline" id="checkout_plan_link">(why?)</a>
+			<% elsif cart_item.product.id == Rails.application.config.our_box_product_id %>
+				<a href="#vc_box_inline" id="vc_product_link" title="Visible Closet Box Details">(why?)</a>
+			<% elsif cart_item.product.id == Rails.application.config.your_box_product_id %>
+				<a href="#cust_box_inline" id="cust_product_link" title="Customer Box Details">(why?)</a>
+			<% end %>
+		</td>
+		<td>
+			<% if cart_item.get_or_pull_address.fedex_validation_status != Address::VALID %>
+			<b><a href="#explain_invalid_address" onclick='$("#explain_invalid_address_link").trigger("click");'>UNVALIDATED ADDRESS</a></b><br>
+			<% end %>
+			<%= raw address_summary cart_item.get_or_pull_address %><br>
+			<a href="/account/new_checkout_shipping_address?cart_item_id=<%= cart_item.id %>">Choose Other Address</a>
+		</td>
+		<td><a href="/account/check_out_remove_cart_item?id=<%=cart_item.id%>">X</a></td>
+	</tr><% end %> <!-- end loop -->
+</table>
+<hr>
+<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
+	Shipping Cost: 
+	<% if !@cart.contains_ship_charge_items? %>
+		$0.00<br>
+	<% elsif @cart.contains_only_ordered_boxes %>
+		TBD when you ship filled box(es)<br>
+	<% elsif @cart.contains_ordered_boxes && !@cart.quoted_shipping_cost_success %>
+		<a href="#explain_tbd_shipping" id="explain_tbd_shipping_link">TBD</a> on shipment date
+	<% elsif @cart.contains_ordered_boxes %>
+		TBD for new boxes, plus <%= number_to_currency @cart.quoted_shipping_cost %> for other services ordered.
+	<% end %>
 	<br>
-	<hr>
-	<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 	<b>Total Due Now: <%= number_to_currency(@cart.estimated_total) %></b>
-	</div><br>
-	<div style="margin: auto; float:left; width: 15px"><%= check_box_tag :agreed, 1, params[:agreed].nil? ? false : params[:agreed] == "1" %></div>
-	<div style="float: right; width: 680px"><b>Accept the Rental Agreement:</b> I certify that I have read and agree to the <a id="member_agreement_link" href="/member_agreement_ajax">Member Agreement</a> associated with this service. I understand that I will be responsible for paying all shipping and storage charges billed to my account by thevisiblecloset.com</div>
-	<div class="clearer"></div>
-	<div style="text-align: right; padding: 20px 0 0 0">
-	<%= submit_tag("Store My Stuff!", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();") %>
-	</div>
-	<br>
+</div><br>
+<% if @cart.contains_new_boxes %> 
+	<div style="margin: auto; float:left; width: 15px; margin-left: 20px; margin-top: 1px"><%= check_box_tag :agreed, 1, params[:agreed].nil? ? false : params[:agreed] == "1" %></div>
+	<div style="float: right; width: 680px; margin-right: 215px"><b>Accept the Rental Agreement:</b> I certify that I have read and agree to the <a id="member_agreement_link" href="/member_agreement_ajax">Member Agreement</a> associated with this service. I understand that I will be responsible for paying all shipping and storage charges billed to my account by thevisiblecloset.com</div>
+<% end %>
+<div class="clearer"></div>
+<div style="text-align: right; padding: 20px 0 0 0">
+	<%= submit_tag("Complete Order", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();") %>
 </div>
+<br>
 <% end %> <!-- end form -->
 <div class="clearer"></div>
 <div style="display: none">
-<div id="cust_box_inline" style="text-align: center"><b>Why am I ordering my own box?</b><br><br>We want to make sure that when we receive your box we know who sent it! <br>By clicking "Store My Stuff" you will create a record of your box in your account, and receive instructions on how to ship it. <br>You can also track your box while it's in transit, and name the box for your own reference. </div>
-<div id="checkout_inventorying_vcbox_inline" style="text-align: center"><b>How does inventorying work?</b><br><br>Most customers don't know how much of their stuff they want to inventory until they pack their boxes. We therefore don't require that you pay for inventorying up front. <br><br>Instead, we stamp our boxes with an indicator so you can choose whether to inventory when you pack the box. If you mark the indicator, then as soon as we receive the box we will inventory it for you, and your storage rate will be adjusted accordingly. <br><br>You can also choose to inventory a box while it is in storage via the "Browse Boxes" section of the website. </div>
+<div id="cust_box_inline" style="text-align: center">
+	<b>Why am I ordering my own box?</b><br><br>We want to make sure that when we receive your box we know who sent it! <br>By clicking "Store My Stuff" you will create a record of your box in your account, and receive instructions on how to ship it. <br>You can also track your box while it's in transit, and name the box for your own reference. 
+</div>
+<div id="checkout_inventorying_vcbox_inline" style="text-align: center">
+	<b>How does inventorying work?</b><br><br>Most customers don't know how much of their stuff they want to inventory until they pack their boxes. We therefore don't require that you pay for inventorying up front. <br><br>Instead, we stamp our boxes with an indicator so you can choose whether to inventory when you pack the box. If you mark the indicator, then as soon as we receive the box we will inventory it for you, and your storage rate will be adjusted accordingly. <br><br>You can also choose to inventory a box while it is in storage via the "Browse Boxes" section of the website. 
+</div>
 <div id="checkout_inventorying_custbox_inline" style="text-align: center"><b>How does inventorying work?</b><br><br>Most customers don't know how much of their stuff they want to inventory until they pack their boxes. We therefore don't require that you pay for inventorying up front. <br><br>Instead, we stamp our labels with an indicator so you can choose whether to inventory when you pack the box. When you put our labels on your box, simply check the "Inventory?" checkbox and, when we receive your box, we will inventory it and adjust your account charges accordingly.<br><br>You can also choose to inventory a box while it is in storage via the "Browse Boxes" section of the website.  </div>
 <div id="vc_box_inline" style="text-align: center"><b>Why am I paying for this box?</b><br><br>Ordering a box from The Visible Closet requires that you pay your first month's rent up front. <br>Once you complete your order we will send you your free shipping materials. <br>You do not pay any more storage costs until your box has been in storage for one month.</div>
 <div id="plan_inline" style="text-align: center"><b>Why am I paying right now?</b><br><br>You have signed up for a multi-month plan, which gets you access to your free shipping voucher(s). All multi-month plans require that you pay your first three months' rent up front. Any subsequent months in your plan will be billed at the price indicated in the "Cost" column. At the end of your plan you can either sign up for another plan or switch to monthly billing (see <a href="/pricing">pricing</a> page for details on pricing for other plans and for the month-to-month option).</div>
@@ -163,4 +171,11 @@ Expires on: <%= profile.month %>/<%= profile.year %><br><br>
 			<td>Additional <%= number_to_percentage(Discount::MONTH_COUNT_THRESHOLD_3_DISCOUNT*100, :precision => 0) %> off</td>
 		</tr>
 	</table>
+</div>
+<a href="#explain_invalid_address" id="explain_invalid_address_link"></a>
+<div id="explain_invalid_address" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center"><b>Invalid Address</b><br><br>This address has not been validated as legitimate by FedEx. We don't recommend shipping to this address. Instead, we recommend clicking the "Choose Other Address" link to enter or select a different address.<br><br>Of course, FedEx is not perfect -- perhaps this is a fine address. If you choose to ship to this address we may need to amend your shipping charge as part of the shipping process.</div>
+<div id="explain_tbd_shipping" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center">
+	<b>TBD Shipping Costs</b><br><br>
+	FedEx is unable to provide shipping costs for the address(es) you provided. This may be due to an invalid address, or a problem with FedEx at this time. <br><br>If you proceed forward you will be charged for shipping later.
+	</div>
 </div>

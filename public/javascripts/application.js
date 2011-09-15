@@ -28,12 +28,12 @@ function formMonitor(obj)
 	}
 }
 
-function addressSelected()
+function addressSelected(radio_field_name, hidden_div_name)
 {
-	if (document.getElementById("payment_profile_billing_address_id").checked)
-		document.getElementById("billing_address_div").style.display = 'block'
+	if (document.getElementById(radio_field_name).checked)
+		document.getElementById(hidden_div_name).style.display = 'block'
 	else
-		document.getElementById("billing_address_div").style.display = 'none'
+		document.getElementById(hidden_div_name).style.display = 'none'
 }
 
 function ToggleIndexingLock()
@@ -429,5 +429,11 @@ $(document).ready(function(){
 		'transitionOut'		: 'none',
 		'type'				: 'iframe'
 	});
+	
+	$("#first_box_return_link").fancybox();
+	
+	$("#explain_invalid_address_link").fancybox();
+	
+	$("#explain_tbd_shipping_link").fancybox();
 
 });

@@ -21,11 +21,15 @@
 	width: 120px; 
 	text-align: right;
 }
+.matrix_table td {
+	text-align: center;
+	padding-top: 5px;
+}
 </style>
 		<!-- SIDE MENU HTML --> 
 		<body>
 			<div style="text-align: center">
-<div style="text-align: center; margin: auto; width: 700px">
+<div style="text-align: center; margin: auto; width: 750px">
 	<div style="width: auto; padding: 10px; ">
 		<a href="/"><img src="https://www.thevisiblecloset.com/images/vcLogo_beta.gif" alt="Visible Closet" /></a><br><br>
 		<strong>The Visible Closet</strong><br>
@@ -34,49 +38,52 @@
 		<% if @invoice.nil? %>
 			Invoice not found
 		<% else %>
-			<div style="width: auto; text-align: right">
 				<% if @order %>
 				<strong>Order #: <%= @order.id %></strong><br>
 				<% end %>
 				<strong>Invoice #: <%= @invoice.id %></strong><br>
 				<strong>Invoice Date: <%= @invoice.created_at.strftime("%m/%d/%Y") %></strong></br>
-			</div>
 			<br><br>
-			<div style="float: left; text-align: left; padding-left: 130px">
+			<div style="text-align: left">
 			<strong>Customer Name: </strong><%= @invoice.user.first_name %> <%= @invoice.user.last_name %>
-			</div>
-			<div style="clear: both">
 			<br><br>
-			<div class="left_column">
-				<strong>Billing Address</strong><br>
-				<%= raw address_summary(@billing_address) %>
-			</div>
-			<div class="right_column">
-				<% if @shipping_address %>
-				<strong>Shipping Address</strong><br>
-				<%= raw address_summary(@shipping_address) %>
-				<% end %>
-			</div>
-			<div style="clear: both">
+			<strong>Billing Address</strong><br>
+			<%= raw address_summary(@billing_address) %>
 			<br><hr>
+			</div>
+			<div style="clear: both"></div>
 			<div style="width: 100%">
 				<br>
-				<table width=100%>
+				<table width=100% class="matrix_table">
 					<thead>
 						<tr>
-							<th width=25% align="left">Item</th><th width=15%>Qty</th><th></th><th width=20%>Monthly Cost</th><th></th><th width=20%># Months Paid</th><th width=20% align="right">Price</th>
+							<th align="left">Item</th>
+							<th>Ship To</th>
+							<th style="text-align: center">Qty</th>
+							<th>&nbsp;</th>
+							<th style="text-align: center">Cost</th>
+							<th>&nbsp;</th>
+							<th style="text-align: center"># Months Paid</th>
+							<th align="right">Price</th>
 						</tr>	
 					</thead>
 					<tbody>
 						<% @invoice.invoice_lines.each do |line| %>
 							<tr>
-								<td align="left"><%= line.product.name %></td>
-								<td><%= line.quantity %></td>
+								<td style="text-align: left"><%= line.description %></td>
+								<td style="text-align: center"><%= raw address_summary line.shipping_address %></td>
+								<td style="text-align: center"><%= line.quantity %></td>
 								<td>x</td>
-								<td><%= number_to_currency(line.unit_price) %></td>
+								<td  style="text-align: center"><%= number_to_currency line.unit_price %> <%= line.product.price_comment %></td>
 								<td>x</td>
-								<td><%= line.months_paid %></td>
-								<td align="right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.discount.due_at_signup) %>
+								<td style="text-align: center">
+								<% if line.box_order_line %>
+									<%= line.months_paid %>
+								<% else %>
+									NA
+								<% end %>
+								</td>
+								<td style="text-align: right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.discount.due_at_signup) %>
 							</tr>
 						<% end %>
 					</tbody>
@@ -84,24 +91,22 @@
 			</div>
 			<div style="clear: both"></div>
 			<br><hr><br>
-			<div class="left_wide_column">
-				Subtotal:<br>
-				Shipping & Handling:<br>
-			</div>
-			<div class="right_narrow_column">
-				<%= number_to_currency(@invoice.total_in_cents / 100)%><br>
+			<div style="text-align: right">
+				Subtotal: <%= number_to_currency(@invoice.subtotal_in_cents / 100)%><br>
+				Shipping & Handling: 
 				<% if @invoice.free_shipping? %>
 				$0.00<br>
-				<% else %>
+				<% elsif @invoice.contains_only_ordered_boxes || !@invoice.quoted_shipping_cost_success %>
 				TBD on shipment date<br>
+				<% elsif @invoice.contains_ordered_boxes %>
+				TBD on shipment date, plus <%= number_to_currency @invoice.shipping_cost %> now.
+				<% else %>
+					<%= number_to_currency @invoice.shipping_cost %>
 				<% end %>
 			</div>
-			<div style="clear: both"></div>
 			<hr>
-			<div class="left_wide_column">
-				Total Amount:
-			</div>
-			<div class="right_narrow_column">
+			<div style="text-align: right">
+				Total Charged: 
 				<%= number_to_currency(@invoice.total_in_cents / 100) %>
 			</div>
 			<div style="clear: both"></div>

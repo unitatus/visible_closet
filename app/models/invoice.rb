@@ -17,7 +17,19 @@ class Invoice < ActiveRecord::Base
   belongs_to :payment_transaction
   
   class InvoiceLine
-    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount
+    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount, :shipping_address, :service_box, :box_order_line
+    
+    def description
+      if product.id == Rails.application.config.return_box_product_id
+        product.name + " for box " + service_box.box_num.to_s
+      else
+        product.name
+      end
+    end
+    
+    def box_order_line?
+      
+    end
   end
   
   def invoice_lines(refresh = false)
@@ -32,6 +44,9 @@ class Invoice < ActiveRecord::Base
         new_invoice_line.unit_price = line.unit_price_after_discount
         new_invoice_line.months_paid = line.discount.months_due_at_signup
         new_invoice_line.discount = line.discount
+        new_invoice_line.shipping_address = line.shipping_address
+        new_invoice_line.service_box = line.service_box
+        new_invoice_line.box_order_line = line.box_order_line?
         
         @invoice_lines << new_invoice_line
       end
@@ -40,7 +55,7 @@ class Invoice < ActiveRecord::Base
     @invoice_lines
   end
   
-  def total_in_cents
+  def subtotal_in_cents
     the_total = 0.0
     
     self.invoice_lines.each do |line|
@@ -48,6 +63,10 @@ class Invoice < ActiveRecord::Base
     end
     
     return the_total*100
+  end
+  
+  def total_in_cents
+    return subtotal_in_cents + shipping_cost*100
   end
   
   def free_shipping?
@@ -58,5 +77,25 @@ class Invoice < ActiveRecord::Base
     end
     
     return true
+  end
+  
+  def contains_only_ordered_boxes
+    self.order.contains_only_ordered_boxes
+  end
+  
+  def contains_ordered_boxes
+    self.order.contains_ordered_boxes
+  end
+  
+  def ordered_box_lines
+    self.order.ordered_box_lines
+  end
+  
+  def shipping_cost
+    self.order.initial_charged_shipping_cost
+  end
+  
+  def quoted_shipping_cost_success
+    self.order.quoted_shipping_cost_success
   end
 end

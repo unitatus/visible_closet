@@ -8,7 +8,7 @@ Order Number: <%= @order.id %>
 <b>Box numbers</b>: 
 <% first = true %>
 <% @order.order_lines.each do |line| %>
-	<% line.boxes.each do |box| %>
+	<% line.ordered_boxes.each do |box| %>
 		<% if first %>
 			<% first = false %>
 		<% else %>

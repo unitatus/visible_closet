@@ -26,11 +26,11 @@ class Discount
     end
     
     if product_count.nil?
-      @product_count = 0
+      product_count = 0
     end
     
     if month_count.nil?
-      @month_count = 0
+      month_count = 0
     end
     
     discount = super()

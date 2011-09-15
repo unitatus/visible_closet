@@ -29,7 +29,7 @@ module Fedex #:nodoc:
     # Defines the required parameters for various methods
     REQUIRED_OPTIONS = {
       :base        => [ :auth_key, :security_code, :account_number, :meter_number ],
-      :price       => [ :shipper, :recipient, :weight ],
+      :price       => [ :shipper, :recipient, :packages ],
       :label       => [ :shipper, :recipient, :weight, :service_type ],
       :contact     => [ :name, :phone_number ],
       :address     => [ :country, :street_lines, :city, :state, :zip ],
@@ -47,7 +47,8 @@ module Fedex #:nodoc:
     }
     
     # Defines the Web Services version implemented.
-    WS_VERSION = { :Major => 9, :Intermediate => 0, :Minor => 0, :ServiceId => 'ship' }
+    SHIP_VERSION = { :Major => 9, :Intermediate => 0, :Minor => 0, :ServiceId => 'ship' }
+    RATE_VERSION = { :Major => 9, :Intermediate => 0, :Minor => 0, :ServiceId => 'crs' }
     ADDRESS_VERSION = { :Major => 2, :Intermediate => 0, :Minor => 0, :ServiceId => 'aval'}
     TRACKING_VERSION = { :Major => 5, :Intermediate => 0, :Minor => 0, :ServiceId => 'trck'}
     
@@ -175,14 +176,26 @@ module Fedex #:nodoc:
       recipient_address   = recipient[:address]
       
       service_type        = options[:service_type]
-      count               = options[:count] || 1
-      weight              = options[:weight]
                           
       residential         = !!recipient_address[:residential]
       service_type        = resolve_service_type(service_type, residential) if service_type
+      
+      packages = Array.new
+      packages_provided = options[:packages]
+      total_weight = 0.0
+      package_count = 0
+      
+      packages_provided.each_with_index do |package, index|
+        packages << { :SequenceNumber => index + 1, :Weight => { :Units => @units, :Value => package[:weight] }}
+        
+        package_count = index + 1
+        #TODO: package dimensions?
+        total_weight += package[:weight]
+      end
+      
       # Create the driver
       driver = create_driver(:rate)
-      options = common_options.merge(
+      options = common_options(RATE_VERSION).merge(
         :RequestedShipment => {
           :Shipper => {
             :Contact => {
@@ -191,7 +204,7 @@ module Fedex #:nodoc:
             },
             :Address => {
               :CountryCode => shipper_address[:country],
-              :StreetLines => shipper_address[:street],
+              :StreetLines => shipper_address[:street_lines],
               :City => shipper_address[:city],
               :StateOrProvinceCode => shipper_address[:state],
               :PostalCode => shipper_address[:zip]
@@ -204,7 +217,7 @@ module Fedex #:nodoc:
             },
             :Address => {
               :CountryCode => recipient_address[:country],
-              :StreetLines => recipient_address[:street],
+              :StreetLines => recipient_address[:street_lines],
               :City => recipient_address[:city],
               :StateOrProvinceCode => recipient_address[:state],
               :PostalCode => recipient_address[:zip],
@@ -218,17 +231,14 @@ module Fedex #:nodoc:
               :CountryCode => shipper_address[:country]
             }
           },
-          :RateRequestTypes => @rate_request_type,
-          :PackageCount => count,
+          :RateRequestTypes => [@rate_request_type],
+          :PackageCount => package_count,
           :DropoffType => @dropoff_type,
           :ServiceType => service_type,
           :PackagingType => @packaging_type,
           :PackageDetail => RequestedPackageDetailTypes::INDIVIDUAL_PACKAGES,
-          :TotalWeight => { :Units => @units, :Value => weight },
-          :RequestedPackageLineItems => [
-            :SequenceNumber => 1,
-            :Weight => { :Units => @units, :Value => weight }
-          ]
+          :TotalWeight => { :Units => @units, :Value => total_weight },
+          :RequestedPackageLineItems => packages
         }
       )
             
@@ -236,18 +246,22 @@ module Fedex #:nodoc:
       
       extract_price = proc do |reply_detail|
         shipment_details = reply_detail.ratedShipmentDetails
+        if !shipment_details.respond_to?(:each) # only one
+          shipment_details = [shipment_details]
+        end
         price = nil
         for shipment_detail in shipment_details
           rate_detail = shipment_detail.shipmentRateDetail
-          if rate_detail.rateType == "PAYOR_#{@rate_request_type}"
-            price = (rate_detail.totalNetCharge.amount.to_f * 100).to_i
+          if rate_detail.rateType == "PAYOR_ACCOUNT_PACKAGE"
+            price ||= 0.0
+            price += rate_detail.totalNetCharge.amount.to_f
             break
           end
         end
         if price
           return price
         else
-          raise "Couldn't find Fedex price in response!"
+          raise FedexError, "Couldn't find Fedex price in response!"
         end
       end
 
@@ -325,7 +339,7 @@ module Fedex #:nodoc:
       
       # Create the driver
       driver = create_driver(:ship)
-      options = common_options.merge(
+      options = common_options(SHIP_VERSION).merge(
         :RequestedShipment => {
           :ShipTimestamp => time,
           :DropoffType => @dropoff_type,
@@ -379,14 +393,6 @@ module Fedex #:nodoc:
           }
         }
       )
-      
-      # recipient_address[:street_lines].each_with_index do |line, index|
-      #   options[:RequestedShipment][:Recipient][:Address][1] << {:StreetLines => line} if index != 0
-      # end
-      # 
-      # shipper_address[:street_lines].each_with_index do |line, index|
-      #   options[:RequestedShipment][:Shipper][:Address][1] << {:StreetLines => line} if index != 0
-      # end
       
       if customer_reference
         options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] = [
@@ -524,7 +530,7 @@ module Fedex #:nodoc:
     
   private
     # Options that go along with each request
-    def common_options(version=WS_VERSION)
+    def common_options(version=SHIP_VERSION)
       {
         :WebAuthenticationDetail => { :UserCredential => { :Key => @auth_key, :Password => @security_code } },
         :ClientDetail => { :AccountNumber => @account_number, :MeterNumber => @meter_number },

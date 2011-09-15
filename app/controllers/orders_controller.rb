@@ -12,14 +12,14 @@ class OrdersController < ApplicationController
   def ship_order_lines
     @order = Order.find(params[:order_id])
 
-    if params[:order_line_ids].empty?
+    if params[:order_line_ids].blank?
       render :process_order
       return
     elsif OrderLine.find(params[:order_line_ids][0]).status == OrderLine::PROCESSED_STATUS # user hit refresh
       redirect_to "/admin/double_post" and return
     end
 
-    @order_lines, @order_shipment = @order.ship_order_lines(params[:order_line_ids])
+    @order_lines = @order.ship_order_lines(params[:order_line_ids])
   end
   
   def print_invoice
@@ -38,7 +38,6 @@ class OrdersController < ApplicationController
   
   def do_show_invoice(invoice)
     @order = invoice.order
-    @shipping_address = @order.shipping_address
     @vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
     if @order.payment_transactions.size > 0 # only one really
       @payment_profile = @order.payment_transactions.first.payment_profile 

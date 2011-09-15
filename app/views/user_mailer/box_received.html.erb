@@ -3,7 +3,7 @@ Dear <%= @box.user.first_name %> <%= @box.user.last_name %>,
 We just wanted to inform you that we have received your box, number <%= @box.id %>, here at The Visible Closet world headquarters!
 <br><br>
 <% if @box.box_type == Box::CUST_BOX_TYPE %>
-We have measured your box, and found that it is a healthy <%= @box.cubic_feet %> cubic feet in size.<br><br>
+We have measured your box, and found that it is a healthy <%= @box.cubic_feet.round(2) %> cubic feet in size.<br><br>
 	<% if @box.inventorying_status != Box::NO_INVENTORYING_REQUESTED %>
 	We also see that you have selected to inventory your box -- a fine idea! Our staff are hard at work processing your inventory, and will notify you when the process is complete.<br><br>
 	<% end %>

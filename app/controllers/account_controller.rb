@@ -134,25 +134,27 @@ class AccountController < ApplicationController
     render 'cart'
   end
 
+  def check_out_remove_cart_item
+    CartItem.delete(params[:id])
+    redirect_to :action => "check_out"
+  end
+
   def check_out
-    @cart = Cart.find_active_by_user_id(current_user.id)
+    @cart = current_user.cart
     
     if !@cart || @cart.cart_items.empty?
       redirect_to :action => :store_more_boxes
       return
     end
     
-    @addresses = Address.find_active(current_user.id, :order => :first_name)
+    @cart.quote_shipping
+    
+    @addresses = current_user.addresses
     
     if @addresses.nil? || @addresses.empty?
       @address = Address.new
       render :action => "add_new_shipping_address"
       return
-    end
-    
-    @shipping_address = get_address_from_session(:shipping_address)
-    if (@shipping_address.nil?)
-      @shipping_address = get_last_shipping_address @addresses
     end
     
     @order = Order.new
@@ -180,35 +182,35 @@ class AccountController < ApplicationController
   end
 
   def finalize_check_out
-    @cart = Cart.find_active_by_user_id(current_user.id)
-    
+    @cart = current_user.cart
+
     # The most likely reason why a cart would not be found is because the submit button was clicked twice, and the order previously committed.
     # That means we should render nicely as though it did.
-    if (!@cart)
+    if @cart.nil?
       @order = Order.find_all_by_user_id(current_user.id, :first, :order => 'created_at DESC').first
       return
     end
     
-    @order = @cart.build_order_properly(params[:order])
+    @order = @cart.build_order(params[:order])
 
     @order.ip_address = request.remote_ip
-    @order.shipping_address_id = params[:shipping_address_id]
-    @order.user_id = current_user.id
     
-    # the only way to get to this function is if the user saw the member agreement; take note of that
-    if params[:agreed] == "1"
-      current_agreement = RentalAgreementVersion.latest
-      user = current_user
-      if !user.rental_agreement_versions.include? current_agreement
-        user.rental_agreement_versions << current_agreement
+    if @order.contains_box_orders?
+      # the only way to get to this function is if the user saw the member agreement; take note of that
+      if params[:agreed] == "1"
+        current_agreement = RentalAgreementVersion.latest
+        user = current_user
+        if !user.rental_agreement_versions.include? current_agreement
+          user.rental_agreement_versions << current_agreement
+        end
+      else
+        @order.errors.add(:agreement, "You must agree to the rental agreement to proceed.")
+        fail_checkout
+        return
       end
-    else
-      @order.errors.add(:agreement, "You must agree to the rental agreement to proceed.")
-      fail_checkout
-      return
     end
     
-    if (!@order.purchase)
+    if (!@order.purchase) # this saves the order
       fail_checkout
     end
     
@@ -216,66 +218,13 @@ class AccountController < ApplicationController
   end
   
   def fail_checkout
-    @addresses = Address.find_active(current_user.id, :order => :first_name)
-    @shipping_address = get_address_from_session(:shipping_address)
-    if (@shipping_address.nil?)
-      @shipping_address = get_last_shipping_address @addresses
-    end
-
     render 'check_out'    
-  end
-  
-  def select_new_shipping_address
-    @addresses = Address.find_active(current_user.id, :order => :first_name)
-    @action = "shipping"
-    render 'select_new_address'
-  end
-  
-  def choose_new_shipping_address
-    session[:shipping_address] = params[:address_id]      
-    
-    redirect_to :action => 'check_out'
-  end
-  
-  def closet_main
-    
   end
   
   private 
   
   def set_menu
     @top_menu_page = :account
-  end
-  
-  def get_address_from_session(address_identifier)
-    if session[address_identifier].blank?
-      nil
-    else
-      return_address = Address.find_active_by_id_and_user_id(session[address_identifier], current_user.id)
-      if (return_address.nil?) # potential bug w/ mult users on same computer
-        @addresses.first
-      else
-        return_address
-      end
-    end
-  end
-  
-  def get_last_shipping_address(user_id=nil, addresses)
-    last_order = get_last_order(user_id, "shipping_address_id")
-    if last_order
-      last_order.shipping_address
-    else
-      shipping_address = current_user.default_shipping_address
-      if shipping_address.nil?
-        if current_user.active_address_count == 0
-          return nil
-        else
-          shipping_address = current_user.addresses[0]
-          current_user.update_attribute(:default_shipping_address_id, shipping_address.id)
-        end
-      end
-      shipping_address
-    end
   end
   
   def get_last_order(user_id=nil, not_null_field)

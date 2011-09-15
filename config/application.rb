@@ -72,6 +72,8 @@ module VisibleCloset
     # config.admin_email = 'admin@thevisiblecloset.com'
     config.admin_email = "admin@thevisiblecloset.com"
     
+    config.shipping_up_percent = 0.0
+    
     ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
       :login => "5Fe5e8GF6z7H", # "API Login ID"
       :password => "83zM4HAnrm84D4pB" # "Transaction Key"

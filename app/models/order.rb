@@ -1,15 +1,15 @@
 # == Schema Information
-# Schema version: 20110729155026
+# Schema version: 20110913051413
 #
 # Table name: orders
 #
-#  id                  :integer         not null, primary key
-#  cart_id             :integer
-#  ip_address          :string(255)
-#  user_id             :integer
-#  created_at          :datetime
-#  updated_at          :datetime
-#  shipping_address_id :integer
+#  id                            :integer         not null, primary key
+#  cart_id                       :integer
+#  ip_address                    :string(255)
+#  user_id                       :integer
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  initial_charged_shipping_cost :float
 #
 
 class Order < ActiveRecord::Base
@@ -17,9 +17,7 @@ class Order < ActiveRecord::Base
   has_many :payment_transactions, :dependent => :destroy
   has_many :order_lines, :dependent => :destroy
   belongs_to :user
-  belongs_to :shipping_address, :class_name => "Address"
   has_many :charges, :dependent => :destroy
-  has_many :shipments, :dependent => :destroy
   has_many :invoices, :dependent => :destroy
 
   attr_accessible :user_id, :created_at
@@ -28,6 +26,8 @@ class Order < ActiveRecord::Base
     transaction_successful = false
 
     self.transaction do
+      self.initial_charged_shipping_cost = cart.quoted_shipping_cost      
+      
       if (!save)
         raise ActiveRecord::Rollback
       end
@@ -45,6 +45,50 @@ class Order < ActiveRecord::Base
     return transaction_successful
   end
   
+  def initial_charged_shipping_cost
+    return_val = read_attribute(:initial_charged_shipping_cost)
+    if return_val.nil?
+      return_val = 0.0
+    end
+    
+    return return_val
+  end
+  
+  def contains_ship_charge_items
+    ship_charge_items = order_lines.select { |o| o.product.customer_pays_shipping_up_front? }
+    return !ship_charge_items.empty?
+  end
+  
+  def free_shipping?
+    order_lines.each do |line|
+      if !line.discount.free_shipping?
+        return false
+      end
+    end
+    
+    return true
+  end
+  
+  def contains_only_ordered_boxes
+    the_ordered_box_lines = self.ordered_box_lines
+    
+    return the_ordered_box_lines.size > 0 && the_ordered_box_lines.size == self.order_lines.size
+  end
+  
+  def contains_ordered_boxes
+    ordered_box_lines.size > 0 
+  end
+  
+  def ordered_box_lines
+    self.order_lines.select { |order_line| order_line.product.id == Rails.application.config.your_box_product_id \
+      || order_line.product.id == Rails.application.config.our_box_product_id }
+  end
+  
+  # at this time there is no way for a customer to order a shippable item other than by walking through the website, so there will always be a cart for this
+  def quoted_shipping_cost_success
+    return cart.nil? || cart.quoted_shipping_cost_success
+  end
+  
   def ship_order_lines(order_line_ids)
     order_lines = Array.new
     
@@ -52,31 +96,15 @@ class Order < ActiveRecord::Base
   
       order_line_ids.each do |order_line_id|
         order_line = OrderLine.find(order_line_id)
+        order_lines << order_line
     
         # will save the order line
         order_line.ship
-    
-        order_lines << order_line
       end
-    
-      # Need to create shipment for the empty boxes
-      order_shipment = Shipment.new
-    
-      order_shipment.order_id = self.id
-      order_shipment.from_address_id = Rails.application.config.fedex_vc_address_id
-      order_shipment.to_address_id = self.shipping_address_id
-
-      if !order_shipment.save
-        raise "Error saving shipment; errors: " << order_shipment.errors.inspect
-      end    
-
-      if !order_shipment.generate_fedex_label
-        raise "Error generating shipment and saving; errors: " << order_shipment.errors.inspect
-      end
-    
-      UserMailer.shipping_materials_sent(user, order_shipment, order_lines).deliver
       
-      return [order_lines, order_shipment]
+      UserMailer.boxes_sent(user, order_lines).deliver
+      
+      return order_lines
     end # end transaction
   end
 
@@ -87,7 +115,7 @@ class Order < ActiveRecord::Base
       the_total += order_line.discount.due_at_signup*100
     end
     
-    the_total
+    the_total + self.initial_charged_shipping_cost*100
   end
   
   def amount_paid
@@ -112,7 +140,7 @@ class Order < ActiveRecord::Base
   
   def build_order_line(attributes={})
     order_line = order_lines.build(:attributes => attributes)
-    
+
     order_line.order_id = id
     
     order_line
@@ -136,7 +164,13 @@ class Order < ActiveRecord::Base
     charges = Array.new
     
     order_lines.each do | order_line |
-      charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id, :order_id => self.id)
+      if order_line.discount.due_at_signup > 0.0
+        charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
+      end
+    end
+    
+    if !cart.nil? && !cart.quoted_shipping_cost.nil? && cart.quoted_shipping_cost > 0.0
+      charges << Charge.create!(:user_id => user_id, :total_in_cents => (self.initial_charged_shipping_cost*100).ceil, :order_id => self.id, :comments => "Shipping charge")
     end
     
     charges
@@ -193,6 +227,18 @@ class Order < ActiveRecord::Base
     end
   end
   
+  def contains_box_orders?
+    return box_order_lines.size > 0
+  end
+  
+  def box_order_lines
+    order_lines.select { |order_line| order_line.product_id == Rails.application.config.your_box_product_id || order_line.product_id == Rails.application.config.our_box_product_id }
+  end
+  
+  def box_return_lines
+    order_lines.select { |order_line| order_line.product_id == Rails.application.config.return_box_product_id }
+  end
+    
   private
   
   # This method saves the transactions
@@ -218,34 +264,8 @@ class Order < ActiveRecord::Base
       raise "Unable to save cart. Cart: " << cart.inspect
     end
     
-    order_lines.each do |order_line|
-      product = order_line.product
-
-      if order_line.committed_months.nil? || order_line.committed_months == 0
-        subscription = nil
-      else
-        subscription = Subscription.create!(:duration_in_months => order_line.committed_months, :user_id => self.user_id)
-      end
-      
-      if product.id.to_s == Rails.application.config.our_box_product_id.to_s
-        type = Box::VC_BOX_TYPE
-        status = Box::NEW_STATUS
-      elsif product.id.to_s == Rails.application.config.your_box_product_id.to_s
-        type = Box::CUST_BOX_TYPE
-        status = Box::BEING_PREPARED_STATUS
-        order_line.status = OrderLine::PROCESSED_STATUS
-        order_line.save
-      else
-        raise "Bad configuration - no match on product " << product.inspect << ", for which product.id returned " << product.id.to_s << "."
-      end
-
-      for i in 1..(order_line.quantity)
-        if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, \
-          :inventorying_status => Box::NO_INVENTORYING_REQUESTED, :subscription_id => (subscription.nil? ? nil : subscription.id))
-          raise "Standard box creation failed."
-        end
-      end # inner for loop
-    end
+    process_box_orders
+    process_box_returns
     
     invoice = create_invoice(charges, payment_transaction)
 
@@ -264,5 +284,37 @@ class Order < ActiveRecord::Base
     end
     
     invoice
+  end
+  
+  def process_box_returns
+    box_return_lines.each do |order_line|
+      order_line.service_box.mark_for_return
+    end
+  end
+  
+  def process_box_orders
+    box_order_lines.each do |order_line|
+      if order_line.committed_months.nil? || order_line.committed_months == 0
+        subscription = nil
+      else
+        subscription = Subscription.create!(:duration_in_months => order_line.committed_months, :user_id => self.user_id)
+      end
+      
+      if order_line.product_id == Rails.application.config.our_box_product_id
+        type = Box::VC_BOX_TYPE
+        status = Box::NEW_STATUS
+      elsif order_line.product_id == Rails.application.config.your_box_product_id
+        type = Box::CUST_BOX_TYPE
+        status = Box::BEING_PREPARED_STATUS
+        order_line.update_attribute(:status, OrderLine::PROCESSED_STATUS) # no further work by us is necessary
+      end
+
+      for i in 1..(order_line.quantity)
+        if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, \
+          :inventorying_status => Box::NO_INVENTORYING_REQUESTED, :subscription_id => (subscription.nil? ? nil : subscription.id))
+          raise "Standard box creation failed."
+        end
+      end # inner for loop
+    end
   end
 end

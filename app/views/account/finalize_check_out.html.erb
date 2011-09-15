@@ -17,7 +17,7 @@
 				Quantity
 			</th>
 			<th>
-				Cost per month
+				Cost
 			</th>
 			<th>
 				Plan
@@ -38,16 +38,20 @@
 				<%= number_to_currency(order_line.total_in_cents/100) %> <%= product.price_comment %>
 			</td>
 			<td>
-				<% if order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>
-					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>-month plan
-				<% elsif order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>
-					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>-month plan
-				<% elsif order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
-					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>-month plan
+				<% if order_line.box_order_line? %>
+					<% if order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>
+						<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>-month plan
+					<% elsif order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>
+						<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>-month plan
+					<% elsif order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
+						<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>-month plan
+					<% else %>
+						Monthly
+					<% end %>	
 				<% else %>
-					Monthly
-				<% end %>	
-			</td>
+					NA
+				<% end %>
+		</td>
 			<td align="right">
 				<%= number_to_currency(order_line.discount.due_at_signup) %>
 			</td>
@@ -56,27 +60,38 @@
 	<br>
 	<hr>
 	<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
-	<b>Total Charged (first month's rent): <%= number_to_currency(@order.total_in_cents.to_f/100) %></b>
+	Shipping Charged: 
+	<% if @order.contains_ship_charge_items && !@order.quoted_shipping_cost_success %>
+		TBD
+	<% else %>
+		<%= number_to_currency @order.initial_charged_shipping_cost %>
+	<% end %>
+	<br><br>
+	
+	<b>Total Charged: <%= number_to_currency(@order.total_in_cents.to_f/100) %></b>
 </div>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 <a href="/orders/<%=@order.id%>/print_invoice" target="new">Printable Summary &gt;&gt;</a>
 </div>
-<br><br>Thank you for placing your order! To keep track of your boxes, see the <a href="/boxes">Browse Boxes</a> menu on the left. 
-<br><br>To learn more about how to pack boxes, <a href="/packing_tips">click here</a>. 
-<br><br>You can choose to have your boxes inventoried by marking the indicator on the box (Visible Closet boxes) or the shipping label (your boxes). You can also choose the inventory option once your boxes are in storage by navigating to the <a href="/boxes">Browse Boxes</a> menu.<br><br>
-<% if @order.vc_box_count > 0 %>
-<div class="simple_header">Visible Closet <%= @order.vc_box_count > 1 ? 'Boxes' : 'Box' %></div>
-<br><br>Your free <%= @order.vc_box_count %> Visible Closet <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %> <%= @order.vc_box_count > 1 ? 'are' : 'is' %> on <%= @order.vc_box_count > 1 ? 'their' : 'its' %> way! Visible Closet boxes are generally shipped to you within one business day, and come pre-addressed -- when you are ready to ship, all you have to do is schedule a pick-up with Fedex by calling 1-800-GO-FEDEX. 
-<br><br>Your <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %> will come with free shipping supplies! 
+<% if @order.contains_box_orders? %>
+	<br><br>Thank you for placing your order! 
+	To keep track of your boxes, see the <a href="/boxes">Browse Boxes</a> menu on the left. 
+	<br><br>To learn more about how to pack boxes, <a href="/packing_tips">click here</a>. 
+	<br><br>You can choose to have your boxes inventoried by marking the indicator on the box (Visible Closet boxes) or the shipping label (your boxes). You can also choose the inventory option once your boxes are in storage by navigating to the <a href="/boxes">Browse Boxes</a> menu.<br><br>
+	<% if @order.vc_box_count > 0 %>
+	<div class="simple_header">Visible Closet <%= @order.vc_box_count > 1 ? 'Boxes' : 'Box' %></div>
+	<br><br>Your free <%= @order.vc_box_count %> Visible Closet <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %> <%= @order.vc_box_count > 1 ? 'are' : 'is' %> on <%= @order.vc_box_count > 1 ? 'their' : 'its' %> way! Visible Closet boxes are generally shipped to you within one business day, and come pre-addressed -- when you are ready to ship, all you have to do is schedule a pick-up with Fedex by calling 1-800-GO-FEDEX. 
+	<br><br>Your <%= @order.vc_box_count > 1 ? 'boxes' : 'box' %> will come with free shipping supplies! 
 
-<% end %>
-<% if @order.cust_box_count > 0 %>
-<br>
-<div class="simple_header">Your <%= @order.cust_box_count > 1 ? 'Boxes' : 'Box' %></div>
-<br><br>You have chosen to store <%= @order.cust_box_count %> <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %> of your own. When you are ready, go to <a href="/boxes">Browse Boxes</a> to print out <%= @order.cust_box_count > 1 ? 'a label for each box' : 'a label for your box' %>, and call 1-800-GO-FEDEX to have Fedex pick up your <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %>. 
+	<% end %>
+	<% if @order.cust_box_count > 0 %>
+	<br>
+	<div class="simple_header">Your <%= @order.cust_box_count > 1 ? 'Boxes' : 'Box' %></div>
+	<br><br>You have chosen to store <%= @order.cust_box_count %> <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %> of your own. When you are ready, go to <a href="/boxes">Browse Boxes</a> to print out <%= @order.cust_box_count > 1 ? 'a label for each box' : 'a label for your box' %>, and call 1-800-GO-FEDEX to have Fedex pick up your <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %>. 
 
-<% end %>
-<br><br>
+	<% end %>
+	<br><br>
+<% end # end check for ordered boxes %>
 </div>
 <div class="clearer"></div>
 <!-- Google Code for store a box Conversion Page -->

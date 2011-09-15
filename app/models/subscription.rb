@@ -15,4 +15,12 @@
 class Subscription < ActiveRecord::Base
   has_many :boxes
   belongs_to :user
+  
+  def start_subscription
+    update_attribute(:start_date, Time.now)
+  end
+  
+  def end_subscription
+    update_attribute(:end_date, Time.now)    
+  end
 end

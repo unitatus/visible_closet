@@ -1,0 +1,23 @@
+<table class="address_select_table">
+	<% @addresses << Address.new(:first_name => "", :last_name => "", :address_line_1 => "New Address", :city => "", :state => "", :zip => "") %>
+	<% @addresses.each_with_index do |address, index| %>
+		<% if index % 3 == 0 %>
+			<tr>
+		<% end %>
+		<td style="vertical-align: middle; padding: 20px 10px">
+			<%= radio_button(:payment_profile, :billing_address_id, address.id, :checked => (params[:payment_profile].nil? ? false : (address.id.nil? ? params[:payment_profile][:billing_address_id] == "on" : params[:payment_profile][:billing_address_id] == address.id.to_s)), :onclick => "addressSelected('payment_profile_billing_address_id', 'billing_address_div')")%>
+		</td>
+		<td style="text-align: left; vertical-align: middle">
+			<%= raw address_summary address %>
+		</td>
+		<% if index + 1 == @addresses.size %>
+			<% (2 - (index % 3)).times {  %>
+				<td>&nbsp;</td><td>&nbsp</td>
+			<% } %>
+		<% end %>
+
+		<% if index % 3 == 2 || index + 1 == @addresses.size %>
+			</tr>
+		<% end %>
+	<% end %>
+</table>
