@@ -157,7 +157,7 @@ class AccountController < ApplicationController
       return
     end
     
-    @order = @cart.build_order
+    @order = Order.new
   end
 
   def add_new_shipping_address
@@ -194,7 +194,6 @@ class AccountController < ApplicationController
     @order = @cart.build_order(params[:order])
 
     @order.ip_address = request.remote_ip
-    @order.user = current_user
     
     if @order.contains_box_orders?
       # the only way to get to this function is if the user saw the member agreement; take note of that

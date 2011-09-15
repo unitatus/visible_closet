@@ -78,6 +78,7 @@ class Cart < ActiveRecord::Base
   def build_order_with_extension(attributes={})
     order = build_order_without_extension(attributes)
     order.cart = self
+    order.user = self.user
     
     cart_items.each do |cart_item|
       order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity, \
@@ -149,6 +150,21 @@ class Cart < ActiveRecord::Base
   def contains_ship_charge_items?
     ship_charge_items = cart_items.select { |c| c.product.customer_pays_shipping_up_front? }
     return !ship_charge_items.empty?
+  end
+  
+  def contains_only_ordered_boxes
+    the_ordered_box_lines = self.ordered_box_lines
+    
+    return the_ordered_box_lines.size > 0 && the_ordered_box_lines.size == self.cart_items.size
+  end
+  
+  def contains_ordered_boxes
+    ordered_box_lines.size > 0 
+  end
+  
+  def ordered_box_lines
+    cart_items.select { |cart_item| cart_item.product.id == Rails.application.config.your_box_product_id \
+      || cart_item.product.id == Rails.application.config.our_box_product_id }
   end
   
   def quote_shipping

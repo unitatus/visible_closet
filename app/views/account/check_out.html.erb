@@ -110,13 +110,13 @@ function openMemberAgreement() {
 <hr>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 	Shipping Cost: 
-	<% if @order.free_shipping? %>
+	<% if !@cart.contains_ship_charge_items? %>
 		$0.00<br>
-	<% elsif @order.contains_only_ordered_boxes %>
+	<% elsif @cart.contains_only_ordered_boxes %>
 		TBD when you ship filled box(es)<br>
-	<% elsif @order.contains_ordered_boxes && !@order.quoted_shipping_cost_success %>
+	<% elsif @cart.contains_ordered_boxes && !@cart.quoted_shipping_cost_success %>
 		<a href="#explain_tbd_shipping" id="explain_tbd_shipping_link">TBD</a> on shipment date
-	<% elsif @order.contains_ordered_boxes %>
+	<% elsif @cart.contains_ordered_boxes %>
 		TBD for new boxes, plus <%= number_to_currency @cart.quoted_shipping_cost %> for other services ordered.
 	<% end %>
 	<br>

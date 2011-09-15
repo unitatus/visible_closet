@@ -86,8 +86,15 @@ class Ability
       can :choose_new_billing_address, :account
       can :closet_main, :account
       can :email_confirmation, :account
+      can :external_addresses_validate, :account
       can :new_default_shipping_address, Address
       can :set_default_shipping_address, Address
+      can :confirm_new_default_shipping_address, Address
+      can :confirm_new_checkout_shipping_address, Address
+      can :confirm_address, Address
+      can :new_checkout_shipping_address, Address
+      can :set_checkout_shipping_address, Address
+      can :update_new_checkout_shipping_address, Address
       can :override_fedex, Address
       can :new_default_payment_profile, PaymentProfile
       can :create_default_payment_profile, PaymentProfile
@@ -100,6 +107,8 @@ class Ability
       can :edit, Box
       can :update, Box
       can :get_label, Box
+      can :request_box_return, Box
+      can :cancel_box_return_request, Box
       
       # stored items
       can :index, StoredItem
