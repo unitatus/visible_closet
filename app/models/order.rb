@@ -17,9 +17,7 @@ class Order < ActiveRecord::Base
   has_many :payment_transactions, :dependent => :destroy
   has_many :order_lines, :dependent => :destroy
   belongs_to :user
-  belongs_to :shipping_address, :class_name => "Address"
   has_many :charges, :dependent => :destroy
-  has_many :shipments, :dependent => :destroy
   has_many :invoices, :dependent => :destroy
 
   attr_accessible :user_id, :created_at
@@ -47,6 +45,50 @@ class Order < ActiveRecord::Base
     return transaction_successful
   end
   
+  def initial_charged_shipping_cost
+    return_val = read_attribute(:initial_charged_shipping_cost)
+    if return_val.nil?
+      return_val = 0.0
+    end
+    
+    return return_val
+  end
+  
+  def contains_ship_charge_items
+    ship_charge_items = order_lines.select { |o| o.product.customer_pays_shipping_up_front? }
+    return !ship_charge_items.empty?
+  end
+  
+  def free_shipping?
+    order_lines.each do |line|
+      if !line.discount.free_shipping?
+        return false
+      end
+    end
+    
+    return true
+  end
+  
+  def contains_only_ordered_boxes
+    the_ordered_box_lines = self.ordered_box_lines
+    
+    return the_ordered_box_lines.size > 0 && the_ordered_box_lines.size == self.order_lines.size
+  end
+  
+  def contains_ordered_boxes
+    ordered_box_lines.size > 0 
+  end
+  
+  def ordered_box_lines
+    self.order_lines.select { |order_line| order_line.product.id == Rails.application.config.your_box_product_id \
+      || order_line.product.id == Rails.application.config.our_box_product_id }
+  end
+  
+  # at this time there is no way for a customer to order a shippable item other than by walking through the website, so there will always be a cart for this
+  def quoted_shipping_cost_success
+    return cart.nil? || cart.quoted_shipping_cost_success
+  end
+  
   def ship_order_lines(order_line_ids)
     order_lines = Array.new
     
@@ -54,31 +96,15 @@ class Order < ActiveRecord::Base
   
       order_line_ids.each do |order_line_id|
         order_line = OrderLine.find(order_line_id)
+        order_lines << order_line
     
         # will save the order line
         order_line.ship
-    
-        order_lines << order_line
       end
-    
-      # Need to create shipment for the empty boxes
-      order_shipment = Shipment.new
-    
-      order_shipment.order_id = self.id
-      order_shipment.from_address_id = Rails.application.config.fedex_vc_address_id
-      order_shipment.to_address_id = self.shipping_address_id
-
-      if !order_shipment.save
-        raise "Error saving shipment; errors: " << order_shipment.errors.inspect
-      end    
-
-      if !order_shipment.generate_fedex_label
-        raise "Error generating shipment and saving; errors: " << order_shipment.errors.inspect
-      end
-    
-      UserMailer.shipping_materials_sent(user, order_shipment, order_lines).deliver
       
-      return [order_lines, order_shipment]
+      UserMailer.boxes_sent(user, order_lines).deliver
+      
+      return order_lines
     end # end transaction
   end
 
@@ -143,7 +169,7 @@ class Order < ActiveRecord::Base
       end
     end
     
-    if cart.quoted_shipping_cost > 0.0
+    if !cart.nil? && !cart.quoted_shipping_cost.nil? && cart.quoted_shipping_cost > 0.0
       charges << Charge.create!(:user_id => user_id, :total_in_cents => (self.initial_charged_shipping_cost*100).ceil, :order_id => self.id, :comments => "Shipping charge")
     end
     

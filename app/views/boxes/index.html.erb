@@ -28,6 +28,9 @@
 			<% elsif box.status == Box::IN_TRANSIT_TO_YOU_STATUS %>
 				<% image_file = "status-inventory-to-you" %>
 				<% alt = "In Transit" %>
+			<% elsif box.status == Box::RETURN_REQUESTED_STATUS %>
+				<% image_file = "status-inventory-to-you" %>
+				<% alt = "In Transit" %>			
 			<% elsif box.status == Box::IN_TRANSIT_TO_TVC_STATUS %>
 				<% image_file = "status-inventory-to-us" %>
 				<% alt = "In Transit" %>			
@@ -73,7 +76,7 @@
                         <li><%= link_to "return this box", "/boxes/#{box.id}/request_box_return", :remote => true, :id => "box_#{box.id}_return_link" %></li>
 						<% elsif !current_user.cart.nil? && current_user.cart.contains_return_request_for(box) %>
 							<li><%= link_to "cancel return request", "/boxes/#{box.id}/cancel_box_return_request", :remote => true, :id => "box_#{box.id}_return_link" %></li>
-							<li id="box_<%= box.id %>_checkout"><a href="/account/checkout">proceed to checkout</a></li>
+							<li id="box_<%= box.id %>_checkout"><a href="/account/check_out">proceed to checkout</a></li>
 						<% end %>
 						<% if box.inventorying_status == Box::INVENTORIED %>
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>

@@ -63,9 +63,7 @@
 							<th>&nbsp;</th>
 							<th style="text-align: center">Cost</th>
 							<th>&nbsp;</th>
-							<% if @invoice.contains_ordered_boxes %>
-								<th style="text-align: center"># Months Paid</th>
-							<% end %>
+							<th style="text-align: center"># Months Paid</th>
 							<th align="right">Price</th>
 						</tr>	
 					</thead>
@@ -76,11 +74,15 @@
 								<td style="text-align: center"><%= raw address_summary line.shipping_address %></td>
 								<td style="text-align: center"><%= line.quantity %></td>
 								<td>x</td>
-								<td  style="text-align: center"><%= number_to_currency line.unit_price %><%= line.product.price_comment %></td>
+								<td  style="text-align: center"><%= number_to_currency line.unit_price %> <%= line.product.price_comment %></td>
 								<td>x</td>
-								<% if @invoice.contains_ordered_boxes %>
-									<td style="text-align: center"><%= line.months_paid %></td>
+								<td style="text-align: center">
+								<% if line.box_order_line %>
+									<%= line.months_paid %>
+								<% else %>
+									NA
 								<% end %>
+								</td>
 								<td style="text-align: right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.discount.due_at_signup) %>
 							</tr>
 						<% end %>
@@ -94,12 +96,12 @@
 				Shipping & Handling: 
 				<% if @invoice.free_shipping? %>
 				$0.00<br>
-				<% elsif @invoice.contains_only_ordered_boxes %>
+				<% elsif @invoice.contains_only_ordered_boxes || !@invoice.quoted_shipping_cost_success %>
 				TBD on shipment date<br>
 				<% elsif @invoice.contains_ordered_boxes %>
-				TBD on shipment date, plus <%= @invoice.shipping_cost %> now.
+				TBD on shipment date, plus <%= number_to_currency @invoice.shipping_cost %> now.
 				<% else %>
-					<%= @invoice.shipping_cost %>
+					<%= number_to_currency @invoice.shipping_cost %>
 				<% end %>
 			</div>
 			<hr>

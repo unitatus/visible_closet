@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110913203644) do
+ActiveRecord::Schema.define(:version => 20110915040308) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(:version => 20110913203644) do
     t.datetime "ordered_at"
     t.string   "status"
     t.float    "quoted_shipping_cost"
+    t.boolean  "quoted_shipping_cost_success"
   end
 
   add_index "carts", ["user_id"], :name => "index_carts_on_user_id"
@@ -123,6 +124,7 @@ ActiveRecord::Schema.define(:version => 20110913203644) do
     t.integer  "committed_months"
     t.integer  "shipping_address_id"
     t.integer  "service_box_id"
+    t.integer  "shipment_id"
   end
 
   add_index "order_lines", ["order_id"], :name => "index_order_lines_on_order_id"
@@ -221,7 +223,6 @@ ActiveRecord::Schema.define(:version => 20110913203644) do
     t.string   "shipment_label_file_name"
     t.datetime "shipment_label_updated_at"
     t.string   "state"
-    t.integer  "order_id"
     t.string   "payor"
     t.boolean  "charge_requested"
   end

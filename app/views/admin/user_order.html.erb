@@ -22,15 +22,18 @@
 				Qty: <%= line.quantity %><br>
 				Product: <%= line.product.name %><br>
 				Boxes: 
-				<% if line.boxes.empty? %>
-					NA
-				<% else %>
-					<% line.boxes.each_with_index do |box, index| %>
+				<% if line.service_box.nil? %>
+					<% line.ordered_boxes.each_with_index do |box, index| %>
 					<% if index > 0 %>
 					, 
 					<% end %>
 						<a href="/admin/user/<%= @order.user.id %>/boxes/<%= box.id %>"><%= box.id %></a>
 					<% end %>
+				<% else %>
+					<a href="/admin/user/<%= @order.user.id %>/boxes/<%= line.service_box.id %>"><%= line.service_box.id %></a>
+				<% end %>
+				<% if line.shipment %>
+					Shipment: <a href="/admin/shipment/<%= line.shipment.id %>"><%= line.shipment.id %></a>
 				<% end %>
 				<br><br>
 			<% end %>
@@ -39,7 +42,7 @@
 	<tr>
 		<td><b>Cart: </b></td>
 		<td>
-			<% if @order.cart_id.nil? %>
+			<% if @order.cart.nil? %>
 				NA
 			<% else %>
 			Cart ID:<%= @order.cart_id %><br>
@@ -77,21 +80,6 @@
 					Params: <%= transaction.params %><br>
 					Message: <%= transaction.message %><br>
 					Last four digits: <%= transaction.payment_profile.last_four_digits %><br>
-				<% end %>
-			<% end %>
-		</td>
-	</tr>
-	<tr>
-		<td><b>Shipments: </b></td>
-		<td>
-			<% if @order.shipments.empty? %>
-				NA
-			<% else %>
-				<% @order.shipments.each_with_index do |shipment, index| %>
-					<% if index > 0 %>
-						, 
-					<% end %>
-					<a href="/admin/shipment/<%= shipment.id %>"><%= shipment.id %></a>
 				<% end %>
 			<% end %>
 		</td>

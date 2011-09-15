@@ -11,8 +11,7 @@
 				<% created_at_desc_string = "&desc=true" %>
 			<% end %>
 			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=created_at<%= created_at_desc_string %>">Create Date</a></th>
-			<th>Ordering Order</th>
-			<th>Inventorying Order</th>
+			<th>Orders</th>
 			<th>Inventory</th>
 			<% if params[:sort_by] == "status" && params[:desc].nil? %>
 				<% status_desc_string = "&desc=true" %>
@@ -32,14 +31,19 @@
 			<tr>
 				<td><a href="/admin/user/<%= @user.id %>/boxes/<%= box.id %>"><%= box.id %></a></td>
 				<td><%= box.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
-				<td><a href="/admin/user/<%= @user.id %>/orders/<%= box.ordering_order.id %>"><%= box.ordering_order.id %></a></td>
-				<% if box.inventorying_order.nil? %>
-					<td>NA</td>
-				<% else %>
-					<td><a href="/admin/user/<%= @user.id %>/orders/<%= box.inventorying_order.id %>"><%= box.inventorying_order.id %></a></td>
-				<% end %>
+				<td>
+					<a href="/admin/user/<%= @user.id %>/orders/<%= box.ordering_order.id %>"><%= box.ordering_order.id %></a>(Ordering)
+					<% if !box.inventorying_order.nil? %>
+						<br><a href="/admin/user/<%= @user.id %>/orders/<%= box.inventorying_order.id %>"><%= box.inventorying_order.id %></a>(Inventorying)
+					<% end %>
+					<% if !box.servicing_order.nil? %>
+						<br><a href="/admin/user/<%= @user.id %>/orders/<%= box.servicing_order.id %>"><%= box.servicing_order.id %></a>(Servicing)
+					<% end %>
+				</td>
 				<td><%= pluralize box.stored_items.size, "item" %></td>
-				<td><%= box.status %></td>
+				<td>
+					<%= box.status %>
+				</td>
 				<td><%= box.box_type %></td>
 				<td><%= box.box_num %></td>
 				<% if box.subscription_id.nil? %>

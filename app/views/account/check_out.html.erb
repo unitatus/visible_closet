@@ -46,7 +46,7 @@ function openMemberAgreement() {
 		<th>
 			Due Now
 		</th>
-		<th>Ship To</th>
+		<th>Shipping Address</th>
 		<th>Remove?</th>
 	</tr><% @cart.cart_items.each do |cart_item| %>
 	<tr>
@@ -110,12 +110,16 @@ function openMemberAgreement() {
 <hr>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 	Shipping Cost: 
-	<% begin %>
-		<%= number_to_currency @cart.quote_shipping %>
-	<% rescue Fedex::FedexError => e %>
-		<a href="#explain_tbd_shipping" id="explain_tbd_shipping_link">TBD</a>
+	<% if @order.free_shipping? %>
+		$0.00<br>
+	<% elsif @order.contains_only_ordered_boxes %>
+		TBD when you ship filled box(es)<br>
+	<% elsif @order.contains_ordered_boxes && !@order.quoted_shipping_cost_success %>
+		<a href="#explain_tbd_shipping" id="explain_tbd_shipping_link">TBD</a> on shipment date
+	<% elsif @order.contains_ordered_boxes %>
+		TBD for new boxes, plus <%= number_to_currency @cart.quoted_shipping_cost %> for other services ordered.
 	<% end %>
-	<br><br>
+	<br>
 	<b>Total Due Now: <%= number_to_currency(@cart.estimated_total) %></b>
 </div><br>
 <% if @cart.contains_new_boxes %> 
@@ -172,6 +176,6 @@ function openMemberAgreement() {
 <div id="explain_invalid_address" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center"><b>Invalid Address</b><br><br>This address has not been validated as legitimate by FedEx. We don't recommend shipping to this address. Instead, we recommend clicking the "Choose Other Address" link to enter or select a different address.<br><br>Of course, FedEx is not perfect -- perhaps this is a fine address. If you choose to ship to this address we may need to amend your shipping charge as part of the shipping process.</div>
 <div id="explain_tbd_shipping" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center">
 	<b>TBD Shipping Costs</b><br><br>
-	FedEx is unable to provide shipping costs for the address(es) you provided. We recommend that you provide another address for all order lines with an unvalidated address. <br><br>If you proceed forward with the current addresses you will be charged for shipping later.
+	FedEx is unable to provide shipping costs for the address(es) you provided. This may be due to an invalid address, or a problem with FedEx at this time. <br><br>If you proceed forward you will be charged for shipping later.
 	</div>
 </div>

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110830021545
+# Schema version: 20110914023402
 #
 # Table name: shipments
 #
@@ -13,14 +13,13 @@
 #  shipment_label_file_name  :string(255)
 #  shipment_label_updated_at :datetime
 #  state                     :string(255)
-#  order_id                  :integer
 #  payor                     :string(255)
 #  charge_requested          :boolean
 #
 
 # Note: at this time there is no need for a shipment line, because we don't have the need to track shipment line items.
 # If a shipment is associated with a box that means that the shipment is for the box.
-# If a shipment is associated with an order that means it shipped one or more empty boxes. We only have the capability to ship
+# If a shipment is associated with an order line that means it shipped one or more empty boxes. We only have the capability to ship
 # entire order lines at this time.
 class Shipment < ActiveRecord::Base
   require 'aws/s3'
@@ -28,9 +27,9 @@ class Shipment < ActiveRecord::Base
   
   belongs_to :to_address, :class_name => "Address", :dependent => :destroy, :autosave => true
   belongs_to :from_address, :class_name => "Address", :dependent => :destroy, :autosave => true
-  belongs_to :order
   belongs_to :box
   has_one :charge
+  has_one :order_line
   
   symbolize :state, :payor
   

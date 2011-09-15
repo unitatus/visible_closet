@@ -19,11 +19,9 @@
 			<th>
 				Cost
 			</th>
-			<% if @order.contains_box_orders? %>
 			<th>
 				Plan
 			</th>
-			<% end %>
 			<th>
 				Due now
 			</th>
@@ -39,8 +37,8 @@
 			<td>
 				<%= number_to_currency(order_line.total_in_cents/100) %> <%= product.price_comment %>
 			</td>
-			<% if @order.contains_box_orders? %>
 			<td>
+				<% if order_line.box_order_line? %>
 					<% if order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>
 						<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>-month plan
 					<% elsif order_line.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>
@@ -50,8 +48,10 @@
 					<% else %>
 						Monthly
 					<% end %>	
-			</td>
-			<% end %>
+				<% else %>
+					NA
+				<% end %>
+		</td>
 			<td align="right">
 				<%= number_to_currency(order_line.discount.due_at_signup) %>
 			</td>
@@ -60,7 +60,14 @@
 	<br>
 	<hr>
 	<div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
-	Shipping: <%= number_to_currency @order.initial_charged_shipping_cost %><br><br>
+	Shipping Charged: 
+	<% if @order.contains_ship_charge_items && !@order.quoted_shipping_cost_success %>
+		TBD
+	<% else %>
+		<%= number_to_currency @order.initial_charged_shipping_cost %>
+	<% end %>
+	<br><br>
+	
 	<b>Total Charged: <%= number_to_currency(@order.total_in_cents.to_f/100) %></b>
 </div>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">

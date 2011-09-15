@@ -530,7 +530,7 @@ module Fedex #:nodoc:
     
   private
     # Options that go along with each request
-    def common_options(version=WS_VERSION)
+    def common_options(version=SHIP_VERSION)
       {
         :WebAuthenticationDetail => { :UserCredential => { :Key => @auth_key, :Password => @security_code } },
         :ClientDetail => { :AccountNumber => @account_number, :MeterNumber => @meter_number },

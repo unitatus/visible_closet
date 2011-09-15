@@ -27,9 +27,8 @@ class UserMailer < ActionMailer::Base
     end
   end
   
-  def shipping_materials_sent(user, shipment, order_lines)
+  def boxes_sent(user, order_lines)
     @user = user
-    @shipment = shipment
     @order_lines = order_lines
     mail(:to => user.email, :subject => "Notification from The Visible Closet")
   end

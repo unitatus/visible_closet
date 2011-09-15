@@ -147,6 +147,8 @@ class AccountController < ApplicationController
       return
     end
     
+    @cart.quote_shipping
+    
     @addresses = current_user.addresses
     
     if @addresses.nil? || @addresses.empty?
@@ -155,7 +157,7 @@ class AccountController < ApplicationController
       return
     end
     
-    @order = Order.new
+    @order = @cart.build_order
   end
 
   def add_new_shipping_address
@@ -181,7 +183,7 @@ class AccountController < ApplicationController
 
   def finalize_check_out
     @cart = current_user.cart
-    
+
     # The most likely reason why a cart would not be found is because the submit button was clicked twice, and the order previously committed.
     # That means we should render nicely as though it did.
     if @cart.nil?

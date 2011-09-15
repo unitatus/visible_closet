@@ -1,15 +1,16 @@
 # == Schema Information
-# Schema version: 20110913030008
+# Schema version: 20110915040308
 #
 # Table name: carts
 #
-#  id                   :integer         not null, primary key
-#  user_id              :integer
-#  created_at           :datetime
-#  updated_at           :datetime
-#  ordered_at           :datetime
-#  status               :string(255)
-#  quoted_shipping_cost :float
+#  id                           :integer         not null, primary key
+#  user_id                      :integer
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  ordered_at                   :datetime
+#  status                       :string(255)
+#  quoted_shipping_cost         :float
+#  quoted_shipping_cost_success :boolean
 #
 
 class Cart < ActiveRecord::Base
@@ -19,6 +20,12 @@ class Cart < ActiveRecord::Base
 
   attr_accessible :id
 
+  def Cart.new()
+    cart = super
+    cart.status = "active"
+    cart
+  end
+
   def estimated_total
     total_estimate = 0
 
@@ -26,7 +33,13 @@ class Cart < ActiveRecord::Base
       total_estimate += cart_item.discount.due_at_signup
     end
  
-    total_estimate + self.get_or_quote_shipping
+    quote_shipping
+ 
+    if quoted_shipping_cost_success
+      total_estimate + quoted_shipping_cost
+    else
+      total_estimate
+    end
   end
 
   def get_quantity(product_id)
@@ -53,12 +66,6 @@ class Cart < ActiveRecord::Base
   def Cart.find_active_by_user_id(user_id)
     Cart.find_by_user_id_and_status(user_id, "active")
   end
-
-  def Cart.new()
-    cart = super
-    cart.status = "active"
-    cart
-  end
   
   def empty?
     return cart_items.size == 0
@@ -70,6 +77,7 @@ class Cart < ActiveRecord::Base
 
   def build_order_with_extension(attributes={})
     order = build_order_without_extension(attributes)
+    order.cart = self
     
     cart_items.each do |cart_item|
       order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity, \
@@ -143,26 +151,23 @@ class Cart < ActiveRecord::Base
     return !ship_charge_items.empty?
   end
   
-  def get_or_quote_shipping
-    if self.quoted_shipping_cost
-      return self.quoted_shipping_cost
-    else
-      return quote_shipping
-    end
-  end
-  
   def quote_shipping
     if !contains_ship_charge_items?
       return 0.0
     end
-    
+        
     grouped_cart_items = group_cart_items_by_address
     fedex = Fedex::Base.new(basic_fedex_options)
     vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
     total_shipping_cost = 0.0
     
-    grouped_cart_items.each do |cart_item_group|
-      total_shipping_cost += get_shipping_price(fedex, vc_address, cart_item_group[:to_address], cart_item_group[:cart_items])
+    begin
+      grouped_cart_items.each do |cart_item_group|
+        total_shipping_cost += get_shipping_price(fedex, vc_address, cart_item_group[:to_address], cart_item_group[:cart_items])
+      end
+      update_attribute(:quoted_shipping_cost_success, true)
+    rescue Fedex::FedexError => e
+      update_attributes(:quoted_shipping_cost_success => false, :quoted_shipping_cost => nil) and return
     end
     
     total_shipping_cost = total_shipping_cost * (1 + Rails.application.config.shipping_up_percent)
@@ -178,7 +183,7 @@ class Cart < ActiveRecord::Base
     hash_of_arrays = Hash.new
     
     cart_items.each do |cart_item|
-      if hash_of_arrays[cart_item.address].nil?
+      if hash_of_arrays[cart_item.get_or_pull_address].nil?
         hash_of_arrays[cart_item.address] = Array.new
       end
       

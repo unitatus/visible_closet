@@ -17,7 +17,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :payment_transaction
   
   class InvoiceLine
-    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount, :shipping_address, :service_box
+    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount, :shipping_address, :service_box, :box_order_line
     
     def description
       if product.id == Rails.application.config.return_box_product_id
@@ -25,6 +25,10 @@ class Invoice < ActiveRecord::Base
       else
         product.name
       end
+    end
+    
+    def box_order_line?
+      
     end
   end
   
@@ -42,6 +46,7 @@ class Invoice < ActiveRecord::Base
         new_invoice_line.discount = line.discount
         new_invoice_line.shipping_address = line.shipping_address
         new_invoice_line.service_box = line.service_box
+        new_invoice_line.box_order_line = line.box_order_line?
         
         @invoice_lines << new_invoice_line
       end
@@ -75,21 +80,22 @@ class Invoice < ActiveRecord::Base
   end
   
   def contains_only_ordered_boxes
-    the_ordered_box_lines = self.ordered_box_lines
-    
-    return the_ordered_box_lines.size > 0 && the_ordered_box_lines.size == self.invoice_lines.size
+    self.order.contains_only_ordered_boxes
   end
   
   def contains_ordered_boxes
-    ordered_box_lines.size > 0 
+    self.order.contains_ordered_boxes
   end
   
   def ordered_box_lines
-    self.invoice_lines.select { |invoice_line| invoice_line.product.id == Rails.application.config.your_box_product_id \
-      || invoice_line.product.id == Rails.application.config.our_box_product_id }
+    self.order.ordered_box_lines
   end
   
   def shipping_cost
     self.order.initial_charged_shipping_cost
+  end
+  
+  def quoted_shipping_cost_success
+    self.order.quoted_shipping_cost_success
   end
 end
