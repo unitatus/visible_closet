@@ -20,8 +20,8 @@
 	<tr>
 		<td><b>Order Id: </b></td>
 		<td>
-			<% if @shipment.order_id %>
-				<a href="/admin/order/<%= @shipment.order_id %>"><%= @shipment.order_id %></a>
+			<% if @shipment.order_line %>
+				<a href="/admin/user/<%= @shipment.user.id %>/orders/<%= @shipment.order_line.order_id %>"><%= @shipment.order_line.order_id %></a>
 			<% else %>
 				None
 			<% end %>
