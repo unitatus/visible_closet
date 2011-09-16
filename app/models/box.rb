@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110915215733
+# Schema version: 20110916025121
 #
 # Table name: boxes
 #
@@ -21,6 +21,7 @@
 #  box_num                    :integer
 #  subscription_id            :integer
 #  return_requested_at        :datetime
+#  location                   :string(255)
 #
 
 class Box < ActiveRecord::Base

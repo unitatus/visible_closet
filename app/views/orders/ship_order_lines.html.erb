@@ -32,7 +32,8 @@
 				<li>Find the following boxes and attach the following labels, then send them off:
 					<ul>
 						<% @returned_boxes.each do |box| %>
-							<li>Box id <%= box.id %>: <a href="/shipment/<%= box.servicing_order_line.shipment_id %>/get_label">label</a></li>
+							<li>Box id <%= box.id %>: <a href="/shipment/<%= box.servicing_order_line.shipment_id %>/get_label">label</a>, Location: <%= box.location %>
+							</li>
 						<% end %>
 					</ul>
 				</li>

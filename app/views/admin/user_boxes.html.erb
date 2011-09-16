@@ -23,8 +23,9 @@
 			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=box_type<%= type_desc_string %>">Type</a></th>
 			<th>Cubic Feet</th>
 			<th>Subscription</th>
+			<th>Receive</th>
 			<% if current_user.admin? %>
-			<th>Destroy?</th>
+				<th>Destroy?</th>
 			<% end %>
 		</tr>
 		<% @boxes.each do |box| %>
@@ -51,8 +52,11 @@
 				<% else %>
 					<td><a href="/admin/user/<%= @user.id %>/subscriptions/<%= box.subscription_id %>"><%= box.subscription_id %></a></td>
 				<% end %>
+				<td>
+					<a href="/boxes/receive_box?box_id=<%= box.id %>">Receive</a>
+				</td>
 				<% if current_user.admin? %>
-				<td><a href="/admin/user/<%= @user.id %>/boxes/<%=box.id%>/destroy" data-confirm="This will delete all inventory, associated inventory orders, EVERYTHING for this box. Are you SURE?" data-method="delete" rel="nofollow">Clear Test Data</a></td>
+					<td><a href="/admin/user/<%= @user.id %>/boxes/<%=box.id%>/destroy" data-confirm="This will delete all inventory, associated inventory orders, EVERYTHING for this box. Are you SURE?" data-method="delete" rel="nofollow">Clear Test Data</a></td>
 				<% end %>
 			</tr>
 		<% end %>

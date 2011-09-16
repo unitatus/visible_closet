@@ -112,7 +112,6 @@ class BoxesController < ApplicationController
   def receive_box
     @error_messages = Array.new
     @messages = Array.new
-    @marked_for_inventorying_locked = (params[:marked_for_inventorying_locked] == "1")
     
     if params[:box_id].blank?
       return
@@ -127,6 +126,10 @@ class BoxesController < ApplicationController
     
     if params[:weight].to_f == 0
       @error_messages << "Weight must be a positive number."
+    end
+    
+    if params[:location].blank?
+      @error_messages << "Location must be specified"
     end
     
     if box.box_type == Box::CUST_BOX_TYPE
@@ -161,27 +164,32 @@ class BoxesController < ApplicationController
       box.width = params[:width].to_f
       box.length = params[:length].to_f
       box.height = params[:height].to_f
-    end 
-    
-    raise ("Error on save with box: " << box.inspect) if !box.receive(params[:marked_for_inventorying] == "1" || params[:marked_for_inventorying_locked] == "1")
-        
-    if box.inventorying_status == Box::INVENTORYING_REQUESTED
-      @error_messages << "WARNING!!! Indexing requested! Please send this box for inventorying!"
     end
     
-    @messages << ("Box " + box.id.to_s + " processed.")
+    box.location = params[:location]
     
-    params[:box_id] = nil
-    params[:weight] = nil
-    params[:length] = nil
-    params[:height] = nil
-    params[:width] = nil
+    if box.receive(params[:marked_for_inventorying] == "1")
+      if box.inventorying_status == Box::INVENTORYING_REQUESTED
+        @error_messages << "WARNING!!! Indexing requested! Please send this box for inventorying!"
+      end
     
-    UserMailer.box_received(box).deliver
+      @messages << ("Box " + box.id.to_s + " processed.")
+    
+      params[:box_id] = nil
+      params[:weight] = nil
+      params[:length] = nil
+      params[:height] = nil
+      params[:width] = nil
+      params[:location] = nil
+      params[:marked_for_inventorying] = nil
+    
+      UserMailer.box_received(box).deliver
+    else
+      @error_messages << box.errors
+    end
   end  
   
   def inventory_box
-    # TODO - get rid of this
     @box = Box.find(params[:id])
     @stored_items = StoredItem.find_by_box_id(@box.id)
   end

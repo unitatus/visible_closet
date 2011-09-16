@@ -43,6 +43,9 @@
 		<td><b>Weight: </b></td><td><%= @box.weight.nil? ? "?" : pluralize(@box.weight, "lb") %></td>
 	</tr>
 	<tr>
+		<td><b>Location: </b></td><td><%= @box.location.nil? ? "?" : @box.location %></td>
+	</tr>
+	<tr>
 		<td><b>Shipments: </b></td>
 		<td>
 			<% if @box.shipments.empty? %>
