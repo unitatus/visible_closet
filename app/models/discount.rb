@@ -18,15 +18,15 @@ class Discount
   
   FREE_SHIPPING_MONTH_THRESHOLD = 3
   
-  attr_accessor :product, :product_count, :month_count
+  attr_accessor :product, :new_product_count, :month_count, :existing_product_count
   
-  def Discount.new(product, product_count, month_count)
+  def Discount.new(product, new_product_count, month_count, existing_product_count=0)
     if product.nil?
       raise "Cannot instantiate with nil product"
     end
     
-    if product_count.nil?
-      product_count = 0
+    if new_product_count.nil?
+      new_product_count = 0
     end
     
     if month_count.nil?
@@ -36,10 +36,15 @@ class Discount
     discount = super()
     
     discount.product = product
-    discount.product_count = product_count
+    discount.new_product_count = new_product_count
     discount.month_count = month_count
+    discount.existing_product_count = existing_product_count
     
     return discount
+  end
+  
+  def total_product_count
+    return new_product_count + existing_product_count
   end
   
   def unit_discount_perc
@@ -48,9 +53,9 @@ class Discount
     count_threshold_1, count_threshold_2, count_threshold_3 = determine_thresholds
     
     # The to_f's are for the case where product count or month count are not set
-    discount_perc += UNIT_COUNT_THRESHOLD_1_DISCOUNT if @product_count.to_f >= count_threshold_1
-    discount_perc += UNIT_COUNT_THRESHOLD_2_DISCOUNT if @product_count.to_f >= count_threshold_2
-    discount_perc += UNIT_COUNT_THRESHOLD_3_DISCOUNT if @product_count.to_f >= count_threshold_3
+    discount_perc += UNIT_COUNT_THRESHOLD_1_DISCOUNT if self.total_product_count.to_f >= count_threshold_1
+    discount_perc += UNIT_COUNT_THRESHOLD_2_DISCOUNT if self.total_product_count.to_f >= count_threshold_2
+    discount_perc += UNIT_COUNT_THRESHOLD_3_DISCOUNT if self.total_product_count.to_f >= count_threshold_3
     discount_perc += MONTH_COUNT_THRESHOLD_1_DISCOUNT if @month_count.to_f >= MONTH_COUNT_DISCOUNT_THRESHOLD_1
     discount_perc += MONTH_COUNT_THRESHOLD_2_DISCOUNT if @month_count.to_f >= MONTH_COUNT_DISCOUNT_THRESHOLD_2
     discount_perc += MONTH_COUNT_THRESHOLD_3_DISCOUNT if @month_count.to_f >= MONTH_COUNT_DISCOUNT_THRESHOLD_3
@@ -67,11 +72,11 @@ class Discount
   end
   
   def total_monthly_savings
-    return self.unit_discount_dollars * @product_count
+    return self.unit_discount_dollars * @new_product_count
   end
   
   def total_monthly_price_after_discount
-    return self.unit_price_after_discount * @product_count
+    return self.unit_price_after_discount * @new_product_count
   end
   
   def total_period_savings

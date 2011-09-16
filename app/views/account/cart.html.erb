@@ -11,10 +11,7 @@
     <table>
         <thead>
             <tr>
-              <th>Product #</th>
               <th>Description</th>
-              <th>Price</th>
-              <th>Estimate Cost/Month</th>
               <th>Quantity</th>
               <th>Update Quanitity</th>
               <th>Remove</th>
@@ -24,21 +21,27 @@
 			<% @cart.cart_items.each do |cart_item| %>
 		      <% product = Product.find(cart_item.product_id) %>
 			<%= form_tag "/account/update_cart_item", :class => "standard" do %>
-            <tr >
-                <td>#<%= product.id %></td>
-                <td><%= product.name %></td>
-                <td><%= number_to_currency(product.price) %> <%= product.price_comment %></td>
-                <td><%= number_to_currency(product.price * cart_item.quantity) %></td>
-	                <td>
-	                	<div class="incrementer">
+            <tr>
+                <td><%= cart_item.description %></td>
+                <td style="text-align: center">
+					<% if cart_item.new_box_line? %>
+	                	<div class="incrementer" style="margin-left: auto; margin-right: auto">
 		                    <span>&nbsp;</span>
 							<%= text_field_tag(:quantity, cart_item.quantity, :size => 5, :align => "middle") %>
 		                    <div class="increment-up"></div>
 		                    <div class="increment-down"></div>
 		                </div>
-	                </td>
-	                <td><%= hidden_field_tag(:cart_item_id, cart_item.id) %>
+					<% else %>
+						NA
+					<% end %>
+                </td>
+                <td>
+				<% if cart_item.new_box_line? %>
+					<%= hidden_field_tag(:cart_item_id, cart_item.id) %>
 					<%= submit_tag("Update", :class => 'button', :name => 'commit') %>
+				<% else %>
+					NA
+				<% end %>
 				</td>
                 <td><a href="/account/remove_cart_item?cart_item_id=<%= cart_item.id %>">Remove</a></td>
             </tr>
@@ -47,12 +50,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3" align="right" class="estimate">
-                    <p>Estimated Total / Month*:</p>
-                    <p class="tiny">*Size of your box assumed to be 1 cubic foot. We will measure your box when we receive it to determine your final cost.</p>
-                </td>
-                <td class="estimate"><%= number_to_currency(@cart.estimated_total) %></td>
-                <td colspan="3" class="checkout">
+				<td colspan="2"></td>
+                <td colspan="2" class="checkout">
 	<% if !@cart.cart_items.empty? %>
                     <a href="/account/check_out"><img src="/images/checkout.gif" alt="Checkout" /></a>
 	<% end %>

@@ -93,6 +93,7 @@ class AccountController < ApplicationController
   end
 
   def cart
+    @turn_cart_off = true
     @cart = Cart.find_active_by_user_id(current_user.id)
     if (@cart.nil?)
       @cart = Cart.new
@@ -100,6 +101,7 @@ class AccountController < ApplicationController
   end
 
   def update_cart_item
+    @turn_cart_off = true
     if (params[:quantity] == '0')
       remove_cart_item
       return
@@ -123,7 +125,13 @@ class AccountController < ApplicationController
 
   def remove_cart_item
     # find the cart so we can re-show the page
-    cart_item = CartItem.find(params[:cart_item_id])
+    begin
+      cart_item = CartItem.find(params[:cart_item_id])
+    rescue
+      # the user probably just hit refresh
+      @cart = current_user.cart
+      return
+    end
    
     CartItem.delete(params[:cart_item_id])
 
@@ -141,6 +149,7 @@ class AccountController < ApplicationController
 
   def check_out
     @cart = current_user.cart
+    @turn_cart_off = true
     
     if !@cart || @cart.cart_items.empty?
       redirect_to :action => :store_more_boxes

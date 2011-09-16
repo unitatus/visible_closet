@@ -33,12 +33,25 @@ class CartItem < ActiveRecord::Base
     return self.address
   end
   
+  def new_box_line?
+    product_id == Rails.application.config.your_box_product_id || product_id == Rails.application.config.our_box_product_id
+  end
+  
   def discount?
     return self.discount.unit_discount_perc > 0.0
   end
   
   def discount
-    Discount.new(product, quantity, committed_months)
+    # Box will return nil for non-box products, which is then translated as "any type" in the user method, which doesn't really matter for other products, since they are one-off
+    Discount.new(product, quantity, committed_months, cust_box? ? cart.user.stored_cubic_feet_count : cart.user.stored_box_count(Box.get_type(product)))
+  end
+  
+  def cust_box?
+    product_id == Rails.application.config.your_box_product_id
+  end
+  
+  def vc_box?
+    product_id == Rails.application.config.our_box_product_id
   end
   
   def description
@@ -46,6 +59,24 @@ class CartItem < ActiveRecord::Base
       product.name
     else
       product.name + " for box " + box.box_num.to_s
+    end
+  end
+  
+  def total_monthly_price_after_discount
+    if new_box_line?
+      discount.unit_price_after_discount * self.quantity
+    else
+      0.0
+    end
+  end
+  
+  def box_type
+    if product_id == Rails.application.config.your_box_product_id
+      Box::CUST_BOX_TYPE
+    elsif product_id == Rails.application.config.our_box_product_id
+      Box::VC_BOX_TYPE
+    else
+      nil
     end
   end
 

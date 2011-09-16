@@ -189,8 +189,59 @@ class User < ActiveRecord::Base
     PaymentProfile.count(:conditions => "user_id = #{self.id}")
   end
   
-  def box_count
-    Box.count(:conditions => "assigned_to_user_id = #{self.id}")
+  def box_count(type=nil)
+    if @box_counts.nil?
+      @box_counts = Hash.new
+    end
+    
+    conditions = "assigned_to_user_id = #{self.id} AND status != '#{Box::INACTIVE_STATUS.to_s}' AND box_type = "
+    
+    if @box_counts[Box::CUST_BOX_TYPE].nil?
+      @box_counts[Box::CUST_BOX_TYPE] = Box.count(:conditions => conditions + "'" + Box::CUST_BOX_TYPE.to_s + "'")
+    end
+    
+    if @box_counts[Box::VC_BOX_TYPE].nil?
+      @box_counts[Box::VC_BOX_TYPE] = Box.count(:conditions => conditions + "'" + Box::VC_BOX_TYPE.to_s + "'")
+    end
+    
+    if type.nil?
+      @box_counts[Box::VC_BOX_TYPE] + @box_counts[Box::CUST_BOX_TYPE]
+    else
+      @box_counts[type]
+    end
+  end
+  
+  # this only tests customer boxes; vc box cubic feet are always the same size
+  def stored_cubic_feet_count
+    matching_boxes = boxes.select { |box| box.box_type == Box::CUST_BOX_TYPE && box.status = Box::IN_STORAGE_STATUS }
+    total_cubic_feet = 0.0
+    matching_boxes.each do |box|
+      total_cubic_feet += (box.cubic_feet.nil? ? 0.0 : box.cubic_feet)
+    end
+    
+    return total_cubic_feet
+  end
+  
+  def stored_box_count(type=nil)
+    if @stored_box_counts.nil?
+      @stored_box_counts = Hash.new
+    end
+    
+    conditions = "assigned_to_user_id = #{self.id} AND status = '#{Box::IN_STORAGE_STATUS.to_s}' AND box_type = "
+    
+    if @stored_box_counts[Box::CUST_BOX_TYPE].nil?
+      @stored_box_counts[Box::CUST_BOX_TYPE] = Box.count(:conditions => conditions + "'" + Box::CUST_BOX_TYPE.to_s + "'")
+    end
+    
+    if @stored_box_counts[Box::VC_BOX_TYPE].nil?
+      @stored_box_counts[Box::VC_BOX_TYPE] = Box.count(:conditions => conditions + "'" + Box::VC_BOX_TYPE.to_s + "'")
+    end
+    
+    if type.nil?
+      @stored_box_counts[Box::VC_BOX_TYPE] + @stored_box_counts[Box::CUST_BOX_TYPE]
+    else
+      @stored_box_counts[type]
+    end
   end
   
   def boxes_in_storage

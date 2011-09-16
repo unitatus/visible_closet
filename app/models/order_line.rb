@@ -38,7 +38,6 @@ class OrderLine < ActiveRecord::Base
   end
   
   def ship
-    
     # bug checking
     if product_id != Rails.application.config.our_box_product_id && product_id != Rails.application.config.return_box_product_id
       raise "Error: order line being processed for shipping on non-shippable product"
@@ -88,7 +87,16 @@ class OrderLine < ActiveRecord::Base
   end
   
   def discount
-    Discount.new(product, quantity, committed_months)
+    # don't need to worry about the products on this order, because they would never be in storage if we are looking at the discount for the order
+    Discount.new(product, quantity, committed_months, self.cust_box? ? order.user.stored_cubic_feet_count : order.user.stored_box_count(Box.get_type(product)))
+  end
+  
+  def cust_box?
+    product_id == Rails.application.config.your_box_product_id
+  end
+  
+  def vc_box?
+    product_id == Rails.application.config.our_box_product_id
   end
   
   def unit_price_after_discount

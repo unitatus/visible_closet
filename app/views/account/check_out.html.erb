@@ -62,7 +62,7 @@ function openMemberAgreement() {
 			<%= cart_item.quantity %>
 		</td>
 		<td>
-				<%= number_to_currency(cart_item.discount.total_monthly_price_after_discount) %> <%= cart_item.product.price_comment %>
+				<%= number_to_currency(cart_item.total_monthly_price_after_discount) %> <%= cart_item.product.price_comment %>
 				<a href="#discount_synopsis" id="discount_synopsis_link">
 					<% if cart_item.discount? %>
 						 <br>(<%= number_to_percentage(cart_item.discount.unit_discount_perc*100.0, :precision => 0)%> discount)

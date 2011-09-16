@@ -3,7 +3,7 @@
         <tr>
             <td colspan="2" class="circle-bg">
 				<% if storage_discount.unit_discount_perc > 0 %>
-					<%= storage_discount.product_count %> / 
+					<%= storage_discount.new_product_count %> / 
 					<% if storage_discount.product.vc_box? %>
 						Box
 					<% else %>
@@ -65,7 +65,7 @@
     </table>
 	<% if user_signed_in? %>
 			<%= hidden_field_tag 'box_type', (storage_discount.product.vc_box? ? "vc_boxes" : "cust_boxes") %>
-			<%= hidden_field_tag (storage_discount.product.vc_box? ? "num_vc_boxes[num_vc_boxes]" : "num_cust_boxes[num_cust_boxes]"), storage_discount.product_count %>
+			<%= hidden_field_tag (storage_discount.product.vc_box? ? "num_vc_boxes[num_vc_boxes]" : "num_cust_boxes[num_cust_boxes]"), storage_discount.new_product_count %>
 			<%= hidden_field_tag 'num_months[num_months]', storage_discount.month_count %>
     		<%= image_submit_tag "pricing-button.gif", :class => "order-button" %>
 	<% else %>

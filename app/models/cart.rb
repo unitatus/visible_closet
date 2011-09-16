@@ -147,6 +147,11 @@ class Cart < ActiveRecord::Base
     return !new_box_cart_items.empty?
   end
   
+  def contains_new_cust_boxes
+    new_cust_boxes = cart_items.select { |c| c.product_id == Rails.application.config.your_box_product_id }
+    return !new_cust_boxes.empty?
+  end
+  
   def contains_ship_charge_items?
     ship_charge_items = cart_items.select { |c| c.product.customer_pays_shipping_up_front? }
     return !ship_charge_items.empty?

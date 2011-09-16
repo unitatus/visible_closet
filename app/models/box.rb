@@ -31,6 +31,7 @@ class Box < ActiveRecord::Base
   IN_STORAGE_STATUS = "in_storage"
   BEING_PREPARED_STATUS = "being_prepared"
   RETURN_REQUESTED_STATUS = "return_requested"
+  INACTIVE_STATUS = "inactive"
   
   NO_INVENTORYING_REQUESTED = "no_inventorying_requested"
   INVENTORYING_REQUESTED = "inventorying_requested"
@@ -79,6 +80,16 @@ class Box < ActiveRecord::Base
       return "Box provided by The Visible Closet"
     else
       raise "Illegal box type " << box_type
+    end
+  end
+  
+  def Box.get_type(product)
+    if product.id == Rails.application.config.your_box_product_id
+      CUST_BOX_TYPE
+    elsif product.id == Rails.application.config.our_box_product_id
+      VC_BOX_TYPE
+    else
+      nil
     end
   end
 
@@ -227,29 +238,35 @@ class Box < ActiveRecord::Base
   end
   
   def monthly_fee
+    return Box.monthly_fee_for_type(self.user, self.box_type, self.cubic_feet, (self.subscription.nil? ? 1 : self.subscription.duration_in_months), self.inventorying_status)
+  end
+  
+  # Added quantity is used for speculative pricing when the user is going through the check-out process
+  def Box.monthly_fee_for_type(user, box_type, cubic_feet, subscription_duration, inventorying_status, added_quantity=0)
     # Box is not returned yet -- can't calculate fee
-    if self.box_type == CUST_BOX_TYPE && cubic_feet.nil?
+    if box_type == CUST_BOX_TYPE && cubic_feet.nil?
       return nil
     end
     
-    if self.box_type == CUST_BOX_TYPE
+    if box_type == CUST_BOX_TYPE
+      total_new_quantity = user.stored_cubic_feet_count(box_type) + added_quantity * cubic_feet
       storage_product = Product.find(Rails.application.config.your_box_product_id)
       inventorying_product = Product.find(Rails.application.config.your_box_inventorying_product_id)
     else
+      total_new_quantity = user.stored_box_count(box_type) + added_quantity
       storage_product = Product.find(Rails.application.config.our_box_product_id)
       inventorying_product = Product.find(Rails.application.config.our_box_inventorying_product_id)
     end
     
-    box_count_like_me = Box.count_boxes(self.user, self.status, self.box_type)
-    storage_discount = Discount.new(storage_product, box_count_like_me, (subscription.nil? ? 1 : subscription.duration_in_months))
+    storage_discount = Discount.new(storage_product, total_new_quantity, subscription_duration)
     
-    if self.inventorying_status == NO_INVENTORYING_REQUESTED
+    if inventorying_status == NO_INVENTORYING_REQUESTED
       inventorying_fee = 0
     else
-      inventorying_fee = Discount.new(inventorying_product, box_count_like_me, (subscription.nil? ? 1 : subscription.duration_in_months)).unit_price_after_discount
+      inventorying_fee = Discount.new(inventorying_product, box_count_matching_type, subscription_duration).unit_price_after_discount
     end
         
-    if self.box_type == CUST_BOX_TYPE
+    if box_type == CUST_BOX_TYPE
       return (storage_discount.unit_price_after_discount + inventorying_fee) * cubic_feet
     else
       return storage_discount.unit_price_after_discount + inventorying_fee

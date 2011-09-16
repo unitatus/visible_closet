@@ -7,12 +7,12 @@ We have measured your box, and found that it is a healthy <%= @box.cubic_feet.ro
 	<% if @box.inventorying_status != Box::NO_INVENTORYING_REQUESTED %>
 	We also see that you have selected to inventory your box -- a fine idea! Our staff are hard at work processing your inventory, and will notify you when the process is complete.<br><br>
 	<% end %>
-Given this box's size and inventorying status, your monthly fee to store this box will be <%= number_to_currency(@box.monthly_fee) %>. For the current month, the fee will be prorated starting on <%= @box.received_at.strftime("%m/%d/%Y") %>, the date it was received.
+Given this box's size and inventorying status, and the size of the boxes you already have in storage, your monthly fee to store this box will be <%= number_to_currency(@box.monthly_fee) %>. For the current month, the fee will be prorated starting on <%= @box.received_at.strftime("%m/%d/%Y") %>, the date it was received.
 <% else %>
 <% if @box.inventorying_status != Box::NO_INVENTORYING_REQUESTED %>
 We see that you have selected to inventory your box -- a fine idea! Our staff are hard at work processing your inventory, and will notify you when the process is complete.<br><br>
 <% end %>
-Given this inventorying status, and the <%= current_user.box_count %> boxes you have in storage, your monthly fee to store this box will be <%= number_to_currency(@box.monthly_fee) %>. Your monthly fee may change if you change the number of boxes you keep in storage. For the current month, the fee will be prorated starting on <%= @box.received_at.strftime("%m/%d/%Y") %>, the date it was received.
+Given this inventorying status, and the <%= @box.user.stored_box_count %> boxes you have in storage, your monthly fee to store this box will be <%= number_to_currency(@box.monthly_fee) %>. Your monthly fee may change if you change the number of boxes you have in storage (more boxes = cheaper fees). For the current month, the fee will be prorated starting on <%= @box.received_at.strftime("%m/%d/%Y") %>, the date it was received.
 <% end %>
 <br><br>
 Thanks for using The Visible Closet, and have a great day!
