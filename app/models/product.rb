@@ -39,6 +39,6 @@ class Product < ActiveRecord::Base
   end
   
   def customer_pays_shipping_up_front?
-    return id == Rails.application.config.return_box_product_id = 5
+    return id == Rails.application.config.return_box_product_id
   end
 end
