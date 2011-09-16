@@ -193,6 +193,11 @@ class User < ActiveRecord::Base
     Box.count(:conditions => "assigned_to_user_id = #{self.id}")
   end
   
+  def boxes_in_storage
+    all_boxes = self.boxes
+    all_boxes.select { |box| box.status == Box::IN_STORAGE_STATUS }
+  end
+  
   def order_count
     Order.count(:conditions => "user_id = #{self.id}")
   end

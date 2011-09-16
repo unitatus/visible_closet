@@ -29,6 +29,6 @@ container.insertBefore(new_element, container.lastChild);
 	cart_display.style.display = 'block';
 <% end %>
 
-<% if first_box && current_user.boxes.count > 1 %> 
+<% if first_box && current_user.boxes_in_storage.count > 1 %> 
 	$("#first_box_return_link").trigger('click');
 <% end %>
