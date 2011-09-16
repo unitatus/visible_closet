@@ -48,12 +48,49 @@ class CartItem < ActiveRecord::Base
       product.name + " for box " + box.box_num.to_s
     end
   end
-  
+
+  # This method exists based on the expectation that cart items could hold boxes or individual items
   def weight
     if box
       box.weight * self.quantity
     else
       raise "Weight not known."
+    end
+  end
+  
+  def height    
+    if box
+      if quantity > 1
+        raise "Cannot calculate height on more than one item at a time."
+      end
+      
+      box.height
+    else
+      return nil
+    end
+  end
+  
+  def width
+    if box
+      if quantity > 1
+        raise "Cannot calculate height on more than one item at a time."
+      end
+      
+      box.width
+    else
+      return nil
+    end
+  end
+  
+  def length
+    if box
+      if quantity > 1
+        raise "Cannot calculate height on more than one item at a time."
+      end
+      
+      box.length
+    else
+      return nil
     end
   end
 end

@@ -259,7 +259,8 @@ class Box < ActiveRecord::Base
     if self.length.nil? || self.width.nil? || self.height.nil?
       return nil
     else
-      return (self.length/12.0) * (self.width/12.0) * (self.height/12.0)
+      divisor = Rails.application.config.box_dimension_divisor
+      return (self.length/divisor) * (self.width/divisor) * (self.height/divisor)
     end
   end
   

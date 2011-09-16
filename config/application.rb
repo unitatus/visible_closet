@@ -51,11 +51,13 @@ module VisibleCloset
     config.fedex_meter_number = '103089427'
     
     # Boxes
-    config.vc_box_height = 1
-    config.vc_box_width = 1
-    config.vc_box_length = 2
+    config.vc_box_height = 12
+    config.vc_box_width = 12
+    config.vc_box_length = 24
     config.volume_uom = 'cubic feet'
     config.weight_uom = 'lbs'
+    config.box_dimension_uom = 'IN'
+    config.box_dimension_divisor = 12.0
     
     config.fedex_debug = true
     config.fedex_customer_label_image_type = 'PDF'

@@ -111,6 +111,7 @@ module Fedex #:nodoc:
       @rate_request_type  = options[:rate_request_type] || RateRequestTypes::LIST
       @payment_type       = options[:payment]           || PaymentTypes::SENDER
       @units              = options[:units]             || WeightUnits::LB
+      @dimension_uom      = options[:dimension_uom]     || LinearUnits::IN
       @currency           = options[:currency]          || CurrencyTypes::USD
       @debug              = options[:debug]             || false
       @label_stock_type   = options[:label_stock_type]
@@ -186,10 +187,11 @@ module Fedex #:nodoc:
       package_count = 0
       
       packages_provided.each_with_index do |package, index|
-        packages << { :SequenceNumber => index + 1, :Weight => { :Units => @units, :Value => package[:weight] }}
+        packages << { :SequenceNumber => index + 1, :Weight => { :Units => @units, :Value => package[:weight] }, \
+          :Dimensions => { :Length => package[:length], :Width => package[:width], :Height => package[:height], :Units => @dimension_uom} }
         
         package_count = index + 1
-        #TODO: package dimensions?
+
         total_weight += package[:weight]
       end
       

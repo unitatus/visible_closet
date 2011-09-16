@@ -243,7 +243,7 @@ class Cart < ActiveRecord::Base
     packages = Array.new
     cart_items.each do |cart_item|
       if cart_item.product.customer_pays_shipping_up_front?
-        packages << { :weight => cart_item.weight }
+        packages << { :weight => cart_item.weight, :length => cart_item.length, :width => cart_item.width, :height => cart_item.height }
       end
     end
     
@@ -261,7 +261,8 @@ class Cart < ActiveRecord::Base
        :security_code => Rails.application.config.fedex_security_code,
        :account_number => Rails.application.config.fedex_account_number,
        :meter_number => Rails.application.config.fedex_meter_number, 
-       :debug => Rails.application.config.fedex_debug
+       :debug => Rails.application.config.fedex_debug,
+       :dimension_uom => Rails.application.config.box_dimension_uom
      }
   end
 end
