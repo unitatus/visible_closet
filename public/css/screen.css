@@ -1058,3 +1058,93 @@ table.address_select_table td {
 .small-print {
 	font-size: 75%;
 }
+
+/************ Items page *********/
+.item_summary {
+	text-align: center;
+	line-height: 120%;
+	min-width: 600px;
+}
+
+.browse-item {
+    width: 145px;
+    display: block;
+    float: left;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #323232;
+    position: relative;
+    padding: 15px;
+}
+
+
+.browse-item-name {
+    font-weight: bolder;
+    color: #006fb3;
+}
+
+.browse-item strong {
+    color: #006fb3;
+}
+
+.browse-item-headline {
+    font-weight: bolder;
+    font-size:14px;
+    line-height: 30px;
+    text-align: center;
+    position: relative;
+    top: -12px;
+}
+
+.browse-headline strong {
+    font-size: 30px;
+    color:  #558fb1;
+}
+
+.browse-item-menu {
+    width: 130px;
+    height: 160px;
+    position: absolute;
+    top: 10px;
+    left: 5px;
+}
+
+.browse-item-menu-contents {
+    display: none;
+    width: 130px;
+    height: 130px;
+    background-color: #b8daf5;
+    -moz-box-shadow: 0px 0px 6px #666;
+    -webkit-box-shadow: 0px 0px 6px #666;
+    box-shadow: 0px 0px 6px #666;
+    border: 2px solid #fff;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: left;
+    margin-left: 10px;
+    opacity: .90;
+}
+
+.browse-item-menu-contents-head {
+    font-size: 20px;
+    line-height: 28px;
+    color: #558fb1;
+}
+
+.browse-item-menu-contents li a {
+    color: #323232 !important;
+    display: block;
+    padding-left: 10px;
+}
+
+.browse-item-menu-contents li {
+    list-style-position: inside;
+    list-style-type: none !important;
+}
+
+.browse-item-menu-contents li a:hover {
+    color: #000 !important;
+    background-color: #558fb1;
+}

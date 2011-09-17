@@ -52,6 +52,11 @@ class StoredItem < ActiveRecord::Base
     all(:joins => :box, :conditions => { :boxes => box_conditions }, :order => "created_at ASC" )
   end
   
+  # this method hits the database every time. If you are going to call it a lot on the same object consider calling box.user
+  def StoredItem.find_by_id_and_user_id(stored_item_id, user_id)
+    joins(:box).where("boxes.assigned_to_user_id = #{user_id} AND stored_items.id = #{stored_item_id}").first
+  end
+  
   private
   
   # simple random salt

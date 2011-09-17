@@ -1,0 +1,20 @@
+<!-- This page is loaded via ajax, so we must do all the partial work manually. -->
+<%= render "layouts/header" %>
+<body>
+	<div class="item_summary">
+		<%= image_tag(@stored_item.photo.url(:normal), :name => "normal_" + @stored_item.id.to_s) %>
+		<br><br>
+		Tags: <br>
+		<% @stored_item.stored_item_tags.each_with_index do |tag, index| %>
+			<% if index % 7 != 0 %>
+			| 
+			<% end %>
+			<%= tag.tag %>
+			<% if (index + 1) % 7 == 0 && (index + 1) != @stored_item.stored_item_tags.size %>
+				<br>
+			<% end %>
+		<% end %>
+		<br><br>
+	</div>
+</body>
+</html>

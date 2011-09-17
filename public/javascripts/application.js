@@ -125,6 +125,16 @@ $(document).ready(function(){
             $($(this)).find("div").hide();
           }
     );
+
+    $('.browse-item .browse-item-menu').hover(
+          function () {
+            $($(this)).find("div").show();
+          }, 
+          function () {
+            $($(this)).find("div").hide();
+          }
+    );
+
     
     $('.increment-up').click(function(){
         oldVal = parseInt($($(this)).parent().find("input").attr('value'));
@@ -272,6 +282,24 @@ $(document).ready(function(){
 		ajax : {
 		    type	: "GET"
 		}
+	});
+	
+	
+	$("a.grouped_images").fancybox({
+		'transitionIn'	:	'elastic',
+		'transitionOut'	:	'elastic',
+		'speedIn'		:	1000, 
+		'speedOut'		:	200, 
+		'overlayShow'	:	true,
+		'autoDimensions': true,
+		'height'		: 600,
+		'width'			: 600,
+		'autoScale'			: true,
+		'transitionIn'		: 'fade',
+		'transitionOut'		: 'fade',
+		'type'				: 'inline',
+		'cyclic'			: true,
+		'scrolling'			: 'no'
 	});
 
 	$("#cf_explainer_link_1").fancybox({

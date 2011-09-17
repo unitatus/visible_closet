@@ -16,6 +16,7 @@ VisibleCloset::Application.routes.draw do
   match "boxes/:id/request_box_return" => "boxes#request_box_return"
   match "boxes/:id/cancel_box_return_request" => "boxes#cancel_box_return_request"
   match "boxes/finish_inventorying_box" => "boxes#finish_inventorying"
+  match "stored_items/:id" => "stored_items#view"
   match "payment_profiles/:id/set_default" => "payment_profiles#set_default"
   match "addresses/:id/set_default_shipping" => "addresses#set_default_shipping"
   match "m" => "pages#marketing_hit"

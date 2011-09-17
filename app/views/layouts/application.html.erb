@@ -14,61 +14,7 @@
 <% when :account %>
 <%   account_class = active_top_str %>
 <% end %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		Remove this if you use the .htaccess -->
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-		<!-- Page Title -->
-		<title><%= content_for?(:title) ? yield(:title) : "The Visible Closet" %></title>
-		
-		<!-- General Meta -->
-		<%= csrf_meta_tag %>
-		<meta name="keywords" content="" />
-		<meta name="description" content="The Visible Closet. Your stuff. Organized. Safeguarded. At your fingertips." />
-		<!--<meta name="viewport" content="width=device-width; initial-scale=1.0" />-->
-
-<!-- STYLE SHEET IMPORT -->
-<%= stylesheet_link_tag "/css/screen.css" %>
-<%= stylesheet_link_tag "/css/jquery.fancybox-1.3.4.css" %>
-<%= stylesheet_link_tag "/css/plupload.queue.css" %>
-<%= stylesheet_link_tag "/css/application.css" %>
-<%= stylesheet_link_tag "/css/styles.css" %>
-<!-- Load JavaScript / jQuery -->
-		<%= javascript_include_tag "/javascripts/jquery.min.js" %>
-		<%= javascript_include_tag "/javascripts/jquery.cycle.all.min.js" %>
-		<%= javascript_include_tag "/javascripts/superfish-combined.js" %>
-		<%= javascript_include_tag "/javascripts/jquery.fancybox-1.3.4.pack.js" %>
-		<%= javascript_include_tag "/javascripts/rails.js" %>
- 		<%= javascript_include_tag "/javascripts/application.js" %>
-		<%= javascript_include_tag "/javascripts/date.js" %>
-		
-		<%= hoptoad_javascript_notifier %>
-		
-		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-		<link rel="shortcut icon" href="/images/vcLogo_boxOnly.png" />
-		<link rel="apple-touch-icon" href="/images/vcLogo_boxOnly.png" />
-		
-		<%= yield :head %>
-		
-		<script type="text/javascript">
-
-		var _gaq = _gaq ||  [];
-		_gaq.push(['_setAccount', 'UA-24704693-1']);
-		_gaq.push(['_trackPageview']);
-
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga,s);
-		})();
-
-		</script>
-	</head>
+<%= render "layouts/header" %>
 	
 <!-- SIDE MENU HTML -->
 <body>

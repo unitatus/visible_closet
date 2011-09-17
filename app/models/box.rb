@@ -245,7 +245,7 @@ class Box < ActiveRecord::Base
     end
     
     if box_type == CUST_BOX_TYPE
-      total_new_quantity = user.stored_cubic_feet_count(box_type) + added_quantity * cubic_feet
+      total_new_quantity = user.stored_cubic_feet_count + added_quantity * cubic_feet
       storage_product = Product.find(Rails.application.config.your_box_product_id)
       inventorying_product = Product.find(Rails.application.config.your_box_inventorying_product_id)
     else
@@ -259,7 +259,7 @@ class Box < ActiveRecord::Base
     if inventorying_status == NO_INVENTORYING_REQUESTED
       inventorying_fee = 0
     else
-      inventorying_fee = Discount.new(inventorying_product, box_count_matching_type, subscription_duration).unit_price_after_discount
+      inventorying_fee = Discount.new(inventorying_product, total_new_quantity, subscription_duration).unit_price_after_discount
     end
         
     if box_type == CUST_BOX_TYPE
