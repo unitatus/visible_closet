@@ -33,8 +33,6 @@ class Cart < ActiveRecord::Base
       total_estimate += cart_item.discount.due_at_signup
     end
  
-    quote_shipping
- 
     if quoted_shipping_cost_success
       total_estimate + quoted_shipping_cost
     else

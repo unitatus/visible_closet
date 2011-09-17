@@ -155,7 +155,7 @@ class AccountController < ApplicationController
       redirect_to :action => :store_more_boxes
       return
     end
-    
+
     @cart.quote_shipping
     
     @addresses = current_user.addresses

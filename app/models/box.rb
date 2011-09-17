@@ -188,10 +188,6 @@ class Box < ActiveRecord::Base
       raise "Cannot create a shipment on a brand new box"
     end
     
-    if !self.active_shipment.nil?
-      raise "This box has a shipment that was never processed."
-    end
-    
     shipment = Shipment.new
     
     shipment.box_id = self.id
@@ -319,13 +315,9 @@ class Box < ActiveRecord::Base
   end
   
   def active_shipment
-    active_shipments = Shipment.find_all_by_box_id_and_state(self.id, Shipment::ACTIVE)
+    active_shipments = Shipment.find_all_by_box_id_and_state(self.id, Shipment::ACTIVE, :order => "created_at DESC")
     
-    if active_shipments.size > 1
-      raise "Improper process flow: somehow a box has multiple active shipments."
-    else
-      active_shipments[0]
-    end
+    active_shipments.first
   end
   
   private

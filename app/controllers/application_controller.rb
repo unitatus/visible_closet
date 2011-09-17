@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include SslRequirement
-  
+  before_filter :check_uri
+      
   protect_from_forgery
   
   # For every controller, make sure that it checks authorization or skips it explicitly, unless the controller is one of the devise controllers
@@ -8,6 +9,10 @@ class ApplicationController < ActionController::Base
   
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to access_denied_url
+  end
+  
+  def check_uri
+    redirect_to request.protocol + "www." + request.host_with_port + request.request_uri if !/^www/.match(request.host) if Rails.env == 'production'
   end
   
   def ssl_required?
