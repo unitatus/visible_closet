@@ -13,6 +13,9 @@ class StoredItemsController < ApplicationController
   
   def view
     @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
-    render :layout => false
+    
+    respond_to do |format|
+      format.html { render :layout => false }
+    end
   end
 end

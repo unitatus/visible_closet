@@ -36,7 +36,8 @@
 					<div class="browse-item-menu-contents">
 						<p class="browse-item-menu-contents-head">Item Options</p>
 						<ul>
-							<li><%= link_to("Details", "/stored_items/#{stored_item.id}", :method => :get, :remote => true, :class => "grouped_images", :rel => "grouped_images") %></li>
+							<li><a class="grouped_images" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">Details</a></li>
+							<!--<%= link_to("Details", "/stored_items/#{stored_item.id}", :method => :get, :remote => true, :class => "grouped_images", :rel => "grouped_images") %>-->
 							<li><a href="#">Mail to me</a></li>
 							<li><a href="#">Sell</a></li>
 							<li><a href="#">Donate to charity</a></li>
