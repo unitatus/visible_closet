@@ -292,8 +292,6 @@ $(document).ready(function(){
 		'speedOut'		:	200, 
 		'overlayShow'	:	true,
 		'autoDimensions': true,
-		'height'		: 600,
-		'width'			: 600,
 		'autoScale'			: true,
 		'transitionIn'		: 'fade',
 		'transitionOut'		: 'fade',
