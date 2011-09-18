@@ -250,30 +250,31 @@ class BoxesController < ApplicationController
   end
   
   def add_tag
-    @stored_item_tag = StoredItemTag.new
-
-    if (!params[:tag].blank?)    
-      @stored_item_tag.stored_item_id = params[:stored_item_id]
-      @stored_item_tag.tag = params[:tag]
-    
-      if (!@stored_item_tag.save)
-        raise "Failed to save stored tag! Erorrs: " << @stored_item_tag.errors
-      end
+    do_add_tag
+  end
+  
+  def user_add_tag
+    @stored_item = StoredItem.find(params[:stored_item_id])
+    if @stored_item.box.user != current_user
+      raise "Error - security breech. Attempt to create tag for stored item not owned by user. User id: " + current_user.id
     end
     
-    respond_to do |format|
-      format.js
+    do_add_tag
+  end
+  
+  def user_delete_tag
+    @stored_item_tag = StoredItemTag.find(params[:id])
+    @stored_item = @stored_item_tag.stored_item
+    
+    if @stored_item.box.user != current_user
+      raise "Error - security breech. Attempt to delete tag for stored item not owned by user. User id: " + current_user.id
     end
+    
+    do_delete_tag
   end
   
   def delete_tag
-    @stored_item_tag = StoredItemTag.find(params[:id])
-
-    @stored_item_tag.destroy
-
-    respond_to do |format|
-      format.js
-    end
+    do_delete_tag
   end
   
   def request_box_return
@@ -332,5 +333,34 @@ class BoxesController < ApplicationController
     shipment = @box.get_or_create_shipment
 
     send_data(shipment.shipment_label, :filename => shipment.shipment_label_file_name_short, :type => "application/pdf")
+  end
+  
+  private
+  
+  def do_add_tag
+    @stored_item_tag = StoredItemTag.new
+
+    if (!params[:tag].blank?)    
+      @stored_item_tag.stored_item_id = params[:stored_item_id]
+      @stored_item_tag.tag = params[:tag]
+    
+      if (!@stored_item_tag.save)
+        raise "Failed to save stored tag! Erorrs: " << @stored_item_tag.errors
+      end
+    end
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def do_delete_tag
+    @stored_item_tag = StoredItemTag.find(params[:id])
+
+    @stored_item_tag.destroy
+
+    respond_to do |format|
+      format.js
+    end
   end
 end

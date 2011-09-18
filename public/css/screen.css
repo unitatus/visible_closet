@@ -1064,6 +1064,7 @@ table.address_select_table td {
 	text-align: center;
 	line-height: 120%;
 	min-width: 600px;
+	min-height: 400px;
 }
 
 .browse-item {

@@ -112,7 +112,9 @@ class Ability
       
       # stored items
       can :index, StoredItem
-      can :delete, StoredItemTag
+      can :user_delete_tag, Box # This is sitting on the boxes controller
+      can :user_add_tag, Box 
+      can :view, StoredItem
       
       # payment profiles
       can :index, PaymentProfile

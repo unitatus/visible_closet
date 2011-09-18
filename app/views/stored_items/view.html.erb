@@ -5,14 +5,14 @@
 		<%= image_tag(@stored_item.photo.url(:normal), :name => "normal_" + @stored_item.id.to_s) %>
 		<br><br>
 		Tags: <br>
-		<% @stored_item.stored_item_tags.each_with_index do |tag, index| %>
-			<% if index % 7 != 0 %>
-			| 
-			<% end %>
-			<%= tag.tag %>
-			<% if (index + 1) % 7 == 0 && (index + 1) != @stored_item.stored_item_tags.size %>
-				<br>
-			<% end %>
+		<div id="tags_container">
+			<%= render :partial => "boxes/user_stored_item_tags", :locals => { :stored_item => @stored_item }%>
+		</div>
+		<br>
+		<%= form_tag( { :controller => "boxes", :action => "user_add_tag"}, { :remote => true, :name => "tags_form" } ) do %>
+			<%= hidden_field_tag :stored_item_id, @stored_item.id %>
+			<%= text_field_tag "tag", "", :alt => "enter new tag", :placeholder => "enter new tag" %>
+			<%= submit_tag "Add Tag" %>
 		<% end %>
 		<br><br>
 	</div>

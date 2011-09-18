@@ -1,0 +1,9 @@
+<% @stored_item.stored_item_tags.each_with_index do |tag, index| %>
+	<% if index % 7 != 0 %>
+	| 
+	<% end %>
+	<%= tag.tag %> <%= link_to("(X)", "/boxes/user_delete_tag?id=" + tag.id.to_s, :alt => "delete this tag", :title => "delete this tag", :method => :delete, :remote => true) %>
+	<% if (index + 1) % 7 == 0 && (index + 1) != @stored_item.stored_item_tags.size %>
+		<br>
+	<% end %>	
+<% end %>
