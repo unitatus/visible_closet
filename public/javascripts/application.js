@@ -61,6 +61,15 @@ function showTagsForm(storedItemId)
 	document.getElementById(form_name).elements["tag"].focus();
 }
 
+function validateTagForm() {
+	if (document.forms["tags_form"]["tag"].value.length > 255) {
+		alert("Max length is 255 characters");
+		return false;
+	} else {
+		return true;
+	}
+}
+
 function hideTagsForm(storedItemId)
 {
 	link_div = 'add_tags_link_' + storedItemId;
@@ -292,9 +301,8 @@ $(document).ready(function(){
 		'speedOut'		:	200, 
 		'overlayShow'	:	true,
 		'autoDimensions': true,
-		'height'		: 600,
-		'width'			: 600,
 		'autoScale'			: true,
+		'centerOnScroll'	: true,
 		'transitionIn'		: 'fade',
 		'transitionOut'		: 'fade',
 		'type'				: 'inline',
