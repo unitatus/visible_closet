@@ -96,12 +96,13 @@ class PaymentProfile < ActiveRecord::Base
     
     def inactivate
       write_attribute(:active, false)
-      if delete_payment_profile
-        identifier = nil
-        return true
-      else
-        return false
-      end
+      # This is turned off, because we don't want to ever delete this information in Authorize.net -- we want to be able to see user payment history.
+      # if delete_payment_profile
+      #   identifier = nil
+      #   return true
+      # else
+      #   return false
+      # end
     end
     
     # Assumes a Visible Closet address object; need to map it to an ActiveMerchant address hash
