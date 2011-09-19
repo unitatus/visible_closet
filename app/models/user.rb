@@ -81,6 +81,10 @@ class User < ActiveRecord::Base
     self.role ||= NORMAL
   end
   
+  def payment_profiles
+    PaymentProfile.find_all_by_user_id_and_active(self.id, true)
+  end
+  
   def cart
     Cart.find_active_by_user_id(self.id)
   end
