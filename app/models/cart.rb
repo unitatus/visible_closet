@@ -18,7 +18,7 @@ class Cart < ActiveRecord::Base
   has_one :order, :dependent => :destroy
   belongs_to :user
 
-  attr_accessible :id
+  attr_accessible :id, :quoted_shipping_cost, :quoted_shipping_cost_success
 
   def Cart.new()
     cart = super
@@ -33,7 +33,7 @@ class Cart < ActiveRecord::Base
       total_estimate += cart_item.discount.due_at_signup
     end
  
-    if quoted_shipping_cost_success
+    if contains_ship_charge_items? && quoted_shipping_cost_success
       total_estimate + quoted_shipping_cost
     else
       total_estimate
@@ -172,7 +172,7 @@ class Cart < ActiveRecord::Base
   
   def quote_shipping
     if !contains_ship_charge_items?
-      return 0.0
+      update_attributes(:quoted_shipping_cost => 0.0, :quoted_shipping_cost_success => false) and return 0.0
     end
         
     grouped_cart_items = group_cart_items_by_address
