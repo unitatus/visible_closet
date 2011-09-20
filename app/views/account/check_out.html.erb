@@ -4,7 +4,7 @@ function openMemberAgreement() {
             }
 </script>
 	<% if current_user.order_count == 0 %>
-		<img src="/images/breadcrumb5.jpg"><br><br>
+		<div style="margin-left: auto; margin-right: auto"><img src="/images/breadcrumb5.jpg"></div><br><br>
 	<% end %>
 	<h1>Confirm Order</h1>
 	<% @order.errors.each do |attr, message| %>

@@ -89,6 +89,36 @@ class AddressesController < ApplicationController
     @address = Address.new
   end
   
+  def create_new_shipping_address
+    @address = Address.new(params[:address])
+    @address.user_id = current_user.id
+
+    if @address.save
+      if current_user.default_shipping_address.nil?
+        current_user.update_attribute(:default_shipping_address_id, @address.id)
+      end
+      
+      if !@address.externally_valid?
+        render :controller => 'addresses', :action => 'confirm_new_checkout_shipping_address' and return
+      end
+      
+      if current_user.default_payment_profile.nil?
+        @profile = PaymentProfile.new
+        @addresses = current_user.addresses
+        render "payment_profiles/new_default_payment_profile" and return
+      end
+      
+      @addresses = Address.find_active(current_user.id, :order => :first_name)
+      @cart = Cart.find_active_by_user_id(current_user.id)
+      session[:shipping_address] = @shipping_address.id
+          
+      @order = Order.new
+      redirect_to "/account/check_out"
+    else
+      render :action => "add_new_shipping_address"
+    end    
+  end
+  
   def set_checkout_shipping_address
     if params[:shipping_address_id].blank?
       flash[:notice] = "Please select a shipping address option."

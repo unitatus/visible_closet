@@ -164,6 +164,10 @@ class AccountController < ApplicationController
       @address = Address.new
       render :action => "add_new_shipping_address"
       return
+    elsif current_user.default_payment_profile.nil?
+      @profile = PaymentProfile.new
+      @addresses = current_user.addresses
+      render "payment_profiles/new_default_payment_profile" and return
     end
     
     @order = Order.new
@@ -172,22 +176,6 @@ class AccountController < ApplicationController
   def add_new_shipping_address
     @address = Address.new
     @address.user_id = current_user.id
-  end
-    
-  def create_new_shipping_address
-    @shipping_address = Address.new(params[:address])
-    @shipping_address.user_id = current_user.id
-
-    if @shipping_address.save
-      @addresses = Address.find_active(current_user.id, :order => :first_name)
-      @cart = Cart.find_active_by_user_id(current_user.id)
-      session[:shipping_address] = @shipping_address.id
-          
-      @order = Order.new
-      redirect_to "/account/check_out"
-    else
-      render :action => "add_new_shipping_address"
-    end    
   end
 
   def finalize_check_out

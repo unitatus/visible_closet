@@ -123,7 +123,7 @@ VisibleCloset::Application.routes.draw do
   get "account/add_new_billing_address"
   post "account/create_new_billing_address"
   get "account/add_new_shipping_address"
-  post "account/create_new_shipping_address"
+  match "account/create_new_shipping_address" => "addresses#create_new_shipping_address"
   get "account/select_new_billing_address"
   get "account/select_new_shipping_address"
   post "account/choose_new_shipping_address"

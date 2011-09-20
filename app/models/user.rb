@@ -112,6 +112,10 @@ class User < ActiveRecord::Base
     self.cim_id
   end
   
+  def has_cart_items?
+    !cart.nil? && cart.cart_items.size > 0
+  end
+  
   def cim_id
     if read_attribute(:cim_id)
       return read_attribute(:cim_id)

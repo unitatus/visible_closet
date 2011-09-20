@@ -2,6 +2,6 @@
 <%= render 'account_nav', :locals => { :menu_page => @menu_page } %>
 <div class="simple_header">New shipping address</div>
 <div id="internal-right">
-<%= render 'form_add_new_shipping_address' %>
+<%= render :partial => 'addresses/new_form', :locals => { :url => "/account/create_new_shipping_address" } %>
 </div>
 <div class="clearer"></div>

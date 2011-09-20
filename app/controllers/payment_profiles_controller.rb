@@ -38,7 +38,7 @@ class PaymentProfilesController < ApplicationController
   end
   
   def create_default_payment_profile
-    do_create("/account/store_more_boxes", :new_default_payment_profile)
+    do_create((current_user.has_cart_items? ? "/account/check_out" : "/account/store_more_boxes"), :new_default_payment_profile)
   end
   
   def create
