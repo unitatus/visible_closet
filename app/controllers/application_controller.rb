@@ -15,13 +15,9 @@ class ApplicationController < ActionController::Base
     redirect_to request.protocol + "www." + request.host_with_port + request.request_uri if !/^www/.match(request.host) if Rails.env == 'production'
   end
   
+  # This is mainly for the autocomplete item search, which for some reason doens't work from a non-secure page calling a secure page
   def ssl_required?
-    #return false if RAILS_ENV != 'production'
-    
-    # otherwise, use the filters.
-    return_val = super
-    
-    return_val
+    return user_signed_in?
   end
   
   def after_sign_in_path_for(resource_or_scope)

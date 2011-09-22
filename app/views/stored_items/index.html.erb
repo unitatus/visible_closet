@@ -14,8 +14,21 @@
 }
 
 </style>
-
+<% if @selected_item %>
+	<script language="javascript">
+		jQuery(document).ready(function() {
+		    $("#<%=@selected_item.id.to_s%>_details_link").trigger('click');
+		});
+	</script>
+<% end %>
 <div id="internal-right">
+	<%= form_tag "/stored_items", :id => "tags_search" do %>
+		<div style="text-align:center">
+			<%= autocomplete_field_tag 'tags', params[:tags], '/stored_items/autocomplete_stored_item_tags', :placeholder => "search your items", :style => "width: 400px; margin-bottom: 25px; ", :id_element => "#selected_item" %>
+			<%= hidden_field_tag :selected_item, params[:selected_item] %>
+			<%= submit_tag "Search" %>
+			</div>
+	<% end %>
 	<div id="inventory-menu">
 		<div id="inventory-menu-leftarrow" class="disabled"></div>
         <div id="inventory-menu-rightarrow"></div>
@@ -51,8 +64,7 @@
 					<div class="browse-item-menu-contents">
 						<p class="browse-item-menu-contents-head">Item Options</p>
 						<ul>
-							<li><a class="grouped_images" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">Details</a></li>
-							<!--<%= link_to("Details", "/stored_items/#{stored_item.id}", :method => :get, :remote => true, :class => "grouped_images", :rel => "grouped_images") %>-->
+							<li><a id="<%= stored_item.id %>_details_link" class="grouped_images" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">Details</a></li>
 							<li><a href="#">Mail to me</a></li>
 							<li><a href="#">Sell</a></li>
 							<li><a href="#">Donate to charity</a></li>
@@ -64,4 +76,3 @@
 		<% end %>
 </div>
 <div class="clearer"></div>
-

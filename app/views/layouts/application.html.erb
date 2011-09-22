@@ -35,7 +35,7 @@
                     <a href="/"><img src="/images/vcLogo_beta.gif" alt="Visible Closet" /></a>
                 </div>
                 <div id="nav">
-    				<ul class="sf-menu">
+    				<ul class="sf-menu" <%= raw "style='margin-top: 0px'" if user_signed_in? && current_user.has_stored_items? && @hide_item_search.nil? %>>
     					<li<%= home_class %>><a href="/">Home</a></li>
     					<li<%= hiw_class %>>
     						<a href="javascript: toggleHIWMenu()">How It Works</a>
@@ -55,6 +55,13 @@
 
 						<% if not user_signed_in? %>
 						<li><a href="/users/register">Sign Up</a></li>
+						<% elsif current_user.has_stored_items? && @hide_item_search.nil? %>
+							<%= form_tag "/stored_items", :id => "tags_search" do %>
+							<li style="float: right; margin-right: 44px; padding-top: 0px">
+								<%= autocomplete_field_tag 'tags', '', '/stored_items/autocomplete_stored_item_tags', :placeholder => "search your items", :style => "width: 275px; margin: 5px -15px 5px 5px; ", :id_element => "#selected_item" %>
+								<%= hidden_field_tag :selected_item %>
+							</li>
+							<% end %>
 						<% end %>
     				</ul>
                 </div>

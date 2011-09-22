@@ -21,6 +21,8 @@ gem 'aws-s3' # This is Amazon Web Services hard drive - used for storing files
 gem 'cancan' # User authorization
 gem 'ssl_requirement'
 gem 'hoptoad_notifier'
+gem 'jquery-rails'
+gem 'rails3-jquery-autocomplete'
 
 group :development do
   gem 'rspec-rails'

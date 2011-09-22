@@ -115,6 +115,7 @@ class Ability
       can :user_delete_tag, Box # This is sitting on the boxes controller
       can :user_add_tag, Box 
       can :view, StoredItem
+      can :autocomplete_stored_item_tags, StoredItem
       
       # payment profiles
       can :index, PaymentProfile

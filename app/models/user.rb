@@ -81,10 +81,6 @@ class User < ActiveRecord::Base
     self.role ||= NORMAL
   end
   
-  def payment_profiles
-    PaymentProfile.find_all_by_user_id_and_active(self.id, true)
-  end
-  
   def cart
     Cart.find_active_by_user_id(self.id)
   end
@@ -110,10 +106,6 @@ class User < ActiveRecord::Base
   # some sort on payment_profile create, since that is generally the first time that cim_id is called in the normal flow.
   def after_create
     self.cim_id
-  end
-  
-  def has_cart_items?
-    !cart.nil? && cart.cart_items.size > 0
   end
   
   def cim_id
@@ -217,6 +209,14 @@ class User < ActiveRecord::Base
     else
       @box_counts[type]
     end
+  end
+  
+  def has_stored_items?
+    stored_item_count > 0
+  end
+  
+  def stored_item_count
+    StoredItem.joins(:box).count(:conditions => "assigned_to_user_id = #{self.id}")
   end
   
   # this only tests customer boxes; vc box cubic feet are always the same size

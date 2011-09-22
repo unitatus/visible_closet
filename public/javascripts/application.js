@@ -471,5 +471,10 @@ $(document).ready(function(){
 	$("#explain_invalid_address_link").fancybox();
 	
 	$("#explain_tbd_shipping_link").fancybox();
+	
+	/************ Autocomplete **************/
+	$('#tags').bind('railsAutocomplete.select', function(event, data){
+	    document.forms['tags_search'].submit();
+	});
 
 });
