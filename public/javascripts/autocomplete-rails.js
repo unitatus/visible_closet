@@ -86,11 +86,8 @@ $(document).ready(function(){
 					} else {
 						this.value = terms.join("");
 						if ($(this).attr('id_element')) {
-							// alert("checkpoint inner")
 							$($(this).attr('id_element')).val(ui.item.id);
 						}
-						// alert("val: " + $($(this).attr('id_element')).val());
-						// alert("ui id: " + ui.item.id)
                         if ($(this).attr('data-update-elements')) {
                             var data = $(this).data(ui.item.id.toString());
                             var update_elements = $.parseJSON($(this).attr("data-update-elements"));
