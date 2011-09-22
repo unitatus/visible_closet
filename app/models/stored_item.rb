@@ -61,7 +61,7 @@ class StoredItem < ActiveRecord::Base
       if (index > 0)
         conditions[0] += " or "
       end
-      conditions[0] += "tag like ?"
+      conditions[0] += "UPPER(tag) like UPPER(?)"
       conditions << "%" + tag + "%"
     end
     
