@@ -1,52 +1,89 @@
 <% @menu_page = :account %>
 <%= render 'account_nav', :locals => { :menu_page => @menu_page } %>
+<style>
+.indent-div {
+	padding-left: 15px;
+}
+</style>
 <div id="internal-right">
 <p class="notice"><%= notice %></p>
 <p class="alert"><%= alert %></p>
 <p>
-<div class="simple_header">Your Visible Closet</div>
-	<% total_boxes = Box.count_boxes(current_user) %>
-	<% with_you = Box.count_boxes(current_user, Box::BEING_PREPARED_STATUS) %>
-	<% in_transit_to_you = Box.count_boxes(current_user, Box::IN_TRANSIT_TO_YOU_STATUS) %>
-	<% in_transit_to_us = Box.count_boxes(current_user, Box::IN_TRANSIT_TO_TVC_STATUS) %>
-<a href="/boxes">Boxes in storage</a>: <%= total_boxes %><br>
-&nbsp;&nbsp;&nbsp;With you: <%= with_you %><br>
-&nbsp;&nbsp;&nbsp;In transit: <%= in_transit_to_you + in_transit_to_us %><br>
-&nbsp;&nbsp;&nbsp;With us: <%= total_boxes - in_transit_to_you - in_transit_to_us - with_you %><br>
-<br>
-<a href="#">Inventory items</a>: <%= StoredItem.count_items(current_user) %>
+<div style="float: left">
+	<div class="simple_header">Your Boxes</div>
+		<% total_boxes = Box.count_boxes(current_user) %>
+		<% with_you = Box.count_boxes(current_user, Box::BEING_PREPARED_STATUS) %>
+		<% in_transit_to_you = Box.count_boxes(current_user, Box::IN_TRANSIT_TO_YOU_STATUS) %>
+		<% in_transit_to_us = Box.count_boxes(current_user, Box::IN_TRANSIT_TO_TVC_STATUS) %>
+	Boxes in storage: <a href="/boxes"><%= pluralize(total_boxes, 'box') %></a><br>
+	<div class="indent-div">
+		With you: <%= with_you %><br>
+		In transit: <%= in_transit_to_you + in_transit_to_us %><br>
+		With us: <%= total_boxes - in_transit_to_you - in_transit_to_us - with_you %><br>
+	</div>
+	<br>
+	Inventory: <a href="/stored_items"><%= pluralize(StoredItem.count_items(current_user), 'item') %></a>
+</div>
+<div style="float: right; margin-right: 150px">
+	<div class="simple_header">Your Payments</div>
+	<div class="indent-div">
+		Most recent payment: 
+		<% if @last_payment_transaction %>
+			<%= number_to_currency @last_payment_transaction.amount %> for <%= raw(@last_payment_transaction.order_id.nil? ? "<a href='#'>storage charges</a>" : "<a href='#'>order #{@last_payment_transaction.order_id}</a>") %>
+		<% else %>
+			None
+		<% end %>
+		<br>
+		Next payment of ### due on ### for ###<br>
+		<a href="#">Account History &gt;&gt;</a>
+	</div>
+</div>
+<div class="clearer"></div>
+
 <br><br>
 <hr style="padding-bottom: 0">
-<div class="simple_header">Account Info</div>
-<% payment_profile = current_user.default_payment_profile %>
-<b>Default credit card on file:</b>
-<% if payment_profile.nil? || payment_profile.id.nil? %>
-none.
-<% else %>
-<%= payment_profile.cc_type.capitalize %></b>, ************<%= payment_profile.last_four_digits %>, exp <%= payment_profile.month %>/<%= payment_profile.year %>. 
-<% end %>
-<br>&nbsp;&nbsp;&nbsp;
-<% if payment_profile.nil? %>
-<a href="/payment_profiles/new">Set up a default credit card &gt;&gt;</a>
-<% else %>
-<a href="/payment_profiles">Manage your credit cards on file &gt;&gt;</a>
-<% end %>
-<br><br>
-<b>Default shipping address on file: </b>
-<% shipping_address = current_user.default_shipping_address %>
-<% if shipping_address.nil? %>
- none.
-<% else %>
-<br><br>
-<%= raw address_summary(shipping_address) %>
-<% end %>
-<br>&nbsp;&nbsp;&nbsp;
-<% if shipping_address.nil? %>
-<a href="/addresses/new">Set up a default shipping address &gt;&gt;</a>
-<% else %>
-<a href="/addresses">Manage your addresses &gt;&gt;</a>
-<% end %>
-<br><br>
-<a href="/users/edit">Change email or password</a>
+<div style="float: left">
+	<div class="simple_header">Account Info</div>
+	<% payment_profile = current_user.default_payment_profile %>
+	<b>Default credit card on file:</b>
+	<br>
+	<div class="indent-div">
+		<% if payment_profile.nil? || payment_profile.id.nil? %>
+			none.
+		<% else %>
+			<%= payment_profile.cc_type.capitalize %></b>, ************<%= payment_profile.last_four_digits %>, exp <%= payment_profile.month %>/<%= payment_profile.year %>. 
+		<% end %>
+	</div>
+	<br>
+	<b>Default shipping address on file: </b>
+	<div class="indent-div">
+		<% if current_user.default_shipping_address.nil? %>
+		 	none.
+		<% else %>
+			<%= raw address_summary(current_user.default_shipping_address) %>
+		<% end %>
+	</div>
+</div>
+<div style="float: right; margin-right: 150px">
+	<div class="simple_header">Account Options</div>
+	<div class="indent-div">
+		<% if payment_profile.nil? %>
+			<a href="/payment_profiles/new">Set up a default credit card &gt;&gt;</a>
+		<% else %>
+			<a href="/payment_profiles">Manage your credit cards on file &gt;&gt;</a>
+		<% end %>
+		<br>
+		<% if current_user.default_shipping_address.nil? %>
+			<a href="/addresses/new">Set up a default shipping address &gt;&gt;</a>
+		<% else %>
+			<a href="/addresses">Manage your addresses &gt;&gt;</a>
+		<% end %>
+		<br>
+		<a href="/users/edit">Change email or password &gt;&gt;</a>
+		<br>
+		<a href="/">
+	</div>
+<div class="clearer"></div>
+</div>
 </div>
 <div class="clearer"></div>

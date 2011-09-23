@@ -9,7 +9,7 @@ class AccountController < ApplicationController
   end
 
   def index
-
+    @last_payment_transaction = PaymentTransaction.find_by_user_id(current_user.id, :order => "created_at DESC")
   end
   
   def email_confirmation

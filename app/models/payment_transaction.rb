@@ -21,6 +21,7 @@ class PaymentTransaction < ActiveRecord::Base
   serialize :params
   
   belongs_to :payment_profile
+  has_many :charges_paid, :class_name => 'Charge'
 
   def response=(response)
     self.success = response.success?
@@ -47,9 +48,17 @@ class PaymentTransaction < ActiveRecord::Base
                                                                   :customer_payment_profile_id => payment_profile.identifier}})
 
     if response.success?
-      [create!(:action => "purchase", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id), nil]
+      new_payment = create!(:action => "purchase", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      charges.each do |charge|
+        charge.update_attribute(:payment_transaction_id, new_payment.id)
+      end
+      return [new_payment, nil]
     elsif RAILS_ENV == "development"
-      [create!(:action => "purchase in dev (failed, overrode)", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id), nil]
+      new_payment = create!(:action => "purchase in dev (failed, overrode)", :amount => total_to_pay, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      charges.each do |charge|
+        charge.update_attribute(:payment_transaction_id, new_payment.id)
+      end
+      return [new_payment, nil]
     else
       [nil, response.message]
     end
