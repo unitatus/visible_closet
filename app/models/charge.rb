@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110923230002
+# Schema version: 20110924185624
 #
 # Table name: charges
 #
@@ -13,7 +13,6 @@
 #  shipment_id            :integer
 #  comments               :string(255)
 #  payment_transaction_id :integer
-#  box_id                 :integer
 #
 
 # Conceptually, a charge can be related to: a product ordered (order_id and product_id set); a box in storage (box_id set); 
@@ -30,9 +29,10 @@ class Charge < ActiveRecord::Base
   belongs_to :order
   belongs_to :shipment
   belongs_to :product
+  belongs_to :user
   # Basic assumption: a charge must be paid in full, so if it has a payment that means it is paid. Thus, a charge can have only one payment, though a payment can have more than one charge.
   belongs_to :payment_transaction
-  has_one :storage_charge
+  has_one :storage_charge, :dependent => :destroy
   
   def Charge.amalgamate(charges)
     sum_total = 0.0
@@ -42,5 +42,19 @@ class Charge < ActiveRecord::Base
     end
     
     sum_total
+  end
+  
+  def box
+    if storage_charge.nil?
+      nil
+    else
+      storage_charge.box
+    end
+  end
+  
+  def after_save
+    if storage_charge
+      storage_charge.save
+    end
   end
 end

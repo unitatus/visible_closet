@@ -331,17 +331,8 @@ class User < ActiveRecord::Base
     Charge.find_all_by_user_id_and_payment_transaction_id(self.id, nil)
   end
   
-  def calculate_subscription_charges(as_of_date = nil)
-    if as_of_date.nil?
-      as_of_date = self.end_of_month
-    end
-    
-    # for each box
-    #   if box has incurred fees then create charge(as_of_date)
-    # end
-    # 
-    
-    return [Charge.new(:total_in_cents => 0.0, :comments => "Dummy value")]
+  def calculate_subscription_charges(as_of_date = self.end_of_month)
+    Box.calculate_charges_for_user_box_set(boxes, earliest_effective_charge_date, as_of_date)
   end
   
   def will_have_charges_at_end_of_month?
@@ -360,7 +351,7 @@ class User < ActiveRecord::Base
     
     self.boxes.each do |box|
       if box.has_charges? && box.chargable?
-        the_earliest_effective_charge_date |= box.storage_charges.last.charge.end_date
+        the_earliest_effective_charge_date ||= box.storage_charges.last.charge.end_date
         if the_earliest_effective_charge_date > box.storage_charges.last.charge.end_date
           the_earliest_effective_charge_date = box.storage_charges.last.charge.end_date
         end

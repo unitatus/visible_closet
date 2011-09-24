@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110923232835) do
+ActiveRecord::Schema.define(:version => 20110924185624) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -50,7 +50,6 @@ ActiveRecord::Schema.define(:version => 20110923232835) do
     t.float    "length"
     t.float    "weight"
     t.integer  "box_num"
-    t.integer  "subscription_id"
     t.datetime "return_requested_at"
     t.string   "location"
   end
@@ -58,7 +57,14 @@ ActiveRecord::Schema.define(:version => 20110923232835) do
   add_index "boxes", ["assigned_to_user_id"], :name => "index_boxes_on_assigned_to_user_id"
   add_index "boxes", ["inventorying_order_line_id"], :name => "index_boxes_on_inventorying_order_line_id"
   add_index "boxes", ["ordering_order_line_id"], :name => "index_boxes_on_order_line_id"
-  add_index "boxes", ["subscription_id"], :name => "index_boxes_on_subscription_id"
+
+  create_table "boxes_subscriptions", :id => false, :force => true do |t|
+    t.integer "box_id"
+    t.integer "subscription_id"
+  end
+
+  add_index "boxes_subscriptions", ["box_id"], :name => "index_boxes_subscriptions_on_box_id"
+  add_index "boxes_subscriptions", ["subscription_id"], :name => "index_boxes_subscriptions_on_subscription_id"
 
   create_table "cart_items", :force => true do |t|
     t.integer  "quantity"
@@ -96,7 +102,6 @@ ActiveRecord::Schema.define(:version => 20110923232835) do
     t.integer  "shipment_id"
     t.string   "comments"
     t.integer  "payment_transaction_id"
-    t.integer  "box_id"
   end
 
   add_index "charges", ["order_id"], :name => "index_charges_on_order_id"
@@ -242,17 +247,15 @@ ActiveRecord::Schema.define(:version => 20110923232835) do
   add_index "shipments", ["to_address_id"], :name => "index_shipments_on_to_address_id"
   add_index "shipments", ["tracking_number"], :name => "index_shipments_on_tracking_number"
 
-  create_table "storage_charges", :id => false, :force => true do |t|
+  create_table "storage_charges", :force => true do |t|
     t.integer  "box_id"
     t.integer  "charge_id"
-    t.integer  "subscription_id"
     t.datetime "start_date"
     t.datetime "end_date"
   end
 
   add_index "storage_charges", ["box_id"], :name => "index_storage_charges_on_box_id"
   add_index "storage_charges", ["charge_id"], :name => "index_storage_charges_on_charge_id"
-  add_index "storage_charges", ["subscription_id"], :name => "index_storage_charges_on_subscription_id"
 
   create_table "stored_item_tags", :force => true do |t|
     t.integer  "stored_item_id"

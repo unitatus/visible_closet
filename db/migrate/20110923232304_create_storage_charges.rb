@@ -1,6 +1,6 @@
 class CreateStorageCharges < ActiveRecord::Migration
   def self.up
-    create_table :storage_charges, :id => false do |t|
+    create_table :storage_charges do |t|
       t.integer :box_id, :references => :boxes
       t.integer :charge_id, :references => :charges
       t.integer :subscription_id, :references => :subscriptions
@@ -10,6 +10,6 @@ class CreateStorageCharges < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :storage_charge
+    drop_table :storage_charges
   end
 end

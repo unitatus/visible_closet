@@ -20,17 +20,9 @@ class Discount
   
   attr_accessor :product, :new_product_count, :month_count, :existing_product_count
   
-  def Discount.new(product, new_product_count, month_count, existing_product_count=0)
+  def Discount.new(product, new_product_count=0, month_count=0, existing_product_count=0)
     if product.nil?
       raise "Cannot instantiate with nil product"
-    end
-    
-    if new_product_count.nil?
-      new_product_count = 0
-    end
-    
-    if month_count.nil?
-      month_count = 0
     end
     
     discount = super()

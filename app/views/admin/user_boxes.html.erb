@@ -47,10 +47,10 @@
 				</td>
 				<td><%= box.box_type %></td>
 				<td><%= box.box_num %></td>
-				<% if box.subscription_id.nil? %>
+				<% if box.current_subscription.empty? %>
 					<td>NA</td>
 				<% else %>
-					<td><a href="/admin/user/<%= @user.id %>/subscriptions/<%= box.subscription_id %>"><%= box.subscription_id %></a></td>
+					<td><a href="/admin/user/<%= @user.id %>/subscriptions/<%= box.current_subscription.id %>"><%= box.current_subscription.id %></a></td>
 				<% end %>
 				<td>
 					<a href="/boxes/receive_box?box_id=<%= box.id %>">Receive</a>
