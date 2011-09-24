@@ -46,6 +46,7 @@ class Box < ActiveRecord::Base
   has_many :stored_items, :dependent => :destroy
   has_many :shipments, :dependent => :destroy
   has_many :stored_item_tags, :through => :stored_items
+  has_many :storage_charges, :order => "end_date DESC" # over time
   has_one :servicing_order_line, :class_name => "OrderLine", :foreign_key => :service_box_id
   belongs_to :ordering_order_line, :class_name => "OrderLine"
   belongs_to :inventorying_order_line, :class_name => "OrderLine", :foreign_key => :inventorying_order_line_id
@@ -82,6 +83,26 @@ class Box < ActiveRecord::Base
     else
       raise "Illegal box type " << box_type
     end
+  end
+  
+  def chargable?
+    if never_received?
+      return false
+    else
+      return never_requested_return? || storage_charges.size == 0 || return_requested_at > storage_charges.last.end_date
+    end
+  end
+  
+  def has_charges?
+    self.storage_charges.size > 0
+  end
+  
+  def never_received?
+    received_at == nil
+  end
+  
+  def never_requested_return?
+    return_requested_at == nil
   end
   
   def Box.get_type(product)

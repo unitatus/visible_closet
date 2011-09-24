@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110923190829) do
+ActiveRecord::Schema.define(:version => 20110923232835) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -31,6 +31,8 @@ ActiveRecord::Schema.define(:version => 20110923190829) do
     t.string   "comment"
     t.string   "fedex_validation_status"
   end
+
+  add_index "addresses", ["user_id"], :name => "index_addresses_on_user_id"
 
   create_table "boxes", :force => true do |t|
     t.integer  "assigned_to_user_id"
@@ -54,7 +56,9 @@ ActiveRecord::Schema.define(:version => 20110923190829) do
   end
 
   add_index "boxes", ["assigned_to_user_id"], :name => "index_boxes_on_assigned_to_user_id"
+  add_index "boxes", ["inventorying_order_line_id"], :name => "index_boxes_on_inventorying_order_line_id"
   add_index "boxes", ["ordering_order_line_id"], :name => "index_boxes_on_order_line_id"
+  add_index "boxes", ["subscription_id"], :name => "index_boxes_on_subscription_id"
 
   create_table "cart_items", :force => true do |t|
     t.integer  "quantity"
@@ -92,9 +96,11 @@ ActiveRecord::Schema.define(:version => 20110923190829) do
     t.integer  "shipment_id"
     t.string   "comments"
     t.integer  "payment_transaction_id"
+    t.integer  "box_id"
   end
 
-  add_index "charges", ["shipment_id"], :name => "index_charges_on_shipment_id"
+  add_index "charges", ["order_id"], :name => "index_charges_on_order_id"
+  add_index "charges", ["user_id"], :name => "index_charges_on_user_id"
 
   create_table "interested_people", :force => true do |t|
     t.string   "email"
@@ -109,6 +115,8 @@ ActiveRecord::Schema.define(:version => 20110923190829) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "invoices", ["order_id"], :name => "index_invoices_on_order_id"
 
   create_table "marketing_hits", :force => true do |t|
     t.string   "source"
@@ -234,12 +242,26 @@ ActiveRecord::Schema.define(:version => 20110923190829) do
   add_index "shipments", ["to_address_id"], :name => "index_shipments_on_to_address_id"
   add_index "shipments", ["tracking_number"], :name => "index_shipments_on_tracking_number"
 
+  create_table "storage_charges", :id => false, :force => true do |t|
+    t.integer  "box_id"
+    t.integer  "charge_id"
+    t.integer  "subscription_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+  end
+
+  add_index "storage_charges", ["box_id"], :name => "index_storage_charges_on_box_id"
+  add_index "storage_charges", ["charge_id"], :name => "index_storage_charges_on_charge_id"
+  add_index "storage_charges", ["subscription_id"], :name => "index_storage_charges_on_subscription_id"
+
   create_table "stored_item_tags", :force => true do |t|
     t.integer  "stored_item_id"
     t.string   "tag"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "stored_item_tags", ["stored_item_id"], :name => "index_stored_item_tags_on_stored_item_id"
 
   create_table "stored_items", :force => true do |t|
     t.integer  "box_id"
@@ -262,6 +284,8 @@ ActiveRecord::Schema.define(:version => 20110923190829) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                      :default => "",   :null => false

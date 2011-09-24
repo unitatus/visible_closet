@@ -251,11 +251,14 @@ class Shipment < ActiveRecord::Base
   end
   
   def set_charge(amount)
-    if !charge.nil?
+    if !self.charge.nil?
       raise "Cannot reset charge for a shipment."
     end
     
-    self.charge = Charge.create!(:user_id => user.id, :total_in_cents => amount*100, :shipment_id => id)
+    comment = "Charge for shipment #{self.id}"
+    comment += box.nil? ? "" : " for box number #{self.box.box_num}"
+    
+    self.charge = Charge.create!(:user_id => user.id, :total_in_cents => amount*100, :shipment_id => self.id, :comments => comment)
   end
   
   def shipment_label_file_name_short

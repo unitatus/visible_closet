@@ -14,7 +14,8 @@
 
 class Subscription < ActiveRecord::Base
   has_many :boxes
-  belongs_to :user
+  belongs_to :user # technically not necessary? Perhas better than just grabbing from the first box.
+  has_many :storage_charges
   
   def start_subscription
     update_attribute(:start_date, Time.now)

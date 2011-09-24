@@ -24,17 +24,19 @@
 	<br>
 	Inventory: <a href="/stored_items"><%= pluralize(StoredItem.count_items(current_user), 'item') %></a>
 </div>
-<div style="float: right; margin-right: 150px">
+<div style="float: right; margin-right: 100px">
 	<div class="simple_header">Your Payments</div>
 	<div class="indent-div">
 		Most recent payment: 
 		<% if @last_payment_transaction %>
-			<%= number_to_currency @last_payment_transaction.amount %> for <%= raw(@last_payment_transaction.order_id.nil? ? "<a href='#'>storage charges</a>" : "<a href='#'>order #{@last_payment_transaction.order_id}</a>") %>
+			<%= number_to_currency @last_payment_transaction.amount %> for <%= raw(@last_payment_transaction.order_id.nil? ? "<a href='#'>storage charges</a>" : "<a href='#'>order #{@last_payment_transaction.order_id}</a>") %>.
 		<% else %>
 			None
 		<% end %>
 		<br>
-		Next payment of ### due on ### for ###<br>
+		<% if current_user.will_have_charges_at_end_of_month? %>
+			Next payment of <%= number_to_currency Charge.amalgamate(current_user.all_upcoming_charges) %> due on <%= current_user.next_charge_date.strftime('%m/%d/%Y') %> <a href="#">(details)</a>.<br>
+		<% end %>
 		<a href="#">Account History &gt;&gt;</a>
 	</div>
 </div>

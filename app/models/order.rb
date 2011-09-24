@@ -169,6 +169,7 @@ class Order < ActiveRecord::Base
       end
     end
     
+    # can't associate with shipment id yet because shipment object is only created at shipment
     if !cart.nil? && !cart.quoted_shipping_cost.nil? && cart.quoted_shipping_cost > 0.0
       charges << Charge.create!(:user_id => user_id, :total_in_cents => (self.initial_charged_shipping_cost*100).ceil, :order_id => self.id, :comments => "Shipping charge")
     end

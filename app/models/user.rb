@@ -323,6 +323,71 @@ class User < ActiveRecord::Base
     end
   end
   
+  def all_upcoming_charges
+    self.already_created_outstanding_charges | self.calculate_subscription_charges
+  end
+  
+  def already_created_outstanding_charges
+    Charge.find_all_by_user_id_and_payment_transaction_id(self.id, nil)
+  end
+  
+  def calculate_subscription_charges(as_of_date = nil)
+    if as_of_date.nil?
+      as_of_date = self.end_of_month
+    end
+    
+    # for each box
+    #   if box has incurred fees then create charge(as_of_date)
+    # end
+    # 
+    
+    return [Charge.new(:total_in_cents => 0.0, :comments => "Dummy value")]
+  end
+  
+  def will_have_charges_at_end_of_month?
+    boxes.each do |box|
+      if box.chargable?
+        return true
+      end
+    end
+    
+    # even if all boxes are not chargable, there may be other charges outstanding
+    !self.already_created_outstanding_charges.empty?
+  end
+  
+  def earliest_effective_charge_date
+    the_earliest_effective_charge_date = nil
+    
+    self.boxes.each do |box|
+      if box.has_charges? && box.chargable?
+        the_earliest_effective_charge_date |= box.storage_charges.last.charge.end_date
+        if the_earliest_effective_charge_date > box.storage_charges.last.charge.end_date
+          the_earliest_effective_charge_date = box.storage_charges.last.charge.end_date
+        end
+      end
+    end
+    
+    return the_earliest_effective_charge_date
+  end
+  
+  def next_charge_date
+    last_charge_date = self.earliest_effective_charge_date
+    
+    if last_charge_date.nil? || last_charge_date < Date.today
+      self.end_of_month
+    else # we just charged the user, so the next charge date is next month
+      self.end_of_month(self.end_of_month + 1) # adds a day to the end of this month, putting us in next month
+    end
+  end
+    
+  def end_of_month(date = nil)
+    if date.nil?
+      date = Date.today
+    end
+    
+    Date.parse((date.month == 12 ? date.year + 1 : date.year).to_s + "-" + (date.month == 12 ? 1 : date.month + 1).to_s + "-01") - 1
+  end
+    
   private 
 
   def delete_cim_profile
