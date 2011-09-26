@@ -359,7 +359,7 @@ class Box < ActiveRecord::Base
       if !shipment.nil?
         shipment.state = Shipment::DELIVERED
         
-        subscription = self.current_or_new_subscription
+        subscription = self.current_subscription
         # the only way for the customer avoiding paying for a box coming in is if the box is on a subscription of sufficient duration
         if subscription.nil? || subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD
           shipment.charge_requested = true
@@ -387,7 +387,7 @@ class Box < ActiveRecord::Base
     shipment.from_address_id = get_shipping_from_address_id
     shipment.to_address_id = get_shipping_to_address_id
     
-    if current_or_new_subscription.nil? || current_or_new_subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD || self.status == RETURN_REQUESTED_STATUS 
+    if current_subscription.nil? || current_subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD || self.status == RETURN_REQUESTED_STATUS 
       shipment.payor = Shipment::CUSTOMER
     end
 
@@ -406,6 +406,17 @@ class Box < ActiveRecord::Base
     end
     
     shipment
+  end
+  
+  def current_subscription
+    current_subscriptions = self.subscriptions.select { |subscription| subscription.start_date.nil? || subscription.start_date <= Date.today }
+    if current_subscriptions.size == 0
+      return nil
+    elsif current_subscriptions.size > 1
+      raise "Box has multiple subscriptions"
+    else
+      current_subscriptions.first
+    end
   end
   
   def ship
@@ -427,7 +438,7 @@ class Box < ActiveRecord::Base
   end
   
   def monthly_fee
-    return Box.monthly_fee_for_type(self.user, self.box_type, self.cubic_feet, (self.current_or_new_subscription.nil? ? 1 : self.current_or_new_subscription.duration_in_months), self.inventorying_status)
+    return Box.monthly_fee_for_type(self.user, self.box_type, self.cubic_feet, (self.current_subscription.nil? ? 1 : self.current_subscription.duration_in_months), self.inventorying_status)
   end
   
   # Added quantity is used for speculative pricing when the user is going through the check-out process

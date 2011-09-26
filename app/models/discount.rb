@@ -25,6 +25,10 @@ class Discount
       raise "Cannot instantiate with nil product"
     end
     
+    month_count ||= 0
+    new_product_count ||= 0
+    existing_product_count ||= 0
+    
     discount = super()
     
     discount.product = product

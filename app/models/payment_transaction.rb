@@ -17,23 +17,6 @@
 #  payment_profile_id :integer
 #
 
-# == Schema Information
-# Schema version: 20110819212810
-#
-# Table name: payment_transactions
-#
-#  id                 :integer         not null, primary key
-#  order_id           :integer
-#  action             :string(255)
-#  amount             :float
-#  success            :boolean
-#  authorization      :string(255)
-#  message            :string(255)
-#  params             :text
-#  user_id            :integer
-#  created_at         :datetime
-#  updated_at         :datetime
-#  payment_profile_id :integer
 #
 # Conceptually, a payment transaction can be associated with an order (to pay for the whole order) or with nothing (indicating simply a payment on the user's account).
 # Really, the order reference is a convenience method -- the order can be gotten via charges, an really only applies to orders that the user explicitly created.
