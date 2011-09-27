@@ -44,7 +44,7 @@ class Box < ActiveRecord::Base
   after_create :set_box_num
 
   has_many :stored_items, :dependent => :destroy
-  has_many :shipments, :dependent => :destroy
+  has_many :shipments, :dependent => :destroy, :order => "created_at ASC"
   has_many :stored_item_tags, :through => :stored_items
   has_one :servicing_order_line, :class_name => "OrderLine", :foreign_key => :service_box_id
   belongs_to :ordering_order_line, :class_name => "OrderLine"
@@ -184,6 +184,17 @@ class Box < ActiveRecord::Base
     end # end transaction
   end
   
+  # The very first shipment for a box is the shipment that sends it to The Visible Closet
+    def first_or_create_shipment
+      first_shipment = self.shipments.first
+
+      if first_shipment.nil?
+        create_shipment
+      else
+        first_shipment
+      end
+    end
+  
   def create_shipment
     if self.id.nil?
       raise "Cannot create a shipment on a brand new box"
@@ -192,6 +203,7 @@ class Box < ActiveRecord::Base
     shipment = Shipment.new
     
     shipment.box_id = self.id
+    self.shipments << shipment
     shipment.from_address_id = get_shipping_from_address_id
     shipment.to_address_id = get_shipping_to_address_id
     
