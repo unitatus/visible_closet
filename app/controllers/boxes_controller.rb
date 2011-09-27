@@ -330,7 +330,7 @@ class BoxesController < ApplicationController
       return
     end
     
-    shipment = @box.get_or_create_shipment
+    shipment = @box.first_or_create_shipment
 
     send_data(shipment.shipment_label, :filename => shipment.shipment_label_file_name_short, :type => "application/pdf")
   end

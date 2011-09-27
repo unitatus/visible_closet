@@ -311,8 +311,10 @@ class Order < ActiveRecord::Base
       end
 
       for i in 1..(order_line.quantity)
-        if !Box.create!(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, \
-          :inventorying_status => Box::NO_INVENTORYING_REQUESTED, :subscription_id => (subscription.nil? ? nil : subscription.id))
+        new_box = Box.new(:assigned_to_user_id => user.id, :ordering_order_line_id => order_line.id, :status => status, :box_type => type, \
+          :inventorying_status => Box::NO_INVENTORYING_REQUESTED)
+        new_box.subscriptions << subscription if !subscription.nil?
+        if !new_box.save
           raise "Standard box creation failed."
         end
       end # inner for loop
