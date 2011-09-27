@@ -95,6 +95,14 @@ class User < ActiveRecord::Base
     return_cart
   end
   
+  def has_cart_items?
+    if cart.nil? || cart.items.empty?
+      return false
+    else
+      return true
+    end
+  end
+  
   def addresses
     Address.find_active(self.id, :order => :first_name)
   end
