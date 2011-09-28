@@ -179,6 +179,7 @@ class User < ActiveRecord::Base
   def transaction_history
     unsorted_transactions = GenericTransaction.find_all_by_user_id(self.id)
     
+    # can't sort this in the database because transaction can be a charge or a payment, and it's a royal pain to do a merge like that in the database with rails
     unsorted_transactions.sort {|x,y| x.created_at <=> y.created_at }
   end
 
@@ -340,7 +341,8 @@ class User < ActiveRecord::Base
   end
   
   def calculate_subscription_charges(as_of_date = self.end_of_month)
-    Box.calculate_charges_for_user_box_set(boxes, earliest_effective_charge_date, as_of_date)
+    last_charged_date = self.earliest_effective_charge_date
+    Box.calculate_charges_for_user_box_set(boxes, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date)
   end
   
   def will_have_charges_at_end_of_month?
@@ -354,14 +356,16 @@ class User < ActiveRecord::Base
     !self.already_created_outstanding_charges.empty?
   end
   
+  # This needs to account for boxes that don't have charges yet but need to be included. If any box has been received but never charged, return the receive date.
+  # If any received box's charge end date is nil, return the receive date. Otherwise, return the earliest actual charge date. 
   def earliest_effective_charge_date
     the_earliest_effective_charge_date = nil
     
     self.boxes.each do |box|
-      if box.has_charges? && box.chargable?
-        the_earliest_effective_charge_date ||= box.storage_charges.last.charge.end_date
-        if the_earliest_effective_charge_date > box.storage_charges.last.charge.end_date
-          the_earliest_effective_charge_date = box.storage_charges.last.charge.end_date
+      if box.chargable?
+        the_earliest_effective_charge_date ||= box.latest_charge_end_date
+        if the_earliest_effective_charge_date && the_earliest_effective_charge_date > box.latest_charge_end_date
+          the_earliest_effective_charge_date = box.latest_charge_end_date
         end
       end
     end
@@ -370,13 +374,14 @@ class User < ActiveRecord::Base
   end
   
   def next_charge_date
-    last_charge_date = self.earliest_effective_charge_date
-    
-    if last_charge_date.nil? || last_charge_date < Date.today
-      self.end_of_month
-    else # we just charged the user, so the next charge date is next month
-      self.end_of_month(self.end_of_month + 1) # adds a day to the end of this month, putting us in next month
-    end
+    # last_charge_date = self.earliest_effective_charge_date
+    #     
+    #     if last_charge_date.nil? || last_charge_date < Date.today
+    #       self.end_of_month
+    #     else # we just charged the user, so the next charge date is next month
+    #       self.end_of_month(self.end_of_month + 1) # adds a day to the end of this month, putting us in next month
+    #     end
+    end_of_month
   end
     
   def end_of_month(date = nil)

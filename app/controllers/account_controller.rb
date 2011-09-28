@@ -10,6 +10,9 @@ class AccountController < ApplicationController
 
   def index
     @last_payment_transaction = PaymentTransaction.find_by_user_id(current_user.id, :order => "created_at DESC")
+    # this must be called before the next line, which will alter (but not save) the user
+    @next_user_charge_date = current_user.next_charge_date
+    @next_user_charge = Charge.amalgamate(current_user.all_upcoming_charges)
   end
   
   def email_confirmation
@@ -186,11 +189,13 @@ class AccountController < ApplicationController
     if @cart.nil?
       @order = Order.find_all_by_user_id(current_user.id, :first, :order => 'created_at DESC').first
       return
+    elsif @cart.order # this means we failed the last time through, after the payment was created; be nice about it
+      @order = @cart.order
+    else
+      @order = @cart.build_order(params[:order])
     end
     
-    @order = @cart.build_order(params[:order])
-
-    @order.ip_address = request.remote_ip
+    @order.ip_address = request.remote_ip      
     
     if @order.contains_box_orders?
       # the only way to get to this function is if the user saw the member agreement; take note of that

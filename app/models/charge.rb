@@ -15,7 +15,7 @@
 #  payment_transaction_id :integer
 #
 
-# Conceptually, a charge can be related to: a product ordered (order_id and product_id set); a box in storage (box_id set); 
+# Conceptually, a charge can be related to: a product ordered (order_id and product_id set); a box in storage (associated with a storage_charge); 
 # a shipment (shipping_id set); or an order's shipping costs (only order id set). The reason for this is workflow. You pay for shipping once per order,
 # not once for each line, even though shipments (in this case, of returns) get processed potentially individually, so in that case the order id for
 # the charge is set, not the shipping id. Shipping charges that are explicitly charged for an individual shipment occur when a user does not commit
@@ -38,10 +38,10 @@ class Charge < ActiveRecord::Base
     sum_total = 0.0
     
     charges.each do |charge|
-      sum_total += charge.total_in_cents / 100
+      sum_total += charge.total_in_cents
     end
     
-    sum_total
+    sum_total/100
   end
   
   def box
@@ -57,4 +57,18 @@ class Charge < ActiveRecord::Base
       storage_charge.save
     end
   end
+  
+  def associate_with(box, start_date=nil, end_date=nil)
+    if !associated_with?(box)
+      new_storage_charge = box.storage_charges.build(:start_date => start_date, :end_date => end_date)
+      new_storage_charge.charge = self
+      self.storage_charge = new_storage_charge
+      return new_storage_charge
+    end
+  end
+  
+  def associated_with?(box)
+    storage_charge && storage_charge.box == box
+  end
+
 end

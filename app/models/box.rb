@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110924185624
+# Schema version: 20110927202410
 #
 # Table name: boxes
 #
@@ -21,6 +21,7 @@
 #  box_num                    :integer
 #  return_requested_at        :datetime
 #  location                   :string(255)
+#  inventoried_at             :datetime
 #
 
 class Box < ActiveRecord::Base
@@ -45,7 +46,7 @@ class Box < ActiveRecord::Base
   has_many :stored_items, :dependent => :destroy
   has_many :shipments, :dependent => :destroy, :order => "created_at ASC"
   has_many :stored_item_tags, :through => :stored_items
-  has_many :storage_charges, :order => "end_date DESC"
+  has_many :storage_charges, :order => "end_date ASC"
   has_one :servicing_order_line, :class_name => "OrderLine", :foreign_key => :service_box_id
   belongs_to :ordering_order_line, :class_name => "OrderLine"
   belongs_to :inventorying_order_line, :class_name => "OrderLine", :foreign_key => :inventorying_order_line_id
@@ -88,7 +89,16 @@ class Box < ActiveRecord::Base
     if never_received?
       return false
     else
-      return never_requested_return? || storage_charges.size == 0 || return_requested_at > storage_charges.last.end_date
+      return never_requested_return? || storage_charges.size == 0 || storage_charges.last.end_date.nil? || return_requested_at > storage_charges.last.end_date
+    end
+  end
+  
+  # the idea behind this is to return the day before when we should start charging
+  def latest_charge_end_date
+    if storage_charges.size == 0 || storage_charges.last.end_date.nil?
+      return received_at.to_date - 1
+    else
+      return storage_charges.last.end_date.to_date
     end
   end
   
@@ -97,12 +107,12 @@ class Box < ActiveRecord::Base
   # to use array-based calculations, which is what we are doing here: we lay the boxes against the days in question to form a matrix, calculate and save things
   # in the matrix, then sum up by box to create the charges.
   def Box.calculate_charges_for_user_box_set(boxes, start_date, end_date)
-    total_vc_boxes_in_storage_matrix = Hash[*boxes.select {|box| box.vc_box? }.collect {|box| [box, 0.0]}.flatten]
-    total_cust_cf_in_storage_matrix = Hash[*boxes.select {|box| box.cust_box? }.collect {|box| [box, 0.0]}.flatten]
+    total_vc_boxes_in_storage_by_day = Hash.new #Hash[*boxes.select {|box| box.vc_box? }.collect {|box| [box, 0.0]}.flatten]
+    total_cust_cf_in_storage_by_day = Hash.new #Hash[*boxes.select {|box| box.cust_box? }.collect {|box| [box, 0.0]}.flatten]
     box_events = Hash.new
 
     # In case where user has never had storage charge
-    start_date = earliest_receipt_date(boxes)
+    start_date ||= earliest_receipt_date(boxes)
     
     if start_date.nil? || start_date > end_date
       return []
@@ -117,19 +127,19 @@ class Box < ActiveRecord::Base
       box_events[box] = Array.new
     end
         
-    (start_date + 1).upto(end_date) do |day|
+    start_date.upto(end_date) do |day|
       boxes.each do |box|
         # save total boxes / cf
         if box.vc_box? && box.in_storage_on(day)
-          total_vc_boxes_in_storage_matrix[day] ||= 0
-          total_vc_boxes_in_storage_matrix[day] += 1
+          total_vc_boxes_in_storage_by_day[day] ||= 0
+          total_vc_boxes_in_storage_by_day[day] += 1
         elsif box.cust_box? && box.in_storage_on(day)
-          total_cust_cf_in_storage_matrix[day] ||= 0.0
-          total_cust_cf_in_storage_matrix[day] += box.cubic_feet
+          total_cust_cf_in_storage_by_day[day] ||= 0.0
+          total_cust_cf_in_storage_by_day[day] += box.cubic_feet
         end
         
         # save whether anything changed, for informational purposes
-        if day != (start_date + 1) && day != end_date
+        if day != start_date && day != end_date
           if box.in_storage_on(day) && !box.in_storage_on(day - 1) && !box.charged_already_on(day)
             box_events[box] << "box receipt"
           end
@@ -150,16 +160,25 @@ class Box < ActiveRecord::Base
     end # end date range loop
     
     # now we know how many boxes / cf were in storage on each day. Time to calculate the charges by box.
-    box_charges = Hash[*boxes.collect { |box| [box, 0.0] }.flatten]
+    box_charges = Hash[*boxes.collect { |box| [box, Rational(0)] }.flatten]
     boxes.each do |box|
-      (start_date + 1).upto(end_date) do |day|
+      start_date.upto(end_date) do |day|
         if box.in_storage_on(day) && !box.charged_already_on(day)
+          
           subscription = box.subscription_on(day)
           subscription_months = subscription.nil? ? 0 : subscription.duration_in_months
         
-          existing_product_count = box.vc_box? ? total_vc_boxes_in_storage_matrix[box] : total_cust_cf_in_storage_matrix[box]
-        
-          box_charges[box] += Discount.new(Box.get_product(box.box_type), 0, subscription_months, existing_product_count).unit_price_after_discount/days_in_month(day.month, day.year)
+          existing_product_count = box.vc_box? ? total_vc_boxes_in_storage_by_day[day] : total_cust_cf_in_storage_by_day[day]
+          
+          storage_discount_calc = Discount.new(Box.get_product(box.box_type), 0, subscription_months, existing_product_count)
+          
+          units = box.vc_box? ? 1 : box.cubic_feet
+          box_charges[box] += Rational(storage_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
+
+          if box.inventoried_at
+            inventory_discount_calc = Discount.new(Box.get_product(box.box_type, true), 0, subscription_months, existing_product_count)
+            box_charges[box] += Rational(inventory_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
+          end
         end
       end
     end
@@ -170,12 +189,9 @@ class Box < ActiveRecord::Base
         comments += (" considering the following events in the period: " + box_events[box].join(", "))
       end
       
-      new_charge = Charge.new(:total_in_cents => box_charges[box]*100, :comments => comments)
+      new_charge = Charge.new(:total_in_cents => (box_charges[box].to_f*100.0).ceil, :comments => comments)
       new_charge.user = box.user
-      new_storage_charge = StorageCharge.new(:start_date => start_date + 1, :end_date => end_date)
-      new_charge.storage_charge = new_storage_charge
-      new_storage_charge.charge = new_charge
-      new_storage_charge.box = box
+      new_charge.associate_with(box, start_date, end_date)
       
       new_charge
     }
@@ -185,7 +201,7 @@ class Box < ActiveRecord::Base
     earliest_receipt_date = nil
     
     boxes.each do |box|
-      if !box.received_at.nil?
+      if box.received_at
         earliest_receipt_date ||= box.received_at
         if earliest_receipt_date < box.received_at
           earliest_receipt_date = box.received_at
@@ -224,12 +240,12 @@ class Box < ActiveRecord::Base
     end
     
     storage_charges.each do |storage_charge|
-      if storage_charge.start_date <= day && storage_charge.end_date >= day
-        @days_already_charged[day] = true and return
+      if storage_charge.start_date && storage_charge.start_date <= day && storage_charge.end_date >= day
+        @days_already_charged[day] = true and return true
       end
     end
     
-    @days_already_charged[day] = false and return
+    @days_already_charged[day] = false and return false
   end
   
   def current_subscription
@@ -240,7 +256,7 @@ class Box < ActiveRecord::Base
     if never_received?
       return false
     else
-      return received_at <= a_date && (never_requested_return? || return_requested_at >= a_date)
+      return received_at.to_date <= a_date && (never_requested_return? || return_requested_at.to_date >= a_date)
     end
   end
   
@@ -274,12 +290,16 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def Box.get_product(type)
-    if type == CUST_BOX_TYPE
+  def Box.get_product(type, inventory=false)
+    if type == CUST_BOX_TYPE && inventory
+      Product.find(Rails.application.config.your_box_inventorying_product_id)
+    elsif type == CUST_BOX_TYPE
       Product.find(Rails.application.config.your_box_product_id)
+    elsif type == VC_BOX_TYPE && inventory
+      Product.find(Rails.application.config.our_box_inventorying_product_id)
     elsif type == VC_BOX_TYPE
       Product.find(Rails.application.config.our_box_product_id)
-    else
+    elsif 
       nil
     end
   end
@@ -337,21 +357,21 @@ class Box < ActiveRecord::Base
     end
   end
   
+  def in_storage?
+    self.status == Box::IN_STORAGE_STATUS
+  end
+  
   def receive(inventorying_requested = false)
     self.transaction do
       
-      # need to check for both, since one disables the other which means that it is not posted
-      if inventorying_requested
-        # this check exists to ensure that customers are not double-charged if we restart the inventorying process. You only get the inventorying order
-        # if you move from "no inventorying requested" to "inventorying requested"
-        if self.inventorying_status == Box::NO_INVENTORYING_REQUESTED
-          generate_inventorying_order
-        end
-        self.inventorying_status = Box::INVENTORYING_REQUESTED
-      end
-    
+      # This must happen first, as other processing checks the box's status
       self.status = Box::IN_STORAGE_STATUS
       self.received_at = Time.now
+
+      # need to check for both, since one disables the other which means that it is not posted
+      if inventorying_requested
+        process_inventory_request
+      end
       
       shipment = self.active_shipment
       
@@ -372,8 +392,29 @@ class Box < ActiveRecord::Base
         subscription.start_subscription
       end
       
+      # the user was already charged, but we didn't know the duration, because we didn't know the start date. Now we do! Time to update the start and end dates of that charge.
+      storage_charge = storage_charges.last
+      if !storage_charge.nil? && storage_charge.start_date.nil?
+        storage_charge.start_date = Date.today
+        amt_paid_in_months = subscription.nil? ? 1 : (subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD ? subscription.duration_in_months : Discount::FREE_SHIPPING_MONTH_THRESHOLD)
+        # >> advances a date object by months. What a weird language Ruby is.
+        storage_charge.end_date = storage_charge.start_date.to_date >> amt_paid_in_months
+        
+        storage_charge.save
+      end
+            
       return self.save
     end # end transaction
+  end
+  
+  def process_inventory_request
+    # this check exists to ensure that customers are not double-charged if we restart the inventorying process. You only get the inventorying order
+    # if you move from "no inventorying requested" to "inventorying requested"
+    if self.inventorying_status == Box::NO_INVENTORYING_REQUESTED
+      generate_inventorying_order
+    end
+    
+    self.inventorying_status = Box::INVENTORYING_REQUESTED
   end
   
   # The very first shipment for a box is the shipment that sends it to The Visible Closet
@@ -521,7 +562,6 @@ class Box < ActiveRecord::Base
     subscriptions.each do |subscription|
       if !subscription.nil? && subscription.boxes.size == 1
         subscription.destroy
-        self.subscription = nil
       end
     end
     
@@ -610,7 +650,7 @@ class Box < ActiveRecord::Base
       self.inventorying_order_line_id = order_line.id
     end
     
-    order.generate_charges
+    # Note: do not generate charges for the order. This will happen automatically at the end of the month.
   end
   
   def set_box_num
@@ -618,6 +658,7 @@ class Box < ActiveRecord::Base
   end
   
   def Box.days_in_month(month, year)
-    (Date.parse(year.to_s + "-" + month.to_s + "-01") - 1).day
+    this_month = Date.parse(year.to_s + "-" + month.to_s + "-01")
+    ((this_month >> 1) - 1).day
   end
 end

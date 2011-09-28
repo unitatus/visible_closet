@@ -32,15 +32,17 @@ class Order < ActiveRecord::Base
         raise ActiveRecord::Rollback
       end
       
+      charges = do_pre_payment_processing
+      
       if total_in_cents > 0.0
-        charges, payment_transaction = pay_for_order
+        payment_transaction = pay_for_order(charges)
       end
       
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
       do_post_payment_processing(charges, payment_transaction)
-      
-      transaction_successful = true
-    end # end transaction    
+
+      transaction_successful = true 
+    end # end transaction so we don't re-enter this section
 
     return transaction_successful
   end
@@ -165,7 +167,17 @@ class Order < ActiveRecord::Base
     
     order_lines.each do | order_line |
       if order_line.discount.due_at_signup > 0.0
-        charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
+        if order_line.associated_boxes.size > 0 # this is a box-related order
+          order_line.associated_boxes.each do |box|
+            new_charge = Charge.new(:user_id => user_id, :comments => "Charge for " + order_line.product.name)
+            new_charge.total_in_cents = ((order_line.discount.due_at_signup/order_line.associated_boxes.size)*100).ceil
+            new_charge.associate_with(box)
+            new_charge.save
+            charges << new_charge
+          end
+        else # this is a non-box related order
+          charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
+        end
       end
     end
     
@@ -243,9 +255,7 @@ class Order < ActiveRecord::Base
   private
   
   # This method saves the transactions
-  def pay_for_order()
-    charges = generate_charges
-
+  def pay_for_order(charges)
     new_transaction, message = PaymentTransaction.pay(charges, user.default_payment_profile, self.id)
     
     if new_transaction.nil?
@@ -253,12 +263,12 @@ class Order < ActiveRecord::Base
       raise ActiveRecord::Rollback
     end
     
-    return [charges, new_transaction]
+    return new_transaction
   end
-
+  
   # this method throws a RuntimeError b/c the only way that save wouldn't work is if something went really wrong
   # and we don't want to miss that.
-  def do_post_payment_processing(charges, payment_transaction)
+  def do_pre_payment_processing
     cart.mark_ordered
     
     if (!cart.save)
@@ -267,7 +277,13 @@ class Order < ActiveRecord::Base
     
     process_box_orders
     process_box_returns
-    
+        
+    return generate_charges
+  end
+
+  # this method throws a RuntimeError b/c the only way that save wouldn't work is if something went really wrong
+  # and we don't want to miss that.
+  def do_post_payment_processing(charges, payment_transaction)
     invoice = create_invoice(charges, payment_transaction)
 
     UserMailer.invoice_email(user, invoice, true).deliver

@@ -83,6 +83,7 @@ class Discount
     return self.total_monthly_price_after_discount * @month_count
   end
   
+  # See also box receipt for this logic; wasn't worth refactoring it all into one place
   def months_due_at_signup
     if @month_count.to_f >= FREE_SHIPPING_MONTH_THRESHOLD
       return FREE_SHIPPING_MONTH_THRESHOLD

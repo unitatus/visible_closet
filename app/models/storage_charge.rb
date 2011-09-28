@@ -16,4 +16,14 @@ class StorageCharge < ActiveRecord::Base
   
   validates_presence_of :box
   validates_presence_of :charge
+  
+  # SQLite and some other databases can't tell the difference between a datetime and a date, but in the case of a storage charge, there is no such thing as time. We must
+  # therefore overwrite things
+  def start_date
+    read_attribute(:start_date).nil? ? nil : read_attribute(:start_date).to_date
+  end
+  
+  def end_date
+    read_attribute(:end_date).nil? ? nil : read_attribute(:end_date).to_date
+  end
 end
