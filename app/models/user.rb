@@ -331,18 +331,23 @@ class User < ActiveRecord::Base
       subscription.destroy
     end
   end
-  
-  def all_upcoming_charges
-    self.already_created_outstanding_charges | self.calculate_subscription_charges
-  end
-  
-  def already_created_outstanding_charges
-    Charge.find_all_by_user_id_and_payment_transaction_id(self.id, nil)
+
+  def current_account_balance
+    running_total = 0.0
+    charges.each do |charge|
+      running_total = running_total - charge.total_in_cents/100
+    end
+    
+    payment_transactions.each do |payment_transaction|
+      running_total = running_total + payment_transaction.amount
+    end
+    
+    return running_total
   end
   
   def calculate_subscription_charges(as_of_date = self.end_of_month)
     last_charged_date = self.earliest_effective_charge_date
-    Box.calculate_charges_for_user_box_set(boxes, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date)
+    Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date)
   end
   
   def will_have_charges_at_end_of_month?

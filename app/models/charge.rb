@@ -1,18 +1,17 @@
 # == Schema Information
-# Schema version: 20110924185624
+# Schema version: 20110928034757
 #
 # Table name: charges
 #
-#  id                     :integer         not null, primary key
-#  user_id                :integer
-#  total_in_cents         :integer
-#  product_id             :integer
-#  created_at             :datetime
-#  updated_at             :datetime
-#  order_id               :integer
-#  shipment_id            :integer
-#  comments               :string(255)
-#  payment_transaction_id :integer
+#  id             :integer         not null, primary key
+#  user_id        :integer
+#  total_in_cents :integer
+#  product_id     :integer
+#  created_at     :datetime
+#  updated_at     :datetime
+#  order_id       :integer
+#  shipment_id    :integer
+#  comments       :string(255)
 #
 
 # Conceptually, a charge can be related to: a product ordered (order_id and product_id set); a box in storage (associated with a storage_charge); 
@@ -21,7 +20,10 @@
 # the charge is set, not the shipping id. Shipping charges that are explicitly charged for an individual shipment occur when a user does not commit
 # enough for free shipping, but we don't know the shipping cost yet because we haven't actually shipped it (and can't charge them beforehand because
 # we don't know the package weight) so we can't charge them for the order's shipping cost, then later when the shipment is processed we record that
-# in the system, at which point the shipment gets "charge" and that charge has a shipment id.
+# in the system, at which point the shipment gets "charged" and that charge has a shipment id.
+
+# Also, note that charges are not associated with payments at this time. The user's balance is the sum of all charges and payments. This addresses the
+# fact that payments may be made well after charges, and may be for multiple charges, and charges may span payments. Not worth tracking.
 
 # In retrospect, this is a bit confusing -- potential to refactor so that charges can be associated with order lines instead of orders, to tie them
 # better with actual shipments made later. -DZ 20110922

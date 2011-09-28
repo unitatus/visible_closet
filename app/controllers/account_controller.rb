@@ -12,7 +12,12 @@ class AccountController < ApplicationController
     @last_payment_transaction = PaymentTransaction.find_by_user_id(current_user.id, :order => "created_at DESC")
     # this must be called before the next line, which will alter (but not save) the user
     @next_user_charge_date = current_user.next_charge_date
-    @next_user_charge = Charge.amalgamate(current_user.all_upcoming_charges)
+    user = current_user
+
+    user.calculate_subscription_charges # this will add all the charges that will show up at the end of the month
+    
+    account_balance = user.current_account_balance
+    @next_user_charge = account_balance > 0 ? 0 : account_balance * -1
   end
   
   def email_confirmation

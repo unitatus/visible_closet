@@ -30,7 +30,7 @@ class Cart < ActiveRecord::Base
     total_estimate = 0
 
     cart_items.each do |cart_item|
-      total_estimate += cart_item.discount.due_at_signup
+      total_estimate += cart_item.discount.charged_at_purchase + cart_item.discount.prepaid_at_purchase
     end
  
     if contains_ship_charge_items? && quoted_shipping_cost_success

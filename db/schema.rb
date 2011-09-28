@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110927202410) do
+ActiveRecord::Schema.define(:version => 20110928034952) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -102,7 +102,6 @@ ActiveRecord::Schema.define(:version => 20110927202410) do
     t.integer  "order_id"
     t.integer  "shipment_id"
     t.string   "comments"
-    t.integer  "payment_transaction_id"
   end
 
   add_index "charges", ["order_id"], :name => "index_charges_on_order_id"

@@ -46,7 +46,7 @@ class Box < ActiveRecord::Base
   has_many :stored_items, :dependent => :destroy
   has_many :shipments, :dependent => :destroy, :order => "created_at ASC"
   has_many :stored_item_tags, :through => :stored_items
-  has_many :storage_charges, :order => "end_date ASC"
+  has_many :storage_charges, :order => "end_date ASC" # This way .first means the first ever charge, and .last means the last ever storage charge, by end_date
   has_one :servicing_order_line, :class_name => "OrderLine", :foreign_key => :service_box_id
   belongs_to :ordering_order_line, :class_name => "OrderLine"
   belongs_to :inventorying_order_line, :class_name => "OrderLine", :foreign_key => :inventorying_order_line_id
@@ -106,10 +106,11 @@ class Box < ActiveRecord::Base
   # figure out how many boxes were in storage on each day, and which ones were under a subscription at that time. Highly inefficient. This is a good case
   # to use array-based calculations, which is what we are doing here: we lay the boxes against the days in question to form a matrix, calculate and save things
   # in the matrix, then sum up by box to create the charges.
-  def Box.calculate_charges_for_user_box_set(boxes, start_date, end_date)
+  def Box.calculate_charges_for_user_box_set(user, start_date, end_date)
     total_vc_boxes_in_storage_by_day = Hash.new #Hash[*boxes.select {|box| box.vc_box? }.collect {|box| [box, 0.0]}.flatten]
     total_cust_cf_in_storage_by_day = Hash.new #Hash[*boxes.select {|box| box.cust_box? }.collect {|box| [box, 0.0]}.flatten]
     box_events = Hash.new
+    boxes = user.boxes
 
     # In case where user has never had storage charge
     start_date ||= earliest_receipt_date(boxes)
@@ -189,8 +190,10 @@ class Box < ActiveRecord::Base
         comments += (" considering the following events in the period: " + box_events[box].join(", "))
       end
       
-      new_charge = Charge.new(:total_in_cents => (box_charges[box].to_f*100.0).ceil, :comments => comments)
-      new_charge.user = box.user
+      # This is a bit asinine. If we were to build the charge on the box's user object, then any other references to user won't get the update until we save.
+      # Thus, in the case where we want to calculate the charges for a customer without saving them, we must pass in that customer's object (user) and associate
+      # the charges with that object here. Thus, if we said user.charges we'd get this charge, but if said user.boxes[0].charges we would not! Bizarre.
+      new_charge = user.charges.build(:total_in_cents => (box_charges[box].to_f*100.0).ceil, :comments => comments)
       new_charge.associate_with(box, start_date, end_date)
       
       new_charge
@@ -390,17 +393,6 @@ class Box < ActiveRecord::Base
       
       if !subscription.nil?
         subscription.start_subscription
-      end
-      
-      # the user was already charged, but we didn't know the duration, because we didn't know the start date. Now we do! Time to update the start and end dates of that charge.
-      storage_charge = storage_charges.last
-      if !storage_charge.nil? && storage_charge.start_date.nil?
-        storage_charge.start_date = Date.today
-        amt_paid_in_months = subscription.nil? ? 1 : (subscription.duration_in_months < Discount::FREE_SHIPPING_MONTH_THRESHOLD ? subscription.duration_in_months : Discount::FREE_SHIPPING_MONTH_THRESHOLD)
-        # >> advances a date object by months. What a weird language Ruby is.
-        storage_charge.end_date = storage_charge.start_date.to_date >> amt_paid_in_months
-        
-        storage_charge.save
       end
             
       return self.save

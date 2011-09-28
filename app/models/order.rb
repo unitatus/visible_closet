@@ -35,7 +35,7 @@ class Order < ActiveRecord::Base
       charges = do_pre_payment_processing
       
       if total_in_cents > 0.0
-        payment_transaction = pay_for_order(charges)
+        payment_transaction = pay_for_order
       end
       
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
@@ -114,7 +114,7 @@ class Order < ActiveRecord::Base
     the_total = 0.0
     
     order_lines.each do |order_line|
-      the_total += order_line.discount.due_at_signup*100
+      the_total += order_line.discount.prepaid_at_purchase*100 + order_line.discount.charged_at_purchase*100
     end
     
     the_total + self.initial_charged_shipping_cost*100
@@ -166,18 +166,18 @@ class Order < ActiveRecord::Base
     charges = Array.new
     
     order_lines.each do | order_line |
-      if order_line.discount.due_at_signup > 0.0
-        if order_line.associated_boxes.size > 0 # this is a box-related order
-          order_line.associated_boxes.each do |box|
+      if order_line.associated_boxes.size > 0 # this is a box-related order
+        order_line.associated_boxes.each do |box|
+          if order_line.discount.charged_at_purchase > 0 # we only charge for stuff that is charged at purchase, though we may pay for things that are prepaid at purchase
             new_charge = Charge.new(:user_id => user_id, :comments => "Charge for " + order_line.product.name)
-            new_charge.total_in_cents = ((order_line.discount.due_at_signup/order_line.associated_boxes.size)*100).ceil
+            new_charge.total_in_cents = ((order_line.discount.charged_at_purchase/order_line.associated_boxes.size)*100).ceil
             new_charge.associate_with(box)
             new_charge.save
             charges << new_charge
           end
-        else # this is a non-box related order
-          charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.due_at_signup*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
         end
+      elsif order_line.discount.charged_at_purchase > 0 # this is a non-box related order with a charge
+        charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.charged_at_purchase*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
       end
     end
     
@@ -255,8 +255,17 @@ class Order < ActiveRecord::Base
   private
   
   # This method saves the transactions
-  def pay_for_order(charges)
-    new_transaction, message = PaymentTransaction.pay(charges, user.default_payment_profile, self.id)
+  def pay_for_order
+    amount = 0.0
+    order_lines.each do |order_line|
+      amount += order_line.discount.charged_at_purchase + order_line.discount.prepaid_at_purchase
+    end
+    
+    if amount == 0.0
+      return nil
+    end
+    
+    new_transaction, message = PaymentTransaction.pay(amount, user.default_payment_profile, self.id)
     
     if new_transaction.nil?
       errors.add("cc_response", message)
@@ -278,7 +287,7 @@ class Order < ActiveRecord::Base
     process_box_orders
     process_box_returns
         
-    return generate_charges
+    generate_charges # if any
   end
 
   # this method throws a RuntimeError b/c the only way that save wouldn't work is if something went really wrong
