@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20110928034757
+# Schema version: 20110928223611
 #
 # Table name: charges
 #
 #  id             :integer         not null, primary key
 #  user_id        :integer
-#  total_in_cents :integer
+#  total_in_cents :float
 #  product_id     :integer
 #  created_at     :datetime
 #  updated_at     :datetime
@@ -43,7 +43,7 @@ class Charge < ActiveRecord::Base
       sum_total += charge.total_in_cents
     end
     
-    sum_total/100
+    sum_total.to_f/100.0
   end
   
   def box

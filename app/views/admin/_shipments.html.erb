@@ -18,7 +18,13 @@
 			<td><a href="/admin/shipment/<%= shipment.id %>"><%= shipment.id %></a></td>
 			<td><%= shipment.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
 			<td><a href="http://www.fedex.com/Tracking?tracknumbers=<%=shipment.tracking_number%>" target="new"><%= shipment.tracking_number %></a></td>
-			<td><a href="/admin/user/<%= shipment.user.id %>"><%= shipment.user.first_name %> <%= shipment.user.last_name %></a></td>
+			<td>
+				<% if shipment.user %>
+					<a href="/admin/user/<%= shipment.user.id %>"><%= shipment.user.first_name %> <%= shipment.user.last_name %></a>
+				<% else %>
+					User unknown
+				<% end %>
+			</td>
 			<td><%= shipment.from_address.first_name  %> <%= shipment.from_address.last_name %></td>
 			<td><%= shipment.to_address.first_name %> <%= shipment.to_address.last_name %></td>
 			<td>

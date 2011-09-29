@@ -159,13 +159,13 @@ class Box < ActiveRecord::Base
         end # end if on start and end dates of range
       end # end box_day_matrix keys loop
     end # end date range loop
-    
+
     # now we know how many boxes / cf were in storage on each day. Time to calculate the charges by box.
     box_charges = Hash[*boxes.collect { |box| [box, Rational(0)] }.flatten]
     boxes.each do |box|
       start_date.upto(end_date) do |day|
         if box.in_storage_on(day) && !box.charged_already_on(day)
-          
+
           subscription = box.subscription_on(day)
           subscription_months = subscription.nil? ? 0 : subscription.duration_in_months
         
@@ -176,14 +176,14 @@ class Box < ActiveRecord::Base
           units = box.vc_box? ? 1 : box.cubic_feet
           box_charges[box] += Rational(storage_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
 
-          if box.inventoried_at
+          if box.inventoried_on(day)
             inventory_discount_calc = Discount.new(Box.get_product(box.box_type, true), 0, subscription_months, existing_product_count)
             box_charges[box] += Rational(inventory_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
           end
         end
       end
     end
-    
+
     boxes.select { |box| box_charges[box] > 0.0 }.collect { |box|
       comments = "Storage charges"
       if !box_events[box].empty?
@@ -193,7 +193,9 @@ class Box < ActiveRecord::Base
       # This is a bit asinine. If we were to build the charge on the box's user object, then any other references to user won't get the update until we save.
       # Thus, in the case where we want to calculate the charges for a customer without saving them, we must pass in that customer's object (user) and associate
       # the charges with that object here. Thus, if we said user.charges we'd get this charge, but if said user.boxes[0].charges we would not! Bizarre.
-      new_charge = user.charges.build(:total_in_cents => (box_charges[box].to_f*100.0).ceil, :comments => comments)
+      new_charge = user.charges.build(:comments => comments)
+      new_charge.total_in_cents = box_charges[box].to_f*100.0
+            
       new_charge.associate_with(box, start_date, end_date)
       
       new_charge
@@ -226,7 +228,7 @@ class Box < ActiveRecord::Base
     matching_subscriptions = subscriptions.select { |subscription| !subscription.start_date.nil? \
                                 && subscription.start_date <= date \
                                 && ((!subscription.end_date.nil? && subscription.end_date >= date) \
-                                    || (subscription.end_date.nil? && date <= subscription.start_date.to_time.advance(subscription.duration_in_months.months).to_date)) \
+                                    || (subscription.end_date.nil? && date <= (subscription.start_date.to_date >> subscription.duration_in_months.months))) \
                          }
 
     @date_subscriptions[date] = matching_subscriptions.last
@@ -261,6 +263,18 @@ class Box < ActiveRecord::Base
     else
       return received_at.to_date <= a_date && (never_requested_return? || return_requested_at.to_date >= a_date)
     end
+  end
+  
+  def inventoried_on(a_date)
+    if never_inventoried?
+      return false
+    else
+      return inventoried_at.to_date <= a_date && (never_requested_return? || return_requested_at.to_date >= a_date)
+    end
+  end
+  
+  def never_inventoried?
+    return inventoried_at.nil?
   end
   
   def has_charges?
@@ -336,6 +350,7 @@ class Box < ActiveRecord::Base
     ordering_order_line.order
   end
   
+  # this is only called when the user submits the order for a return; when they mark a box for a return, it just goes in the cart!
   def mark_for_return
     update_attribute(:status, RETURN_REQUESTED_STATUS)
     update_attribute(:return_requested_at, Time.now)

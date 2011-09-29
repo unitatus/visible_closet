@@ -335,11 +335,13 @@ class User < ActiveRecord::Base
   def current_account_balance
     running_total = 0.0
     charges.each do |charge|
-      running_total = running_total - charge.total_in_cents/100
+      puts("charge total in cents is " + charge.total_in_cents.to_s)
+      running_total = running_total - charge.total_in_cents.to_f
     end
+    running_total = running_total/100.0
     
     payment_transactions.each do |payment_transaction|
-      running_total = running_total + payment_transaction.amount
+      running_total = running_total + payment_transaction.amount.to_f
     end
     
     return running_total
@@ -379,13 +381,6 @@ class User < ActiveRecord::Base
   end
   
   def next_charge_date
-    # last_charge_date = self.earliest_effective_charge_date
-    #     
-    #     if last_charge_date.nil? || last_charge_date < Date.today
-    #       self.end_of_month
-    #     else # we just charged the user, so the next charge date is next month
-    #       self.end_of_month(self.end_of_month + 1) # adds a day to the end of this month, putting us in next month
-    #     end
     end_of_month
   end
     
