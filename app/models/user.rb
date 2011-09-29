@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
   end
   
   def has_cart_items?
-    if cart.nil? || cart.items.empty?
+    if cart.nil? || cart.cart_items.empty?
       return false
     else
       return true
