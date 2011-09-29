@@ -62,16 +62,16 @@ class OrderLine < ActiveRecord::Base
         
         supplies_shipment.from_address_id = Rails.application.config.fedex_vc_address_id
         supplies_shipment.to_address_id = self.shipping_address_id
-      
-        if !supplies_shipment.generate_fedex_label
-          raise "Error generating shipment and saving; errors: " << order_shipment.errors.inspect
-        end
         
         if !supplies_shipment.save
           raise "Error saving shipment; errors: " << order_shipment.errors.inspect
-        end    
-      
+        end
+        
         update_attribute(:shipment_id, supplies_shipment.id)
+              
+        if !supplies_shipment.generate_fedex_label
+          raise "Error generating shipment and saving; errors: " << order_shipment.errors.inspect
+        end
       end
       
       if (!save)
