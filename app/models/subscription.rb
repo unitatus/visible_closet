@@ -18,10 +18,7 @@ class Subscription < ActiveRecord::Base
   has_many :storage_charges
   
   def start_subscription
-    update_attribute(:start_date, Time.now)
-  end
-  
-  def end_subscription
-    update_attribute(:end_date, Time.now)    
+    update_attribute(:start_date, Date.today)
+    update_attribute(:end_date, Date.today >> duration_in_months)
   end
 end

@@ -226,8 +226,8 @@ class Box < ActiveRecord::Base
     end
     
     matching_subscriptions = subscriptions.select { |subscription| !subscription.start_date.nil? \
-                                && subscription.start_date <= date \
-                                && ((!subscription.end_date.nil? && subscription.end_date >= date) \
+                                && subscription.start_date.to_date <= date \
+                                && ((!subscription.end_date.nil? && subscription.end_date.to_date >= date) \
                                     || (subscription.end_date.nil? && date <= (subscription.start_date.to_date >> subscription.duration_in_months.months))) \
                          }
 
@@ -355,7 +355,7 @@ class Box < ActiveRecord::Base
     update_attribute(:status, RETURN_REQUESTED_STATUS)
     update_attribute(:return_requested_at, Time.now)
     if !subscription_on(Date.today).nil?
-      subscription_on(Date.today).end_subscription
+      # TODO: This is wrong. you should not be able to do this.
     end
   end
   
