@@ -184,6 +184,8 @@ class Box < ActiveRecord::Base
       end
     end
 
+    print_out_box_charges(box_charges)
+
     boxes.select { |box| box_charges[box] > 0.0 }.collect { |box|
       comments = "Storage charges"
       if !box_events[box].empty?
@@ -194,12 +196,18 @@ class Box < ActiveRecord::Base
       # Thus, in the case where we want to calculate the charges for a customer without saving them, we must pass in that customer's object (user) and associate
       # the charges with that object here. Thus, if we said user.charges we'd get this charge, but if said user.boxes[0].charges we would not! Bizarre.
       new_charge = user.charges.build(:comments => comments)
-      new_charge.total_in_cents = box_charges[box].to_f*100.0
+      new_charge.total_in_cents = (box_charges[box].to_f*100.0).round(8)
             
       new_charge.associate_with(box, start_date, end_date)
       
       new_charge
     }
+  end
+  
+  def Box.print_out_box_charges(box_charges)
+    box_charges.keys.each do |box|
+      puts "Box #" + box.id.to_s + ": " + box_charges[box].to_f.to_s
+    end
   end
   
   def Box.earliest_receipt_date(boxes)

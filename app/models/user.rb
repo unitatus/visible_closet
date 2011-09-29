@@ -335,7 +335,6 @@ class User < ActiveRecord::Base
   def current_account_balance
     running_total = 0.0
     charges.each do |charge|
-      puts("charge total in cents is " + charge.total_in_cents.to_s)
       running_total = running_total - charge.total_in_cents.to_f
     end
     running_total = running_total/100.0
