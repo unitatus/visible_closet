@@ -29,7 +29,7 @@
 	<div class="indent-div">
 		Most recent payment: 
 		<% if @last_payment_transaction %>
-			<%= number_to_currency @last_payment_transaction.amount %> for <%= raw(@last_payment_transaction.order_id.nil? ? "<a href='#'>storage charges</a>" : "<a href='#'>order #{@last_payment_transaction.order_id}</a>") %>.
+			<%= number_to_currency @last_payment_transaction.amount %> for <%= raw(@last_payment_transaction.order_id.nil? ? "<a href='#'>storage charges</a>" : "<a href='/orders/#{@last_payment_transaction.order_id}'>order #{@last_payment_transaction.order_id}</a>") %>.
 		<% else %>
 			None
 		<% end %>

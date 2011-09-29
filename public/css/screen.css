@@ -749,6 +749,17 @@ html {
 table.lightly_padded_table td
 {
 	padding: 2px 5px 2px 5px;
+	text-align: left;
+}
+table.lightly_padded_table th
+{
+	padding: 2px 5px 2px 5px;
+	font-weight: bold;
+	text-align: center;
+}
+table.right_pad_table td
+{
+	text-align: center;
 }
 table.address_validation_table {
 	margin-left: auto;

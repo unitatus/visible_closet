@@ -1,15 +1,65 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <b>Cart:</b>
-  <%= @order.cart_id %>
-</p>
-
-<p>
-  <b>Ip address:</b>
-  <%= @order.ip_address %>
-</p>
-
-
-<%= link_to 'Edit', edit_order_path(@order) %> |
-<%= link_to 'Back', orders_path %>
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<style>
+.indent-div {
+	padding-left: 15px;
+}
+</style>
+<div id="internal-right">
+	<h1>Order <%= @order.id %></h1>
+	<table class="lightly_padded_table">
+		<tr>
+			<td style="width: 80px"><b>Created At:</b></td>
+			<td><%= @order.created_at.strftime "%m/%d/%Y" %></td>
+		</tr>
+		<tr>
+			<td><b>Status:</b></td>
+			<td><%= @order.status %></td>
+		</tr>
+		<tr>
+			<td><b>Total Paid:</b></td>
+			<td><%= number_to_currency @order.amount_paid %></td>
+		</tr>
+		<tr>
+			<td colspan="2"><b>Order Lines:</b></td>
+		</tr>
+		<tr>
+			<td colspan="2"><br>
+				<table class="right_pad_table">
+					<% if @order.order_lines.size > 0 %>
+						<tr>
+							<th>Item Ordered</b></th>
+							<th>Quantity</th>
+							<th>Subscription months</th>
+							<th>Associated boxes</th>
+							<th>Associated shipping address</th>
+						</tr>
+					<% end %>
+					<% @order.order_lines.each_with_index do |order_line, index| %>
+						<tr>
+							<td><%= order_line.product.name %></td>
+							<td><%= order_line.quantity %></td>
+							<td>
+								<% if order_line.committed_months %>
+									<%= order_line.committed_months %>
+								<% else %>
+									NA
+								<% end %>
+							</td>
+							<td>
+								<% order_line.associated_boxes.each_with_index do |box, index| %>
+									<% if index > 0 %>
+									, 
+									<% end %>
+									<a href="/boxes">Box <%= box.box_num %></a>
+								<% end %>
+							</td>
+							<td><%= raw address_summary(order_line.shipping_address)%>
+						</tr>
+					<% end %>
+				</table>
+			</td>
+		</tr>
+	</table>
+	</div>
+<div class="clearer"></div>

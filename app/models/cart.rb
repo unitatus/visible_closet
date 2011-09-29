@@ -112,7 +112,6 @@ class Cart < ActiveRecord::Base
   
   def num_box_return_requests
     cart_items_with_boxes = cart_items.select { |c| !c.box.nil? }
-    puts("cart items with boxes is " + cart_items_with_boxes.inspect)
     cart_items_with_boxes.size
   end
   

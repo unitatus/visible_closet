@@ -184,7 +184,7 @@ class Box < ActiveRecord::Base
       end
     end
 
-    print_out_box_charges(box_charges)
+    # print_out_box_charges(box_charges)
 
     boxes.select { |box| box_charges[box] > 0.0 }.collect { |box|
       comments = "Storage charges"
