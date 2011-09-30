@@ -29,6 +29,10 @@ class AccountController < ApplicationController
     @start_of_month = DateHelper.start_of_month
   end
   
+  def account_history
+    @events = Event.all(current_user)
+  end
+  
   def store_more_boxes
     # If you circumvented the normal sign-up procedures then you must take care of those now
     if current_user.default_shipping_address.nil?

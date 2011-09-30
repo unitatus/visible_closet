@@ -1,0 +1,23 @@
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<style>
+.indent-div {
+	padding-left: 15px;
+}
+</style>
+<div id="internal-right">
+	<h1>Account History</h1>
+	<table class="lightly_padded_table">
+		<tr>
+			<th>Date</th>
+			<th>Description</th>
+		</tr>
+		<% @events.each do |event| %>
+			<tr>
+				<td><%= event.date.strftime "%m/%d/%Y" %></td>
+				<td><%= event.description %></td>
+			</tr>
+		<% end %>
+	</table>
+	</div>
+<div class="clearer"></div>

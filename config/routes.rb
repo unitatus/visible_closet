@@ -130,6 +130,7 @@ VisibleCloset::Application.routes.draw do
   post "account/choose_new_shipping_address"
   post "account/choose_new_billing_address"
   get "account/invoice_estimate"
+  match "account/history" => "account#account_history"
   match "orders/:id/print_invoice" => "orders#print_invoice"
   get "account/external_addresses_validate"
   match "email_confirmation" => "account#email_confirmation"
