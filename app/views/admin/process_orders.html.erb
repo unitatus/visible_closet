@@ -15,8 +15,8 @@
 	  </tr>
 		<% @orders.each do |order| %>
 
-		<% user = User.find(order.user_id) %>
-	  <tr>
+		<% user = order.user %>
+	  <tr<%= user.test_user? ? " style='background: #FF99FF'" : "" %>>
 		<td>
 			<%= order.id %>
 		</td>
@@ -33,7 +33,7 @@
 			<%= order.created_at.strftime '%m/%d/%Y %l:%M %p' %>
 		</td>
 		<td>
-			<%= order.status %>
+			<%= order.status %><%= user.test_user? ? " (TEST USER)" : "" %>
 		</td>
 	    <td>
 	      <a href="/orders/<%= order.id %>/process">Process Order</a>
