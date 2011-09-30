@@ -332,23 +332,65 @@ class User < ActiveRecord::Base
     end
   end
 
-  def current_account_balance
+  def current_account_balance(include_news=false)
+    account_balance_as_of(Date.today, include_news)
+  end
+  
+  def account_balance_as_of(date, include_news=false)
     running_total = 0.0
+
     charges.each do |charge|
-      running_total = running_total - charge.total_in_cents.to_f
+      running_total = running_total - charge.total_in_cents.to_f if (charge.created_at && charge.created_at <= date) || (include_news && charge.created_at.nil?)
     end
     running_total = running_total/100.0
     
     payment_transactions.each do |payment_transaction|
-      running_total = running_total + payment_transaction.amount.to_f
+      running_total = running_total + payment_transaction.amount.to_f if payment_transaction.created_at <= date
     end
     
     return running_total
   end
   
-  def calculate_subscription_charges(as_of_date = self.end_of_month)
-    last_charged_date = self.earliest_effective_charge_date
-    Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date)
+  def payments_during_month(date=nil)
+    if date.nil?
+      date = Date.today
+    end
+    
+    payments_between(DateHelper.start_of_month(date), DateHelper.end_of_month(date))
+  end
+  
+  def payments_between(start_date, end_date)
+    payment_transactions.select {|payment| payment.created_at >= start_date && payment.created_at <= end_date }
+  end
+  
+  def charges_during_month(date=nil)
+    if date.nil?
+      date = Date.today
+    end
+    
+    charges_between(DateHelper.start_of_month(date), DateHelper.end_of_month(date))
+  end
+  
+  def charges_between(start_date, end_date)
+    charges.select {|charge| charge.created_at.nil? ? false : charge.created_at >= start_date && charge.created_at <= end_date }
+  end
+  
+  def calculate_subscription_charges(as_of_date = self.end_of_month, force=false)
+    if !@recently_calculated_anticipated || force
+      last_charged_date = self.earliest_effective_charge_date
+      Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date)
+      @recently_calculated_anticipated = true
+    else
+      anticipated_charges
+    end
+  end
+  
+  def anticipated_charges
+    if @recently_calculated_anticipated
+      charges.select {|charge| charge.id.nil? }
+    else
+      calculate_subscription_charges
+    end
   end
   
   def will_have_charges_at_end_of_month?

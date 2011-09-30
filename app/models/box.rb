@@ -142,19 +142,19 @@ class Box < ActiveRecord::Base
         # save whether anything changed, for informational purposes
         if day != start_date && day != end_date
           if box.in_storage_on(day) && !box.in_storage_on(day - 1) && !box.charged_already_on(day)
-            box_events[box] << "box receipt"
+            box_events[box] << "receipt on " + day.strftime("%m/%d/%Y")
           end
           
           if box.in_storage_on(day) && !box.in_storage_on(day + 1) && !box.charged_already_on(day)
-            box_events[box] << "box return"
+            box_events[box] << "return on " + day.strftime("%m/%d/%Y")
           end
           
           if box.subscription_on(day) && box.subscription_on(day) != box.subscription_on(day - 1) && !box.charged_already_on(day)
-            box_events[box] << "subscription number #{box.subscription_on(day).id} start"
+            box_events[box] << "subscription start on " + day.strftime("%m/%d/%Y")
           end
           
           if box.subscription_on(day) && box.subscription_on(day) != box.subscription_on(day + 1) && !box.charged_already_on(day)
-            box_events[box] << "subscription number #{box.subscription_on(day).id} end"
+            box_events[box] << "subscription end on " + day.strftime("%m/%d/%Y")
           end
         end # end if on start and end dates of range
       end # end box_day_matrix keys loop
@@ -187,9 +187,9 @@ class Box < ActiveRecord::Base
     # print_out_box_charges(box_charges)
 
     boxes.select { |box| box_charges[box] > 0.0 }.collect { |box|
-      comments = "Storage charges"
+      comments = "Storage charges for box " + box.box_num.to_s
       if !box_events[box].empty?
-        comments += (" considering the following events in the period: " + box_events[box].join(", "))
+        comments += (" (prorated for " + box_events[box].join(", ") + ")")
       end
       
       # This is a bit asinine. If we were to build the charge on the box's user object, then any other references to user won't get the update until we save.

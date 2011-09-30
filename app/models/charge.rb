@@ -73,4 +73,7 @@ class Charge < ActiveRecord::Base
     storage_charge && storage_charge.box == box
   end
 
+  def amount
+    total_in_cents/100.0
+  end
 end

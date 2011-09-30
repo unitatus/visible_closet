@@ -14,14 +14,19 @@ class AccountController < ApplicationController
     @next_user_charge_date = current_user.next_charge_date
     user = current_user
 
-    user.calculate_subscription_charges # this will add all the charges that will show up at the end of the month
-    
     account_balance = user.current_account_balance
     @next_user_charge = account_balance > 0 ? 0 : account_balance * -1
   end
   
   def email_confirmation
     
+  end
+  
+  def invoice_estimate
+    @user = current_user
+
+    @user.calculate_subscription_charges # this will add all the charges that will show up at the end of the month
+    @start_of_month = DateHelper.start_of_month
   end
   
   def store_more_boxes

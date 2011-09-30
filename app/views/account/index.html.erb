@@ -35,7 +35,7 @@
 		<% end %>
 		<br>
 		<% if current_user.will_have_charges_at_end_of_month? %>
-			Next payment of <%= number_to_currency @next_user_charge %> due on <%= @next_user_charge_date.strftime('%m/%d/%Y') %> <a href="#">(details)</a>.<br>
+			Next payment of <%= number_to_currency @next_user_charge %> due on <%= @next_user_charge_date.strftime('%m/%d/%Y') %> <a href="/account/invoice_estimate">(details)</a>.<br>
 		<% end %>
 		<a href="#">Account History &gt;&gt;</a>
 	</div>

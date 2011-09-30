@@ -1,0 +1,117 @@
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<style>
+.indent-div {
+	padding-left: 15px;
+}
+</style>
+<div id="internal-right">
+	<h1>Invoice estimate for <%= @user.next_charge_date.strftime "%m/%d/%Y" %></h1>
+	<p>This is an estimate of the charges you will incur at the end of the month based on the boxes you currently have in storage. Adding boxes, returning them, or using Visible Closet services may positively or negatively affect the amount due at the end of this month.</p>
+	<br>
+	<table class="lightly_padded_table">
+		<tr>
+			<td colspan="2"><b>Account Balance as of <%= @start_of_month.strftime "%m/%d/%Y" %>:</b></td>
+			<td><%= number_to_currency (@user.account_balance_as_of(@start_of_month-1)) %></td>
+		</tr>
+		<% payments_during_month = @user.payments_during_month %>
+		<% if payments_during_month.size > 0 %>
+			<tr>
+				<td colspan="2"><br><b>Payments Made this Month</td>
+				<td></td>
+			</tr>
+			<% payments_during_month.each do |payment| %>
+				<tr>
+					<td style="padding-left: 10px">payment for 
+						<% if payment.order_id %>
+							<a href="/orders/<%= payment.order_id %>">order <%= payment.order_id %></a>
+						<% else %>
+							<a href="/boxes">box <%= payment.box.box_num %></a>
+						<% end %>
+						:
+					</td>
+					<td><%= number_to_currency payment.amount %></td>
+					<td></td>
+				</tr>
+			<% end %>
+			<tr>
+				<td colspan="2"><b>Total payments:</b></td>
+				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(payments_during_month)%></b></td>
+			</tr>
+		<% end %>
+		<% charges_during_month = @user.charges_during_month %>
+		<% if charges_during_month.size > 0 %>
+			<tr>
+				<td colspan="2"><br><b>Charges Already Incurred</td>
+				<td></td>
+			</tr>
+			<% charges_during_month.each do |charge| %>
+			<tr>
+				<td style="padding-left: 10px">Charge for 
+					<% if charge.product_id %>
+						purchase of <%= charge.product.name %>
+					<% elsif charge.shipment %>
+						shipping for 
+						<% if charge.shipment.box_id %>
+							box <%= charge.shipment.box.box_num %>
+						<% elsif charge.order_line %>
+							<a href="/orders/<%= charge.shipment.order_line.order_id %>">order <%= charge.shipment.order_line.order_id %></a>
+						<% else %>
+							(unknown shipment type)
+						<% end %>
+					<% elsif charge.order_id %>
+						<a href="/orders/<%= charge.order_id %>">order <%= charge.order_id %></a>
+					<% else # storage charge or misc %>
+						<%= charge.comments %>
+					<% end %>
+				</td>
+				<td><%= number_to_currency charge.amount*-1 %></td>
+				<td></td>
+			</tr>
+			<% end %>
+			<tr>
+				<td colspan="2"><b>Total charges:</b></td>
+				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(charges_during_month)*-1 %></b></td>
+			</tr>
+		<% end %>
+		<tr>
+			<% anticipated_charges = @user.anticipated_charges %>
+			<td colspan="2"><br><b>Anticipated Charges</b></td>
+			<td></td>
+		</tr>
+		<% if anticipated_charges.size == 0 %>
+			<tr><td colspan="2">None</td><td></td></tr>
+		<% else %>
+		<% anticipated_charges.each do |charge| %>
+			<tr>
+				<td style="padding-left: 10px; width: 400px;"><%= charge.comments %></td>
+				<td><%= number_to_currency charge.amount %></td>
+				<td></td>
+			</tr>
+		<% end %>
+		<tr>
+			<td colspan="2"><b>Total anticipated charges:</b></td>
+			<td><%= number_to_currency MiscHelper.aggregate_transactions(anticipated_charges) %></td>
+		</tr>
+		<% end %>
+		<tr><td colspan="3">&nbsp;</td></tr>
+		<tr>
+			<% current_account_balance = @user.current_account_balance(true) %>
+			<td colspan="2" style="text-align: right"><b>Net Anticipated Account Balance on <%= DateHelper.end_of_month.strftime "%m/%d/%Y"%>:</b></td>
+			<td>
+				<%= number_to_currency current_account_balance %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: right"><b>Anticipated amount due:</b></td>
+			<td>
+				<% if current_account_balance < 0 %>
+					<%= number_to_currency 0 %>
+				<% else %>
+					<%= number_to_currency current_account_balance %>
+				<% end %>
+			</td>
+		</tr>
+	</table>
+	</div>
+<div class="clearer"></div>
