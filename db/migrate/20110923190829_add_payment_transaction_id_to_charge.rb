@@ -1,6 +1,13 @@
 class AddPaymentTransactionIdToCharge < ActiveRecord::Migration
   def self.up
     add_column :charges, :payment_transaction_id, :integer, :references => :payment_transactions
+    create_table :storage_charges do |t|
+      t.integer :box_id, :references => :boxes
+      t.integer :charge_id, :references => :charges
+      t.integer :subscription_id, :references => :subscriptions
+      t.datetime :start_date
+      t.datetime :end_date
+    end
     Order.all.each do |order|
       if order.payment_transactions.size > 0
         order.charges.each do |charge|
@@ -8,6 +15,7 @@ class AddPaymentTransactionIdToCharge < ActiveRecord::Migration
         end
       end
     end
+    drop_table :storage_charges
   end
 
   def self.down
