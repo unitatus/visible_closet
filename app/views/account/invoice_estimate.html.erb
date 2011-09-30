@@ -65,13 +65,13 @@
 						<%= charge.comments %>
 					<% end %>
 				</td>
-				<td><%= number_to_currency charge.amount*-1 %></td>
+				<td><%= number_to_currency charge.amount %></td>
 				<td></td>
 			</tr>
 			<% end %>
 			<tr>
 				<td colspan="2"><b>Total charges:</b></td>
-				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(charges_during_month)*-1 %></b></td>
+				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(charges_during_month) %></b></td>
 			</tr>
 		<% end %>
 		<tr>
