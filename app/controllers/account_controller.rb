@@ -14,7 +14,9 @@ class AccountController < ApplicationController
     @next_user_charge_date = current_user.next_charge_date
     user = current_user
 
-    account_balance = user.current_account_balance
+    user.calculate_subscription_charges
+
+    account_balance = user.account_balance_as_of(DateHelper.end_of_month, true)
     @next_user_charge = account_balance > 0 ? 0 : account_balance * -1
   end
   
@@ -27,6 +29,7 @@ class AccountController < ApplicationController
 
     @user.calculate_subscription_charges # this will add all the charges that will show up at the end of the month
     @start_of_month = DateHelper.start_of_month
+    @end_of_month = DateHelper.end_of_month
   end
   
   def account_history

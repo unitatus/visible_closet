@@ -196,7 +196,7 @@ class Box < ActiveRecord::Base
       # Thus, in the case where we want to calculate the charges for a customer without saving them, we must pass in that customer's object (user) and associate
       # the charges with that object here. Thus, if we said user.charges we'd get this charge, but if said user.boxes[0].charges we would not! Bizarre.
       new_charge = user.charges.build(:comments => comments)
-      new_charge.total_in_cents = (box_charges[box].to_f*100.0).round(8)
+      new_charge.total_in_cents = (box_charges[box].to_f*100.0).round
             
       new_charge.associate_with(box, start_date, end_date)
       

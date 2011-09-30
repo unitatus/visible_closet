@@ -96,19 +96,19 @@
 		<% end %>
 		<tr><td colspan="3">&nbsp;</td></tr>
 		<tr>
-			<% current_account_balance = @user.current_account_balance(true) %>
+			<% end_month_balance = @user.account_balance_as_of(@end_of_month, true) %>
 			<td colspan="2" style="text-align: right"><b>Net Anticipated Account Balance on <%= DateHelper.end_of_month.strftime "%m/%d/%Y"%>:</b></td>
 			<td>
-				<%= number_to_currency current_account_balance %>
+				<%= number_to_currency end_month_balance %>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align: right"><b>Anticipated amount due:</b></td>
 			<td>
-				<% if current_account_balance < 0 %>
+				<% if end_month_balance > 0 %>
 					<%= number_to_currency 0 %>
 				<% else %>
-					<%= number_to_currency current_account_balance %>
+					<%= number_to_currency end_month_balance*-1 %>
 				<% end %>
 			</td>
 		</tr>

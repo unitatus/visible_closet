@@ -348,14 +348,15 @@ class User < ActiveRecord::Base
     running_total = 0.0
 
     charges.each do |charge|
-      running_total = running_total - charge.total_in_cents.to_f if (charge.created_at && charge.created_at <= date) || (include_news && charge.created_at.nil?)
+      if (charge.created_at && charge.created_at <= date) || (include_news && charge.created_at.nil?)
+        running_total = running_total - charge.amount
+      end
     end
-    running_total = running_total/100.0
     
     payment_transactions.each do |payment_transaction|
       running_total = running_total + payment_transaction.amount.to_f if payment_transaction.created_at <= date
     end
-    
+
     return running_total
   end
   
