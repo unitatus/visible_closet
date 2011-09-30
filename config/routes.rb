@@ -86,6 +86,7 @@ VisibleCloset::Application.routes.draw do
   post "admin/send_boxes_user_search"
   get "admin/users"
   match "admin/user/:id/addresses" => "admin#user_addresses"
+  match "admin/user/:id/switch_test_user_status" => "admin#switch_test_user_status"
   match "admin/user/:id" => "admin#user"
   match "admin/user/:id/clear_test_data" => "admin#clear_user_data"
   match "admin/user/:id/destroy" => "admin#destroy_user"

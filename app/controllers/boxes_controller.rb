@@ -183,7 +183,7 @@ class BoxesController < ApplicationController
       params[:location] = nil
       params[:marked_for_inventorying] = nil
     
-      UserMailer.box_received(box).deliver
+      UserMailer.deliver_box_received(box)
     else
       @error_messages << box.errors
     end
@@ -313,7 +313,7 @@ class BoxesController < ApplicationController
     @order_line.status = OrderLine::PROCESSED_STATUS
     @order_line.save!
     
-    UserMailer.box_inventoried(@box).deliver
+    UserMailer.deliver_box_inventoried(@box)
     
     redirect_to :controller => "admin", :action => "process_orders"
   end

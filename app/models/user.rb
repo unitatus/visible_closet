@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110803210001
+# Schema version: 20110930133517
 #
 # Table name: users
 #
@@ -31,6 +31,7 @@
 #  cim_id                      :string(255)
 #  default_payment_profile_id  :integer
 #  default_shipping_address_id :integer
+#  test_user                   :boolean
 #
 
 class User < ActiveRecord::Base
@@ -443,7 +444,11 @@ class User < ActiveRecord::Base
     
     Date.parse((date.month == 12 ? date.year + 1 : date.year).to_s + "-" + (date.month == 12 ? 1 : date.month + 1).to_s + "-01") - 1
   end
-    
+  
+  def not_test_user?
+    !test_user?
+  end
+  
   private 
 
   def delete_cim_profile

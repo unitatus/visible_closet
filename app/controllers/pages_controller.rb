@@ -110,7 +110,7 @@ class PagesController < ApplicationController
   def register_interest
     if !params[:email].blank? && InterestedPerson.find_by_email(params[:email]).nil?
       person = InterestedPerson.create!(:email => params[:email]) 
-      AdminMailer.interested_person_added(person).deliver
+      AdminMailer.deliver_interested_person_added(person)
     end
   end
   
@@ -173,13 +173,13 @@ class PagesController < ApplicationController
   
     if action == :support
       if @error_messages.empty?
-        AdminMailer.support_post(email, params[:comment][:text], request.remote_ip, user).deliver
+        AdminMailer.deliver_support_post(email, params[:comment][:text], request.remote_ip, user)
       else
         render :action => "support"
       end
     else
       if @error_messages.empty?
-        AdminMailer.contact_post(email, params[:comment][:text], request.remote_ip).deliver
+        AdminMailer.deliver_contact_post(email, params[:comment][:text], request.remote_ip)
       else
         render :action => "contact"
       end

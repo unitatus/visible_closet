@@ -1,6 +1,8 @@
 <%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
-	<h1>User #<%= @user.id %></h1><br>
+	<h1>
+		<%= raw @user.test_user? ? "<span style='color: red'>": ""%>User #<%= @user.id %><%= raw @user.test_user? ? " TEST USER</span>": ""%>
+	</h1><br>
 <table class="lightly_padded_table">
 	<tr>
 		<td><b>First Name: </b></td><td><%= @user.first_name %></td>
@@ -31,6 +33,9 @@
 	</tr>
 	<tr>
 		<td><b>CIM Identifier: </b></td><td><%= @user.cim_id %></td>
+	</tr>
+	<tr>
+		<td><b>Test User? </b></td><td><%= @user.test_user? %> <a href="/admin/user/<%= @user.id %>/switch_test_user_status">(toggle)</a></td>
 	</tr>
 </table>
 

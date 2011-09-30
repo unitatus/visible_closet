@@ -42,6 +42,12 @@ class PaymentTransaction < ActiveRecord::Base
   end
   
   def PaymentTransaction.pay(amount, payment_profile, order_id)
+    if payment_profile.user.test_user?
+      action_msg = "FAKE PURCHASE for testing; did not call active_merchant interface"
+      new_payment = create!(:action => action_msg, :amount => amount, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      return [new_payment, nil]
+    end
+    
     response = CIM_GATEWAY.create_customer_profile_transaction({:transaction => {:type => :auth_capture,
                                                                   :amount => amount,
                                                                   :customer_profile_id => payment_profile.user.cim_id,

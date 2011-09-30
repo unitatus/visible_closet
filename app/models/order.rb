@@ -104,7 +104,7 @@ class Order < ActiveRecord::Base
         order_line.ship
       end
       
-      UserMailer.boxes_sent(user, order_lines).deliver
+      UserMailer.deliver_boxes_sent(user, order_lines)
       
       return order_lines
     end # end transaction
@@ -295,7 +295,7 @@ class Order < ActiveRecord::Base
   def do_post_payment_processing(charges, payment_transaction)
     invoice = create_invoice(charges, payment_transaction)
 
-    UserMailer.invoice_email(user, invoice, true).deliver
+    UserMailer.deliver_invoice_email(user, invoice, true)
   end # end function
   
   def create_invoice(charges, payment_transaction)

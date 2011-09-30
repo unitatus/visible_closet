@@ -29,11 +29,12 @@
 			<% end %>
 		</tr>
 		<% @users.each do |user| %>
-		<tr>
+		<% style_string = user.test_user? ? " style='background: #FF99FF'" : "" %>
+		<tr<%=style_string%>>
 			<td><a href="/admin/user/<%= user.id %>"><%= user.id %></a></td>
 			<td><%= user.first_name %></td>
 			<td><%= user.last_name %></td>
-			<td><%= user.role %></td>
+			<td><%= user.role %><%= user.test_user? ? " - TEST USER" : "" %></td>
 			<td><a href="/admin/user/<%= user.id %>/orders">Orders</a></td>
 			<td><a href="/admin/user/<%= user.id %>/boxes">Boxes</a></td>
 			<td><a href="/admin/user/<%= user.id %>/shipments">Shipments</a></td>

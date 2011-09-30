@@ -57,6 +57,13 @@ class AdminController < ApplicationController
     @user = User.find(params[:id])
   end
   
+  def switch_test_user_status
+    @user = User.find(params[:id])
+    @user.update_attribute(:test_user, !user.test_user?)
+    
+    redirect_to "/admin/user/#{@user.id}"
+  end
+  
   def clear_user_data
     @user = User.find(params[:id])
     
