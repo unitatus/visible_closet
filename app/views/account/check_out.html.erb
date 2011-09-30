@@ -87,7 +87,7 @@ function openMemberAgreement() {
 			<% end %>
 		</td>
 		<td align="right">
-			<%= number_to_currency(cart_item.discount.due_at_signup) %>
+			<%= number_to_currency(cart_item.discount.charged_at_purchase + cart_item.discount.prepaid_at_purchase) %>
 			<br>
 			<% if !cart_item.committed_months.nil? && cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
 				<a href="#plan_inline" id="checkout_plan_link">(why?)</a>

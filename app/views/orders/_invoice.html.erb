@@ -83,7 +83,7 @@
 									NA
 								<% end %>
 								</td>
-								<td style="text-align: right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.discount.due_at_signup) %>
+								<td style="text-align: right">=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= number_to_currency(line.discount.charged_at_purchase + line.discount.prepaid_at_purchase) %>
 							</tr>
 						<% end %>
 					</tbody>

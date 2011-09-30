@@ -22,6 +22,10 @@ class OrdersController < ApplicationController
     @order_lines = @order.ship_order_lines(params[:order_line_ids])
   end
   
+  def show
+    @order = Order.find_by_id_and_user_id(params[:id], current_user.id)
+  end
+  
   def print_invoice
     @order = Order.find_by_id_and_user_id(params[:id], current_user.id)
     @invoice = @order.latest_invoice

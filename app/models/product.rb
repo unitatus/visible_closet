@@ -12,18 +12,14 @@
 #  first_due     :string(255)
 #
 
+# Note that a product can be anything the customer could purchase -- including storage services for a box, inventorying services for a box,
+# return services for a box, or anything else. Thus, product must behave somewhat polymorphically.
 class Product < ActiveRecord::Base
-  AT_SIGNUP = "at_signup"
-  AT_RECEIPT = "at_receipt"
   
   attr_accessible :id, :name, :price, :price_comment, :created_at, :updated_at
   
-  def due_at_signup
-    if first_due == AT_SIGNUP
-      self.price
-    else
-      0.0
-    end
+  def prepay?
+    return vc_box?
   end
   
   def vc_box?

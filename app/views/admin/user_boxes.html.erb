@@ -21,7 +21,7 @@
 				<% type_desc_string = "&desc=true" %>
 			<% end %>
 			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=box_type<%= type_desc_string %>">Type</a></th>
-			<th>Cubic Feet</th>
+			<th>Box Num</th>
 			<th>Subscription</th>
 			<th>Receive</th>
 			<% if current_user.admin? %>
@@ -47,10 +47,10 @@
 				</td>
 				<td><%= box.box_type %></td>
 				<td><%= box.box_num %></td>
-				<% if box.subscription_id.nil? %>
+				<% if box.current_subscription.nil? %>
 					<td>NA</td>
 				<% else %>
-					<td><a href="/admin/user/<%= @user.id %>/subscriptions/<%= box.subscription_id %>"><%= box.subscription_id %></a></td>
+					<td><a href="/admin/user/<%= @user.id %>/subscriptions/<%= box.current_subscription.id %>"><%= box.current_subscription.id %></a></td>
 				<% end %>
 				<td>
 					<a href="/boxes/receive_box?box_id=<%= box.id %>">Receive</a>

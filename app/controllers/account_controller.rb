@@ -9,11 +9,28 @@ class AccountController < ApplicationController
   end
 
   def index
+    @last_payment_transaction = PaymentTransaction.find_by_user_id(current_user.id, :order => "created_at DESC")
+    # this must be called before the next line, which will alter (but not save) the user
+    @next_user_charge_date = current_user.next_charge_date
+    user = current_user
 
+    account_balance = user.current_account_balance
+    @next_user_charge = account_balance > 0 ? 0 : account_balance * -1
   end
   
   def email_confirmation
     
+  end
+  
+  def invoice_estimate
+    @user = current_user
+
+    @user.calculate_subscription_charges # this will add all the charges that will show up at the end of the month
+    @start_of_month = DateHelper.start_of_month
+  end
+  
+  def account_history
+    @events = Event.all(current_user)
   end
   
   def store_more_boxes
@@ -186,11 +203,13 @@ class AccountController < ApplicationController
     if @cart.nil?
       @order = Order.find_all_by_user_id(current_user.id, :first, :order => 'created_at DESC').first
       return
+    elsif @cart.order # this means we failed the last time through, after the payment was created; be nice about it
+      @order = @cart.order
+    else
+      @order = @cart.build_order(params[:order])
     end
     
-    @order = @cart.build_order(params[:order])
-
-    @order.ip_address = request.remote_ip
+    @order.ip_address = request.remote_ip      
     
     if @order.contains_box_orders?
       # the only way to get to this function is if the user saw the member agreement; take note of that

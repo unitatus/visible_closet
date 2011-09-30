@@ -53,7 +53,7 @@
 				<% end %>
 		</td>
 			<td align="right">
-				<%= number_to_currency(order_line.discount.due_at_signup) %>
+				<%= number_to_currency(order_line.discount.charged_at_purchase + order_line.discount.prepaid_at_purchase) %>
 			</td>
 		</tr><% end %> <!-- end loop -->
 	</table>

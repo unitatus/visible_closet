@@ -59,7 +59,7 @@ class Invoice < ActiveRecord::Base
     the_total = 0.0
     
     self.invoice_lines.each do |line|
-      the_total += line.discount.due_at_signup
+      the_total += line.discount.charged_at_purchase + line.discount.prepaid_at_purchase
     end
     
     return the_total*100

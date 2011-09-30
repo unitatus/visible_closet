@@ -305,6 +305,7 @@ class BoxesController < ApplicationController
     @box = Box.find(params[:id])
     
     @box.inventorying_status = Box::INVENTORIED
+    @box.inventoried_at = Time.now
     
     @box.save!
     

@@ -137,6 +137,12 @@ class OrderLine < ActiveRecord::Base
     total_quantity
   end
   
+  def associated_boxes
+    all_boxes = ordered_boxes | inventoried_boxes
+    all_boxes << service_box if service_box
+    all_boxes
+  end
+  
   private
   
   def dissociate_inventoried_boxes

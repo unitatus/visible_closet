@@ -20,18 +20,14 @@ class Discount
   
   attr_accessor :product, :new_product_count, :month_count, :existing_product_count
   
-  def Discount.new(product, new_product_count, month_count, existing_product_count=0)
+  def Discount.new(product, new_product_count=0, month_count=0, existing_product_count=0)
     if product.nil?
       raise "Cannot instantiate with nil product"
     end
     
-    if new_product_count.nil?
-      new_product_count = 0
-    end
-    
-    if month_count.nil?
-      month_count = 0
-    end
+    month_count ||= 0
+    new_product_count ||= 0
+    existing_product_count ||= 0
     
     discount = super()
     
@@ -64,7 +60,7 @@ class Discount
   end
   
   def unit_discount_dollars
-    return ((((@product.price * self.unit_discount_perc)*1000.0).round)/10).round/100.0
+    return @product.price * self.unit_discount_perc
   end
   
   def unit_price_after_discount
@@ -90,19 +86,23 @@ class Discount
   def months_due_at_signup
     if @month_count.to_f >= FREE_SHIPPING_MONTH_THRESHOLD
       return FREE_SHIPPING_MONTH_THRESHOLD
-    elsif product.first_due == Product::AT_SIGNUP
+    elsif @product.prepay?
       return 1
     else
       return 0
     end
   end
   
-  def due_at_signup
-    if product.first_due == Product::AT_SIGNUP || self.month_count.to_f >= FREE_SHIPPING_MONTH_THRESHOLD
+  def prepaid_at_purchase
+    if @product.prepay? || self.month_count.to_f >= FREE_SHIPPING_MONTH_THRESHOLD
 			self.total_monthly_price_after_discount * months_due_at_signup
 		else
 		  return 0.0
 		end
+  end
+  
+  def charged_at_purchase
+    product.id == Rails.application.config.return_box_product_id ? @product.price*@new_product_count : 0.0
   end
   
   def free_shipping?

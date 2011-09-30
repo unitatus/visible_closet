@@ -19,11 +19,15 @@
 				<% if transaction.core_transaction.is_a?(PaymentTransaction) %>
 					payment - card ending in <%= transaction.core_transaction.payment_profile.last_four_digits %>
 				<% else %>
-				charge for 
-				  <% if transaction.core_transaction.shipment_id.nil? %>
-				      order <a href="/admin/user/<%= @user.id %>/orders/<%= transaction.core_transaction.order_id %>">#<%= transaction.core_transaction.order_id %></a> for product <%= transaction.core_transaction.product.name %>
-				  <% else %>
-				      shipment <a href="/admin/shipment/<%= transaction.core_transaction.shipment_id %>">#<%= transaction.core_transaction.shipment_id %></a>
+					charge for 
+				  	<% if transaction.core_transaction.shipment_id %>
+						shipment <a href="/admin/shipment/<%= transaction.core_transaction.shipment_id %>">#<%= transaction.core_transaction.shipment_id %></a>
+					<% elsif transaction.core_transaction.order_id && transaction.core_transaction.product_id %>
+						order <a href="/admin/user/<%= @user.id %>/orders/<%= transaction.core_transaction.order_id %>">#<%= transaction.core_transaction.order_id %></a> for product <%= transaction.core_transaction.product.name %>
+					<% elsif transaction.core_transaction.order_id %>
+						shipping for order <a href="/admin/user/<%= @user.id %>/orders/<%= transaction.core_transaction.order_id %>">#<%= transaction.core_transaction.order_id %></a>
+				   	<% elsif transaction.core_transaction.storage_charge %>
+						storage of box <a href="/admin/user/<%= @userid %>/box/<%= transaction.core_transaction.storage_charge.box_id %>">#<%= transaction.core_transaction.storage_charge.box_id %><a/> from <%= transaction.core_transaction.storage_charge.start_date.strftime "%m/%d/%Y" %> to <%= transaction.core_transaction.storage_charge.end_date.strftime "%m/%d/%Y" %>
 				  <% end %>
 				<% end %>
 			</td>
