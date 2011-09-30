@@ -1,6 +1,8 @@
 class AddPaymentTransactionIdToCharge < ActiveRecord::Migration
   def self.up
     add_column :charges, :payment_transaction_id, :integer, :references => :payment_transactions
+    
+    # The create-drop bits are in case this needs to be re-executed with the current code, since heroku needed them (charges wouldn't load)
     create_table :storage_charges do |t|
       t.integer :box_id, :references => :boxes
       t.integer :charge_id, :references => :charges
