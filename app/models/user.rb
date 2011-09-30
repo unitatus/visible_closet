@@ -387,7 +387,7 @@ class User < ActiveRecord::Base
   def calculate_subscription_charges(as_of_date = self.end_of_month, force=false)
     if !@recently_calculated_anticipated || force
       last_charged_date = self.earliest_effective_charge_date
-      if last_charged_date > DateHelper.start_of_month(as_of_date)
+      if last_charged_date && last_charged_date > DateHelper.start_of_month(as_of_date)
         last_charged_date = DateHelper.start_of_month(as_of_date)
       end
       Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date)
@@ -412,8 +412,7 @@ class User < ActiveRecord::Base
       end
     end
     
-    # even if all boxes are not chargable, there may be other charges outstanding
-    !self.already_created_outstanding_charges.empty?
+    return account_balance_as_of(DateHelper.end_of_month) < 0
   end
   
   # This needs to account for boxes that don't have charges yet but need to be included. If any box has been received but never charged, return the receive date.

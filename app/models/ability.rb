@@ -87,6 +87,8 @@ class Ability
       can :closet_main, :account
       can :email_confirmation, :account
       can :external_addresses_validate, :account
+      can :account_history, :account
+      can :invoice_estimate, :account
       
       # addresses
       can :new_default_shipping_address, Address
