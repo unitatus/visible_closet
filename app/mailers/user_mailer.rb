@@ -27,14 +27,14 @@ class UserMailer < ActionMailer::Base
     if !send_admin
       mail(:to => user.email, :subject => "Invoice from The Visible Closet")
     else
-      mail(:to => user.email, :subject => "Invoice from The Visible Closet")
       AdminMailer.deliver_new_order(@user, @order, @invoice, @vc_address, @payment_profile, @billing_address)
+      mail(:to => user.email, :subject => "Invoice from The Visible Closet")
     end
   end
   
   def deliver_boxes_sent(user, order_lines)
     if user.not_test_user?
-      invoice_email(user, order_lines).deliver
+      boxes_sent(user, order_lines).deliver
     end
   end
   
@@ -46,7 +46,7 @@ class UserMailer < ActionMailer::Base
   
   def deliver_box_received(box)
     if box.user.not_test_user?
-      invoice_email(user, order_lines).deliver
+      box_received(box).deliver
     end
   end
   
@@ -57,7 +57,7 @@ class UserMailer < ActionMailer::Base
   
   def deliver_box_inventoried(box)
     if box.user.not_test_user?
-      invoice_email(user, order_lines).deliver
+      box_inventoried(box).deliver
     end
   end
   
