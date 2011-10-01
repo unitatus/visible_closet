@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
   helper :application
   layout 'user_mailer', :except => :invoice_email
   
-  def deliver_invoice_email(user, invoice, send_admin=false)
+  def UserMailer.deliver_invoice_email(user, invoice, send_admin=false)
     if user.not_test_user?
       invoice_email(user, invoice, send_admin).deliver
     end
@@ -32,7 +32,7 @@ class UserMailer < ActionMailer::Base
     end
   end
   
-  def deliver_boxes_sent(user, order_lines)
+  def UserMailer.deliver_boxes_sent(user, order_lines)
     if user.not_test_user?
       boxes_sent(user, order_lines).deliver
     end
@@ -44,7 +44,7 @@ class UserMailer < ActionMailer::Base
     mail(:to => user.email, :subject => "Notification from The Visible Closet")
   end
   
-  def deliver_box_received(box)
+  def UserMailer.deliver_box_received(box)
     if box.user.not_test_user?
       box_received(box).deliver
     end
@@ -55,7 +55,7 @@ class UserMailer < ActionMailer::Base
     mail(:to => box.user.email, :subject => "Notification from The Visible Closet")
   end
   
-  def deliver_box_inventoried(box)
+  def UserMailer.deliver_box_inventoried(box)
     if box.user.not_test_user?
       box_inventoried(box).deliver
     end

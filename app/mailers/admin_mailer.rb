@@ -8,7 +8,7 @@ class AdminMailer < ActionMailer::Base
     mail(:subject => "New Interested Person")
   end
   
-  def deliver_new_order(user, order, invoice, vc_address, payment_profile, billing_address)
+  def AdminMailer.deliver_new_order(user, order, invoice, vc_address, payment_profile, billing_address)
     if user.not_test_user?
       new_order(user, order, invoice, vc_address, payment_profile, billing_address).deliver
     end
