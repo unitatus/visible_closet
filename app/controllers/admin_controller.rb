@@ -186,26 +186,41 @@ class AdminController < ApplicationController
   end
   
   def monthly_charges
+    @admin_page = :monthly_charges
     @last_storage_charge_action = StorageChargeProcessingRecord.last
     @last_storage_payment_action = StoragePaymentProcessingRecord.last
   end
   
   def generate_charges
     as_of_date = Date.strptime(params[:as_of_date], '%m/%d/%Y')
+    user = current_user
     
-    record = StorageChargeProcessingRecord.new
+    record = user.storage_charge_processing_records.build(:as_of_date => as_of_date)
     record.generated_by = current_user
     
     User.all.each do |user|
       charges = user.calculate_subscription_charges(as_of_date, false, true)
       if !charges.empty?
-        record.charges << charges.collect {|charge| charge.storage_charge}
+        record.storage_charges << charges.collect {|charge| charge.storage_charge}
       end
     end
     
     record.save
     
     redirect_to "/storage_charge_processing_records/#{record.id}"
+  end
+  
+  def delete_charge
+    charge = Charge.find(params[:id])
+    record = charge.storage_charge ? charge.storage_charge.storage_charge_processing_record : nil
+    
+    charge.destroy
+    
+    if record
+      redirect_to "/storage_charge_processing_records/#{record.id}"
+    else
+      redirect_to "/admin/home"
+    end
   end
 
 private

@@ -12,5 +12,5 @@
 
 class StoragePaymentProcessingRecord < ActiveRecord::Base
   belongs_to :generated_by, :class_name => "User", :foreign_key => :generated_by_user_id
-  has_many :payment_transactions
+  has_many :payment_transactions, :dependent => :destroy
 end

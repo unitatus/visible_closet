@@ -140,23 +140,25 @@ class Box < ActiveRecord::Base
         end
         
         # save whether anything changed, for informational purposes
-        if day != start_date && day != end_date
+        if day != start_date
           if box.in_storage_on(day) && !box.in_storage_on(day - 1) && !box.charged_already_on(day)
             box_events[box] << "receipt on " + day.strftime("%m/%d/%Y")
           end
-          
-          if box.in_storage_on(day) && !box.in_storage_on(day + 1) && !box.charged_already_on(day)
-            box_events[box] << "return on " + day.strftime("%m/%d/%Y")
-          end
-          
+
           if box.subscription_on(day) && box.subscription_on(day) != box.subscription_on(day - 1) && !box.charged_already_on(day)
             box_events[box] << "subscription start on " + day.strftime("%m/%d/%Y")
+          end          
+        end
+          
+        if day != end_date
+          if box.in_storage_on(day) && !box.in_storage_on(day + 1) && !box.charged_already_on(day)
+            box_events[box] << "return on " + day.strftime("%m/%d/%Y")
           end
           
           if box.subscription_on(day) && box.subscription_on(day) != box.subscription_on(day + 1) && !box.charged_already_on(day)
             box_events[box] << "subscription end on " + day.strftime("%m/%d/%Y")
           end
-        end # end if on start and end dates of range
+        end
       end # end box_day_matrix keys loop
     end # end date range loop
 

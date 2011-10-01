@@ -53,6 +53,7 @@ class Ability
       can :switch_test_user_status, :admin
       can :monthly_charges, :admin
       can :generate_charges, :admin
+      can :delete_charge, :admin
       can :receive_box, Box
       can :inventory_box, Box
       can :inventory_boxes, Box
@@ -69,6 +70,7 @@ class Ability
       can :get_order_label, Shipment
       can :show, StorageChargeProcessingRecord
       can :show, StoragePaymentProcessingRecord
+      can :destroy, StorageChargeProcessingRecord
       
     end
     

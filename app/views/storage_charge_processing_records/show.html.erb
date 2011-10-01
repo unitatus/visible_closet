@@ -1,23 +1,26 @@
-<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
-	<h1>Storage Charges Generated On <%= @record.created_at.strftime "%m/%d/%Y" %></h1><br>
-	<table class="lightly_padded_table">
+	<h1>Storage Charges Generated as of <%= @record.as_of_date.strftime "%m/%d/%Y" %> on <%= @record.created_at.strftime "%m/%d/%Y" %></h1><br>
+	<a href="/storage_charge_processing_records/<%=@record.id%>" data-method="delete">(Destroy All Storage Charges Listed Here)</a><br><br>
+	<table class="lightly_padded_table centered_td">
 		<tr>
-			<td>Charge Id</td>
-			<td>User Id</td>
-			<td>User Name</td>
-			<td>Box</td>
-			<td>Amount</td>
-			<td>Comment</td>
+			<th>Charge Id</th>
+			<th>User Id</th>
+			<th>User Name</th>
+			<th>Box</th>
+			<th>Amount</th>
+			<th>Comment</th>
+			<th>Delete?</th>
 		</tr>
-	<% record.storage_charges.each do |storage_charge| %>
+	<% @record.storage_charges.each do |storage_charge| %>
 		<tr>
 			<td><%= storage_charge.id %></td>
 			<td><a href="/admin/user/<%= storage_charge.box.user.id %>"><%= storage_charge.box.user.id %></a></td>
-			<td><%= storage_charge.box.user.first_name %><%= storage_charge.box.user.last_name %></td>
+			<td><%= storage_charge.box.user.first_name %> <%= storage_charge.box.user.last_name %></td>
 			<td><a href="/admin/user/<%= storage_charge.box.user.id %>/boxes/<%= storage_charge.box.id %>"><%= storage_charge.box.id %></a></td>
-			<td><%= number_to_currency storage_charge.amount %></td>
+			<td><%= number_to_currency storage_charge.charge.amount %></td>
 			<td><%= storage_charge.charge.comments %></td>
+			<td><a href="/admin/charges/<%= storage_charge.charge.id %>/delete">X</a></td>
 		</tr>
 	<% end %>
 	</table>
