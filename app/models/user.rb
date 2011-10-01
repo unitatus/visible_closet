@@ -385,14 +385,15 @@ class User < ActiveRecord::Base
     charges.select {|charge| charge.created_at.nil? ? false : charge.created_at >= start_date && charge.created_at <= end_date }
   end
   
-  def calculate_subscription_charges(as_of_date = self.end_of_month, force=false)
+  def calculate_subscription_charges(as_of_date = self.end_of_month, force=false, save=false)
     if !@recently_calculated_anticipated || force
       last_charged_date = self.earliest_effective_charge_date
       if last_charged_date && last_charged_date > DateHelper.start_of_month(as_of_date)
         last_charged_date = DateHelper.start_of_month(as_of_date)
       end
-      Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date)
+      return_charges = Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date, save)
       @recently_calculated_anticipated = true
+      return_charges
     else
       anticipated_charges
     end

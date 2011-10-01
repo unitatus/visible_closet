@@ -1,0 +1,14 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Monthly Charges</h1><br>
+	Most recent storage charges calculated for: <%= @last_storage_charge_action.nil? ? "(never)" : @last_storage_charge_action.as_of_date.strftime("%m/%d/%Y") %> <a href="/storage_charge_processing_records">(history)</a><br><br>
+	Most recent storage payments levied at: <%= @last_storage_payment_action.nil? ? "(never)" : @last_storage_payment_action.as_of_date.strftime("%m/%d/%Y") %> <a href="/storage_payment_processing_records">(history)</a><br><br>
+	<%= form_tag "/admin/generate_charges" do %>
+		Generate charges as of end of month <%= select_tag :as_of_date, options_for_select(month_end_dates_array, :selected => (Date.today.day == 1 ? (Date.today - 1).month : Date.today.month)) %> <%= submit_tag "Submit", :confirm => "Depending on past charges levied, this function may create charges for all system users. Are you SURE you want to do this now?" %>
+	<% end %>
+	<br>
+	<%= form_tag "/admin/generate_payments" do %>
+		Generate payments as of end of month <%= select_tag :as_of_date, options_for_select(month_end_dates_array, :selected => (Date.today.day == 1 ? (Date.today - 1).month : Date.today.month)) %> <%= submit_tag "Submit", :confirm => "Depending on account balance, this may ACTUALLY CHARGE CUSTOMER CREDIT CARDS. Are you SURE?" %>
+	<% end %>
+</div>
+<div class="clearer"></div>

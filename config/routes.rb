@@ -2,6 +2,8 @@ VisibleCloset::Application.routes.draw do
 
   resources :orders
   resources :products
+  resources :storage_charge_processing_records
+  resources :storage_payment_processing_records
 
   match "/register" => "pages#register_block"
   match "/register_interest" => "pages#register_interest"
@@ -83,7 +85,9 @@ VisibleCloset::Application.routes.draw do
   get "admin/shipping"
   get "admin/inventory_boxes"
   get "admin/process_orders"
+  get "admin/monthly_charges"
   post "admin/send_boxes_user_search"
+  post "admin/generate_charges"
   get "admin/users"
   match "admin/user/:id/addresses" => "admin#user_addresses"
   match "admin/user/:id/switch_test_user_status" => "admin#switch_test_user_status"

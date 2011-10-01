@@ -1,20 +1,21 @@
 # == Schema Information
-# Schema version: 20110923232304
+# Schema version: 20110930213450
 #
 # Table name: payment_transactions
 #
-#  id                 :integer         not null, primary key
-#  order_id           :integer
-#  action             :string(255)
-#  amount             :float
-#  success            :boolean
-#  authorization      :string(255)
-#  message            :string(255)
-#  params             :text
-#  user_id            :integer
-#  created_at         :datetime
-#  updated_at         :datetime
-#  payment_profile_id :integer
+#  id                                   :integer         not null, primary key
+#  order_id                             :integer
+#  action                               :string(255)
+#  amount                               :float
+#  authorization                        :string(255)
+#  message                              :string(255)
+#  params                               :text
+#  user_id                              :integer
+#  created_at                           :datetime
+#  updated_at                           :datetime
+#  payment_profile_id                   :integer
+#  status                               :string(255)
+#  storage_payment_processing_record_id :integer
 #
 
 #
@@ -25,9 +26,16 @@
 class PaymentTransaction < ActiveRecord::Base
   serialize :params
   
+  SUCCESS_STATUS = :success
+  FAILURE_STATUS = :failure
+  RECTIFY_STATUS = :rectify
+  
   belongs_to :payment_profile
+  belongs_to :storage_payment_processing_record
   belongs_to :user
   has_many :charges_paid, :class_name => 'Charge'
+  
+  symbolize :status
 
   def response=(response)
     self.success = response.success?
@@ -39,6 +47,10 @@ class PaymentTransaction < ActiveRecord::Base
     self.authorization = nil
     self.message = e.message
     self.params = {}
+  end
+  
+  def success?
+    self.status == SUCCESS_STATUS
   end
   
   def PaymentTransaction.pay(amount, payment_profile, order_id)

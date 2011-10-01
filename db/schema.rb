@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110930133517) do
+ActiveRecord::Schema.define(:version => 20110930213450) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -178,7 +178,6 @@ ActiveRecord::Schema.define(:version => 20110930133517) do
     t.integer  "order_id"
     t.string   "action"
     t.float    "amount"
-    t.boolean  "success"
     t.string   "authorization"
     t.string   "message"
     t.text     "params"
@@ -186,9 +185,12 @@ ActiveRecord::Schema.define(:version => 20110930133517) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "payment_profile_id"
+    t.string   "status"
+    t.integer  "storage_payment_processing_record_id"
   end
 
   add_index "payment_transactions", ["order_id"], :name => "index_payment_transactions_on_order_id"
+  add_index "payment_transactions", ["storage_payment_processing_record_id"], :name => "payment_transaction_spprid"
   add_index "payment_transactions", ["user_id"], :name => "index_payment_transactions_on_user_id"
 
   create_table "photos", :force => true do |t|
@@ -247,15 +249,31 @@ ActiveRecord::Schema.define(:version => 20110930133517) do
   add_index "shipments", ["to_address_id"], :name => "index_shipments_on_to_address_id"
   add_index "shipments", ["tracking_number"], :name => "index_shipments_on_tracking_number"
 
+  create_table "storage_charge_processing_records", :force => true do |t|
+    t.integer  "generated_by_user_id"
+    t.datetime "as_of_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "storage_charges", :force => true do |t|
     t.integer  "box_id"
     t.integer  "charge_id"
     t.datetime "start_date"
     t.datetime "end_date"
+    t.integer  "storage_charge_processing_record_id"
   end
 
   add_index "storage_charges", ["box_id"], :name => "index_storage_charges_on_box_id"
   add_index "storage_charges", ["charge_id"], :name => "index_storage_charges_on_charge_id"
+  add_index "storage_charges", ["storage_charge_processing_record_id"], :name => "index_storage_charges_on_storage_charge_processing_record_id"
+
+  create_table "storage_payment_processing_records", :force => true do |t|
+    t.integer  "generated_by_user_id"
+    t.datetime "as_of_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "stored_item_tags", :force => true do |t|
     t.integer  "stored_item_id"

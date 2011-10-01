@@ -1,0 +1,25 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Storage Charges Generated On <%= @record.created_at.strftime "%m/%d/%Y" %></h1><br>
+	<table class="lightly_padded_table">
+		<tr>
+			<td>Charge Id</td>
+			<td>User Id</td>
+			<td>User Name</td>
+			<td>Box</td>
+			<td>Amount</td>
+			<td>Comment</td>
+		</tr>
+	<% record.storage_charges.each do |storage_charge| %>
+		<tr>
+			<td><%= storage_charge.id %></td>
+			<td><a href="/admin/user/<%= storage_charge.box.user.id %>"><%= storage_charge.box.user.id %></a></td>
+			<td><%= storage_charge.box.user.first_name %><%= storage_charge.box.user.last_name %></td>
+			<td><a href="/admin/user/<%= storage_charge.box.user.id %>/boxes/<%= storage_charge.box.id %>"><%= storage_charge.box.id %></a></td>
+			<td><%= number_to_currency storage_charge.amount %></td>
+			<td><%= storage_charge.charge.comments %></td>
+		</tr>
+	<% end %>
+	</table>
+</div>
+<div class="clearer"></div>

@@ -127,4 +127,25 @@ module ApplicationHelper
     
     options
   end
+  
+  def months_select_array
+    [["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December", "12"]]
+  end
+  
+  def month_end_dates_array(near_date=Date.today)
+    return_array = Array.new
+    near_date = DateHelper.end_of_month(near_date)
+    
+    2.downto(1).each do |i|
+      return_array << [DateHelper.end_of_month(near_date << i).strftime("%m/%d/%Y"), DateHelper.end_of_month(near_date << i).strftime("%m/%d/%Y")]
+    end
+    
+    return_array << [(near_date).strftime("%m/%d/%Y"), (near_date).strftime("%m/%d/%Y")]
+    
+    1.upto(2).each do |i|
+      return_array << [DateHelper.end_of_month(near_date >> i).strftime("%m/%d/%Y"), DateHelper.end_of_month(near_date >> i).strftime("%m/%d/%Y")]
+    end
+    
+    return_array
+  end
 end

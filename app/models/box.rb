@@ -106,9 +106,9 @@ class Box < ActiveRecord::Base
   # figure out how many boxes were in storage on each day, and which ones were under a subscription at that time. Highly inefficient. This is a good case
   # to use array-based calculations, which is what we are doing here: we lay the boxes against the days in question to form a matrix, calculate and save things
   # in the matrix, then sum up by box to create the charges.
-  def Box.calculate_charges_for_user_box_set(user, start_date, end_date)
-    total_vc_boxes_in_storage_by_day = Hash.new #Hash[*boxes.select {|box| box.vc_box? }.collect {|box| [box, 0.0]}.flatten]
-    total_cust_cf_in_storage_by_day = Hash.new #Hash[*boxes.select {|box| box.cust_box? }.collect {|box| [box, 0.0]}.flatten]
+  def Box.calculate_charges_for_user_box_set(user, start_date, end_date, save=false)
+    total_vc_boxes_in_storage_by_day = Hash.new
+    total_cust_cf_in_storage_by_day = Hash.new
     box_events = Hash.new
     boxes = user.boxes
 
@@ -199,6 +199,10 @@ class Box < ActiveRecord::Base
       new_charge.total_in_cents = (box_charges[box].to_f*100.0).round
             
       new_charge.associate_with(box, start_date, end_date)
+      
+      if (save)
+        new_charge.save
+      end
       
       new_charge
     }

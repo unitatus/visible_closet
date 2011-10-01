@@ -54,6 +54,7 @@ class AdminController < ApplicationController
   end
   
   def user
+    @admin_page = :users
     @user = User.find(params[:id])
   end
   
@@ -182,6 +183,29 @@ class AdminController < ApplicationController
     @shipment.refresh_fedex_events
     
     redirect_to :action => :shipment
+  end
+  
+  def monthly_charges
+    @last_storage_charge_action = StorageChargeProcessingRecord.last
+    @last_storage_payment_action = StoragePaymentProcessingRecord.last
+  end
+  
+  def generate_charges
+    as_of_date = Date.strptime(params[:as_of_date], '%m/%d/%Y')
+    
+    record = StorageChargeProcessingRecord.new
+    record.generated_by = current_user
+    
+    User.all.each do |user|
+      charges = user.calculate_subscription_charges(as_of_date, false, true)
+      if !charges.empty?
+        record.charges << charges.collect {|charge| charge.storage_charge}
+      end
+    end
+    
+    record.save
+    
+    redirect_to "/storage_charge_processing_records/#{record.id}"
   end
 
 private
