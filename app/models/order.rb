@@ -35,7 +35,7 @@ class Order < ActiveRecord::Base
       charges = do_pre_payment_processing
       
       if total_in_cents > 0.0
-        payment_transaction = pay_for_order
+        payment_transaction = pay_for_order(charges)
       end
       
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
@@ -161,6 +161,7 @@ class Order < ActiveRecord::Base
   end
   
   # this method saves the charges
+  # This generates all the charges -- but ignores any prepayments necessary (such as when ordering new boxes)
   def generate_charges
     raise "Attempted to call generate charges on unsaved order" unless self.id
     charges = Array.new
@@ -255,10 +256,18 @@ class Order < ActiveRecord::Base
   private
   
   # This method saves the transactions
-  def pay_for_order
+  # We must pay for any charges plus any prepayments
+  def pay_for_order(charges)
     amount = 0.0
+    
+    #calculate the prepayments
     order_lines.each do |order_line|
-      amount += order_line.discount.charged_at_purchase + order_line.discount.prepaid_at_purchase
+      amount += order_line.discount.prepaid_at_purchase
+    end
+    
+    # calculate the charges
+    charges.each do |charge|
+      amount += charge.amount
     end
     
     if amount == 0.0
