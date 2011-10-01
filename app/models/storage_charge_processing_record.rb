@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110930213450
+# Schema version: 20111001143818
 #
 # Table name: storage_charge_processing_records
 #
@@ -8,6 +8,7 @@
 #  as_of_date           :datetime
 #  created_at           :datetime
 #  updated_at           :datetime
+#  locked_for_editing   :boolean
 #
 
 class StorageChargeProcessingRecord < ActiveRecord::Base

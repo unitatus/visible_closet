@@ -13,6 +13,11 @@ class StorageChargeProcessingRecordsController < ApplicationController
   def destroy
     @record = StorageChargeProcessingRecord.find(params[:id])
     @record.destroy
-    redirect_to "/admin/monthly_charges"
+    redirect_to "/storage_charge_processing_records"
+  end
+  
+  def index
+    @admin_page = :monthly_charges
+    @records = StorageChargeProcessingRecord.all
   end
 end
