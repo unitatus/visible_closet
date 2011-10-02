@@ -7,8 +7,6 @@
 		Generate charges as of end of month <%= select_tag :as_of_date, options_for_select(month_end_dates_array, :selected => (Date.today.day == 1 ? (Date.today - 1).month : Date.today.month)) %> <%= submit_tag "Submit", :confirm => "Depending on past charges levied, this function may create charges for all system users. Are you SURE you want to do this now?" %>
 	<% end %>
 	<br>
-	<%= form_tag "/admin/generate_payments" do %>
-		Generate payments as of end of month <%= select_tag :as_of_date, options_for_select(month_end_dates_array, :selected => (Date.today.day == 1 ? (Date.today - 1).month : Date.today.month)) %> <%= submit_tag "Submit", :confirm => "Depending on account balance, this may ACTUALLY CHARGE CUSTOMER CREDIT CARDS. Are you SURE?" %>
-	<% end %>
+	<a href="/admin/generate_payments" onclick="return confirm('Depending on account balance, this may ACTUALLY CHARGE CUSTOMER CREDIT CARDS. Are you SURE?')">Pay off all user account balances &gt;&gt;</a>
 </div>
 <div class="clearer"></div>

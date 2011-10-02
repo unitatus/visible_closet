@@ -115,6 +115,7 @@ VisibleCloset::Application.routes.draw do
   match "admin/invoices/:id" => "orders#show_invoice"
   match "admin/user/:user_id/subscriptions/:subscription_id" => "admin#user_subscription"
   match "admin/charges/:id/delete" => "admin#delete_charge"
+  match "admin/generate_payments" => "admin#generate_payments"
   
   # Account
   get "account/store_more_boxes"

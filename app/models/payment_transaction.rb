@@ -38,12 +38,12 @@ class PaymentTransaction < ActiveRecord::Base
   symbolize :status
 
   def response=(response)
-    self.success = response.success?
+    self.status ||= response.success? ? SUCCESS_STATUS : FAILURE_STATUS
     self.authorization = response.authorization
     self.message = response.message
     self.params = response.params
   rescue ActiveMerchant::ActiveMerchantError => e
-    self.success = false
+    self.status = FAILURE
     self.authorization = nil
     self.message = e.message
     self.params = {}
@@ -53,7 +53,11 @@ class PaymentTransaction < ActiveRecord::Base
     self.status == SUCCESS_STATUS
   end
   
-  def PaymentTransaction.pay(amount, payment_profile, order_id)
+  def rectify?
+    self.status == RECTIFY_STATUS
+  end
+  
+  def PaymentTransaction.pay(amount, payment_profile, order_id=nil)
     if payment_profile.user.test_user?
       action_msg = "FAKE PURCHASE for testing; did not call active_merchant interface"
       new_payment = create!(:action => action_msg, :amount => amount, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
@@ -66,12 +70,14 @@ class PaymentTransaction < ActiveRecord::Base
                                                                   :customer_payment_profile_id => payment_profile.identifier}})
 
     if response.success?
-      new_payment = create!(:action => "purchase", :amount => amount, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment = create!(:action => "purchase", :status => SUCCESS_STATUS, :amount => amount, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, nil]
     elsif RAILS_ENV == "development"
-      new_payment = create!(:action => "purchase in dev (failed, overrode)", :amount => amount, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment = create!(:action => "purchase in dev (failed, overrode)", :status => SUCCESS_STATUS, :amount => amount, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, nil]
-    else
+    elsif order_id.nil? # this means that it was a storage charge, in which case we need to keep track of the payment for repayment later
+      new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :amount => amount, :response => response)
+    else # this was an attempt to pay for an order, which we can allow to just die
       [nil, response.message]
     end
   end

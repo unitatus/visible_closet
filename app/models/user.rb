@@ -231,6 +231,23 @@ class User < ActiveRecord::Base
     end
   end
   
+  def pay_off_account_balance_and_save
+    balance_to_pay = current_account_balance * -1 # current account balance negative means user owes us money
+    
+    if balance_to_pay > 0.0
+      payment, message = PaymentTransaction.pay(balance_to_pay, default_payment_profile)
+      if payment.success?
+        UserMailer.deliver_storage_charges_paid(self, payment)
+      else
+        UserMailer.deliver_storage_charge_cc_rejected(self, message)
+      end
+    end
+    
+    save
+    
+    return payment
+  end
+  
   def has_stored_items?
     stored_item_count > 0
   end
@@ -347,20 +364,21 @@ class User < ActiveRecord::Base
     account_balance_as_of(Date.today, include_news)
   end
   
+  # Note: the "to_date" calls are to ensure that we aren't comparing times -- just dates (since the database can't handle straight dates)
   def account_balance_as_of(date, include_news=false)
     running_total = 0.0
 
     charges.each do |charge|
-      if (charge.created_at && charge.created_at <= date) || (include_news && charge.created_at.nil?)
+      if (charge.created_at && charge.created_at.to_date <= date.to_date) || (include_news && charge.created_at.nil?)
         running_total = running_total - charge.amount
       end
     end
     
     payment_transactions.each do |payment_transaction|
-      running_total = running_total + payment_transaction.amount.to_f if payment_transaction.created_at <= date
+      running_total = running_total + payment_transaction.amount.to_f if payment_transaction.created_at.to_date <= date.to_date
     end
 
-    return running_total
+    return running_total.round(2) # takes care of obnoxious adding errors
   end
   
   def payments_during_month(date=nil)

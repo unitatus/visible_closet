@@ -1,0 +1,40 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Storage Payments Generated as of <%= @record.as_of_date.strftime "%m/%d/%Y" %> on <%= @record.created_at.strftime "%m/%d/%Y" %></h1>
+	<br>
+	<% if @record.payment_transactions.size > 0 %>
+		<table class="lightly_padded_table centered_td">
+			<% if @record.contains_rectify_payments? %>
+				<tr>
+					<td colspan="4" style="background: #FF99FF">
+						<b>THESE PAYMENTS WERE REJECTED BY THE CREDIT CARD COMPANIES</b>
+					</td>
+				</tr>
+			<% end %>
+			<tr>
+				<th>Payment Id</th>
+				<th>User Id</th>
+				<th>User Name</th>
+				<th>Amount</th>
+			</tr>
+			<%= render :partial => "payment_lines", :locals => { :payments => @record.rectify_payments } %>
+			<% if @record.contains_rectify_payments? %>
+				<tr>
+					<td colspan="4" style="background: #FF99FF">
+						<b>User payments that were accepted just fine with the credit card companies</b>
+					</td>
+				</tr>
+				<tr>
+					<th>Payment Id</th>
+					<th>User Id</th>
+					<th>User Name</th>
+					<th>Amount</th>
+				</tr>
+			<% end %>
+			<%= render :partial => "payment_lines", :locals => { :payments => @record.non_rectify_payments } %>
+		</table>
+	<% else %>
+	(no payments generated)
+	<% end %>
+</div>
+<div class="clearer"></div>

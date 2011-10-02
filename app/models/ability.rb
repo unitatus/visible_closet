@@ -54,6 +54,7 @@ class Ability
       can :monthly_charges, :admin
       can :generate_charges, :admin
       can :delete_charge, :admin
+      can :generate_payments, :admin
       can :receive_box, Box
       can :inventory_box, Box
       can :inventory_boxes, Box
@@ -69,8 +70,10 @@ class Ability
       can :show_invoice, Order
       can :get_order_label, Shipment
       can :show, StorageChargeProcessingRecord
-      can :show, StoragePaymentProcessingRecord
+      can :index, StorageChargeProcessingRecord
       can :destroy, StorageChargeProcessingRecord
+      can :show, StoragePaymentProcessingRecord
+      can :index, StoragePaymentProcessingRecord
       
     end
     

@@ -210,6 +210,26 @@ class AdminController < ApplicationController
     redirect_to "/storage_charge_processing_records/#{record.id}"
   end
   
+  def generate_payments
+    user = current_user
+    
+    @record = user.storage_payment_processing_records.build(:as_of_date => Date.today)
+    @record.generated_by = current_user
+    
+    User.transaction do
+      User.all.each do |user|
+        payment = user.pay_off_account_balance_and_save
+        if payment
+          @record.payment_transactions << payment
+        end
+      end
+    end # transaction
+    
+    @record.save
+    
+    redirect_to "/storage_payment_processing_records/#{@record.id}"
+  end
+  
   def delete_charge
     charge = Charge.find(params[:id])
     record = charge.storage_charge ? charge.storage_charge.storage_charge_processing_record : nil

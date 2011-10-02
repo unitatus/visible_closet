@@ -20,20 +20,7 @@
 				<td colspan="2"><br><b>Payments Made this Month</td>
 				<td></td>
 			</tr>
-			<% payments_during_month.each do |payment| %>
-				<tr>
-					<td style="padding-left: 10px">payment for 
-						<% if payment.order_id %>
-							<a href="/orders/<%= payment.order_id %>">order <%= payment.order_id %></a>
-						<% else %>
-							<a href="/boxes">box <%= payment.box.box_num %></a>
-						<% end %>
-						:
-					</td>
-					<td><%= number_to_currency payment.amount %></td>
-					<td></td>
-				</tr>
-			<% end %>
+<%= render :partial => "payments_list", :locals => { :payments => payments_during_month }%>
 			<tr>
 				<td colspan="2"><b>Total payments:</b></td>
 				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(payments_during_month)%></b></td>
@@ -45,30 +32,7 @@
 				<td colspan="2"><br><b>Charges Already Incurred</td>
 				<td></td>
 			</tr>
-			<% charges_during_month.each do |charge| %>
-			<tr>
-				<td style="padding-left: 10px">Charge for 
-					<% if charge.product_id %>
-						purchase of <%= charge.product.name %>
-					<% elsif charge.shipment %>
-						shipping for 
-						<% if charge.shipment.box_id %>
-							box <%= charge.shipment.box.box_num %>
-						<% elsif charge.order_line %>
-							<a href="/orders/<%= charge.shipment.order_line.order_id %>">order <%= charge.shipment.order_line.order_id %></a>
-						<% else %>
-							(unknown shipment type)
-						<% end %>
-					<% elsif charge.order_id %>
-						<a href="/orders/<%= charge.order_id %>">order <%= charge.order_id %></a>
-					<% else # storage charge or misc %>
-						<%= charge.comments %>
-					<% end %>
-				</td>
-				<td><%= number_to_currency charge.amount %></td>
-				<td></td>
-			</tr>
-			<% end %>
+<%= render :partial => "charges_list", :locals => { :charges => charges_during_month }%>
 			<tr>
 				<td colspan="2"><b>Total charges:</b></td>
 				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(charges_during_month) %></b></td>
