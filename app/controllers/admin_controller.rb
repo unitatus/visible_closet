@@ -81,6 +81,7 @@ class AdminController < ApplicationController
   end
   
   def user_orders
+    @admin_page = :users
     @user = User.find(params[:id])
     
     order_by = params[:sort_by]
@@ -93,6 +94,7 @@ class AdminController < ApplicationController
   end
   
   def user_boxes
+    @admin_page = :users
     @user = User.find(params[:id])
     
     order_by = params[:sort_by]
@@ -105,30 +107,40 @@ class AdminController < ApplicationController
   end
   
   def user_billing
+    @admin_page = :users
     @user = User.find(params[:id])
     @transactions = @user.transaction_history
   end
   
   def user_subscription
+    @admin_page = :users
     @subscription = Subscription.find_by_id_and_user_id(params[:subscription_id], params[:user_id])
   end
   
   def user_shipments
+    @admin_page = :users
     @user = User.find(params[:id])
     @shipments = @user.shipments
   end
   
   def user_box
+    @admin_page = :users
     @user = User.find(params[:user_id])
     @box = Box.find_by_assigned_to_user_id_and_id(params[:user_id], params[:box_id])
   end
   
   def user_order
+    @admin_page = :users
     @user = User.find(params[:user_id])
     @order = Order.find_by_user_id_and_id(params[:user_id], params[:order_id])
   end
   
+  def user_account_balances
+    @users = User.all
+  end
+  
   def set_shipment_charge
+    @admin_page = :users
     @shipment = Shipment.find(params[:id])
     amount = params[:amount]
     

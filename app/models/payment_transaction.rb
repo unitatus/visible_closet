@@ -72,6 +72,7 @@ class PaymentTransaction < ActiveRecord::Base
       return [new_payment, nil]
     elsif order_id.nil? # this means that it was a storage charge, in which case we need to keep track of the payment for repayment later
       new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :amount => amount, :response => response, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      return [new_payment, response.message]
     else # this was an attempt to pay for an order, which we can allow to just die
       [nil, response.message]
     end

@@ -38,8 +38,8 @@
 <div style="width:700px; margin-left: auto; margin-right: auto">
 	<% if current_user.payment_profile_count != 0 %>
 		Default Card?
-		<%= hidden_field_tag :default, 0 %>
-		<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1" %>
+		<%= hidden_field_tag :default, @force_default.nil? ? 0 : 1 %>
+		<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1", :disabled => !@force_default.nil? %>
 		<br><br>
 	<% end %>
 	<% if !@addresses.empty? %>

@@ -232,21 +232,31 @@ class User < ActiveRecord::Base
   end
   
   def pay_off_account_balance_and_save
-    balance_to_pay = current_account_balance * -1 # current account balance negative means user owes us money
-    
-    if balance_to_pay > 0.0
-      payment, message = PaymentTransaction.pay(balance_to_pay, default_payment_profile)
-      if payment.success?
-        UserMailer.deliver_storage_charges_paid(self, payment)
-      else
-        UserMailer.deliver_storage_charge_cc_rejected(self, message)
+    payment = nil
+    self.transaction do
+      # Credit card might be fixed; let's turn those old rectify payments into failed payments
+      rectify_payments.each do |rectify_payment|
+        rectify_payment.update_attribute(:status, PaymentTransaction::FAILURE_STATUS)
       end
-    end
+
+      balance_to_pay = current_account_balance * -1 # current account balance negative means user owes us money
     
-    save
+      if balance_to_pay > 0.0
+        payment, message = PaymentTransaction.pay(balance_to_pay, default_payment_profile)
+        if payment.success?
+          UserMailer.deliver_storage_charges_paid(self, payment)
+        else
+          UserMailer.deliver_storage_charge_cc_rejected(self, message)
+        end
+      end
+    
+      save
+    end
     
     return payment
   end
+  
+  
   
   def has_stored_items?
     stored_item_count > 0
@@ -326,6 +336,53 @@ class User < ActiveRecord::Base
     Shipment.find_all_by_user_id(id, :order => "created_at DESC")
   end
   
+  def has_rectify_payments?
+    payment_transactions.each do |payment_transaction|
+      if payment_transaction.rectify?
+        return true
+      end
+    end
+    
+    return false
+  end
+  
+  def rectify_payments
+    payment_transactions.select {|payment| payment.rectify? }
+  end
+  
+  def resolve_rectify_payments
+    self.transaction do
+      rectify_payment_transactions.each do |rectify_payment|
+        # A rectify payment signifies that "this needs to be taken care of". By "failing" old rectify payments and re-attempting, we 
+        # keep a record of the failed payments while either getting new, "good" payments of replacing them with new "rectify" payments.
+        new_payment, message = PaymentTransaction.pay(rectify_payment.amount, default_payment_profile)
+        payment_transactions << new_payment
+        rectify_payment.update_attribute(:status, PaymentTransaction::FAILURE_STATUS)
+        # want the rectify payment to show up in the list of associated storage processing records
+        if rectify_payment.storage_payment_processing_record
+          rectify_payment.storage_payment_processing_record.payment_transactions << new_payment
+        end
+        save # save all those new payment relationships
+        
+        if !new_payment.success?
+          return false
+        else
+          UserMailer.deliver_storage_charges_paid(self, new_payment)
+        end
+      end
+    end # end transaction
+    
+    return true
+  end
+  
+  def last_successful_payment_transaction
+    successful_payment_transactions.last
+  end
+  
+  def active_payment_profiles
+    payment_profiles.select {|profile| profile.active? }
+  end
+  
   def clear_test_data
     orders.each do |order|
       order.destroy
@@ -364,8 +421,12 @@ class User < ActiveRecord::Base
     account_balance_as_of(Date.today, include_news)
   end
   
+  def current_account_balance_ignore_rectify(include_news=false)
+    account_balance_as_of(Date.today, include_news, false)
+  end
+  
   # Note: the "to_date" calls are to ensure that we aren't comparing times -- just dates (since the database can't handle straight dates)
-  def account_balance_as_of(date, include_news=false)
+  def account_balance_as_of(date, include_news=false, include_rectify=true)
     running_total = 0.0
 
     charges.each do |charge|
@@ -374,7 +435,8 @@ class User < ActiveRecord::Base
       end
     end
     
-    payment_transactions.each do |payment_transaction|
+    payments = include_rectify ? non_failed_payment_transactions : successful_payment_transactions
+    payments.each do |payment_transaction|
       running_total = running_total + payment_transaction.amount.to_f if payment_transaction.created_at.to_date <= date.to_date
     end
 
@@ -435,6 +497,18 @@ class User < ActiveRecord::Base
     end
     
     return account_balance_as_of(DateHelper.end_of_month) < 0
+  end
+  
+  def non_failed_payment_transactions
+    payment_transactions.select {|payment_transaction| payment_transaction.status != PaymentTransaction::FAILURE_STATUS }
+  end
+  
+  def rectify_payment_transactions
+    payment_transactions.select {|payment_transaction| payment_transaction.status == PaymentTransaction::RECTIFY_STATUS }
+  end
+  
+  def successful_payment_transactions
+    payment_transactions.select {|payment_transaction| payment_transaction.success? }
   end
   
   # This needs to account for boxes that don't have charges yet but need to be included. If any box has been received but never charged, return the receive date.

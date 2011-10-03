@@ -55,6 +55,7 @@ class Ability
       can :generate_charges, :admin
       can :delete_charge, :admin
       can :generate_payments, :admin
+      can :user_account_balances, :admin
       can :receive_box, Box
       can :inventory_box, Box
       can :inventory_boxes, Box
