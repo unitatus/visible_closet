@@ -6,8 +6,8 @@
 		<table class="lightly_padded_table centered_td">
 			<% if @record.contains_rectify_payments? %>
 				<tr>
-					<td colspan="4" style="background: #FF99FF">
-						<b>THESE PAYMENTS WERE REJECTED BY THE CREDIT CARD COMPANIES</b>
+					<td colspan="5" style="background: #FF99FF">
+						<b>THESE PAYMENTS WERE REJECTED BY THE CREDIT CARD COMPANIES AND MUST BE RECTIFIED</b>
 					</td>
 				</tr>
 			<% end %>
@@ -16,12 +16,16 @@
 				<th>User Id</th>
 				<th>User Name</th>
 				<th>Amount</th>
+				<th>State</th>
 			</tr>
 			<%= render :partial => "payment_lines", :locals => { :payments => @record.rectify_payments } %>
 			<% if @record.contains_rectify_payments? %>
 				<tr>
-					<td colspan="4" style="background: #FF99FF">
-						<b>User payments that were accepted just fine with the credit card companies</b>
+					<td colspan="5">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="5">
+						<b>User payments that were accepted just fine with the credit card companies, or failed but were corrected</b>
 					</td>
 				</tr>
 				<tr>
@@ -29,6 +33,7 @@
 					<th>User Id</th>
 					<th>User Name</th>
 					<th>Amount</th>
+					<th>State</th>
 				</tr>
 			<% end %>
 			<%= render :partial => "payment_lines", :locals => { :payments => @record.non_rectify_payments } %>

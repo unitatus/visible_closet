@@ -47,7 +47,7 @@ class AdminController < ApplicationController
     end
     
     if order_by.blank?
-      @users = User.all
+      @users = User.find(:all, :order => "last_name ASC")
     else
       @users = User.find(:all, :order => order_by)
     end

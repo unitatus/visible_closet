@@ -9,7 +9,11 @@
 			<th>Creator</th>
 		</tr>
 	<% @records.each do |record| %>
+		<% if record.contains_rectify_payments? %>
+		<tr style="background: #FF99FF">
+		<% else %>
 		<tr>
+		<% end %>
 			<td><a href="/storage_payment_processing_records/<%= record.id %>"><%= record.id %></a></td>
 			<td><%= record.as_of_date.strftime "%m/%d/%Y" %></a></td>
 			<td><%= record.created_at.strftime "%m/%d/%Y" %></a></td>

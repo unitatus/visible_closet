@@ -46,12 +46,13 @@ class UserMailer < ActionMailer::Base
   
   def UserMailer.deliver_storage_charge_cc_rejected(user, rejected_message)
     if user.not_test_user?
-      storage_charge_cc_rejected(user).deliver
+      storage_charge_cc_rejected(user, rejected_message).deliver
     end
   end
   
-  def storage_charge_cc_rejected(user)
+  def storage_charge_cc_rejected(user, rejected_message)
     @user = user
+    @rejected_message = rejected_message
     mail(:to => user.email, :subject => "Visible Closet CREDIT CARD DECLINED")
   end
   
