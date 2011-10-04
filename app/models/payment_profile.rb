@@ -32,11 +32,31 @@ class PaymentProfile < ActiveRecord::Base
     validate :validate_card, :on => :create
 
     def PaymentProfile.new(attributes=nil)
+      attributes[:active] = nil if attributes
+      attributes[:id] = nil if attributes
       profile = super(attributes)
       profile.active = true
       profile.billing_address = Address.new
       
       profile
+    end
+    
+    def PaymentProfile.clone(old_profile)
+      new_attributes = {}
+      new_attributes = new_attributes.merge(old_profile.attributes)
+      new_attributes[:billing_address_id] = nil
+      new_profile = PaymentProfile.new(new_attributes)
+      if old_profile.billing_address
+        new_profile.billing_address = Address.new(old_profile.billing_address.attributes)
+      end
+      new_profile.number = old_profile.number
+      new_profile.verification_value = old_profile.verification_value
+      
+      old_profile.errors.each do |attr, msg|
+        new_profile.errors.add(attr, msg)
+      end
+      
+      return new_profile
     end
     
     def billing_address_id=(value)
@@ -95,9 +115,13 @@ class PaymentProfile < ActiveRecord::Base
     end
     
     def inactivate
-      write_attribute(:active, false)
+      if !active?
+        return true
+      end
+      
       if delete_payment_profile
-        identifier = nil
+        update_attribute(:active, false)
+        update_attribute(:identifier, nil)
         return true
       else
         return false
@@ -139,7 +163,7 @@ class PaymentProfile < ActiveRecord::Base
         user.update_attribute(:default_payment_profile_id, nil)
       end
       
-      if delete_payment_profile and super
+      if (active? && delete_payment_profile and super) || super
         return true
       end
       return false

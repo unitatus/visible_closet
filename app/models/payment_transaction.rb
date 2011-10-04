@@ -1,20 +1,21 @@
 # == Schema Information
-# Schema version: 20110923232304
+# Schema version: 20110930213450
 #
 # Table name: payment_transactions
 #
-#  id                 :integer         not null, primary key
-#  order_id           :integer
-#  action             :string(255)
-#  amount             :float
-#  success            :boolean
-#  authorization      :string(255)
-#  message            :string(255)
-#  params             :text
-#  user_id            :integer
-#  created_at         :datetime
-#  updated_at         :datetime
-#  payment_profile_id :integer
+#  id                                   :integer         not null, primary key
+#  order_id                             :integer
+#  action                               :string(255)
+#  amount                               :float
+#  authorization                        :string(255)
+#  message                              :string(255)
+#  params                               :text
+#  user_id                              :integer
+#  created_at                           :datetime
+#  updated_at                           :datetime
+#  payment_profile_id                   :integer
+#  status                               :string(255)
+#  storage_payment_processing_record_id :integer
 #
 
 #
@@ -25,26 +26,39 @@
 class PaymentTransaction < ActiveRecord::Base
   serialize :params
   
+  SUCCESS_STATUS = :success
+  FAILURE_STATUS = :failure
+  RECTIFY_STATUS = :rectify
+  
   belongs_to :payment_profile
+  belongs_to :storage_payment_processing_record
   belongs_to :user
   has_many :charges_paid, :class_name => 'Charge'
+  
+  symbolize :status
 
   def response=(response)
-    self.success = response.success?
     self.authorization = response.authorization
     self.message = response.message
     self.params = response.params
   rescue ActiveMerchant::ActiveMerchantError => e
-    self.success = false
     self.authorization = nil
     self.message = e.message
     self.params = {}
   end
   
-  def PaymentTransaction.pay(amount, payment_profile, order_id)
+  def success?
+    self.status == SUCCESS_STATUS
+  end
+  
+  def rectify?
+    self.status == RECTIFY_STATUS
+  end
+  
+  def PaymentTransaction.pay(amount, payment_profile, order_id=nil)
     if payment_profile.user.test_user?
       action_msg = "FAKE PURCHASE for testing; did not call active_merchant interface"
-      new_payment = create!(:action => action_msg, :amount => amount, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment = create!(:action => action_msg, :status => SUCCESS_STATUS, :amount => amount, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, nil]
     end
     
@@ -54,12 +68,12 @@ class PaymentTransaction < ActiveRecord::Base
                                                                   :customer_payment_profile_id => payment_profile.identifier}})
 
     if response.success?
-      new_payment = create!(:action => "purchase", :amount => amount, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment = create!(:action => "purchase", :status => SUCCESS_STATUS, :amount => amount, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, nil]
-    elsif RAILS_ENV == "development"
-      new_payment = create!(:action => "purchase in dev (failed, overrode)", :amount => amount, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
-      return [new_payment, nil]
-    else
+    elsif order_id.nil? # this means that it was a storage charge, in which case we need to keep track of the payment for repayment later
+      new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :amount => amount, :response => response, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      return [new_payment, response.message]
+    else # this was an attempt to pay for an order, which we can allow to just die
       [nil, response.message]
     end
   end

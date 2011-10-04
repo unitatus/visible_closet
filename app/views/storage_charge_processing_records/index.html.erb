@@ -1,0 +1,35 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Storage Charge Processing Records</h1><br>
+	<table class="lightly_padded_table centered_td">
+		<tr>
+			<th>Id</th>
+			<th>As of Date</th>
+			<th>Created On</th>
+			<th>Creator</th>
+			<th>Delete?</th>
+		</tr>
+	<% @records.each do |record| %>
+		<tr>
+			<td><a href="/storage_charge_processing_records/<%= record.id %>"><%= record.id %></a></td>
+			<td><%= record.as_of_date.strftime "%m/%d/%Y" %></a></td>
+			<td><%= record.created_at.strftime "%m/%d/%Y" %></a></td>
+			<td>
+				<% if record.generated_by %>
+					<%= record.generated_by.first_name %> <%= record.generated_by.last_name %>
+				<% else %>
+					Machine (automated)
+				<% end %>
+			</td>
+			<td>
+				<% if !record.locked_for_editing? %>
+					<a href="/storage_charge_processing_records/<%=record.id%>" data-method="delete" confirm="This will delete all charges associated with this record. THIS IS VERY DANGEROUS! Are you sure?">Delete</a>
+				<% else %>
+					Locked
+				<% end %>
+				</td>
+		</tr>
+	<% end %>
+	</table>
+</div>
+<div class="clearer"></div>

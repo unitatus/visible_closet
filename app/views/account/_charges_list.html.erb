@@ -1,0 +1,27 @@
+<% charges.each do |charge| %>
+<tr>
+	<td style="padding-left: 10px">Charge for 
+		<% if charge.product_id %>
+			purchase of <%= charge.product.name %>
+		<% elsif charge.shipment %>
+			shipping for 
+			<% if charge.shipment.box_id %>
+				box <%= charge.shipment.box.box_num %>
+			<% elsif charge.order_line %>
+				<a href="/orders/<%= charge.shipment.order_line.order_id %>">order <%= charge.shipment.order_line.order_id %></a>
+			<% else %>
+				(unknown shipment type)
+			<% end %>
+		<% elsif charge.order_id %>
+			<a href="/orders/<%= charge.order_id %>">order <%= charge.order_id %></a>
+		<% else # storage charge or misc %>
+			<%= charge.comments %>
+			<% if charge.storage_charge %>
+			 (assessed from <%= charge.storage_charge.start_date.strftime "%m/%d/%Y" %> to <%= charge.storage_charge.end_date.strftime "%m/%d/%Y" %>)
+			<% end %>
+		<% end %>
+	</td>
+	<td><%= number_to_currency charge.amount %></td>
+	<td></td>
+</tr>
+<% end %>

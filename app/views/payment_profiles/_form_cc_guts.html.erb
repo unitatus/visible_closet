@@ -21,7 +21,7 @@
 			<%= error_messages_for_attribute(profile, :number) %>
 		</td>
 		<td>
-			<%= f.select :month, options_for_select([["01 - January", "1"], ["02 - February", "2"], ["03 - March", "3"], ["04 - April", "4"], ["05 - May", "5"], ["06 - June", "6"], ["07 - July", "7"], ["08 - August", "8"], ["09 - September", "9"], ["10 - October", "10"], ["11 - November", "11"], ["12 - December", "12"]], :selected => profile.month) %>
+			<%= f.select :month, options_for_select(months_select_array, :selected => profile.month) %>
 			<%= error_messages_for_attribute(profile, :month) %>
 		</td>
 		<td>
@@ -38,8 +38,8 @@
 <div style="width:700px; margin-left: auto; margin-right: auto">
 	<% if current_user.payment_profile_count != 0 %>
 		Default Card?
-		<%= hidden_field_tag :default, 0 %>
-		<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1" %>
+		<%= hidden_field_tag :default, @force_default.nil? ? 0 : 1 %>
+		<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1", :disabled => !@force_default.nil? %>
 		<br><br>
 	<% end %>
 	<% if !@addresses.empty? %>

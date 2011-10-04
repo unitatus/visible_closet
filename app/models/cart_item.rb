@@ -38,7 +38,7 @@ class CartItem < ActiveRecord::Base
   end
   
   def discount?
-    return self.discount.unit_discount_perc > 0.0
+    return total_monthly_price_after_discount > 0 && self.discount.unit_discount_perc > 0.0
   end
   
   def discount

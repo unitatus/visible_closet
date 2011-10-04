@@ -757,6 +757,10 @@ table.lightly_padded_table th
 	font-weight: bold;
 	text-align: center;
 }
+table.centered_td td 
+{
+	text-align: center;
+}
 table.right_pad_table td
 {
 	text-align: center;

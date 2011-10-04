@@ -32,6 +32,30 @@ class UserMailer < ActionMailer::Base
     end
   end
   
+  def UserMailer.deliver_storage_charges_paid(user, payment)
+    if user.not_test_user?
+      storage_charges_paid(user, payment).deliver
+    end
+  end
+  
+  def storage_charges_paid(user, payment)
+    @user = user
+    @payment = payment
+    mail(:to => user.email, :subject => "Visible Closet Storage Charges Paid")
+  end
+  
+  def UserMailer.deliver_storage_charge_cc_rejected(user, rejected_message)
+    if user.not_test_user?
+      storage_charge_cc_rejected(user, rejected_message).deliver
+    end
+  end
+  
+  def storage_charge_cc_rejected(user, rejected_message)
+    @user = user
+    @rejected_message = rejected_message
+    mail(:to => user.email, :subject => "Visible Closet CREDIT CARD DECLINED")
+  end
+  
   def UserMailer.deliver_boxes_sent(user, order_lines)
     if user.not_test_user?
       boxes_sent(user, order_lines).deliver

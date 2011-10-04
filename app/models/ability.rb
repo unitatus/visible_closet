@@ -51,6 +51,11 @@ class Ability
       can :user_billing, :admin
       can :user_subscription, :admin
       can :switch_test_user_status, :admin
+      can :monthly_charges, :admin
+      can :generate_charges, :admin
+      can :delete_charge, :admin
+      can :generate_payments, :admin
+      can :user_account_balances, :admin
       can :receive_box, Box
       can :inventory_box, Box
       can :inventory_boxes, Box
@@ -65,6 +70,12 @@ class Ability
       can :ship_order_lines, Order
       can :show_invoice, Order
       can :get_order_label, Shipment
+      can :show, StorageChargeProcessingRecord
+      can :index, StorageChargeProcessingRecord
+      can :destroy, StorageChargeProcessingRecord
+      can :show, StoragePaymentProcessingRecord
+      can :index, StoragePaymentProcessingRecord
+      
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER
@@ -106,7 +117,7 @@ class Ability
       can :print_invoice, Order
 
       # orders
-      can :view, Order
+      can :show, Order
 
       # payment profiles
       can :new_default_payment_profile, PaymentProfile
@@ -146,6 +157,7 @@ class Ability
       
       # rental agreements
       can :latest_agreement_ajax, :rental_agreement_version
+      
     end
   end
 end

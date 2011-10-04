@@ -6,8 +6,12 @@
 }
 </style>
 <div id="internal-right">
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
+<% if current_user.has_rectify_payments? %>
+	<div style="width: 600px; border: solid black; background: red; margin-left: auto; margin-right: auto; text-align: center; padding: 5px 5px 5px 5px">
+		<b>YOUR DEFAULT CREDIT CARD HAS BEEN DECLINED!</b><br>
+		<br>To avoid additional fees or the loss of access to your account, <br><a href="/payment_profiles/new_default_payment_profile" style="color: white">please click here immediately</a><br>to provide a new default credit card and pay outstanding charges on your account, <br> <a href="/payment_profiles" style="color: white">or click here</a> to select another working credit card on file.
+	</div>
+<% end %>
 <p>
 <div style="float: left">
 	<div class="simple_header">Your Boxes</div>

@@ -1,18 +1,20 @@
 # == Schema Information
-# Schema version: 20110924185624
+# Schema version: 20110930213450
 #
 # Table name: storage_charges
 #
-#  id         :integer         not null, primary key
-#  box_id     :integer
-#  charge_id  :integer
-#  start_date :datetime
-#  end_date   :datetime
+#  id                                  :integer         not null, primary key
+#  box_id                              :integer
+#  charge_id                           :integer
+#  start_date                          :datetime
+#  end_date                            :datetime
+#  storage_charge_processing_record_id :integer
 #
 
 class StorageCharge < ActiveRecord::Base
   belongs_to :box
   belongs_to :charge
+  belongs_to :storage_charge_processing_record
   
   validates_presence_of :box
   validates_presence_of :charge

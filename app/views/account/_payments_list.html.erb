@@ -1,0 +1,14 @@
+<% payments.each do |payment| %>
+	<tr>
+		<td style="padding-left: 10px">payment for 
+			<% if payment.order_id %>
+				<a href="/orders/<%= payment.order_id %>">order <%= payment.order_id %></a>
+			<% else %>
+				storage charges
+			<% end %>
+			:
+		</td>
+		<td><%= number_to_currency payment.amount %></td>
+		<td></td>
+	</tr>
+<% end %>

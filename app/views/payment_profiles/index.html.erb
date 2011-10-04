@@ -7,7 +7,7 @@
 		<div class="error_label"><%= message %></div>
 		<% end %>
 	<% end %>
-	<% profiles = current_user.payment_profiles %>
+	<% profiles = current_user.active_payment_profiles %>
 	<% if profiles.size == 0 %>
 	You have no payment methods on file. <a href="/payment_profiles/new">Click here to add one</a>.
 	<% else %>

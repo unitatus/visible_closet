@@ -9,7 +9,7 @@ class AccountController < ApplicationController
   end
 
   def index
-    @last_payment_transaction = PaymentTransaction.find_by_user_id(current_user.id, :order => "created_at DESC")
+    @last_payment_transaction = current_user.last_successful_payment_transaction
     # this must be called before the next line, which will alter (but not save) the user
     @next_user_charge_date = current_user.next_charge_date
     user = current_user
