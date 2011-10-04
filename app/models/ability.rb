@@ -75,6 +75,7 @@ class Ability
       can :destroy, StorageChargeProcessingRecord
       can :show, StoragePaymentProcessingRecord
       can :index, StoragePaymentProcessingRecord
+      can :get_label, Shipment
       
     end
     
