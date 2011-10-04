@@ -46,6 +46,12 @@
 		<td><b>Location: </b></td><td><%= @box.location.nil? ? "?" : @box.location %></td>
 	</tr>
 	<tr>
+		<td><b>Received On: </b></td><td><%= @box.received_at.nil? ? "NA" : (@box.received_at.strftime "%m/%d/%Y") %></td>
+	</tr>
+	<tr>
+		<td><b>Return Requested On: </b></td><td><%= @box.return_requested_at.nil? ? "NA" : (@box.return_requested_at.strftime "%m/%d/%Y") %></td>
+	</tr>
+	<tr>
 		<td><b>Shipments: </b></td>
 		<td>
 			<% if @box.shipments.empty? %>

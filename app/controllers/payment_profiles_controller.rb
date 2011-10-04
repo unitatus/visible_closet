@@ -93,7 +93,7 @@ class PaymentProfilesController < ApplicationController
       render :action => "index"
     else
       profile = PaymentProfile.find(params[:id])
-      profile.update_attribute(:active, false)
+      profile.inactivate
       
       @profiles = current_user.payment_profiles
 

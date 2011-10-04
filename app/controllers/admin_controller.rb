@@ -136,6 +136,7 @@ class AdminController < ApplicationController
   end
   
   def user_account_balances
+    @admin_page = :monthly_charges
     @users = User.all
   end
   
@@ -234,6 +235,11 @@ class AdminController < ApplicationController
         if payment
           @record.payment_transactions << payment
         end
+      end
+      
+      charge_records = StorageChargeProcessingRecord.all.select {|record| ! record.locked_for_editing? }
+      charge_records.each do |charge_record|
+        charge_record.update_attribute(:locked_for_editing, true)
       end
     end # transaction
     

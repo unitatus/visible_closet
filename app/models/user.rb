@@ -256,8 +256,6 @@ class User < ActiveRecord::Base
     return payment
   end
   
-  
-  
   def has_stored_items?
     stored_item_count > 0
   end
@@ -452,7 +450,7 @@ class User < ActiveRecord::Base
   end
   
   def payments_between(start_date, end_date)
-    payment_transactions.select {|payment| payment.created_at >= start_date && payment.created_at <= end_date }
+    non_failed_payment_transactions.select {|payment| payment.created_at >= start_date && payment.created_at <= end_date }
   end
   
   def charges_during_month(date=nil)

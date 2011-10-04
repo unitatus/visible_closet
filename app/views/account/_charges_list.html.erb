@@ -16,6 +16,9 @@
 			<a href="/orders/<%= charge.order_id %>">order <%= charge.order_id %></a>
 		<% else # storage charge or misc %>
 			<%= charge.comments %>
+			<% if charge.storage_charge %>
+			 (assessed from <%= charge.storage_charge.start_date.strftime "%m/%d/%Y" %> to <%= charge.storage_charge.end_date.strftime "%m/%d/%Y" %>)
+			<% end %>
 		<% end %>
 	</td>
 	<td><%= number_to_currency charge.amount %></td>

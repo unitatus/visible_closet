@@ -117,7 +117,7 @@ class Ability
       can :print_invoice, Order
 
       # orders
-      can :view, Order
+      can :show, Order
 
       # payment profiles
       can :new_default_payment_profile, PaymentProfile
