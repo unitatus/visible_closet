@@ -42,35 +42,31 @@ function selectStoredItem(link_area, stored_item_id)
   </div> <!-- photos_container -->
 </td>
 <td style="border-left: 1px solid grey; padding: 10px;"></td>
-<td style="margin-left: auto; margin-right: auto; text-align: center; vertical-align:text-top;" width="50%" align="center">
-<div>
-  <div> 
+<td style="text-align: center; vertical-align:top;" width="50%" align="center"> 
 	<% if @stored_item %>
 	   	<%= image_tag(@stored_item.photo.url(:medium), :name => "large_image") %>
     <% end %>
-<br>
-<%= form_tag( { :controller => "boxes", :action => "add_tag"}, { :remote => true, :name => "tags_form" } ) do %>
-<% if @stored_item %>
-	<%= hidden_field_tag :stored_item_id, @stored_item.id %>
-<% else %>
-	<%= hidden_field_tag :stored_item_id %>
-<% end %>
-	<%= text_field_tag("tag")%>
-	<%= submit_tag("Add") %>
-<% end %> <!-- end form -->
-  </div>
-</div>
-<script type="text/javascript" language="JavaScript">
-document.forms['tags_form'].elements['tag'].focus();
-</script>
- <br>
-<div id="tags_container">
+	<br>
+	<%= form_tag( { :controller => "boxes", :action => "add_tag"}, { :remote => true, :name => "tags_form" } ) do %>
 	<% if @stored_item %>
-	  <% @stored_item.stored_item_tags.each do |stored_item_tag| %>
-	  	<% @stored_item_tag = stored_item_tag %>
-	  	<%= render("stored_item_tag", :locals => {:stored_item_tag => @stored_item_tag}) %>
-		<% @stored_item_tag = nil %>
-	  <% end %>
+		<%= hidden_field_tag :stored_item_id, @stored_item.id %>
+	<% else %>
+		<%= hidden_field_tag :stored_item_id %>
 	<% end %>
-</div>
+		<%= text_field_tag("tag")%>
+		<%= submit_tag("Add") %>
+	<% end %> <!-- end form -->
+	<script type="text/javascript" language="JavaScript">
+	document.forms['tags_form'].elements['tag'].focus();
+	</script>
+	<br>
+	<div id="tags_container">
+		<% if @stored_item %>
+		  <% @stored_item.stored_item_tags.each do |stored_item_tag| %>
+		  	<% @stored_item_tag = stored_item_tag %>
+		  	<%= render("stored_item_tag", :locals => {:stored_item_tag => @stored_item_tag}) %>
+			<% @stored_item_tag = nil %>
+		  <% end %>
+		<% end %>
+	</div>
 </td></tr></table>
