@@ -25,6 +25,16 @@ class PaymentProfilesController < ApplicationController
     end
   end
   
+  def edit
+    @profile = PaymentProfile.find_by_id_and_user_id(params[:id], current_user.id)
+    @addresses = current_user.addresses
+    params[:payment_profile] = {:billing_address_id => "on"} # this turns on the "enter address" section of the screen
+  end
+  
+  def update
+    do_create_or_update("/payment_profiles", "/payment_profiles/#{params[:id]}/edit")
+  end
+  
   def new_default_payment_profile
     @force_default = true
     
@@ -46,7 +56,7 @@ class PaymentProfilesController < ApplicationController
     save_default_profile = @user.default_payment_profile
     
     if @user.has_rectify_payments?
-      if do_create        
+      if do_create_or_update    
         if @user.resolve_rectify_payments
           redirect_to "/account/home"
         else
@@ -64,12 +74,12 @@ class PaymentProfilesController < ApplicationController
         render :new_default_payment_profile
       end
     else # rectify check
-      do_create((@user.has_cart_items? ? "/account/check_out" : "/account/store_more_boxes"), :new_default_payment_profile)
+      do_create_or_update((@user.has_cart_items? ? "/account/check_out" : "/account/store_more_boxes"), :new_default_payment_profile)
     end
   end
   
   def create
-    do_create("/account/home", :new)
+    do_create_or_update("/account/home", :new)
   end
   
   def set_default
@@ -108,16 +118,23 @@ class PaymentProfilesController < ApplicationController
   
   private
   
-  def do_create(success_redirect=nil, failure_render=nil)
-    @profile = PaymentProfile.new(params[:payment_profile])
+  def do_create_or_update(success_redirect=nil, failure_render=nil)
     @user ||= current_user
-    @profile.user = @user
+    @profile = params[:id].blank? ? @user.payment_profiles.build(params[:payment_profile]) : PaymentProfile.find_by_id_and_user_id(params[:id], @user.id)
+
+    if !@profile.new_record?
+      @profile.update_attributes(params[:payment_profile])
+    end
 
     # Because we have "options" in how the user specifies the address, we must ignore the auto-setting above and manually set billing address properties.
     # FYI, it seems that what happens above is if the user selected a billing address then it gets set, then all the empty attributes get set
     # on top of it.
     if params[:payment_profile][:billing_address_id] == "on" # user entered an address
-      @profile.billing_address = Address.new(params[:payment_profile][:billing_address_attributes])
+      if @profile.new_record?
+        @profile.billing_address = Address.new(params[:payment_profile][:billing_address_attributes])
+      else
+        @profile.billing_address.update_attributes(params[:payment_profile][:billing_address_attributes])
+      end
     else # user selected an address
       @profile.billing_address_id = params[:payment_profile][:billing_address_id]
     end

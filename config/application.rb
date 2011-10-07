@@ -71,7 +71,6 @@ module VisibleCloset
     config.s3_labels_path = '/public/system/labels/'
     config.s3_labels_bucket = 'shipment_labels'
     
-    # config.admin_email = 'admin@thevisiblecloset.com'
     config.admin_email = "admin@thevisiblecloset.com"
     
     config.shipping_up_percent = 0.0

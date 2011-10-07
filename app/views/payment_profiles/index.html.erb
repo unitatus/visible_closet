@@ -12,7 +12,19 @@
 	You have no payment methods on file. <a href="/payment_profiles/new">Click here to add one</a>.
 	<% else %>
 		<div class="graybox">
-			<table><thead style="font-size: 125%"><tr><td>Type</td><td>Number</td><td>Exp Date</td><td>Cardholder Name</td><td>Billing Address</td><td>Default?</td><td>Delete?</td></tr></thead>
+			<table>
+				<thead style="font-size: 125%">
+					<tr>
+						<td>Type</td>
+						<td>Number</td>
+						<td>Exp Date</td>
+						<td>Cardholder Name</td>
+						<td>Billing Address</td>
+						<td>Default?</td>
+						<td>Edit?</td>
+						<td>Delete?</td>
+					</tr>
+				</thead>
 				<tbody class="top-line bottom-line">
 			<% profiles.each do |profile| %>
 			<% address = profile.billing_address %>
@@ -32,6 +44,9 @@
 					<% else %>
 						<a href="/payment_profiles/<%=profile.id%>/set_default">Set Default</a> 
 					<% end %>
+				</td>
+				<td>
+					<a href="/payment_profiles/<%=profile.id%>/edit">Edit</a>
 				</td>
 				<td>
 				<% if current_user.default_payment_profile_id == profile.id %>

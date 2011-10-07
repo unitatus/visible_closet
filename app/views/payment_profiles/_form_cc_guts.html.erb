@@ -3,9 +3,13 @@
 	<tr>
 		<th>First Name:</th>
 		<th>Last Name:</th>
-		<th>Card Number:</th>
+		<% if @profile.new_record? %>
+			<th>Card Number:</th>
+		<% end %>
 		<th style="width: 187px" colspan="2">Expiration:</th>
-		<th>CVV: <a href="/pcCardCode.html" id="cvv_link" title="Verification Value"style="font-size: 80%">(What's this?)</a></th>
+		<% if @profile.new_record? %>
+			<th>CVV: <a href="/pcCardCode.html" id="cvv_link" title="Verification Value"style="font-size: 80%">(What's this?)</a></th>
+		<% end %>
 	</tr>
 	<tr>
 		<td>
@@ -16,10 +20,12 @@
 			<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (profile.errors[:last_name].empty? ? "": " error"), :style => "width: 100px;" %>
 			<%= error_messages_for_attribute(profile, :last_name) %>
 		</td>
-		<td>
-			<%= f.text_field :number, :placeholder => "#################", :class => "textbox" + (profile.errors[:number].empty? ? "": " error"), :style => "width: 125px;" %>
-			<%= error_messages_for_attribute(profile, :number) %>
-		</td>
+		<% if @profile.new_record? %>
+			<td>
+				<%= f.text_field :number, :placeholder => "#################", :class => "textbox" + (profile.errors[:number].empty? ? "": " error"), :style => "width: 125px;" %>
+				<%= error_messages_for_attribute(profile, :number) %>
+			</td>
+		<% end %>
 		<td>
 			<%= f.select :month, options_for_select(months_select_array, :selected => profile.month) %>
 			<%= error_messages_for_attribute(profile, :month) %>
@@ -28,15 +34,17 @@
 			<%= f.select :year, options_for_select(year_array, profile.year) %>
 			<%= error_messages_for_attribute(profile, :year) %>
 		</td>
-		<td>
-			<%= f.text_field :verification_value, :placeholder => "###", :class => "textbox" + (profile.errors[:verification_value].empty? ? "": " error"), :style => "width: 40px;" %>
-			<%= error_messages_for_attribute(profile, :verification_value) %>
-		</td>
+		<% if @profile.new_record? %>
+			<td>
+				<%= f.text_field :verification_value, :placeholder => "###", :class => "textbox" + (profile.errors[:verification_value].empty? ? "": " error"), :style => "width: 40px;" %>
+				<%= error_messages_for_attribute(profile, :verification_value) %>
+			</td>
+		<% end %>
 	</tr>
 	<tr><td colspan="6"><br><hr></td></tr>
 </table>
 <div style="width:700px; margin-left: auto; margin-right: auto">
-	<% if current_user.payment_profile_count != 0 %>
+	<% if current_user.payment_profile_count != 0 && @profile.new_record? %>
 		Default Card?
 		<%= hidden_field_tag :default, @force_default.nil? ? 0 : 1 %>
 		<%= check_box_tag :default, 1, params[:default].nil? ? true : params[:default] == "1", :disabled => !@force_default.nil? %>

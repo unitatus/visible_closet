@@ -123,6 +123,7 @@ class Ability
       # payment profiles
       can :new_default_payment_profile, PaymentProfile
       can :create_default_payment_profile, PaymentProfile
+      can :edit, PaymentProfile
       
       # boxes
       can :index, Box

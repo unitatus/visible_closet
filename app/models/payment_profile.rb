@@ -58,6 +58,18 @@ class PaymentProfile < ActiveRecord::Base
       
       return new_profile
     end
+
+    # This seems silly, but there seems to be something wrong where Rails can't find the billing address id in this
+    def update_attributes(attributes)
+      # make a copy so we don't mess with anything
+      copied_attributes = Hash[*attributes.flatten]
+
+      if copied_attributes["billing_address_attributes"]
+        copied_attributes["billing_address_attributes"]["id"] = nil
+      end
+      
+      super(copied_attributes)
+    end
     
     def billing_address_id=(value)
       # a bit of a hack, gets around rails auto-setting fields when that would be inappropriate in some cases
@@ -71,11 +83,11 @@ class PaymentProfile < ActiveRecord::Base
     
     def billing_address_with_extension=(value)
       target_attributes = value.attributes
-
+    
       target_attributes["user_id"] = nil
       target_attributes.delete("created_at")
       target_attributes.delete("updated_at")
-
+    
       # The convoluted check on address should never be needed, but is included just in case there's a data problem so we can never overwrite a customer's address info.
       if billing_address.nil? || (!billing_address.user.nil? || billing_address_id == Rails.application.config.fedex_vc_address_id)
         self.billing_address_without_extension = Address.new(target_attributes)
@@ -157,6 +169,10 @@ class PaymentProfile < ActiveRecord::Base
         return false
       end
     end
+    
+    def before_update
+      update_payment_profile
+    end
 
     def destroy
       if !user.nil? && user.default_payment_profile == self
@@ -211,23 +227,31 @@ class PaymentProfile < ActiveRecord::Base
       end
     end
 
-    # Updates are not allowed, but this method is kept around just in case, since it may prove useful.
-    # def update_payment_profile
-    #   profile = {:customer_profile_id => user.cim_id,
-    #               :payment_profile => {:customer_payment_profile_id => self.identifier,
-    #                                    :bill_to => self.address_hash,
-    #                                    :payment => {:credit_card => self.credit_card}
-    #                                    }
-    #               }
-    #   response = CIM_GATEWAY.update_customer_payment_profile(profile)
-    #   if response.success?
-    #     self.credit_card = nil
-    #     return true
-    #   else
-    #     errors.add("cc_response", response.message)
-    #     return false
-    #   end
-    # end
+    def dummy_cc_number
+      "XXXX" + self.last_four_digits
+    end
+
+    def update_payment_profile
+      self.number = dummy_cc_number
+      
+      profile = {:customer_profile_id => user.cim_id,
+                 :payment_profile => {
+                   :customer_payment_profile_id => self.identifier,
+                   :bill_to => self.address_hash,
+                   :payment => {
+                     :credit_card => self.credit_card
+                   }
+                 }
+                }
+      response = CIM_GATEWAY.update_customer_payment_profile(profile)
+      if response.success?
+        @credit_card = nil
+        return true
+      else
+        errors.add("cc_response", response.message)
+        return false
+      end
+    end
 
     def delete_payment_profile
       if self.identifier
@@ -261,6 +285,8 @@ class PaymentProfile < ActiveRecord::Base
         "diners club international"
       elsif length == 16 && number =~ /^(54|55)/
         "diners club US & Canada"
+      elsif number == dummy_cc_number
+        self.cc_type
       else
         nil
       end

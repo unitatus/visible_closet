@@ -29,6 +29,7 @@ class PagesController < ApplicationController
   
   def pricing
     @top_menu_page = :pricing
+    debugger
     @vc_box = Product.find(Rails.application.config.our_box_product_id)
     @vc_box_count_1_months_1_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)
     @vc_box_count_2_months_1_disc = Discount.new(@vc_box, Discount::BOX_COUNT_DISCOUNT_THRESHOLD_2, Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1)

@@ -472,6 +472,15 @@ $(document).ready(function(){
 	
 	$("#explain_tbd_shipping_link").fancybox();
 	
+	$("#edit_cc_number_link").fancybox({
+		'titleShow'		: false,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 400,
+		'height': 100
+	});
+	
 	/************ Autocomplete **************/
 	$('#tags').bind('railsAutocomplete.select', function(event, data){
 	    document.forms['tags_search'].submit();
