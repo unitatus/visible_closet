@@ -31,6 +31,7 @@ VisibleCloset::Application.routes.draw do
   match "addresses/:id/override_fedex" => "addresses#override_fedex"
   get "addresses/confirm_new_default_shipping_address"
   get "addresses/confirm_address"
+  match "addresses/:id/confirm_address" => "addresses#confirm_address"
   get "payment_profiles/new_default_payment_profile"
   post "payment_profiles/create_default_payment_profile"
   post "addresses/admin_fedex_override"

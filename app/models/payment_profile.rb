@@ -20,16 +20,20 @@
 
 class PaymentProfile < ActiveRecord::Base
     belongs_to :user
-    belongs_to :billing_address, :class_name => 'Address', :dependent => :destroy, :autosave => true
-    accepts_nested_attributes_for :billing_address, :allow_destroy => true
+    belongs_to :billing_address, :class_name => 'Address', :autosave => true
+    accepts_nested_attributes_for :billing_address
     
     attr_accessor :number, :verification_value
         
     # Really we should be validating billing address, but then rails won't let us automatically set a billing address, so we can't create the payment profile
     # using Devise. The right solution to this is to have Devise allow for customization of create, but that isn't possible. Arg!
     validates_presence_of :last_four_digits, :year, :first_name, :last_name, :month
-    validates_presence_of :billing_address, :message => "Billing address must be selected."
+    validates_presence_of :billing_address, :message => "Billing address must be selected.", :if => :should_require_billing_address
     validate :validate_card, :on => :create
+    
+    def should_require_billing_address
+      self.active?
+    end
 
     def PaymentProfile.new(attributes=nil)
       attributes[:active] = nil if attributes
@@ -70,33 +74,6 @@ class PaymentProfile < ActiveRecord::Base
       
       super(copied_attributes)
     end
-    
-    def billing_address_id=(value)
-      # a bit of a hack, gets around rails auto-setting fields when that would be inappropriate in some cases
-      if value.to_f == 0.0
-        write_attribute(:billing_address_id, nil)
-        self.billing_address_without_extension = nil
-      else
-        self.billing_address = Address.find(value)
-      end
-    end
-    
-    def billing_address_with_extension=(value)
-      target_attributes = value.attributes
-    
-      target_attributes["user_id"] = nil
-      target_attributes.delete("created_at")
-      target_attributes.delete("updated_at")
-    
-      # The convoluted check on address should never be needed, but is included just in case there's a data problem so we can never overwrite a customer's address info.
-      if billing_address.nil? || (!billing_address.user.nil? || billing_address_id == Rails.application.config.fedex_vc_address_id)
-        self.billing_address_without_extension = Address.new(target_attributes)
-      else
-        self.billing_address.attributes = target_attributes
-      end
-    end
-    
-    alias_method_chain :billing_address=, :extension
 
     def number=(value)
       if value.nil?
@@ -114,27 +91,31 @@ class PaymentProfile < ActiveRecord::Base
     end
       
     def active=(value)
-      if active.nil?
-        write_attribute(:active, value)
-      elsif (!active? && value == true)
+      if active == false && value == true
         raise "Cannot move from inactive to active by setting active indicator"
       else 
         write_attribute(:active, value)
-        if value == false
-          inactivate
-        end
       end
     end
     
+    def calling_inactivate?
+      @calling_inactivate
+    end
+    
     def inactivate
+      @calling_inactive = true
+      
       if !active?
         return true
       end
       
       if delete_payment_profile
-        update_attribute(:active, false)
-        update_attribute(:identifier, nil)
-        return true
+        # kill billing address -- don't want the cascade updates
+        self.billing_address = nil
+        self.billing_address_id = nil
+        self.identifier = nil
+        self.active = false
+        return save
       else
         return false
       end
@@ -146,7 +127,8 @@ class PaymentProfile < ActiveRecord::Base
         nil
       else
         address = Address.find(self.billing_address_id)
-        return { :name => address.first_name + " " + address.last_name,
+        return { :first_name => self.first_name,
+                      :last_name => self.last_name,
                       :address1 => address.address_line_1,
                       :address2 => nil, #address.address_line_2,
                       :company => nil, # not supported at this time
@@ -171,7 +153,43 @@ class PaymentProfile < ActiveRecord::Base
     end
     
     def before_update
-      update_payment_profile
+      if calling_inactivate?
+        return true
+      end
+      
+      @save_initiator = true
+      
+      if identifier.blank?
+        return true
+      else
+        update_active_merchant
+      end
+    end
+    
+    def save_initiator?
+      @save_initiator
+    end
+    
+    def update_active_merchant
+      self.number = dummy_cc_number
+      
+      profile = {:customer_profile_id => user.cim_id,
+                 :payment_profile => {
+                   :customer_payment_profile_id => self.identifier,
+                   :bill_to => self.address_hash,
+                   :payment => {
+                     :credit_card => self.credit_card
+                   }
+                 }
+                }
+      response = CIM_GATEWAY.update_customer_payment_profile(profile)
+      if response.success?
+        @credit_card = nil
+        return true
+      else
+        errors.add("cc_response", response.message)
+        return false
+      end
     end
 
     def destroy
@@ -229,28 +247,6 @@ class PaymentProfile < ActiveRecord::Base
 
     def dummy_cc_number
       "XXXX" + self.last_four_digits
-    end
-
-    def update_payment_profile
-      self.number = dummy_cc_number
-      
-      profile = {:customer_profile_id => user.cim_id,
-                 :payment_profile => {
-                   :customer_payment_profile_id => self.identifier,
-                   :bill_to => self.address_hash,
-                   :payment => {
-                     :credit_card => self.credit_card
-                   }
-                 }
-                }
-      response = CIM_GATEWAY.update_customer_payment_profile(profile)
-      if response.success?
-        @credit_card = nil
-        return true
-      else
-        errors.add("cc_response", response.message)
-        return false
-      end
     end
 
     def delete_payment_profile

@@ -102,6 +102,7 @@ class Ability
       can :external_addresses_validate, :account
       can :account_history, :account
       can :invoice_estimate, :account
+      can :check_out_remove_cart_item, :account
       
       # addresses
       can :new_default_shipping_address, Address
@@ -124,6 +125,7 @@ class Ability
       can :new_default_payment_profile, PaymentProfile
       can :create_default_payment_profile, PaymentProfile
       can :edit, PaymentProfile
+      can :update, PaymentProfile
       
       # boxes
       can :index, Box

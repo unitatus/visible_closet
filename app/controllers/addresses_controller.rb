@@ -61,7 +61,8 @@ class AddressesController < ApplicationController
   end
   
   def confirm_address
-    
+    @address = Address.find_active_by_id_and_user_id(params[:id], current_user.id)
+    @address.externally_valid_with_save?
   end
   
   def admin_confirm_address

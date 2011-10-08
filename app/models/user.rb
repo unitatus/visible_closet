@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
 
   has_many :boxes, :foreign_key => :assigned_to_user_id, :dependent => :destroy
   has_many :payment_profiles, :dependent => :destroy
-  has_many :addresses, :dependent => :destroy
+  has_many :addresses, :dependent => :destroy, :order => "first_name", :conditions => "status = '" + Address::ACTIVE + "'"
   has_many :orders, :dependent => :destroy
   has_many :carts, :dependent => :destroy
   has_many :charges, :dependent => :destroy
@@ -104,10 +104,6 @@ class User < ActiveRecord::Base
     else
       return true
     end
-  end
-  
-  def addresses
-    Address.find_active(self.id, :order => :first_name)
   end
   
   # This is to avoid a rather interesting bug. If we call this right after create the cim id will be saved. If we wait, then it's possible that

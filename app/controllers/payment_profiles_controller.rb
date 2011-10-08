@@ -28,11 +28,11 @@ class PaymentProfilesController < ApplicationController
   def edit
     @profile = PaymentProfile.find_by_id_and_user_id(params[:id], current_user.id)
     @addresses = current_user.addresses
-    params[:payment_profile] = {:billing_address_id => "on"} # this turns on the "enter address" section of the screen
+    @new_address = Address.new
   end
   
   def update
-    do_create_or_update("/payment_profiles", "/payment_profiles/#{params[:id]}/edit")
+    do_create_or_update("/payment_profiles", :edit)
   end
   
   def new_default_payment_profile
@@ -105,7 +105,7 @@ class PaymentProfilesController < ApplicationController
       profile = PaymentProfile.find(params[:id])
       profile.inactivate
       
-      @profiles = current_user.payment_profiles
+      @profiles = current_user.active_payment_profiles
 
       if @profiles.size == 0
         @profile = PaymentProfile.new
@@ -130,19 +130,13 @@ class PaymentProfilesController < ApplicationController
     # FYI, it seems that what happens above is if the user selected a billing address then it gets set, then all the empty attributes get set
     # on top of it.
     if params[:payment_profile][:billing_address_id] == "on" # user entered an address
-      if @profile.new_record?
-        @profile.billing_address = Address.new(params[:payment_profile][:billing_address_attributes])
-      else
-        @profile.billing_address.update_attributes(params[:payment_profile][:billing_address_attributes])
-      end
+      @profile.billing_address = current_user.addresses.build(params[:payment_profile][:billing_address_attributes])
     else # user selected an address
-      @profile.billing_address_id = params[:payment_profile][:billing_address_id]
+      @profile.billing_address = Address.find(params[:payment_profile][:billing_address_id])
     end
     
     if @profile.save
-
       if params[:default] == "1" || current_user.payment_profile_count == 1
-
         @profile.user.default_payment_profile = @profile
         @profile.user.save
       end
@@ -160,13 +154,19 @@ class PaymentProfilesController < ApplicationController
       end
     else
       @addresses = current_user.addresses
+      if params[:payment_profile][:billing_address_id] == "on"
+        @new_address = @profile.billing_address
+        current_user.addresses.delete(@profile.billing_address) # so new address doens't show up in the list of addresses159
+      else
+        @new_address = Address.new
+      end
       # This is to prevent the selected billing address (if any) from showing up in the new address form.
       # The annoying reset logic is because if the profile succeeded locally but failed with authorize.net then it must be
       # destroyed, but if destroyed, we can't modify it. Arg!
-      if params[:payment_profile][:billing_address_id] != "on"
-        @profile = PaymentProfile.clone(@profile)
-        @profile.billing_address = Address.new
-      end
+      # if params[:payment_profile][:billing_address_id] != "on"
+      #   @profile = PaymentProfile.clone(@profile)
+      #   @profile.billing_address = Address.new
+      # end
       if failure_render
         render failure_render
       else

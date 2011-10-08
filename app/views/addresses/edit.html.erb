@@ -4,6 +4,16 @@
 	<div class="simple_header">Edit Address</div>
 	(<%= link_to 'See all addresses', addresses_path %>)
 <br><br>
+<% if @address.payment_profiles.any? %>
+	<b>Note: You are changing the billing address for the credit <%= pluralize(@address.payment_profiles.size, "card") %> ending in 
+	<% @address.payment_profiles.each_with_index do |profile, index| %>
+		<% if index > 0 %>
+		, 
+		<% end %>
+		<%= profile.last_four_digits %>
+	<% end %>
+	.</b> <a href="/payment_profiles">(Manage credit cards &gt;&gt;)</a><br><br>
+<% end %>
 <%= render :partial => 'new_form', :locals => { :url => "/addresses/#{@address.id}"} %>
 </div>
 <div class="clearer"></div>

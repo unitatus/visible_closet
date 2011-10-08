@@ -5,7 +5,9 @@
 (<%= link_to 'see all credit cards', payment_profiles_path %>)
 <% if @profile.errors.size > 0 %>
 <% # If there is a credit card error, it is always followed by garbage. %>
-  <div class="error_label"><%= @profile.errors[:cc_response][0] %></div><br>
+  <div class="error_label">
+	Please address the following errors:
+	<%= @profile.errors[:cc_response][0] %></div><br>
 <% end %>
 <div style="width: 100%">
 <%= render 'form', :locals => { :profile => @profile } %>

@@ -30,8 +30,13 @@ class Address < ActiveRecord::Base
   NOT_CHECKED = "not_checked"
   VALID = "valid"
   NOT_VALID = "not_valid"
+  
+  # Generic status
+  ACTIVE = "active"
+  INACTIVE = "inactive"
 
   belongs_to :user
+  has_many :payment_profiles, :foreign_key => :billing_address_id
   has_many :cart_items
   has_many :to_shipments, :class_name => "Shipment", :foreign_key => :to_address_id
   has_many :from_shipments, :class_name => "Shipment", :foreign_key => :from_address_id
@@ -42,6 +47,7 @@ class Address < ActiveRecord::Base
   validates_presence_of :address_line_1, :message => "can't be blank"
   validates_length_of :address_line_1, :maximum => 30, :message => "Fedex cannot accept address lines longer than 30 characters"
   validates_length_of :address_line_2, :maximum => 30, :message => "Fedex cannot accept address lines longer than 30 characters"
+  validates_length_of :city, :maximum => 40, :message => "City cannot be more than 40 characters"
   validates_presence_of :city, :message => "can't be blank"
   validates_presence_of :state, :message => "State must be selected"
   validates_presence_of :zip, :message => "can't be blank"
@@ -72,7 +78,7 @@ class Address < ActiveRecord::Base
   def Address.new(params=nil)
     new_address = super(params)
     new_address.country = "US"
-    new_address.status = "active"
+    new_address.status = ACTIVE
     new_address.fedex_validation_status = NOT_CHECKED
     
     new_address
@@ -87,11 +93,11 @@ class Address < ActiveRecord::Base
   end
   
   def Address.find_active(user_id, order=nil)
-    find_all_by_user_id_and_status(user_id, "active", order)
+    find_all_by_user_id_and_status(user_id, ACTIVE, order)
   end
   
   def Address.find_active_by_id_and_user_id(id, user_id)
-    find_by_id_and_user_id_and_status(id, user_id, "active")
+    find_by_id_and_user_id_and_status(id, user_id, ACTIVE)
   end
   
   def summary
@@ -157,7 +163,7 @@ class Address < ActiveRecord::Base
        :country => country
      }
       
-     # this should really fail gracefully by catching any exception and telling the user that their address could not be validated,
+     # this should really fail gracefully by catching any exception and telling the user that their address could not be,
      # and maybe even using the airbrake interface to send an email?
      @address_report = fedex.validate_address(:address => address_hash)
      
@@ -222,6 +228,24 @@ class Address < ActiveRecord::Base
      
      return @suggested_address.errors.empty?
    end
+  
+  def before_update
+    payment_profiles.each do |profile|
+      if !profile.save_initiator? && profile.active? && !profile.calling_inactivate?
+        profile.update_active_merchant
+      end
+    end
+    
+    # this is stupid, but Rails is stupid sometimes. If you inactivate a profile it will update ActiveMerchant then save, at which point
+    # address save will trigger, AND RELOAD PROFILES FROM THE DATABASE. It then thinks that the profile is not updated yet (because we
+    # are in the process of saving!) and try to resave. We can't let that fail, and we can't get rid of the logic, because when we update
+    # an address we need to update the related profile. Stupid.
+    return true 
+  end
+  
+  def save_initiator?
+    @save_initiator
+  end
   
   def was_externally_valid?
     @address_report.nil? ? externally_valid? : @address_report[:success]

@@ -57,10 +57,10 @@
 	<% end %>
 	<div style="display: <%= (params[:payment_profile].nil? ? false : params[:payment_profile][:billing_address_id] == "on") ? 'block' : 'none' %>" id="billing_address_div">
 		<br>
-			<%= f.fields_for :billing_address do |address_form| %>
+			<%= f.fields_for :billing_address, @new_address do |address_form| %>
 			<table class="registration_table">
 				<% @address = @profile.billing_address %>
-				<%= render :partial => "addresses/new_form_guts", :locals => { :f => address_form } %>
+				<%= render :partial => "addresses/new_form_guts", :locals => { :f => address_form, :show_address_name => false } %>
 			</table>
 			<% end # billing address form %>
 	</div>

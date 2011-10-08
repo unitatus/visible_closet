@@ -1,14 +1,20 @@
 <table class="address_select_table">
-	<% @addresses << Address.new(:first_name => "", :last_name => "", :address_line_1 => "Enter Address", :city => "", :state => "", :zip => "") %>
+	<% @addresses << Address.new(:first_name => "", :last_name => "", :address_line_1 => "New Address", :city => "", :state => "", :zip => "") %>
 	<% @addresses.each_with_index do |address, index| %>
 		<% if index % 3 == 0 %>
 			<tr>
 		<% end %>
 		<td style="vertical-align: middle; padding: 20px 10px">
-			<%= radio_button(:payment_profile, :billing_address_id, address.id, :checked => (params[:payment_profile].nil? ? false : (address.id.nil? ? params[:payment_profile][:billing_address_id] == "on" : params[:payment_profile][:billing_address_id] == address.id.to_s)), :onclick => "addressSelected('payment_profile_billing_address_id', 'billing_address_div')")%>
+			<% check_this_one = false %>
+			<% if @profile.billing_address_id == address.id && !@profile.billing_address_id.nil? %>
+			<%   check_this_one = true %>
+			<% elsif address.id.nil? && params[:payment_profile] && params[:payment_profile][:billing_address_id] == "on" %>
+			<%   check_this_one = true %>
+			<% end %>
+			<%= radio_button(:payment_profile, :billing_address_id, address.id, :checked => check_this_one, :onclick => "addressSelected('payment_profile_billing_address_id', 'billing_address_div')")%>
 		</td>
 		<td style="text-align: left; vertical-align: middle">
-			<%= raw address_summary address %>
+			<%= raw address_summary(address, @show_address_name) %>
 		</td>
 		<% if index + 1 == @addresses.size %>
 			<% (2 - (index % 3)).times {  %>

@@ -29,11 +29,22 @@ You do not have any addresses on file. Click <a href="/addresses/new">here</a> t
 	<% if !address.evening_phone.blank? %>
 	<br>Evening Phone: <%= number_to_phone(address.evening_phone) %>
 	<% end %>
+	<br>
+	<% if address.fedex_validation_status != Address::VALID %>
+		<b>UNVALIDATED FOR SHIPPING</b>
+	<% else %>
+		<i>Validated for shipping</i>
+	<% end %>
 	<br><%= link_to 'Edit', edit_address_path(address) %> 
-	<% if current_user.default_shipping_address != address %>
-	| <%= link_to 'Destroy', address, :confirm => 'Are you sure?', :method => :delete %> <br>
+	<% if current_user.default_shipping_address != address && address.payment_profiles.size == 0 %>
+	| <%= link_to 'Delete', address, :confirm => 'Are you sure?', :method => :delete %> <br>
+	<% elsif address.payment_profiles.size > 0 %>
+	| (Can't delete billing address)<br>
 	<% else %>
 	<br>
+	<% end %>
+	<% if address.fedex_validation_status != Address::VALID %>
+		<a href="/addresses/<%= address.id %>/confirm_address">Validate address for shipping</a><br>
 	<% end %>
 	<% if current_user.default_shipping_address == address %>
 		<b>This is your default shipping address</b>

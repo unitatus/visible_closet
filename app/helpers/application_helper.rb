@@ -97,7 +97,7 @@ module ApplicationHelper
       return_str << address.address_line_2
     end
     return_str << "<br>" if !return_str.blank?
-    return_str << (address.city.blank? ? "" : address.city + ", ")
+    return_str << (address.city.blank? ? "" : truncate(address.city, :length => 10) + ", ")
     return_str << (address.state.blank? ? "" : address.state)
     return_str << " "
     return_str << (address.zip.blank? ? "" : address.zip)
