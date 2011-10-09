@@ -114,6 +114,10 @@ function toggleHIWMenu() {
 		hiw_submenu.style.top = (hiw_submenu.style.top == "30px" ? "-999em" : "30px");
 		hiw_submenu.style.zIndex = (hiw_submenu.style.zIndex == "9999" ? "0" : "9999");
 	}
+    else
+    {
+        window.location = "/how_it_works";
+    }
 }
 
 $(document).ready(function(){

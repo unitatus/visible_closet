@@ -3,7 +3,7 @@
         <tr>
             <td colspan="2" class="circle-bg">
 				<% if storage_discount.unit_discount_perc > 0 %>
-					<%= storage_discount.new_product_count %> / 
+					<%= storage_discount.new_product_count %> 
 					<% if storage_discount.product.vc_box? %>
 						Box
 					<% else %>
@@ -53,12 +53,21 @@
 					<input type="hidden" name="sans_inv" id="sans_inv" value="<%= number_to_currency(storage_discount.unit_price_after_discount) %>" />
 					<input type="hidden" name="with_inv" id="with_inv" value="<%= number_to_currency(storage_discount.unit_price_after_discount + inventory_discount.unit_price_after_discount) %>" />
 				
-				<p><strong><%= number_to_currency(storage_discount.unit_price_after_discount) %></strong> 
+				<p>
+					<% if storage_discount.product.vc_box? %>
+						<div style="margin-top: -15px">
+					<% end %>
+					<strong><%= number_to_currency(storage_discount.unit_price_after_discount) %></strong>
+					<% if storage_discount.product.vc_box? %>
+						</div>
+					<% end %>
+				<div style="padding-top: 5px">
 				<% if storage_discount.product.vc_box? # free shipping materials means vc box %>
-					per box
+					per box per month
 				<% else %>
-					/ cubic foot
+					per cubic foot per month
 				<% end %>
+				</div>
 				</p>
 			</td>
         </tr>
