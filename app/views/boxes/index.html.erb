@@ -73,10 +73,15 @@
                     <ul id="box_<%= box.id %>_menu_list">
                         <li><a href="/boxes/<%= box.id %>/edit">edit description</a></li>
 						<% if box.status == Box::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_return_request_for(box)) %>
-                        <li><%= link_to "return this box", "/boxes/#{box.id}/request_box_return", :remote => true, :id => "box_#{box.id}_return_link" %></li>
+                        	<li><%= link_to "return this box", "/boxes/#{box.id}/request_box_return", :remote => true, :id => "box_#{box.id}_return_link" %></li>
 						<% elsif !current_user.cart.nil? && current_user.cart.contains_return_request_for(box) %>
 							<li><%= link_to "cancel return request", "/boxes/#{box.id}/cancel_box_return_request", :remote => true, :id => "box_#{box.id}_return_link" %></li>
 							<li id="box_<%= box.id %>_checkout"><a href="/account/check_out">proceed to checkout</a></li>
+						<% end %>
+						<% if box.status == Box::IN_STORAGE_STATUS && box.inventorying_status == Box::NO_INVENTORYING_REQUESTED %>
+							<li id="box_<%= box.id %>_inv_req">
+								<%= render :partial => "inv_req_link", :locals => { :box => box } %>
+							</li>
 						<% end %>
 						<% if box.inventorying_status == Box::INVENTORIED %>
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>

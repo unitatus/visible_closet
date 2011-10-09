@@ -231,6 +231,26 @@ class Box < ActiveRecord::Base
     earliest_receipt_date
   end
   
+  def extra_inventorying_cost
+    if inventorying_status != NO_INVENTORYING_REQUESTED
+      return 0.0
+    end
+    
+    product = Box.get_product(box_type, true)
+    new_product_count = 0
+    subscription = current_subscription
+    month_count = subscription.nil? ? 0 : subscription.duration_in_months
+    product_count = user.box_count(box_type)
+    
+    unit_discount_amt = Discount.new(product, new_product_count, month_count, product_count).unit_price_after_discount
+    
+    if box_type == VC_BOX_TYPE
+      return unit_discount_amt
+    else
+      return unit_discount_amt * cubic_feet
+    end
+  end
+  
   def subscription_on(date)
     # @subscriptions variable is for performance
     @date_subscriptions ||= Hash.new
@@ -439,11 +459,11 @@ class Box < ActiveRecord::Base
       end
     end
 
-  def process_inventory_request
+  def process_inventory_request(send_admin_email=false)
     # this check exists to ensure that customers are not double-charged if we restart the inventorying process. You only get the inventorying order
     # if you move from "no inventorying requested" to "inventorying requested"
     if self.inventorying_status == Box::NO_INVENTORYING_REQUESTED
-      generate_inventorying_order
+      generate_inventorying_order(send_admin_email)
     end
     
     self.inventorying_status = Box::INVENTORYING_REQUESTED
@@ -639,7 +659,7 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def generate_inventorying_order
+  def generate_inventorying_order(send_admin_email=false)
     if self.box_type == CUST_BOX_TYPE
       product_id = Rails.application.config.your_box_inventorying_product_id
     elsif self.box_type == VC_BOX_TYPE
@@ -669,6 +689,10 @@ class Box < ActiveRecord::Base
       raise "Failed to save order line " + order_line.inspect + " for box " + inspect
     else
       self.inventorying_order_line_id = order_line.id
+    end
+    
+    if send_admin_email
+      AdminMailer.deliver_new_inventorying_order(user, self)
     end
     
     # Note: do not generate charges for the order. This will happen automatically at the end of the month.

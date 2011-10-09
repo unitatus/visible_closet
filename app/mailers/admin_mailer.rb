@@ -25,6 +25,19 @@ class AdminMailer < ActionMailer::Base
     mail(:subject => "New Order")
   end
   
+  def AdminMailer.deliver_new_inventorying_order(user, box)
+    if user.not_test_user?
+      new_inventorying_order(user, box).deliver
+    end
+  end
+  
+  def new_inventorying_order(user, box)
+    @user = user
+    @box = box
+    
+    mail(:subject => "New Inventorying Order")
+  end
+  
   def contact_post(email, text, remote_ip)
     
     @text = text

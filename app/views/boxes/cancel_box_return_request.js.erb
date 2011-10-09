@@ -14,6 +14,14 @@ var container = document.getElementById("box_<%=@box.id%>_menu_list");
 var checkout_element = document.getElementById("box_<%=@box.id%>_checkout")
 container.removeChild(checkout_element)
 
+<% if @box.inventorying_status == Box::NO_INVENTORYING_REQUESTED %>
+	var container = document.getElementById("box_<%=@box.id%>_menu_list");
+	var new_element = document.createElement('li');
+	new_element.innerHTML = '<%= render :partial => "inv_req_link", :locals => { :box => @box } %>';
+	new_element.id = 'box_<%= @box.id %>_inv_req';
+	container.insertBefore(new_element, container.lastChild);
+<% end %>
+
 // refresh the cart image at the top of the screen
 <% if !current_user.cart.nil? && !current_user.cart.empty? %>
 	var cart_display = document.getElementById("cart-display");

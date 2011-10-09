@@ -134,6 +134,7 @@ class Ability
       can :get_label, Box
       can :request_box_return, Box
       can :cancel_box_return_request, Box
+      can :request_inventory, Box
       
       # stored items
       can :index, StoredItem

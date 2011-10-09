@@ -22,6 +22,11 @@ new_element.innerHTML = '<a href="/account/check_out">proceed to checkout</a>';
 new_element.id = 'box_<%=@box.id%>_checkout';
 container.insertBefore(new_element, container.lastChild);
 
+<% if @box.inventorying_status == Box::NO_INVENTORYING_REQUESTED %>
+	var inv_req_element = document.getElementById("box_<%=@box.id%>_inv_req")
+	container.removeChild(inv_req_element)
+<% end %>
+
 // refresh the cart image at the top of the screen
 <% if !current_user.cart.nil? && !current_user.cart.empty? %>
 	var cart_display = document.getElementById("cart-display");

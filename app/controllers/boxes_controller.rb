@@ -301,6 +301,16 @@ class BoxesController < ApplicationController
     end
   end
   
+  def request_inventory
+    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+    @box.process_inventory_request(true)
+    @box.save
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
   def finish_inventorying
     @box = Box.find(params[:id])
     

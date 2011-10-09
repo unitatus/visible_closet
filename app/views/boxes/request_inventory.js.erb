@@ -1,0 +1,8 @@
+// Change the clicked box image
+var box_img = document.getElementById('box_img_<%= @box.id %>')
+box_img.src = '/images/status-inventory-processing.jpg';
+
+// reconfigure menu items on mouse-over menu for this box
+var container = document.getElementById("box_<%=@box.id%>_menu_list");
+var inv_element = document.getElementById("box_<%=@box.id%>_inv_req")
+container.removeChild(inv_element)

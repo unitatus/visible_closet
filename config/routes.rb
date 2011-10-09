@@ -49,6 +49,7 @@ VisibleCloset::Application.routes.draw do
   match "orders/:id/process" => "orders#process_order"
   match "orders/:id/ship_order_lines" => "orders#ship_order_lines"
   match "boxes/:box_id/stored_items" => "stored_items#index"
+  match "boxes/:id/request_inventory" => "boxes#request_inventory"
   match "/stored_items" => "stored_items#index"
   match "box/:id/get_label" => "boxes#get_label"
   match "shipment/:id/get_label" => "shipments#get_label"
