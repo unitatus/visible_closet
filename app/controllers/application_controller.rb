@@ -17,7 +17,8 @@ class ApplicationController < ActionController::Base
   
   # This is mainly for the autocomplete item search, which for some reason doens't work from a non-secure page calling a secure page
   def ssl_required?
-    return user_signed_in?
+    # return user_signed_in?
+    true
   end
   
   def after_sign_in_path_for(resource_or_scope)
