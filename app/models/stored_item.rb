@@ -1,5 +1,5 @@
-3# == Schema Information
-# Schema version: 20110710195000
+# == Schema Information
+# Schema version: 20111023201319
 #
 # Table name: stored_items
 #
@@ -12,9 +12,16 @@
 #  photo_file_size    :integer
 #  photo_updated_at   :datetime
 #  access_token       :string(255)
+#  status             :string(255)
 #
 
 class StoredItem < ActiveRecord::Base
+  IN_STORAGE_STATUS = :in_storage_status
+  DONATION_REQUESTED_STATUS = :donation_requested
+  DONATED_STATUS = :donated
+  
+  symbolize :status
+  
   belongs_to :box
   has_many :stored_item_tags, :dependent => :destroy
   attr_accessible :file
@@ -37,6 +44,12 @@ class StoredItem < ActiveRecord::Base
                             
   validates_attachment_presence :photo
   validates_attachment_content_type :photo, :content_type => [/image\/jpg/, /image\/jpeg/, /image\/pjpeg/, /image\/gif/, /image\/png/, /image\/x-png/]
+  
+  def StoredItem.new()
+    stored_item = super
+    stored_item.status = IN_STORAGE_STATUS
+    stored_item
+  end
   
   def StoredItem.count_items(user)
     count_by_sql "SELECT COUNT(*) FROM stored_items s, boxes b WHERE s.box_id = b.id AND b.assigned_to_user_id = #{user.id}"

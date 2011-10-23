@@ -67,8 +67,8 @@ class User < ActiveRecord::Base
   has_many :charges, :dependent => :destroy
   has_many :payment_transactions, :dependent => :destroy
   has_many :subscriptions, :dependent => :destroy
-  has_many :storage_charge_processing_records, :dependent => :destroy
-  has_many :storage_payment_processing_records, :dependent => :destroy
+  has_many :storage_charge_processing_records, :dependent => :destroy, :foreign_key => :generated_by_user_id
+  has_many :storage_payment_processing_records, :dependent => :destroy, :foreign_key => :generated_by_user_id
   has_and_belongs_to_many :rental_agreement_versions
 
   validates :first_name, :presence => true
