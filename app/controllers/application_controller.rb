@@ -11,14 +11,14 @@ class ApplicationController < ActionController::Base
     redirect_to access_denied_url
   end
   
+  # Redirect to www.thevisiblecloset.com if the user hit anything other than that url
   def check_uri
     redirect_to request.protocol + "www." + request.host_with_port + request.request_uri if !/^www/.match(request.host) if Rails.env == 'production'
   end
   
   # This is mainly for the autocomplete item search, which for some reason doens't work from a non-secure page calling a secure page
   def ssl_required?
-    # return user_signed_in?
-    true
+    return user_signed_in?
   end
   
   def after_sign_in_path_for(resource_or_scope)

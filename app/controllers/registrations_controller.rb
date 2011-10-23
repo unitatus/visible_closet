@@ -1,5 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
   
-  private
+  def ssl_required?
+    true
+  end
 
 end

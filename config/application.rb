@@ -84,8 +84,5 @@ module VisibleCloset
       :login => "5Fe5e8GF6z7H", # "API Login ID"
       :password => "83zM4HAnrm84D4pB" # "Transaction Key"
     )
-    
-    # Indicate the log-in and sign-up screens that need to be SSL-required
-    config.to_prepare { Devise::SessionsController.ssl_required :new, :create }
   end
 end

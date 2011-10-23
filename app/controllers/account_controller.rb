@@ -20,10 +20,6 @@ class AccountController < ApplicationController
     @next_user_charge = account_balance > 0 ? 0 : account_balance * -1
   end
   
-  def email_confirmation
-    
-  end
-  
   def invoice_estimate
     @user = current_user
 

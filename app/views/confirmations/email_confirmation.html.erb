@@ -1,0 +1,42 @@
+<% if user_signed_in? %>
+	<%= render 'account/account_nav' %>
+	<div id="internal-right">
+<% else %>
+	<div class="login-slim-centered">
+<% end %>
+<h1>Email Confirmation</h1>
+Congratulations! You have confirmed your email account, and now have unrestricted access as a Visible Closet user! Welcome!<br><br>
+<% if @this_user.default_shipping_address.nil? %>
+It looks like when you signed up you did not set up a default shipping address. You must do so in order to store your stuff with The Visible Closet. Why not set it up now? 
+	<% if user_signed_in? %>
+		<a href="/addresses/new_default_shipping_address">Click here to continue!</a>
+	<% else %>
+		Sign in below to continue!
+	<% end %>
+	<br><br>
+<% elsif @this_user.default_payment_profile.nil? %>
+It looks like when you signed up you did not set up a default credit card. You must do so in order to store your stuff with The Visible Closet. Why not set it up now? 
+	<% if user_signed_in? %>
+		<a href="/payment_profiles/new_default_payment_profile">Click here to continue!</a>
+	<% else %>
+		Sign in below to continue!
+	<% end %>
+<br><br>
+<% elsif @this_user.box_count > 0 %>
+	<% if user_signed_in? %>
+		To browse your boxes or manage your account, use the menu at the left.
+	<% else %>
+		To browse your boxes or manager you account, sign in below.
+	<% end %>
+<% else %>
+	<% if user_signed_in? %>
+		To start storing with The Visible Closet, click the "Store More Stuff" link on the left.
+	<% else %>
+		To start storing with The Visible Closet, sign in below.
+	<% end %>
+<% end %>
+<% if !user_signed_in? %>
+	<%= render :partial => 'sessions/login_form' %>
+<% end %>
+</div>
+<div class="clearer"></div>
