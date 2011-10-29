@@ -6,6 +6,7 @@
     <th>Name</th>
     <th>Price</th>
     <th></th>
+	<th>Discountable?</th>
     <th></th>
     <th></th>
     <th></th>
@@ -17,6 +18,7 @@
     <td><%= product.name %></td>
     <td><%= number_to_currency(product.price) %></td>
     <td><%= product.price_comment %></td>
+	<td><%= product.discountable? %></td>
     <td><%= link_to 'Show', product %></td>
     <td><%= link_to 'Edit', edit_product_path(product) %></td>
     <td><%= link_to 'Destroy', product, :confirm => 'Are you sure?', :method => :delete %></td>

@@ -28,6 +28,7 @@ VisibleCloset::Application.configure do
   config.our_box_inventorying_product_id = 3
   config.your_box_inventorying_product_id = 4
   config.return_box_product_id = 5
+  config.item_donation_product_id = 6
   # if more products are added, be sure to update the constants and functions in the Product object
 
   config.fedex_vc_address_id = 7

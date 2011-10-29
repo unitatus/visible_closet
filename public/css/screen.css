@@ -1119,17 +1119,20 @@ table.address_select_table td {
 }
 
 .browse-item-menu {
-    width: 130px;
-    height: 160px;
+    width: 163px;
+    height: 170px;
     position: absolute;
     top: 10px;
-    left: 5px;
+    left: 3px;
 }
 
 .browse-item-menu-contents {
     display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
     width: 130px;
-    height: 130px;
+    height: 135px;
     background-color: #b8daf5;
     -moz-box-shadow: 0px 0px 6px #666;
     -webkit-box-shadow: 0px 0px 6px #666;
@@ -1139,6 +1142,27 @@ table.address_select_table td {
     border-radius: 15px;
     padding: 10px;
     text-align: left;
+    margin-left: 10px;
+    opacity: .90;
+}
+
+.browse-item-service {
+    display: block;
+    width: 130px;
+    height: 135px;
+    background-color: #6D7B8D;
+	font-weight: bold;
+	font-size: 2em;
+	font-color: black;
+	line-height: 100%;
+    -moz-box-shadow: 0px 0px 6px #666;
+    -webkit-box-shadow: 0px 0px 6px #666;
+    box-shadow: 0px 0px 6px #666;
+    border: 2px solid #fff;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
     margin-left: 10px;
     opacity: .90;
 }

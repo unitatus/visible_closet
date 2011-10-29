@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110902171257
+# Schema version: 20111023204639
 #
 # Table name: cart_items
 #
@@ -12,6 +12,7 @@
 #  committed_months :integer
 #  box_id           :integer
 #  address_id       :integer
+#  stored_item_id   :integer
 #
 
 class CartItem < ActiveRecord::Base
@@ -19,6 +20,7 @@ class CartItem < ActiveRecord::Base
   belongs_to :cart
   belongs_to :box
   belongs_to :address
+  belongs_to :stored_item
 
   validates_numericality_of :quantity, :only_integer => true, :greater_than_or_equal_to => 0, :message => "Please enter only positive integers."
   
@@ -38,7 +40,7 @@ class CartItem < ActiveRecord::Base
   end
   
   def discount?
-    return total_monthly_price_after_discount > 0 && self.discount.unit_discount_perc > 0.0
+    return total_unit_price_after_discount > 0 && self.discount.unit_discount_perc > 0.0
   end
   
   def discount
@@ -55,19 +57,15 @@ class CartItem < ActiveRecord::Base
   end
   
   def description
-    if self.box.nil?
-      product.name
-    else
+    if !self.box.nil?
       product.name + " for box " + box.box_num.to_s
+    elsif !self.stored_item.nil?
+      product.name + " for stored item " + stored_item.id.to_s
     end
   end
   
-  def total_monthly_price_after_discount
-    if new_box_line?
-      discount.unit_price_after_discount * self.quantity
-    else
-      0.0
-    end
+  def total_unit_price_after_discount
+    discount.unit_price_after_discount * self.quantity
   end
   
   def box_type

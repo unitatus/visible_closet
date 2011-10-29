@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111023201455) do
+ActiveRecord::Schema.define(:version => 20111029221959) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(:version => 20111023201455) do
     t.integer  "committed_months"
     t.integer  "box_id"
     t.integer  "address_id"
+    t.integer  "stored_item_id"
   end
 
   add_index "cart_items", ["cart_id"], :name => "index_cart_items_on_cart_id"
@@ -212,6 +213,7 @@ ActiveRecord::Schema.define(:version => 20111023201455) do
     t.datetime "updated_at"
     t.string   "price_comment"
     t.string   "first_due"
+    t.boolean  "discountable"
   end
 
   create_table "rental_agreement_versions", :force => true do |t|

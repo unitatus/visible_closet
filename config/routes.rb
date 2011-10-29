@@ -22,6 +22,8 @@ VisibleCloset::Application.routes.draw do
   match "boxes/finish_inventorying_box" => "boxes#finish_inventorying"
   get "stored_items/autocomplete_stored_item_tags"
   match "stored_items/:id" => "stored_items#view"
+  match "stored_items/:id/request_charitable_donation" => "stored_items#request_charitable_donation"
+  match "stored_items/:id/cancel_donation_request" => "stored_items#cancel_donation_request"
   match "payment_profiles/:id/set_default" => "payment_profiles#set_default"
   match "addresses/:id/set_default_shipping" => "addresses#set_default_shipping"
   match "m" => "pages#marketing_hit"

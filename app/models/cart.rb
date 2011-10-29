@@ -104,8 +104,28 @@ class Cart < ActiveRecord::Base
     end
   end
   
+  def remove_donation_request(stored_item)
+    cart_items_to_remove = cart_items.select { |c| c.stored_item == stored_item }
+    
+    cart_items_to_remove.each do |cart_item|
+      cart_items.delete(cart_item)
+    end
+  end
+  
   def contains_return_request_for(box)
     found_items = cart_items.select { |c| c.box == box }
+    
+    return !found_items.empty?
+  end
+  
+  def contains_service_request_for(stored_item)
+    found_items = cart_items.select { |c| c.stored_item == stored_item }
+    
+    return !found_items.empty?
+  end
+  
+  def contains_donation_request_for(stored_item)
+    found_items = cart_items.select { |c| c.stored_item == stored_item && c.product.donation? }
     
     return !found_items.empty?
   end
@@ -113,6 +133,11 @@ class Cart < ActiveRecord::Base
   def num_box_return_requests
     cart_items_with_boxes = cart_items.select { |c| !c.box.nil? }
     cart_items_with_boxes.size
+  end
+  
+  def num_item_service_requests
+    cart_items_with_item_service_requests = cart_items.select { |c| !c.stored_item.nil? }
+    cart_items_with_item_service_requests.size
   end
   
   def add_cart_item(product_id, quantity, committed_months)
@@ -136,6 +161,20 @@ class Cart < ActiveRecord::Base
       cart_items << cart_item
     else
       raise "Invalid cart item object."
+    end
+  end
+  
+  def add_donation_request_for(obj)
+    if obj.is_a?(StoredItem)
+      cart_item = CartItem.new
+      
+      cart_item.product_id = Rails.application.config.item_donation_product_id
+      cart_item.quantity = 1
+      cart_item.stored_item = obj
+      
+      cart_items << cart_item
+    else
+      raise "Invalid cart item object"
     end
   end
   

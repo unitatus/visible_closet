@@ -62,20 +62,51 @@ ul.ui-autocomplete {
 		<% @stored_items.each_with_index do |stored_item, index| %>
 	        <div class="browse-item">
 				<%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150) %>
+				<!-- use this when offline image_tag("/images/electronic-musical-toy.jpg", :height => 150, :width => 150) -->
 				<p>(Box: <%= stored_item.box.box_num %>)</p>
-				<div class="browse-item-menu">
-					<div class="browse-item-menu-contents">
+				<div class="browse-item-menu" id="stored_item_<%=stored_item.id%>_menu">
+					<div class="browse-item-menu-contents" id="stored_item_<%=stored_item.id%>_menu_contents">
 						<p class="browse-item-menu-contents-head">Item Options</p>
-						<ul>
-							<li><a id="<%= stored_item.id %>_details_link" class="grouped_images" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">Details</a></li>
-							<li><a href="#">Mail to me</a></li>
-							<li><a href="#">Sell</a></li>
-							<li><a href="#">Donate to charity</a></li>
-							<li><a href="#">Safely dispose of</a></li>
+						<ul id="stored_item_<%=stored_item.id%>_menu_list">
+							<li><a id="<%= stored_item.id %>_details_link" class="grouped_images" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">details</a></li>
+							<% if stored_item.status == StoredItem::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_service_request_for(stored_item)) %>
+								<li id="stored_item_<%= stored_item.id%>_mail_li"><a href="#">mail to me</a></li>
+								<li id="stored_item_<%= stored_item.id%>_sell_li"><a href="#">sell</a></li>
+	                        	<li id="stored_item_<%= stored_item.id%>_donation_li"><%= link_to "donate to charity", "/stored_items/#{stored_item.id}/request_charitable_donation", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
+								<li id="stored_item_<%= stored_item.id%>_dispose_li"><a href="#">safely dispose of</a></li>
+							<% elsif !current_user.cart.nil? && current_user.cart.contains_donation_request_for(stored_item) %>
+								<li><%= link_to "cancel donation", "/stored_items/#{stored_item.id}/cancel_donation_request", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
+								<li id="stored_item_<%= stored_item.id %>_checkout_li"><a href="/account/check_out">checkout</a></li>
+							<% end %>
 						</ul>
 					</div>
+					<% if stored_item.status == StoredItem::DONATION_REQUESTED_STATUS || stored_item.status == StoredItem::DONATED_STATUS || (current_user.cart && current_user.cart.contains_donation_request_for(stored_item)) %>
+						<div class="browse-item-service" id="item-<%= stored_item.id %>-service-div">
+							<% if current_user.cart && current_user.cart.contains_donation_request_for(stored_item) %>
+								Donation<br>Requested
+							<% elsif stored_item.status == StoredItem::DONATION_REQUESTED_STATUS %>
+								Donation<br>Requested
+							<% elsif stored_item.status == StoredItem::DONATED_STATUS %>
+								IMPLEMENT
+							<% end %>
+						</div>
+					<% end %>
 				</div>
 			</div>
 		<% end %>
 </div>
 <div class="clearer"></div>
+<div style="display: none">
+	<a href="#first_item_processing_div" id="first_item_processing_link"></a>
+	<div id="first_item_processing_div" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center">
+		You have added an item service to your cart. You can choose to add more item services to your cart (or remove them) by continuing to click the links on the item menus on this page, or you can proceed to checkout now to confirm your order and pay.
+		<br><br>
+		If you choose to add or cancel more item services, simply click the "cart" box at the top of the screen to proceed to checkout when you are ready.
+		<br><br>
+		What would you like to do now?<br><br>
+		<%= form_tag "/account/check_out", :class => "standard", :method => "get" do  %>
+			<input type="submit" class="button" value="Add / Cancel More Item Services" onclick="$.fancybox.close(); return false;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="submit" class="button" value="Go to Checkout">
+		<% end %>
+	</div>
+</div>

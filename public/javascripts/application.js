@@ -141,10 +141,10 @@ $(document).ready(function(){
 
     $('.browse-item .browse-item-menu').hover(
           function () {
-            $($(this)).find("div").show();
+            $($(this)).find("div").toggle();
           }, 
           function () {
-            $($(this)).find("div").hide();
+            $($(this)).find("div").toggle();
           }
     );
 
@@ -471,6 +471,8 @@ $(document).ready(function(){
 	});
 	
 	$("#first_box_return_link").fancybox();
+	
+	$("#first_item_processing_link").fancybox();
 	
 	$("#explain_invalid_address_link").fancybox();
 	

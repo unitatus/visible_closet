@@ -53,6 +53,30 @@ class StoredItemsController < ApplicationController
     render :json => Yajl::Encoder.encode(json_ready_hash)
   end
   
+  def request_charitable_donation
+    @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
+    @cart = current_user.get_or_create_cart
+    
+    @cart.add_donation_request_for(@stored_item)
+    @cart.save
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def cancel_donation_request
+    @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
+    @cart = current_user.cart
+    
+    @cart.remove_donation_request(@stored_item)
+    @cart.save
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
   private
   
   def construct_json_label(item, tags = [])

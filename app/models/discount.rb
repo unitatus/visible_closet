@@ -44,6 +44,10 @@ class Discount
   end
   
   def unit_discount_perc
+    if !product.discountable?
+      return 0.0
+    end
+    
     discount_perc = 0.0
     
     count_threshold_1, count_threshold_2, count_threshold_3 = determine_thresholds
@@ -102,7 +106,7 @@ class Discount
   end
   
   def charged_at_purchase
-    product.id == Rails.application.config.return_box_product_id ? @product.price*@new_product_count : 0.0
+    (product.id == Rails.application.config.return_box_product_id || product.id == Rails.application.config.item_donation_product_id) ? @product.price*@new_product_count : 0.0
   end
   
   def free_shipping?
