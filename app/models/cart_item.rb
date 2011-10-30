@@ -60,6 +60,10 @@ class CartItem < ActiveRecord::Base
     product_id == Rails.application.config.our_box_product_id
   end
   
+  def item_service?
+    self.product.item_service?
+  end
+  
   def donation?
     self.product.donation?
   end

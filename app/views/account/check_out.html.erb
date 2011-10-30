@@ -56,6 +56,9 @@ function openMemberAgreement() {
 				<br> <a href="#checkout_inventorying_vcbox_inline" id="co_inv_link">(what about inventorying?)<a/>
 			<% elsif cart_item.product.cust_box? %>
 				<br> <a href="#checkout_inventorying_custbox_inline" id="co_inv_link">(what about inventorying?)<a/>
+			<% elsif cart_item.item_service? %>
+				<br>
+				<%= image_tag(cart_item.stored_item.photo.url(:thumb), :name => "thumb_" + cart_item.stored_item.id.to_s, :height => 100, :width => 100) %>
 			<% end %>
 		</td>
 		<td>
