@@ -39,16 +39,12 @@ class OrderLine < ActiveRecord::Base
     end
   end
   
-  def ship
-    # bug checking
-    if product_id != Rails.application.config.our_box_product_id && product_id != Rails.application.config.return_box_product_id
-      raise "Error: order line being processed for shipping on non-shippable product"
-    end
-    
+  def process(charity_name=nil)
     self.status = PROCESSED_STATUS
     
     self.transaction do
-      
+
+      # This won't do anything on an order line that doe not include associated boxes
       associated_boxes.each do |box|
         box_shipment = box.ship # the box will check its state and behave accordingly; new boxes will have their shipment back to us generated; returned boxes will have their outgoing shipment created
         
@@ -75,6 +71,9 @@ class OrderLine < ActiveRecord::Base
           raise "Error generating shipment and saving; errors: " << order_shipment.errors.inspect
         end
       end
+      
+      # When we implement item return we will have to take care of shipment information here.
+      service_item.finalize_service(product, charity_name) if service_item
       
       if (!save)
         raise "Unable to save OrderLine " << self.inspect
@@ -103,6 +102,10 @@ class OrderLine < ActiveRecord::Base
   
   def vc_box?
     product_id == Rails.application.config.our_box_product_id
+  end
+  
+  def item_service?
+    self.product.item_service?
   end
   
   def unit_price_after_discount

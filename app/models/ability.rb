@@ -142,6 +142,8 @@ class Ability
       can :user_add_tag, Box 
       can :view, StoredItem
       can :autocomplete_stored_item_tags, StoredItem
+      can :request_charitable_donation, StoredItem
+      can :cancel_donation_request, StoredItem
       
       # payment profiles
       can :index, PaymentProfile

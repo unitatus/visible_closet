@@ -28,7 +28,11 @@ class StoredItemsController < ApplicationController
   
   # This call is made from fancybox when viewing an individual item
   def view
-    @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
+    if current_user.admin? || current_user.manager?
+      @stored_item = StoredItem.find(params[:id])
+    else
+      @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
+    end
     
     respond_to do |format|
       format.html { render :layout => false }
@@ -86,6 +90,14 @@ class StoredItemsController < ApplicationController
       tag_str.gsub!(tag.downcase, "<b>#{tag.downcase}</b>")
     end
     
-    "<img src='" + item[:img] + "'> " + tag_str + " (Box " + item[:box_num].to_s + ")"
+    return_str = "<img src='" + item[:img] + "'> " + tag_str
+    
+    if item[:donated]
+      return_str += " (item donated to \"" + item[:donated_to] + "\")"
+    else
+      return_str += " (Box " + item[:box_num].to_s + ")"
+    end
+    
+    return return_str
   end
 end

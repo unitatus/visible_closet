@@ -6,6 +6,11 @@
 		<td><b>Created At: </b></td><td><%= @order.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
 	</tr>
 	<tr>
+		<td><b>User email:</b></td>
+		<td><a href="mailto:<%= @order.user.email %>"><%= @order.user.email %></a></td>
+	</tr>
+	
+	<tr>
 		<td><b>Status: </b></td><td><%= @order.status %></td>
 	</tr>
 	<tr>

@@ -8,4 +8,24 @@ module MiscHelper
     
     return running_total
   end
+  
+  def MiscHelper.contains_shipping_lines(order_lines)
+    order_lines.each do |order_line|
+      if order_line.shippable?
+        return true
+      end
+    end
+    
+    return false
+  end
+  
+  def MiscHelper.contains_non_shipping_item_services(order_lines)
+    order_lines.each do |order_line|
+      if !order_line.shippable? && order_line.item_service?
+        return true
+      end
+    end
+    
+    return false
+  end
 end

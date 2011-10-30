@@ -3,6 +3,10 @@
 	<div class="item_summary">
 		<%= image_tag(@stored_item.photo.url(:normal), :name => "normal_" + @stored_item.id.to_s) %>
 		<br><br>
+		<% if @stored_item.donated? %>
+		NOTE: Item no longer in storage; donated to &quot;<%= @stored_item.donated_to %>&quot;.
+		<br><br>
+		<% end %>
 		Tags: <br>
 		<div id="tags_container" style="text-align: center; margin-left: auto; margin-right: auto; text-wrap: unrestricted; width: 420px; position: relative; z-index: 2000">
 			<%= render :partial => "boxes/user_stored_item_tags", :locals => { :stored_item => @stored_item }%>

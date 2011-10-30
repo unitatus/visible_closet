@@ -27,7 +27,7 @@
 	      <%= user.last_name %>
 	    </td>
 	    <td>
-	      <%= user.email %>
+	      <a href="mailto:<%= user.email %>"><%= user.email %></a>
 	    </td>
 		<td>
 			<%= order.created_at.strftime '%m/%d/%Y %l:%M %p' %>

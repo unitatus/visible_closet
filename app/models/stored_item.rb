@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20111023201319
+# Schema version: 20111030203554
 #
 # Table name: stored_items
 #
@@ -13,6 +13,7 @@
 #  photo_updated_at   :datetime
 #  access_token       :string(255)
 #  status             :string(255)
+#  donated_to         :string(255)
 #
 
 class StoredItem < ActiveRecord::Base
@@ -99,7 +100,7 @@ class StoredItem < ActiveRecord::Base
     # select only the records that match all tags
     grouped_item_tags.delete_if { |stored_item_id, tag_str| item_counts[stored_item_id] < tags.size }
     
-    # Rails does not support joining and eager loading, so we this is to seed the cache for faster processing. -DZ
+    # Rails does not support joining and eager loading, so this is to seed the cache for faster processing. -DZ
     # For those following along from home, we do a search for stored items matching the ids in the grouped_item_tags keys, tell Rails to fetch the boxes while
     # we're at it and put them in the Rails cache, turn the resulting array of stored items into an array with each entry an array of id and stored item,
     # convert that into an array of id's followed by stored items (with flatten), convert that into the parameters to a function call using *, and pass that to the
@@ -108,7 +109,8 @@ class StoredItem < ActiveRecord::Base
     
     if json_ready
       grouped_item_tags.keys.collect do |stored_item_id|
-        { :id => stored_item_id, :tag_matches => grouped_item_tags[stored_item_id], :box_num => cache[stored_item_id].box.box_num, :img => cache[stored_item_id].photo.url(:thumb) }
+        { :id => stored_item_id, :tag_matches => grouped_item_tags[stored_item_id], :box_num => cache[stored_item_id].box.box_num, \
+          :img => cache[stored_item_id].photo.url(:thumb), :donated => cache[stored_item_id].donated?, :donated_to => cache[stored_item_id].donated_to }
       end
     else
       cache.values
@@ -127,6 +129,19 @@ class StoredItem < ActiveRecord::Base
     else
       raise "Invalid product id for item service product: " + product.id.to_s
     end
+  end
+  
+  def finalize_service(product, charity_name=nil)
+    if product.id == Rails.application.config.item_donation_product_id
+      update_attribute(:status, DONATED_STATUS)
+      update_attribute(:donated_to, charity_name)
+    else
+      raise "Invalid product id for item service product: " + product.id.to_s
+    end
+  end
+  
+  def donated?
+    status == DONATED_STATUS
   end
   
   private

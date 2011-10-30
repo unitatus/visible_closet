@@ -87,7 +87,7 @@ ul.ui-autocomplete {
 							<% elsif stored_item.status == StoredItem::DONATION_REQUESTED_STATUS %>
 								Donation<br>Requested
 							<% elsif stored_item.status == StoredItem::DONATED_STATUS %>
-								IMPLEMENT
+								DONATED<br><div style="font-size: 50%">to <%= stored_item.donated_to %></div>
 							<% end %>
 						</div>
 					<% end %>

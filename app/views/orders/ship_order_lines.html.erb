@@ -25,6 +25,8 @@
 				<li>A label has been created for shipping the bag. Click <a href="/shipment/<%= @ordered_boxes[0].ordering_order_line.shipment.id %>/get_label">here</a> to access it, and print it to the label printer.</li>
 				<li>Place the bag in the "ready" area for FedEx</li>
 			</ol><br>
+		<% else %>
+		(nothing ordered)
 		<% end # end ordered_boxes size check %>
 		<% if @returned_boxes.size > 0 %>
 			Next steps: returning boxes
@@ -38,7 +40,19 @@
 					</ul>
 				</li>
 			</ol>
+		<% else %>
+		<br>(nothing returned)
 		<% end # end returned_boxes size check %>
+	</div>
+	<div class="simple_header">Item processing information</div>
+	<div class="simple_body" style="width: 7300px">
+		<ul>
+		<% @order_lines.each do |order_line| %>
+			<% if order_line.product.donation? %>
+				<li style="vertical-align: middle"><%= image_tag(order_line.service_item.photo.url(:thumb), :name => "thumb_" + order_line.service_item.id.to_s, :height => 100, :width => 100) %> Item <%= order_line.service_item_id %> donated to <%= order_line.service_item.donated_to %>; user emailed at <a href="mailto:<%= order_line.order.user.email %>"><%= order_line.order.user.email %></a>.</li>
+			<% end %>
+		<% end %>
+		</ul>
 	</div>
 </div>
 <div class="clearer"></div>

@@ -91,7 +91,7 @@ class Order < ActiveRecord::Base
     return cart.nil? || cart.quoted_shipping_cost_success
   end
   
-  def ship_order_lines(order_line_ids)
+  def process_order_lines(order_line_ids, charity_names=Hash.new)
     order_lines = Array.new
     
     self.transaction do
@@ -101,10 +101,10 @@ class Order < ActiveRecord::Base
         order_lines << order_line
     
         # will save the order line
-        order_line.ship
+        order_line.process(charity_names[order_line.id])
       end
       
-      UserMailer.deliver_boxes_sent(user, order_lines)
+      UserMailer.deliver_order_lines_processed(user, order_lines)
       
       return order_lines
     end # end transaction
@@ -243,6 +243,30 @@ class Order < ActiveRecord::Base
   
   def contains_box_orders?
     return box_order_lines.size > 0
+  end
+  
+  def contains_box_services?
+    return contains_box_orders? || contains_box_return_services? || contains_inventory_services?
+  end
+  
+  def contains_box_return_services?
+    box_return_lines.size > 0
+  end
+  
+  def contains_inventory_services?
+    inventory_lines.size > 0
+  end
+  
+  def contains_item_services?
+    item_service_lines.size > 0
+  end
+  
+  def item_service_lines
+    order_lines.select { |order_line| order_line.product.item_service? }
+  end
+  
+  def inventory_lines
+    order_lines.select { |order_line| order_line.product_id == Rails.application.config.your_box_inventorying_product_id || order_line.product_id == Rails.application.config.our_box_inventorying_product_id }
   end
   
   def box_order_lines

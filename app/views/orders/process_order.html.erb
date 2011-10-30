@@ -1,8 +1,17 @@
 <% @admin_page = :shipping %>
 <%= render :partial => "admin/admin_menu", :locals => { :admin_page => @admin_page } %>
 
+<% # set some repeat variables %>
+<% contains_box_services = @order.contains_box_services? %>
+<% contains_item_services = @order.contains_item_services? %>
+<% contains_inventory_services = @order.contains_inventory_services? %>
+<% if flash[:notice] %>
+<div class="error_label"><%= flash[:notice] %></div>
+<% end %>
 <div id="internal-right">
 <%= form_tag("ship_order_lines", :class => "standard", :id => "ship_order_lines_form", :name => "ship_order_lines_form", :onsubmit => "cf_submit.disabled=true;") %>
+For reference: user email is <a href="mailto:<%= @order.user.email %>"><%= @order.user.email %></a>.
+<br><br>
 <table class="prices_table">
   <tr>
 	<th width="20%">
@@ -11,12 +20,20 @@
 	Select All</th>
 	<th width="20%">Order ID</th>
 	<th width="20%">Order Line ID</th>
-	<th width="20%">Box ID</th>
+	<% if contains_box_services %>
+		<th width="20%">Box ID</th>
+	<% end %>
     <th width="10%">Product ID</th>
     <th width="20%">Product Desc</th>
+	<% if contains_item_services %>
+		<th width="20%">Item</th>
+		<th>Charity</th>
+	<% end %>
     <th>Quantity</th>
     <th>Status</th>
-	<th width="20%">Inventory?</th>
+	<% if contains_inventory_services %>
+		<th width="20%">Inventory?</th>
+	<% end %>
   </tr>
 <% @order.order_lines.each do |order_line| %>
 <% product = order_line.product %>
@@ -30,51 +47,74 @@
 		<% end %>
 	</td>
 	<td class="<%= class_name %>">
-      <%= @order.id %>
+      <a href="/admin/user/<%= @order.user.id %>/orders/<%= @order.id %>"><%= @order.id %></a>
     </td>
 	<td class="<%= class_name %>">
       <%= order_line.id %>
     </td>
-	<td class="<%= class_name %>">
-		<% box = Box.find_by_inventorying_order_line_id(order_line.id) %>
-		<% if box.nil? %>
-			<% box = Box.find_by_ordering_order_line_id(order_line.id) %>
-		<% end %>
-		<% if box.nil? %>
-			<% box = Box.find_by_service_order_lines([order_line]).first %>
-		<% end %>
-		<% if box %>
-			<%= box.id %>
-		<% else %>
-		NA or many
-		<% end %>
-	</td>
+	<% if contains_box_services %>
+		<td class="<%= class_name %>">
+			<% box = Box.find_by_inventorying_order_line_id(order_line.id) %>
+			<% if box.nil? %>
+				<% box = Box.find_by_ordering_order_line_id(order_line.id) %>
+			<% end %>
+			<% if box.nil? %>
+				<% box = Box.find_by_service_order_lines([order_line]).first %>
+			<% end %>
+			<% if box %>
+				<%= box.id %>
+			<% else %>
+			NA or many
+			<% end %>
+		</td>
+	<% end %>
 	<td class="<%= class_name %>">
       <%= product.id %>
     </td>
 	<td class="<%= class_name %>">
 		<%= product.name %>
 	</td>
+	<% if contains_item_services %>
+		<td>
+			<% if order_line.item_service? %>
+			Item #<%= order_line.service_item_id %><br>
+			<a id="<%= order_line.service_item_id %>_details_link" class="grouped_images" rel="grouped_images" href="/stored_items/<%= order_line.service_item_id %>"><%= image_tag(order_line.service_item.photo.url(:thumb), :name => "thumb_" + order_line.service_item.id.to_s, :height => 100, :width => 100) %></a>
+			<% else %>
+				NA
+			<% end %>
+		</td>
+		<td>
+			<% if order_line.item_service? %>
+				<% if order_line.status == OrderLine::NEW_STATUS %>
+					<%= text_field_tag "charity_" + order_line.id.to_s %>
+				<% else %>
+					<%= order_line.service_item.donated_to %>
+				<% end %>
+			<% end %>
+		</td>
+	<% end %>
 	<td class="<%= class_name %>">
 		<%= order_line.quantity %>
 	</td>
 	<td class="<%= class_name %>">
       <%= order_line.status %>
     </td>
-	<td class="<%= class_name %>">
-	  <% if order_line.status == OrderLine::NEW_STATUS && order_line.inventorying_line? %>
-	<a href="/boxes/inventory_box?id=<%= box.id %>">Inventory&gt;&gt;</a>
-	<% else %>
-	NA
+	<% if contains_inventory_services %>
+		<td class="<%= class_name %>">
+		  <% if order_line.status == OrderLine::NEW_STATUS && order_line.inventorying_line? %>
+		<a href="/boxes/inventory_box?id=<%= box.id %>">Inventory&gt;&gt;</a>
+		<% else %>
+		NA
+		<% end %>
+		</td>
 	<% end %>
-	</td>
   </tr>
 <% end %>
 </table>
 <br>
 <div class="right">
 	<%= hidden_field_tag :order_id, @order.id %>
-<%= submit_tag("Ship Selected Lines", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();") %>
+<%= submit_tag("Process Selected Lines", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();") %>
 </div>
 </div>
 <div class="clearer"></div>

@@ -16,4 +16,10 @@ class StoredItemTag < ActiveRecord::Base
   has_many :boxes, :through => :stored_item
 
   attr_accessible :tag
+  
+  # this method hits the database every time. If you are going to call it a lot on the same object consider calling box.user.
+  # Note that the stored items are found once each; Rails caches them.
+  def StoredItemTag.find_by_id_and_user_id(tag_id, user_id)
+    joins(:stored_item).joins(:box).where("boxes.assigned_to_user_id = #{user_id} AND stored_item_tags.id = #{tag_id}").first
+  end
 end

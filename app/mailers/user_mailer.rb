@@ -56,13 +56,13 @@ class UserMailer < ActionMailer::Base
     mail(:to => user.email, :subject => "Visible Closet CREDIT CARD DECLINED")
   end
   
-  def UserMailer.deliver_boxes_sent(user, order_lines)
+  def UserMailer.deliver_order_lines_processed(user, order_lines)
     if user.not_test_user?
-      boxes_sent(user, order_lines).deliver
+      order_lines_processed(user, order_lines).deliver
     end
   end
   
-  def boxes_sent(user, order_lines)
+  def order_lines_processed(user, order_lines)
     @user = user
     @order_lines = order_lines
     mail(:to => user.email, :subject => "Notification from The Visible Closet")
