@@ -1,22 +1,21 @@
 Dear <%= @user.first_name %> <%= @user.last_name %>,
 <br><br>
-We just wanted to inform you that we have processed order lines for order <%= @order_lines[0].order.id %>. 
+We just wanted to inform you that we have processed order lines for order <%= @order_lines[0].order.id %>. Here are some details:
 <% if MiscHelper.contains_shipping_lines(@order_lines) %>
-	The following are being shipped to:
 	<br><br>
 	<ul>
 	<% @order_lines.each do |order_line| %>
 		<% if order_line.return_order_line? %>
-			<li>Box <%= order_line.service_box.box_num %> shipped to: <%= raw address_summary order_line.shipment.to_address %></li>
+			<li>Box <%= order_line.service_box.box_num %> shipped to: <br><br><%= raw address_summary order_line.shipment.to_address %></li>
 		<% elsif order_line.vc_box? %>
-			Box(es) and shipping materials shipped to: <%= raw address_summary order_line.shipment.to_address %>
+			Box(es) and shipping materials shipped to: <br><br><%= raw address_summary order_line.shipment.to_address %>
 		<% else # item return goes here %>
 		<% end %>
 	<% end %>
 	</ul>
 <% end %>
 <% if MiscHelper.contains_non_shipping_item_services(@order_lines) %>
-	The following item services have been completed:
+	<br><br>The following item services have been completed:
 	<br><br>
 	<ul>
 		<% @order_lines.each do |order_line| %>
@@ -28,10 +27,12 @@ We just wanted to inform you that we have processed order lines for order <%= @o
 <% end %>
 <br><br>
 <% if MiscHelper.contains_shipping_lines(@order_lines) %>
-	You can track your packages using the following tracking numbers via fedex.com. Note that it may take up to 1 business day for FedEx to integrate these tracking numbers into the FedEx system.
+	You can track your packages using the following tracking numbers via fedex.com. Note that it may take up to 1 business day for FedEx to integrate these tracking numbers into the FedEx system.<br>
 	<ul>
 	<% @order_lines.each do |order_line| %>
-		<li><a href="http://www.fedex.com/Tracking?action=track&tracknumbers=<%= order_line.shipment.tracking_number %>"><%= order_line.shipment.tracking_number %></a></li>
+		<% if order_line.shippable? %>
+			<li>Tracking number: <a href="http://www.fedex.com/Tracking?action=track&tracknumbers=<%= order_line.shipment.tracking_number %>"><%= order_line.shipment.tracking_number %></a></li>
+		<% end %>
 	<% end %>
 	</ul>
 	<br><br>

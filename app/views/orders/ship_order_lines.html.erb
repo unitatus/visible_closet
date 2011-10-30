@@ -44,15 +44,17 @@
 		<br>(nothing returned)
 		<% end # end returned_boxes size check %>
 	</div>
-	<div class="simple_header">Item processing information</div>
-	<div class="simple_body" style="width: 7300px">
-		<ul>
-		<% @order_lines.each do |order_line| %>
-			<% if order_line.product.donation? %>
-				<li style="vertical-align: middle"><%= image_tag(order_line.service_item.photo.url(:thumb), :name => "thumb_" + order_line.service_item.id.to_s, :height => 100, :width => 100) %> Item <%= order_line.service_item_id %> donated to <%= order_line.service_item.donated_to %>; user emailed at <a href="mailto:<%= order_line.order.user.email %>"><%= order_line.order.user.email %></a>.</li>
+	<% if MiscHelper.contains_non_shipping_item_services(@order_lines) %>
+		<div class="simple_header">Item processing information</div>
+		<div class="simple_body" style="width: 7300px">
+			<ul>
+			<% @order_lines.each do |order_line| %>
+				<% if order_line.product.donation? %>
+					<li style="vertical-align: middle"><%= image_tag(order_line.service_item.photo.url(:thumb), :name => "thumb_" + order_line.service_item.id.to_s, :height => 100, :width => 100) %> Item <%= order_line.service_item_id %> donated to <%= order_line.service_item.donated_to %>; user emailed at <a href="mailto:<%= order_line.order.user.email %>"><%= order_line.order.user.email %></a>.</li>
+				<% end %>
 			<% end %>
-		<% end %>
-		</ul>
-	</div>
+			</ul>
+		</div>
+	<% end %>
 </div>
 <div class="clearer"></div>
