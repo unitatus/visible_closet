@@ -252,6 +252,10 @@ class Order < ActiveRecord::Base
   def box_return_lines
     order_lines.select { |order_line| order_line.product_id == Rails.application.config.return_box_product_id }
   end
+  
+  def item_service_lines
+    order_lines.select { |order_line| order_line.product.item_service? }
+  end
     
   private
   
@@ -295,6 +299,7 @@ class Order < ActiveRecord::Base
     
     process_box_orders
     process_box_returns
+    process_item_services
         
     generate_charges # if any
   end
@@ -324,6 +329,12 @@ class Order < ActiveRecord::Base
   def process_box_returns
     box_return_lines.each do |order_line|
       order_line.service_box.mark_for_return
+    end
+  end
+  
+  def process_item_services
+    item_service_lines.each do |order_line|
+      order_line.service_item.process_service(order_line.product)
     end
   end
   

@@ -17,7 +17,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :payment_transaction
   
   class InvoiceLine
-    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount, :shipping_address, :service_box, :box_order_line
+    attr_accessor :product, :quantity, :unit_price, :months_paid, :discount, :shipping_address, :service_box, :box_order_line, :shippable
     
     def description
       if product.id == Rails.application.config.return_box_product_id
@@ -28,8 +28,22 @@ class Invoice < ActiveRecord::Base
     end
     
     def box_order_line?
-      
+      self.box_order_line
     end
+    
+    def shippable?
+      self.shippable
+    end
+  end
+  
+  def only_non_shippable_lines?
+    self.invoice_lines.each do |line|
+      if line.shippable?
+        return false
+      end
+    end
+    
+    return true
   end
   
   def invoice_lines(refresh = false)
@@ -47,6 +61,7 @@ class Invoice < ActiveRecord::Base
         new_invoice_line.shipping_address = line.shipping_address
         new_invoice_line.service_box = line.service_box
         new_invoice_line.box_order_line = line.box_order_line?
+        new_invoice_line.shippable = line.shippable?
         
         @invoice_lines << new_invoice_line
       end

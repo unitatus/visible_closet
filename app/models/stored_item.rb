@@ -24,6 +24,7 @@ class StoredItem < ActiveRecord::Base
   
   belongs_to :box
   has_many :stored_item_tags, :dependent => :destroy
+  has_many :service_order_lines, :class_name => 'OrderLine'
   attr_accessible :file
   before_create :generate_access_token
   
@@ -120,8 +121,12 @@ class StoredItem < ActiveRecord::Base
     joins(:box).where("boxes.assigned_to_user_id = #{user_id} AND stored_items.id = #{stored_item_id}").first
   end
   
-  def tag
-    "dingo"
+  def process_service(product)
+    if product.id == Rails.application.config.item_donation_product_id
+      update_attribute(:status, DONATION_REQUESTED_STATUS)
+    else
+      raise "Invalid product id for item service product: " + product.id.to_s
+    end
   end
   
   private

@@ -71,7 +71,13 @@
 						<% @invoice.invoice_lines.each do |line| %>
 							<tr>
 								<td style="text-align: left"><%= line.description %></td>
-								<td style="text-align: center"><%= raw address_summary line.shipping_address %></td>
+								<td style="text-align: center">
+									<% if line.shippable? %>
+										<%= raw address_summary line.shipping_address %>
+									<% else %>
+										NA
+									<% end %>
+								</td>
 								<td style="text-align: center"><%= line.quantity %></td>
 								<td>x</td>
 								<td  style="text-align: center"><%= number_to_currency line.unit_price %> <%= line.product.price_comment %></td>
@@ -96,6 +102,8 @@
 				Shipping & Handling: 
 				<% if @invoice.free_shipping? %>
 				$0.00<br>
+				<% elsif @invoice.only_non_shippable_lines? %>
+				NA
 				<% elsif @invoice.contains_only_ordered_boxes || !@invoice.quoted_shipping_cost_success %>
 				TBD on shipment date<br>
 				<% elsif @invoice.contains_ordered_boxes %>

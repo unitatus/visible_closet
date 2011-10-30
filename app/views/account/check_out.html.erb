@@ -71,8 +71,10 @@ function openMemberAgreement() {
 					<% end %>	
 				</a>
 		</td>
-		<td>
-			<% if cart_item.committed_months.nil? %>
+		<td style="max-width: 150px">
+			<% if cart_item.donation? %>
+				You will be able to choose your charity after completing your order. For more details, please email us at <a href="mailto:contact@thevisiblecloset.com">contact@thevisiblecloset.com</a>.
+			<% elsif cart_item.committed_months.nil? %>
 				NA
 			<% else %>
 				<% if cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %>
@@ -98,11 +100,15 @@ function openMemberAgreement() {
 			<% end %>
 		</td>
 		<td>
-			<% if cart_item.get_or_pull_address.fedex_validation_status != Address::VALID %>
-			<b><a href="#explain_invalid_address" onclick='$("#explain_invalid_address_link").trigger("click");'>UNVALIDATED ADDRESS</a></b><br>
+			<% if cart_item.shippable? %>
+				<% if cart_item.get_or_pull_address.fedex_validation_status != Address::VALID %>
+				<b><a href="#explain_invalid_address" onclick='$("#explain_invalid_address_link").trigger("click");'>UNVALIDATED ADDRESS</a></b><br>
+				<% end %>
+				<%= raw address_summary cart_item.get_or_pull_address %><br>
+				<a href="/account/new_checkout_shipping_address?cart_item_id=<%= cart_item.id %>">Choose Other Address</a>
+			<% else %>
+				NA
 			<% end %>
-			<%= raw address_summary cart_item.get_or_pull_address %><br>
-			<a href="/account/new_checkout_shipping_address?cart_item_id=<%= cart_item.id %>">Choose Other Address</a>
 		</td>
 		<td><a href="/account/check_out_remove_cart_item?id=<%=cart_item.id%>">X</a></td>
 	</tr><% end %> <!-- end loop -->

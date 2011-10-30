@@ -43,6 +43,10 @@ class CartItem < ActiveRecord::Base
     return total_unit_price_after_discount > 0 && self.discount.unit_discount_perc > 0.0
   end
   
+  def shippable?
+    return self.product.shippable?
+  end
+  
   def discount
     # Box will return nil for non-box products, which is then translated as "any type" in the user method, which doesn't really matter for other products, since they are one-off
     Discount.new(product, quantity, committed_months, cust_box? ? cart.user.stored_cubic_feet_count : cart.user.stored_box_count(Box.get_type(product)))
@@ -54,6 +58,10 @@ class CartItem < ActiveRecord::Base
   
   def vc_box?
     product_id == Rails.application.config.our_box_product_id
+  end
+  
+  def donation?
+    self.product.donation?
   end
   
   def description

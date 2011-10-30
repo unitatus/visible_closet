@@ -80,7 +80,8 @@ class Cart < ActiveRecord::Base
     
     cart_items.each do |cart_item|
       order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity, \
-        :committed_months => cart_item.committed_months, :shipping_address_id => cart_item.address_id, :service_box_id => cart_item.box_id } )
+        :committed_months => cart_item.committed_months, :shipping_address_id => cart_item.address_id, :service_box_id => cart_item.box_id, \
+        :service_item_id => cart_item.stored_item_id } )
     end    
     order
   end

@@ -29,6 +29,14 @@ class Product < ActiveRecord::Base
     id == Rails.application.config.your_box_product_id
   end
   
+  def shippable?
+    id != Rails.application.config.item_donation_product_id
+  end
+  
+  def item_service?
+    id == Rails.application.config.item_donation_product_id
+  end
+  
   def box?
     vc_box? || cust_box?
   end

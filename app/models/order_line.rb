@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110913230417
+# Schema version: 20111030000336
 #
 # Table name: order_lines
 #
@@ -14,6 +14,7 @@
 #  shipping_address_id :integer
 #  service_box_id      :integer
 #  shipment_id         :integer
+#  service_item_id     :integer
 #
 
 class OrderLine < ActiveRecord::Base
@@ -25,6 +26,7 @@ class OrderLine < ActiveRecord::Base
   belongs_to :shipping_address, :class_name => 'Address'
   belongs_to :service_box, :class_name => 'Box'
   belongs_to :shipment
+  belongs_to :service_item, :class_name => 'StoredItem'
   has_many :ordered_boxes, :class_name => 'Box', :foreign_key => :ordering_order_line_id, :dependent => :destroy
   has_many :inventoried_boxes, :foreign_key => :inventorying_order_line_id, :class_name => "Box"
   
@@ -80,6 +82,10 @@ class OrderLine < ActiveRecord::Base
     end # end transaction
     
     return true # Only hard errors are thrown in the transaction, so if we made it here we are ok
+  end
+  
+  def shippable?
+    self.product.shippable?
   end
   
   def total_in_cents
