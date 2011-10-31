@@ -299,19 +299,12 @@ $(document).ready(function(){
 	
 	
 	$("a[rel=grouped_images]").fancybox({
-		'transitionIn'	:	'elastic',
-		'transitionOut'	:	'elastic',
-		'speedIn'		:	1000, 
-		'speedOut'		:	200, 
-		'overlayShow'	:	true,
-		'autoDimensions': true,
-		'autoScale'			: true,
-		'centerOnScroll'	: true,
-		'transitionIn'		: 'fade',
-		'transitionOut'		: 'fade',
-		'type'				: 'inline',
-		'cyclic'			: true,
-		'scrolling'			: 'no'
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'titlePosition' 	: 'over',
+		'titleFormat'       : function(title, currentArray, currentIndex, currentOpts) {
+		    return '<span id="fancybox-title-over">Image ' +  (currentIndex + 1) + ' / ' + currentArray.length + ' ' + title + '</span>';
+		}
 	});
 
 	$("#cf_explainer_link_1").fancybox({
