@@ -298,7 +298,7 @@ $(document).ready(function(){
 	});
 	
 	
-	$("a.grouped_images").fancybox({
+	$("a[rel=grouped_images]").fancybox({
 		'transitionIn'	:	'elastic',
 		'transitionOut'	:	'elastic',
 		'speedIn'		:	1000, 
