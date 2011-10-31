@@ -301,10 +301,7 @@ $(document).ready(function(){
 	$("a[rel=grouped_images]").fancybox({
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',
-		'titlePosition' 	: 'over',
-		'titleFormat'       : function(title, currentArray, currentIndex, currentOpts) {
-		    return '<span id="fancybox-title-over">Image ' +  (currentIndex + 1) + ' / ' + currentArray.length + ' ' + title + '</span>';
-		}
+		'titlePosition' 	: 'over'
 	});
 
 	$("#cf_explainer_link_1").fancybox({
