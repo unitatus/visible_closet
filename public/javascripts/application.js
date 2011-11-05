@@ -298,7 +298,7 @@ $(document).ready(function(){
 	});
 	
 	
-	$("a[rel=grouped_images]").fancybox({
+	$("a.grouped_images_class").fancybox({
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',
 		'titlePosition' 	: 'over',

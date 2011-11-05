@@ -68,7 +68,7 @@ ul.ui-autocomplete {
 					<div class="browse-item-menu-contents" id="stored_item_<%=stored_item.id%>_menu_contents">
 						<p class="browse-item-menu-contents-head">Item Options</p>
 						<ul id="stored_item_<%=stored_item.id%>_menu_list">
-							<li><a id="<%= stored_item.id %>_details_link" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">details</a></li>
+							<li><a id="<%= stored_item.id %>_details_link" class="grouped_images_class" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">details</a></li>
 							<% if stored_item.status == StoredItem::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_service_request_for(stored_item)) %>
 								<li id="stored_item_<%= stored_item.id%>_mail_li"><a href="#">mail to me</a></li>
 								<li id="stored_item_<%= stored_item.id%>_sell_li"><a href="#">sell</a></li>
