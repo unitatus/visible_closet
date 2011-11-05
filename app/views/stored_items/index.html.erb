@@ -61,13 +61,14 @@ ul.ui-autocomplete {
 	</div>
 		<% @stored_items.each_with_index do |stored_item, index| %>
 	        <div class="browse-item">
-				<a id="<%= stored_item.id %>_details_link" rel="grouped_images" href="/stored_items/<%= stored_item.id %>"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150) %></a>
+				<%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150) %>
 				<!-- use this when offline image_tag("/images/electronic-musical-toy.jpg", :height => 150, :width => 150) -->
 				<p>(Box: <%= stored_item.box.box_num %>)</p>
-<!--				<div class="browse-item-menu" id="stored_item_<%=stored_item.id%>_menu">
+				<div class="browse-item-menu" id="stored_item_<%=stored_item.id%>_menu">
 					<div class="browse-item-menu-contents" id="stored_item_<%=stored_item.id%>_menu_contents">
 						<p class="browse-item-menu-contents-head">Item Options</p>
 						<ul id="stored_item_<%=stored_item.id%>_menu_list">
+							<li><a id="<%= stored_item.id %>_details_link" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">details</a></li>
 							<% if stored_item.status == StoredItem::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_service_request_for(stored_item)) %>
 								<li id="stored_item_<%= stored_item.id%>_mail_li"><a href="#">mail to me</a></li>
 								<li id="stored_item_<%= stored_item.id%>_sell_li"><a href="#">sell</a></li>
@@ -90,7 +91,7 @@ ul.ui-autocomplete {
 							<% end %>
 						</div>
 					<% end %>
-				</div>-->
+				</div>
 			</div>
 		<% end %>
 </div>
