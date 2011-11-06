@@ -122,7 +122,7 @@ function toggleHIWMenu() {
 
 function manuallyHover(thisElement) {
 	alert('hi there')
-	thisElement.mouseover();
+	thisElement.toggle();
 	
 }
 
