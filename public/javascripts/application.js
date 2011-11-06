@@ -285,6 +285,26 @@ $(document).ready(function(){
         }
       });
 
+	// This code exists because IE does not handle the placeholder attribute
+	function switchText()
+	{
+		if ($(this).val() == $(this).attr('title'))
+			$(this).val('').removeClass('exampleText');
+		else if ($.trim($(this).val()) == '')
+			$(this).addClass('exampleText').val($(this).attr('title'));
+	}
+
+	$('input[type=text][title!=""]').each(function() {
+		if ($.trim($(this).val()) == '') $(this).val($(this).attr('title'));
+		if ($(this).val() == $(this).attr('title')) $(this).addClass('exampleText');
+	}).focus(switchText).blur(switchText);
+
+	$('form').submit(function() {
+		$(this).find('input[type=text][title!=""]').each(function() {
+			if ($(this).val() == $(this).attr('title')) $(this).val('');
+		});
+	});
+	// end IE work-around for placeholder
 
 ///////////////////////Start Fancybox
 
