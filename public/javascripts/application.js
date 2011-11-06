@@ -302,7 +302,9 @@ $(document).ready(function(){
 		'transitionIn'	:	'elastic',
 		'transitionOut'	:	'elastic',
 		'speedIn'		:	1000, 
-		'speedOut'		:	200
+		'speedOut'		:	200, 
+		'overlayShow'	:	true,
+		'autoDimensions': true
 	});
 
 	$("#cf_explainer_link_1").fancybox({
