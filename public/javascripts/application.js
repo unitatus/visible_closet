@@ -120,17 +120,6 @@ function toggleHIWMenu() {
     }
 }
 
-function manuallyHover(thisElement) {
-	alert('hi there')
-	alert(thisElement)
-	try {
-	thisElement.toggle();
-} catch(err) {
-	alert("error: " + err.description)
-}
-	alert('it worked?')
-}
-
 $(document).ready(function(){
 	// Fades store/portfolio link overlays
 	
@@ -159,6 +148,12 @@ $(document).ready(function(){
           }
     );
     
+    $('.browse-item-menu').click(
+          function () {
+            $($(this)).find("div").mouseover();
+          }
+    );
+
     $('.increment-up').click(function(){
         oldVal = parseInt($($(this)).parent().find("input").attr('value'));
         $($(this)).parent().find("input").attr('value',oldVal+1)
