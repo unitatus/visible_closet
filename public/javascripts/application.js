@@ -256,17 +256,15 @@ $(document).ready(function(){
     widthCalc = boxSize * boxCount;
     $("#inventory-boxcanvas").css('width',widthCalc);
     whichActive = $('#inventory-boxdisplay').find(".activebox").index();
-    offsetMax = boxCount-6 // 6 accounts for the "all" box, and the fact that the animation gets messed up on IE
+    offsetMax = boxCount-5
     if(offsetMax<0){
         offsetMax=0;
     }
-
     if (whichActive > offsetMax){
         offsetCalc = offsetMax*boxSize;
     }else{
         offsetCalc = whichActive*boxSize;
     }
-
     $("#inventory-boxcanvas").animate({
         left: '-='+offsetCalc
       }, 1000, function() {
