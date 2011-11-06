@@ -61,7 +61,7 @@ ul.ui-autocomplete {
 	</div>
 		<% @stored_items.each_with_index do |stored_item, index| %>
 	        <div class="browse-item">
-				<a href="javascript:document.getElementById('stored_item_<%=stored_item.id%>_menu_contents').style.display='block'"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150) %></a>
+				<a href="javascript:document.getElementById('stored_item_<%=stored_item.id%>_menu_contents').style.display='block'; return false;"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150) %></a>
 				<!-- use this when offline image_tag("/images/electronic-musical-toy.jpg", :height => 150, :width => 150) -->
 				<p>(Box: <%= stored_item.box.box_num %>)</p>
 				<div class="browse-item-menu" id="stored_item_<%=stored_item.id%>_menu">
