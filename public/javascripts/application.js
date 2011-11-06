@@ -266,10 +266,10 @@ $(document).ready(function(){
     }else{
         offsetCalc = whichActive*boxSize;
     }
-    
+
     $("#inventory-boxcanvas").animate({
-        left: '='+offsetCalc
-      }, 1000, 'linear', function() {
+        left: '-='+offsetCalc
+      }, 1000, function() {
         $('#inventory-menu-leftarrow').addClass('enabled');
         $('#inventory-menu-rightarrow').addClass('enabled');
         curPos = $("#inventory-boxcanvas").position().left;
