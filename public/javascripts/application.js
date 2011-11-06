@@ -251,6 +251,22 @@ $(document).ready(function(){
         }
     });
     
+    boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
+    boxSize = 120;
+    widthCalc = boxSize * boxCount;
+    $("#inventory-boxcanvas").css('width',widthCalc);
+    whichActive = $('#inventory-boxdisplay').find(".activebox").index();
+    offsetMax = boxCount-5
+    if(offsetMax<0){
+        offsetMax=0;
+    }
+    
+    if (whichActive > offsetMax){
+        offsetCalc = offsetMax*boxSize;
+    }else{
+        offsetCalc = whichActive*boxSize;
+    }
+    
 
 	// This code exists because IE does not handle the placeholder attribute
 	function switchText()
