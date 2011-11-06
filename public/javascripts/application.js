@@ -256,7 +256,7 @@ $(document).ready(function(){
     widthCalc = boxSize * boxCount;
     $("#inventory-boxcanvas").css('width',widthCalc);
     whichActive = $('#inventory-boxdisplay').find(".activebox").index();
-    offsetMax = boxCount-5
+    offsetMax = boxCount-6 // 6 accounts for the "all" box, and the fact that the animation gets messed up on IE
     if(offsetMax<0){
         offsetMax=0;
     }
