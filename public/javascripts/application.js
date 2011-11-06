@@ -300,16 +300,7 @@ $(document).ready(function(){
 	
 	$("a.grouped_images_class").fancybox({
 		'transitionIn'	:	'elastic',
-		'transitionOut'	:	'elastic',
-		'speedIn'		:	1000, 
-		'speedOut'		:	200, 
-		'overlayShow'	:	true,
-		'autoDimensions': true,
-		'autoScale'			: true,
-		'centerOnScroll'	: true,
-		'type'				: 'inline',
-		'cyclic'			: true,
-		'scrolling'			: 'no'
+		'transitionOut'	:	'elastic'
 	});
 
 	$("#cf_explainer_link_1").fancybox({
