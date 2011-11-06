@@ -226,7 +226,31 @@ $(document).ready(function(){
             }
         }
     });
-
+    
+    $('#inventory-menu-leftarrow').click(function(){
+        if($('#inventory-menu-leftarrow').hasClass('enabled')){
+            $('#inventory-menu-leftarrow').removeClass('enabled');
+            boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
+            curPos = $("#inventory-boxcanvas").position().left;
+            boxSize = 120;
+            if(curPos < 0){
+                $("#inventory-boxcanvas").animate({
+                    left: '+='+boxSize
+                  }, 1000, function() {
+                    $('#inventory-menu-leftarrow').addClass('enabled');
+                    $('#inventory-menu-rightarrow').removeClass('disabled');
+                    boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
+                    curPos = $("#inventory-boxcanvas").position().left;
+                    if(curPos >= 0){
+                        $('#inventory-menu-leftarrow').addClass('disabled');
+                    }
+                  });
+            }else{
+                $('#inventory-menu-leftarrow').addClass('enabled');
+            }
+        }
+    });
+    
 
 	// This code exists because IE does not handle the placeholder attribute
 	function switchText()
