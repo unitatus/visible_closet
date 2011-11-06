@@ -299,14 +299,15 @@ $(document).ready(function(){
 	
 	
 	$("a.grouped_images_class").fancybox({
-		'transitionIn'	:	'elastic',
-		'transitionOut'	:	'elastic',
+		'transitionIn'	:	'fade',
+		'transitionOut'	:	'fade',
 		'speedIn'		:	1000, 
 		'speedOut'		:	200, 
 		'overlayShow'	:	true,
 		'autoDimensions': true,
 		'autoScale'			: true,
 		'centerOnScroll'	: true,
+		'cyclic'			: true,
 		'scrolling'			: 'no'
 	});
 
