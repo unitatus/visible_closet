@@ -150,7 +150,7 @@ $(document).ready(function(){
     
     $('.browse-item-menu').click(
           function () {
-            $($(this)).find("div").mouseover();
+            $($(this)).find("div").toggle();
           }
     );
 
