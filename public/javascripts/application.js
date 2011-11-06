@@ -279,7 +279,7 @@ $(document).ready(function(){
         if(curPos == 0-((boxCount*boxSize)-(5*boxSize))){
             $('#inventory-menu-rightarrow').addClass('disabled');
         }
-        if(boxCount<=5){
+        if(boxCount<5){
             $('#inventory-menu-rightarrow').addClass('disabled');
         }
       });
