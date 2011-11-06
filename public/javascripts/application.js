@@ -150,6 +150,7 @@ $(document).ready(function(){
     
     $('.browse-item-menu').click(
           function () {
+	alert('well fuck')
             $($(this)).find("div").toggle();
           }
     );
