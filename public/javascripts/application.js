@@ -226,64 +226,7 @@ $(document).ready(function(){
             }
         }
     });
-    
-    $('#inventory-menu-leftarrow').click(function(){
-        if($('#inventory-menu-leftarrow').hasClass('enabled')){
-            $('#inventory-menu-leftarrow').removeClass('enabled');
-            boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
-            curPos = $("#inventory-boxcanvas").position().left;
-            boxSize = 120;
-            if(curPos < 0){
-                $("#inventory-boxcanvas").animate({
-                    left: '+='+boxSize
-                  }, 1000, function() {
-                    $('#inventory-menu-leftarrow').addClass('enabled');
-                    $('#inventory-menu-rightarrow').removeClass('disabled');
-                    boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
-                    curPos = $("#inventory-boxcanvas").position().left;
-                    if(curPos >= 0){
-                        $('#inventory-menu-leftarrow').addClass('disabled');
-                    }
-                  });
-            }else{
-                $('#inventory-menu-leftarrow').addClass('enabled');
-            }
-        }
-    });
-    
-    boxCount = $("#inventory-boxcanvas").find(".inventory-boxdisplay-box").length;
-    boxSize = 120;
-    widthCalc = boxSize * boxCount;
-    $("#inventory-boxcanvas").css('width',widthCalc);
-    whichActive = $('#inventory-boxdisplay').find(".activebox").index();
-    offsetMax = boxCount-5
-    if(offsetMax<0){
-        offsetMax=0;
-    }
-    
-    if (whichActive > offsetMax){
-        offsetCalc = offsetMax*boxSize;
-    }else{
-        offsetCalc = whichActive*boxSize;
-    }
-    
-    $("#inventory-boxcanvas").animate({
-        left: '='+offsetCalc
-      }, 1000, function() {
-          //alert(offsetCalc);
-        $('#inventory-menu-leftarrow').addClass('enabled');
-        $('#inventory-menu-rightarrow').addClass('enabled');
-        curPos = $("#inventory-boxcanvas").position().left;
-        if(curPos != 0){
-            $('#inventory-menu-leftarrow').removeClass('disabled');
-        }
-        if(curPos == 0-((boxCount*boxSize)-(5*boxSize))){
-            $('#inventory-menu-rightarrow').addClass('disabled');
-        }
-        if(boxCount<=5){
-            $('#inventory-menu-rightarrow').addClass('disabled');
-        }
-      });
+
 
 	// This code exists because IE does not handle the placeholder attribute
 	function switchText()
