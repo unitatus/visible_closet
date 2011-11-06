@@ -123,7 +123,11 @@ function toggleHIWMenu() {
 function manuallyHover(thisElement) {
 	alert('hi there')
 	alert(thisElement)
+	try {
 	thisElement.toggle();
+} catch(err) {
+	alert("error: " + err.description)
+}
 	alert('it worked?')
 }
 
