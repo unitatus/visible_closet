@@ -300,7 +300,9 @@ $(document).ready(function(){
 	
 	$("a.grouped_images_class").fancybox({
 		'transitionIn'	:	'elastic',
-		'transitionOut'	:	'elastic'
+		'transitionOut'	:	'elastic',
+		'speedIn'		:	1000, 
+		'speedOut'		:	200
 	});
 
 	$("#cf_explainer_link_1").fancybox({
