@@ -1124,6 +1124,7 @@ table.address_select_table td {
     position: absolute;
     top: 10px;
     left: 3px;
+	z-index: 1000;
 }
 
 .browse-item-menu-contents {
