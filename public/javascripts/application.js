@@ -150,8 +150,7 @@ $(document).ready(function(){
     
     $('.browse-item-menu-link').click(
           function () {
-	alert('well fuck')
-            $($(this)).parent().find("div").toggle();
+            $($(this)).parent().mouseover();
           }
     );
 
