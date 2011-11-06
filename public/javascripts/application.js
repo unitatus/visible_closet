@@ -150,7 +150,7 @@ $(document).ready(function(){
     
     $('.browse-item-menu-link').click(
           function () {
-            $($(this)).parent().mouseover();
+            $($(this)).parent().trigger('hover');
           }
     );
 
