@@ -139,19 +139,19 @@ $(document).ready(function(){
           }
     );
 
-    // $('.browse-item-menu').hover(
-    //       function () {
-    //         $($(this)).find("div").toggle();
-    //       }, 
-    //       function () {
-    //         $($(this)).find("div").toggle();
-    //       }
-    // );
+    $('.browse-item-menu').hover(
+          function () {
+            $($(this)).find("div").toggle();
+          }, 
+          function () {
+            $($(this)).find("div").toggle();
+          }
+    );
     
     $('.browse-item-menu-link').click(
           function () {
 	alert('well fuck')
-            $($(this)).find("div").toggle();
+            $($(this)).parent().find("div").toggle();
           }
     );
 
