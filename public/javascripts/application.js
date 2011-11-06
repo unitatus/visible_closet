@@ -139,7 +139,7 @@ $(document).ready(function(){
           }
     );
 
-    $('.browse-item .browse-item-menu').hover(
+    $('.browse-item-menu').hover(
           function () {
             $($(this)).find("div").toggle();
           }, 
