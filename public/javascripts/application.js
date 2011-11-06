@@ -288,13 +288,13 @@ $(document).ready(function(){
 	// This code exists because IE does not handle the placeholder attribute
 	function switchText()
 	{
-		if ($(this).val() == $(this).attr('title'))
+		if ($(this).val() == $(this).attr('placeholder'))
 			$(this).val('').removeClass('exampleText');
 		else if ($.trim($(this).val()) == '')
-			$(this).addClass('exampleText').val($(this).attr('title'));
+			$(this).addClass('exampleText').val($(this).attr('placeholder'));
 	}
 
-	$('input[type=text][title!=""]').each(function() {
+	$('input[type=text][placeholder!=""]').each(function() {
 		if ($.trim($(this).val()) == '') $(this).val($(this).attr('placeholder'));
 		if ($(this).val() == $(this).attr('placeholder')) $(this).addClass('exampleText');
 	}).focus(switchText).blur(switchText);
