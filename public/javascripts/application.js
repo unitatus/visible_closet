@@ -120,6 +120,12 @@ function toggleHIWMenu() {
     }
 }
 
+function manuallyHover(thisElement) {
+	alert('hi there')
+	thisElement.hover();
+	
+}
+
 $(document).ready(function(){
 	// Fades store/portfolio link overlays
 	
