@@ -270,19 +270,8 @@ $(document).ready(function(){
     $("#inventory-boxcanvas").animate({
         left: '='+offsetCalc
       }, 1000, function() {
-          //alert(offsetCalc);
         $('#inventory-menu-leftarrow').addClass('enabled');
-        $('#inventory-menu-rightarrow').addClass('enabled');
-        curPos = $("#inventory-boxcanvas").position().left;
-        if(curPos != 0){
-            $('#inventory-menu-leftarrow').removeClass('disabled');
-        }
-        if(curPos == 0-((boxCount*boxSize)-(5*boxSize))){
-            $('#inventory-menu-rightarrow').addClass('disabled');
-        }
-        if(boxCount<=5){
-            $('#inventory-menu-rightarrow').addClass('disabled');
-        }
+
       });
 
 	// This code exists because IE does not handle the placeholder attribute
