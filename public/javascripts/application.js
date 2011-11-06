@@ -295,13 +295,13 @@ $(document).ready(function(){
 	}
 
 	$('input[type=text][title!=""]').each(function() {
-		if ($.trim($(this).val()) == '') $(this).val($(this).attr('title'));
-		if ($(this).val() == $(this).attr('title')) $(this).addClass('exampleText');
+		if ($.trim($(this).val()) == '') $(this).val($(this).attr('placeholder'));
+		if ($(this).val() == $(this).attr('placeholder')) $(this).addClass('exampleText');
 	}).focus(switchText).blur(switchText);
 
 	$('form').submit(function() {
-		$(this).find('input[type=text][title!=""]').each(function() {
-			if ($(this).val() == $(this).attr('title')) $(this).val('');
+		$(this).find('input[type=text][placeholder!=""]').each(function() {
+			if ($(this).val() == $(this).attr('placeholder')) $(this).val('');
 		});
 	});
 	// end IE work-around for placeholder
