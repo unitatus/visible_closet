@@ -1131,7 +1131,7 @@ table.address_select_table td {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 135px;
+    width: 140px;
     height: 135px;
     background-color: #b8daf5;
     -moz-box-shadow: 0px 0px 6px #666;
@@ -1194,9 +1194,10 @@ table.address_select_table td {
 
 .browse-item-menu-contents li a:hover {
     color: #000 !important;
-    background-color: #558fb1;
+    background-color: #558fb1 !important;
 }
 
+/* This is for IE 'placeholder' code. */
 input.exampleText {
   color: #aaa;
 }
