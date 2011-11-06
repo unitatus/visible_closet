@@ -139,14 +139,14 @@ $(document).ready(function(){
           }
     );
 
-    $('.browse-item .browse-item-menu').hover(
-          function () {
-            $($(this)).find("div").toggle();
-          }, 
-          function () {
-            $($(this)).find("div").toggle();
-          }
-    );
+    // $('.browse-item .browse-item-menu').hover(
+    //       function () {
+    //         $($(this)).find("div").toggle();
+    //       }, 
+    //       function () {
+    //         $($(this)).find("div").toggle();
+    //       }
+    // );
 
     
     $('.increment-up').click(function(){
