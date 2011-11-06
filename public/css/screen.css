@@ -1092,7 +1092,6 @@ table.address_select_table td {
     color: #323232;
     position: relative;
     padding: 15px;
-	z-index: 2000;
 }
 
 
@@ -1125,7 +1124,6 @@ table.address_select_table td {
     position: absolute;
     top: 10px;
     left: 3px;
-	z-index: 1000;
 }
 
 .browse-item-menu-contents {
