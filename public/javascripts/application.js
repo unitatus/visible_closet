@@ -122,8 +122,9 @@ function toggleHIWMenu() {
 
 function manuallyHover(thisElement) {
 	alert('hi there')
+	alert(thisElement)
 	thisElement.toggle();
-	
+	alert('it worked?')
 }
 
 $(document).ready(function(){
