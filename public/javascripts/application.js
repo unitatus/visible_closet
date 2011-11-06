@@ -141,9 +141,11 @@ $(document).ready(function(){
 
     $('.browse-item-menu').hover(
           function () {
+			alert('toggle on')
             $($(this)).find("div").toggle();
           }, 
           function () {
+			alert('toggle off')
             $($(this)).find("div").toggle();
           }
     );
