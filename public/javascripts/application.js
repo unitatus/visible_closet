@@ -306,7 +306,9 @@ $(document).ready(function(){
 		'overlayShow'	:	true,
 		'autoDimensions': true,
 		'autoScale'			: true,
-		'centerOnScroll'	: true
+		'centerOnScroll'	: true,
+		'type'				: 'inline',
+		'cyclic'			: true
 	});
 
 	$("#cf_explainer_link_1").fancybox({
