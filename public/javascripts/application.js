@@ -255,16 +255,18 @@ $(document).ready(function(){
     boxSize = 120;
     widthCalc = boxSize * boxCount;
     $("#inventory-boxcanvas").css('width',widthCalc);
-    whichActive = $('#inventory-boxdisplay').find(".activebox").index();
+    whichActive = $('#inventory-boxdisplay').find(".activebox").index()+1;
     offsetMax = boxCount-5
     if(offsetMax<0){
         offsetMax=0;
     }
-    if (whichActive > offsetMax){
+
+    if (whichActive > 5){
         offsetCalc = offsetMax*boxSize;
     }else{
-        offsetCalc = whichActive*boxSize;
+        offsetCalc = 0;
     }
+
     $("#inventory-boxcanvas").animate({
         left: '-='+offsetCalc
       }, 1000, function() {
