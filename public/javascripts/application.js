@@ -307,8 +307,7 @@ $(document).ready(function(){
 		'autoDimensions': true,
 		'autoScale'			: true,
 		'centerOnScroll'	: true,
-		'type'				: 'inline',
-		'cyclic'			: true
+		'scrolling'			: 'no'
 	});
 
 	$("#cf_explainer_link_1").fancybox({
