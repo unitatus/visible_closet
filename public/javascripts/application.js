@@ -147,16 +147,6 @@ $(document).ready(function(){
             $($(this)).find("div").toggle();
           }
     );
-
-    $('.browse-item-menu-link').hover(
-          function () {
-            $($(this)).find("div").toggle();
-          }, 
-          function () {
-            $($(this)).find("div").toggle();
-          }
-    );
-
     
     $('.increment-up').click(function(){
         oldVal = parseInt($($(this)).parent().find("input").attr('value'));
