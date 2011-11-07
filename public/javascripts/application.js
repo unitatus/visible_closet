@@ -149,15 +149,15 @@ $(document).ready(function(){
     // );
 
 	    $('.browse-item-menu').mouseover(
-	alert('mouseover')
 	          function () {
+			alert('mouseover')
 	            $($(this)).find("div").toggle();
 	          }
 	    );
     
 		    $('.browse-item-menu').mouseout(
-		alert('mouseout')
 		          function () {
+					alert('mouseout')
 		            $($(this)).find("div").toggle();
 		          }
 		    );
