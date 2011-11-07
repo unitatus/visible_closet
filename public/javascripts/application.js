@@ -150,8 +150,7 @@ $(document).ready(function(){
     
     $('.browse-item-menu-link').click(
           function () {
-	alert(JSON.stringify($($(this)).parent().find("div")))
-            $($(this)).parent().find("div").toggle();
+            $($(this)).parent().find("div").find("div").toggle();
           }
     );
 
