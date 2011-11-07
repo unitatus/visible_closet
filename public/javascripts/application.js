@@ -148,12 +148,12 @@ $(document).ready(function(){
           }
     );
 
-    $('.browse-item-menu').mouseover(
-	alert('mouseover')
-          function () {
-            $($(this)).find("div").toggle();
-          }
-    );
+	//     $('.browse-item-menu').mouseover(
+	// alert('mouseover')
+	//           function () {
+	//             $($(this)).find("div").toggle();
+	//           }
+	//     );
     
     $('.browse-item-menu-link').click(
           function () {
