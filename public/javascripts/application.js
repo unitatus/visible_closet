@@ -120,6 +120,19 @@ function toggleHIWMenu() {
     }
 }
 
+function getObjectClass(obj) {
+    if (obj && obj.constructor && obj.constructor.toString) {
+        var arr = obj.constructor.toString().match(
+            /function\s*(\w+)/);
+
+        if (arr && arr.length == 2) {
+            return arr[1];
+        }
+    }
+
+    return undefined;
+}
+
 $(document).ready(function(){
 	// Fades store/portfolio link overlays
 	
@@ -162,7 +175,7 @@ $(document).ready(function(){
 
     $('.browse-item-menu-link').click(
           function () {
-	alert('click')
+	alert(getObjectClass($($(this)).parent()))
             $($(this)).parent().find("div").mouseover();
           }
     );
