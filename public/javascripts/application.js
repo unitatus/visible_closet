@@ -147,10 +147,17 @@ $(document).ready(function(){
             $($(this)).find("div").toggle();
           }
     );
+
+    $('.browse-item-menu').mouseover(
+	alert('mouseover')
+          function () {
+            $($(this)).find("div").toggle();
+          }
+    );
     
     $('.browse-item-menu-link').click(
           function () {
-            $($(this)).parent().find("div").trigger('hover');
+            $($(this)).parent().find("div").mouseover();
           }
     );
 
