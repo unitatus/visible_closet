@@ -175,7 +175,7 @@ $(document).ready(function(){
 
     $('.browse-item-menu-link').click(
           function () {
-	alert($($(this)).parent().constructor)
+	alert($($(this)).parent().className)
             $($(this)).parent().find("div").mouseover();
           }
     );
