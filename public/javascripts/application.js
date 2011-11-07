@@ -150,14 +150,12 @@ $(document).ready(function(){
 
 	    $('.browse-item-menu').mouseover(
 	          function () {
-			alert('mouseover')
 	            $($(this)).find("div").toggle();
 	          }
 	    );
     
 		    $('.browse-item-menu').mouseout(
 		          function () {
-					alert('mouseout')
 		            $($(this)).find("div").toggle();
 		          }
 		    );
