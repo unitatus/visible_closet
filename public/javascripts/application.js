@@ -150,9 +150,7 @@ $(document).ready(function(){
     
     $('.browse-item-menu-link').click(
           function () {
-	alert($($(this)))
-	alert($($(this)).parent())
-            $($(this)).parent().trigger('hover');
+            $($(this)).parent().find("div").toggle();
           }
     );
 
