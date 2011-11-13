@@ -25,7 +25,7 @@ class Ability
     #
     # See the wiki for details: https://github.com/ryanb/cancan/wiki/Defining-Abilities
 
-    role = user ? (user.impersonating? ? user.acting_as.role : user.role) : nil
+    role = user ? user.role : nil
     
     if role == User::ADMIN
       can :manage, :all
@@ -76,7 +76,7 @@ class Ability
       can :show, StoragePaymentProcessingRecord
       can :index, StoragePaymentProcessingRecord
       can :get_label, Shipment
-      can :become_user, :admin      
+      can :impersonate_user, :admin      
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      
@@ -164,10 +164,10 @@ class Ability
       
       # rental agreements
       can :latest_agreement_ajax, :rental_agreement_version
-    end
-    
-    if user.impersonating?
+      
+      # In case this is really a manager
       can :stop_impersonating, :admin
     end
+    
   end
 end

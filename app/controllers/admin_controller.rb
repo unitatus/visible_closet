@@ -264,10 +264,11 @@ class AdminController < ApplicationController
   def impersonate_user
     redirect_to access_denied_url and return unless current_user.manager?
     new_user = User.find(params[:id])
+    the_current_user = current_user
     redirect_to access_denied_url and return unless new_user.normal_user?
     
-    current_user.impersonate(new_user)
-    current_user.save
+    the_current_user.impersonate(new_user)
+    the_current_user.save
     
     redirect_to user_root_url
   end
