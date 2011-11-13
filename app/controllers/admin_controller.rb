@@ -277,6 +277,7 @@ class AdminController < ApplicationController
       #                        :path => '/', 
       #                        :domain => request.domain, 
       #                        :expire => 1.day.ago } 
+      puts("Clearing cookie " + k.to_s)
       cookies[k.to_sym] = ""
     end
     
