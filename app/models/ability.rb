@@ -76,6 +76,7 @@ class Ability
       can :show, StoragePaymentProcessingRecord
       can :index, StoragePaymentProcessingRecord
       can :get_label, Shipment
+      can :become_user, :admin
       
     end
     

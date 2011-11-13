@@ -260,6 +260,15 @@ class AdminController < ApplicationController
       redirect_to "/admin/home"
     end
   end
+  
+  def become_user
+    redirect_to access_denied_url and return unless current_user.admin? or current_user.manager?
+    new_user = User.find(params[:id])
+    redirect_to access_denied_url and return unless (!new_user.admin? and !new_user.manager?)
+    
+    sign_in(:user, new_user)
+    redirect_to user_root_url
+  end
 
 private
 
