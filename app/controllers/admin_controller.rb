@@ -266,20 +266,23 @@ class AdminController < ApplicationController
     new_user = User.find(params[:id])
     redirect_to access_denied_url and return unless (!new_user.admin? and !new_user.manager?)
     
-    sign_out(current_user)
-    @current_user = nil
+    # sign_out(current_user)
+    # @current_user = nil
+    # 
+    # reset_session
+    # 
+    # cookies.to_hash.each_pair do |k, v|
+    #   puts("Deleting cookie " + k.to_s) 
+    #   cookies[k.to_sym] = { :value => '', 
+    #                          :path => '/', 
+    #                          :domain => request.domain, 
+    #                          :expire => 1.day.ago } 
+    # end
+    # 
+    # sign_in(new_user)
     
-    reset_session
-    
-    cookies.to_hash.each_pair do |k, v|
-      puts("Deleting cookie " + k.to_s) 
-     	cookies[k.to_sym] = { :value => '', 
-                             :path => '/', 
-                             :domain => request.domain, 
-                             :expire => 1.day.ago } 
-    end
-    
-    sign_in(new_user)
+    warden.session.clear
+    warden.set_user(new_user)
     
     redirect_to user_root_url
   end

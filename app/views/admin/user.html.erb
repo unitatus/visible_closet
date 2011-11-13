@@ -42,6 +42,7 @@
 		<td>
 			<% if !@user.admin? && !@user.manager? %>
 				<%= link_to "Let's do it.", "/switch_user?scope_identifier=user_#{@user.id}", :confirm => "WARNING: You will be logged off as an administrator and logged in as this user. Are you sure?" %>
+				<%= link_to "Let's do it.", "/admin/become_user/#{@user.id}", :confirm => "WARNING: You will be logged off as an administrator and logged in as this user. Are you sure?" %>
 			<% else %>
 				Too bad. You can only switch to regular users, not admins or managers.
 			<% end %>
