@@ -32,4 +32,27 @@ class ApplicationController < ActionController::Base
   def skip_authorization
     return devise_controller? || params[:controller] == "switch_user"
   end
+  
+  # This is a bit of a hack -- the warden code below is taken from devise -- but it is the only way I could come up with to
+  # safely intercept current user, since otherwise the current_user method is added dynamically at the end of the class load
+  # process by devise (which means that if we decorated that method it would either break the console (because devise does 
+  # not load there first) or it would not work the first time you hit the code in production). -DZ
+  #
+  # Note: we are not using switch_user (a gem for switching users) or having devise log out - log in because to do so 
+  # causes cookie problems in production.
+  #
+  # Note also: this method must live in application controller for the hack to work (not in the helper)
+  def current_user
+    @current_user ||= warden.authenticate(:scope => :user)
+    
+    if @current_user.nil?
+      return nil
+    end
+    
+    if @current_user.manager? && @current_user.impersonating?
+      @current_user.acting_as
+    else
+      @current_user
+    end    
+  end
 end
