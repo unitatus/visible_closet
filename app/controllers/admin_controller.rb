@@ -267,18 +267,26 @@ class AdminController < ApplicationController
     redirect_to access_denied_url and return unless (!new_user.admin? and !new_user.manager?)
     
     sign_out(current_user)
+    @current_user = nil
+    
+    puts("Just signed out. Current user is " + current_user.to_s)
+    
     reset_session
     
-    cookies.to_hash.each_pair do |k, v| 
+    puts("Just reset the session.")
+    
+    cookies.to_hash.each_pair do |k, v|
+      puts("Deleting cookie " + k.to_s) 
      	cookies[k.to_sym] = { :value => '', 
                              :path => '/', 
                              :domain => request.domain, 
                              :expire => 1.day.ago } 
     end
     
+    puts("Signing in again")
     sign_in(:user, new_user)
     
-    @current_user = nil
+    puts("Redirecting to " + user_root_url.to_s)
     
     redirect_to user_root_url
   end
