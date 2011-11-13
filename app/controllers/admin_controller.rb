@@ -268,6 +268,14 @@ class AdminController < ApplicationController
     
     sign_out(current_user)
     reset_session
+    
+    cookies.to_hash.each_pair do |k, v| 
+     	cookies[k.to_sym] = { :value => '', 
+                             :path => '/', 
+                             :domain => request.domain, 
+                             :expire => 1.day.ago } 
+    end
+    
     sign_in(:user, new_user)
     redirect_to user_root_url
   end
