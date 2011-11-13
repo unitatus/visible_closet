@@ -326,6 +326,10 @@ class User < ActiveRecord::Base
     return self.role == ADMIN || self.role == MANAGER
   end
   
+  def normal_user?
+    !admin? and !manager?
+  end
+  
   def shipments
     Shipment.find_all_by_user_id(id, :order => "created_at DESC")
   end

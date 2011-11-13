@@ -269,11 +269,7 @@ class AdminController < ApplicationController
     sign_out(current_user)
     @current_user = nil
     
-    puts("Just signed out. Current user is " + current_user.to_s)
-    
     reset_session
-    
-    puts("Just reset the session.")
     
     cookies.to_hash.each_pair do |k, v|
       puts("Deleting cookie " + k.to_s) 
@@ -283,10 +279,7 @@ class AdminController < ApplicationController
                              :expire => 1.day.ago } 
     end
     
-    puts("Signing in again")
-    sign_in(:user, new_user)
-    
-    puts("Redirecting to " + user_root_url.to_s)
+    sign_in(new_user)
     
     redirect_to user_root_url
   end
