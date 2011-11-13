@@ -266,7 +266,8 @@ class AdminController < ApplicationController
     new_user = User.find(params[:id])
     redirect_to access_denied_url and return unless new_user.normal_user?
     
-    current_user.impersonate(new_user) and current_user.save
+    current_user.impersonate(new_user)
+    current_user.save
     
     redirect_to user_root_url
   end
@@ -275,7 +276,8 @@ class AdminController < ApplicationController
     # Must use @ to get "real" user
     user = @current_user
     
-    user.stop_impersonating and user.save
+    user.stop_impersonating
+    user.save
     
     redirect_to "/admin/home"
   end
