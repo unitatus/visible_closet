@@ -148,4 +148,23 @@ module ApplicationHelper
     
     return_array
   end
+  
+  def impersonating?
+    # this is a bit of a hack, but it reflects the fact that we are overriding the current_user method in application_controller
+    current_user != @current_user
+  end
+  
+  def current_user
+    @current_user ||= warden.authenticate(:scope => :user)
+    
+    if @current_user.nil?
+      return nil
+    end
+    
+    if @current_user.manager? && @current_user.acting_as
+      @current_user.acting_as
+    else
+      @current_user
+    end    
+  end
 end

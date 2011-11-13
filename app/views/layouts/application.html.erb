@@ -18,12 +18,25 @@
 	
 <!-- SIDE MENU HTML -->
 <body>
-    <div id="toplip">
+	<% if impersonating? %>
+    	<div id="toplip" style="background-color: red; color: black">
+	<% else %>
+		<div id="toplip">
+	<% end %>
 	<% if user_signed_in? %>
 		<div id="container">
-	        <div id="block">	
-				Signed in as <%= current_user.first_name %> <%= current_user.last_name %>.
-				<%= link_to "Sign out", destroy_user_session_path %>
+	        <div id="block">
+				<% if impersonating? %>
+					Impersonating
+				<% else %>
+					Signed in as
+				<% end %>
+				 <%= current_user.first_name %> <%= current_user.last_name %>.
+				<% if impersonating? %>
+					<%= link_to "Stop impersonating", "/admin/stop_impersonating" %>
+				<% else %>
+					<%= link_to "Sign out", destroy_user_session_path %>
+				<% end %>
 		    </div>
 	    </div>
 	<% end %>

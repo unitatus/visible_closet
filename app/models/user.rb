@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110930133517
+# Schema version: 20111113163317
 #
 # Table name: users
 #
@@ -32,6 +32,7 @@
 #  default_payment_profile_id  :integer
 #  default_shipping_address_id :integer
 #  test_user                   :boolean
+#  acting_as_user_id           :integer
 #
 
 class User < ActiveRecord::Base
@@ -70,6 +71,7 @@ class User < ActiveRecord::Base
   has_many :storage_charge_processing_records, :dependent => :destroy, :foreign_key => :generated_by_user_id
   has_many :storage_payment_processing_records, :dependent => :destroy, :foreign_key => :generated_by_user_id
   has_and_belongs_to_many :rental_agreement_versions
+  belongs_to :acting_as, :foreign_key => :acting_as_user_id, :class_name => "User"
 
   validates :first_name, :presence => true
   validates :last_name, :presence => true
@@ -104,6 +106,19 @@ class User < ActiveRecord::Base
     else
       return true
     end
+  end
+  
+  def impersonate(user)
+    self.acting_as=user
+  end
+  
+  def stop_impersonating
+    self.acting_as=nil
+    return true
+  end
+  
+  def impersonating?
+    self.acting_as != nil
   end
   
   # This is to avoid a rather interesting bug. If we call this right after create the cim id will be saved. If we wait, then it's possible that
@@ -327,7 +342,7 @@ class User < ActiveRecord::Base
   end
   
   def normal_user?
-    !admin? and !manager?
+    return self.role == NORMAL
   end
   
   def shipments

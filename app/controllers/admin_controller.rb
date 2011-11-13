@@ -261,35 +261,25 @@ class AdminController < ApplicationController
     end
   end
   
-  def become_user
-    redirect_to access_denied_url and return unless current_user.admin? or current_user.manager?
+  def impersonate_user
+    redirect_to access_denied_url and return unless current_user.manager?
     new_user = User.find(params[:id])
-    redirect_to access_denied_url and return unless (!new_user.admin? and !new_user.manager?)
+    redirect_to access_denied_url and return unless new_user.normal_user?
     
-    # sign_out(current_user)
-    # @current_user = nil
-    
-    # reset_session
-    
-    # cookies.to_hash.each_pair do |k, v|
-      # puts("This cookie is " + cookies[k.to_sym]) 
-      # cookies[k.to_sym] = { :value => '', 
-      #                        :path => '/', 
-      #                        :domain => request.domain, 
-      #                        :expire => 1.day.ago } 
-      # puts("Clearing cookie " + k.to_s)
-      # cookies[k.to_sym] = ""
-    # end
-    
-    sign_in(new_user)
-    sign_in new_user, :bypass => true
-    
-    # 
-    # warden.session.clear
-    # warden.set_user(new_user)
+    current_user.impersonate(new_user) and current_user.save
     
     redirect_to user_root_url
   end
+
+  def stop_impersonating
+    # Must use @ to get "real" user
+    user = @current_user
+    
+    user.stop_impersonating and user.save
+    
+    redirect_to "/admin/home"
+  end
+
 
 private
 

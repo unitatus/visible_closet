@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
     redirect_to request.protocol + "www." + request.host_with_port + request.request_uri if !/^www/.match(request.host) if Rails.env == 'production'
   end
   
-  # This is mainly for the autocomplete item search, which for some reason doens't work from a non-secure page calling a secure page
+  # This is mainly for the autocomplete item search, which for some reason doesn't work from a non-secure page calling a secure page
   def ssl_required?
     return user_signed_in?
   end

@@ -93,7 +93,7 @@ class StoredItemsController < ApplicationController
     return_str = "<img src='" + item[:img] + "'> " + tag_str
     
     if item[:donated]
-      return_str += " (item donated to \"" + item[:donated_to] + "\")"
+      return_str += " (item donated to \"" + item[:donated_to].to_s + "\")"
     else
       return_str += " (Box " + item[:box_num].to_s + ")"
     end
