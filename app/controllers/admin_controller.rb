@@ -277,6 +277,9 @@ class AdminController < ApplicationController
     end
     
     sign_in(:user, new_user)
+    
+    @current_user = nil
+    
     redirect_to user_root_url
   end
 
