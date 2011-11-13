@@ -40,8 +40,8 @@
 	<tr>
 		<td><b>Want to sign in as this user?</td>
 		<td>
-			<% if !@user.admin? && !@user.manager? %>
-				<%= link_to "Let's do it.", "/admin/impersonate_user/#{@user.id}", :confirm => "WARNING: You will be logged off as an administrator and logged in as this user. Are you sure?" %>
+			<% if @user.normal_user? %>
+				<%= link_to "Let's do it.", "/admin/impersonate_user/#{@user.id}" %>
 			<% else %>
 				Too bad. You can only switch to regular users, not admins or managers.
 			<% end %>
