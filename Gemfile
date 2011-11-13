@@ -23,6 +23,7 @@ gem 'ssl_requirement'
 gem 'hoptoad_notifier'
 gem 'jquery-rails'
 gem 'rails3-jquery-autocomplete'
+#gem 'switch_user'
 
 group :development do
   gem 'rspec-rails'

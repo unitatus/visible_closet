@@ -267,6 +267,7 @@ class AdminController < ApplicationController
     redirect_to access_denied_url and return unless (!new_user.admin? and !new_user.manager?)
     
     sign_out(current_user)
+    reset_session
     sign_in(:user, new_user)
     redirect_to user_root_url
   end
