@@ -144,6 +144,8 @@ class Ability
       can :autocomplete_stored_item_tags, StoredItem
       can :request_charitable_donation, StoredItem
       can :cancel_donation_request, StoredItem
+      can :request_mailing, StoredItem
+      can :cancel_mailing_request, StoredItem
       
       # payment profiles
       can :index, PaymentProfile

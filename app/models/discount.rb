@@ -106,7 +106,7 @@ class Discount
   end
   
   def charged_at_purchase
-    (product.id == Rails.application.config.return_box_product_id || product.id == Rails.application.config.item_donation_product_id) ? @product.price*@new_product_count : 0.0
+    product.incurs_charge_at_purchase? ? @product.price*@new_product_count : 0.0
   end
   
   def free_shipping?

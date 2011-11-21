@@ -105,14 +105,6 @@ class Cart < ActiveRecord::Base
     end
   end
   
-  def remove_donation_request(stored_item)
-    cart_items_to_remove = cart_items.select { |c| c.stored_item == stored_item }
-    
-    cart_items_to_remove.each do |cart_item|
-      cart_items.delete(cart_item)
-    end
-  end
-  
   def contains_return_request_for(box)
     found_items = cart_items.select { |c| c.box == box }
     
@@ -127,6 +119,12 @@ class Cart < ActiveRecord::Base
   
   def contains_donation_request_for(stored_item)
     found_items = cart_items.select { |c| c.stored_item == stored_item && c.product.donation? }
+    
+    return !found_items.empty?
+  end
+  
+  def contains_mailing_request_for(stored_item)
+    found_items = cart_items.select { |c| c.stored_item == stored_item && c.product.item_mailing? }
     
     return !found_items.empty?
   end
@@ -179,6 +177,24 @@ class Cart < ActiveRecord::Base
     end
   end
   
+  def remove_service_request_for(stored_item)
+    cart_items_to_remove = cart_items.select { |c| c.stored_item == stored_item }
+    
+    cart_items_to_remove.each do |cart_item|
+      cart_items.delete(cart_item)
+    end
+  end
+  
+  def add_mailing_request_for(stored_item)
+    cart_item = CartItem.new
+    
+    cart_item.product_id = Rails.application.config.item_mailing_product_id
+    cart_item.quantity = 1
+    cart_item.stored_item = stored_item
+    
+    cart_items << cart_item
+  end
+  
   def contains_new_boxes
     new_box_cart_items = cart_items.select { |c| c.product_id == Rails.application.config.your_box_product_id || c.product_id == Rails.application.config.our_box_product_id }
     return !new_box_cart_items.empty?
@@ -192,6 +208,11 @@ class Cart < ActiveRecord::Base
   def contains_ship_charge_items?
     ship_charge_items = cart_items.select { |c| c.product.customer_pays_shipping_up_front? }
     return !ship_charge_items.empty?
+  end
+  
+  def contains_item_mailings?
+    item_mailing_items = cart_items.select { |c| c.product.item_mailing? }
+    return !item_mailing_items.empty?
   end
   
   def contains_only_ordered_boxes
@@ -215,6 +236,9 @@ class Cart < ActiveRecord::Base
     end
         
     grouped_cart_items = group_cart_items_by_address
+    
+    puts("grouped cart items is " + grouped_cart_items.inspect)
+    
     fedex = Fedex::Base.new(basic_fedex_options)
     vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
     total_shipping_cost = 0.0
@@ -241,11 +265,13 @@ class Cart < ActiveRecord::Base
     hash_of_arrays = Hash.new
     
     cart_items.each do |cart_item|
-      if hash_of_arrays[cart_item.get_or_pull_address].nil?
-        hash_of_arrays[cart_item.address] = Array.new
-      end
+      if cart_item.customer_pays_shipping_up_front?
+        if hash_of_arrays[cart_item.get_or_pull_address].nil?
+          hash_of_arrays[cart_item.address] = Array.new
+        end
       
-      hash_of_arrays[cart_item.address] << cart_item
+        hash_of_arrays[cart_item.address] << cart_item
+      end
     end
     
     return_array = Array.new

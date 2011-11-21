@@ -34,7 +34,7 @@ class Product < ActiveRecord::Base
   end
   
   def item_service?
-    id == Rails.application.config.item_donation_product_id
+    id == Rails.application.config.item_donation_product_id || id == Rails.application.config.item_mailing_product_id
   end
   
   def box?
@@ -45,7 +45,15 @@ class Product < ActiveRecord::Base
     id == Rails.application.config.item_donation_product_id
   end
   
+  def item_mailing?
+    id == Rails.application.config.item_mailing_product_id
+  end
+  
   def customer_pays_shipping_up_front?
     return id == Rails.application.config.return_box_product_id
+  end
+  
+  def incurs_charge_at_purchase?
+    id == Rails.application.config.return_box_product_id || id == Rails.application.config.item_donation_product_id || id == Rails.application.config.item_mailing_product_id
   end
 end

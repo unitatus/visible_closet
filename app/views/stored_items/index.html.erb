@@ -70,17 +70,20 @@ ul.ui-autocomplete {
 						<ul id="stored_item_<%=stored_item.id%>_menu_list">
 							<li><a id="<%= stored_item.id %>_details_link" class="grouped_images_class" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">details</a></li>
 							<% if stored_item.status == StoredItem::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_service_request_for(stored_item)) %>
-								<li id="stored_item_<%= stored_item.id%>_mail_li"><a href="#">mail to me</a></li>
+								<li id="stored_item_<%= stored_item.id%>_mailing_li"><%= link_to "mail this item", "/stored_items/#{stored_item.id}/request_mailing", :remote => true, :id => "stored_item_#{stored_item.id}_mailing_link" %></li>
 								<li id="stored_item_<%= stored_item.id%>_sell_li"><a href="#">sell</a></li>
-	                        	<li id="stored_item_<%= stored_item.id%>_donation_li"><%= link_to "donate to charity", "/stored_items/#{stored_item.id}/request_charitable_donation", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
+	                        	<li id="stored_item_<%= stored_item.id%>_donation_li"><%= link_to "donate to charity", "/stored_items/#{stored_item.id}/request_donation", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
 								<li id="stored_item_<%= stored_item.id%>_dispose_li"><a href="#">safely dispose of</a></li>
 							<% elsif !current_user.cart.nil? && current_user.cart.contains_donation_request_for(stored_item) %>
-								<li><%= link_to "cancel donation", "/stored_items/#{stored_item.id}/cancel_donation_request", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
+								<li id="stored_item_<%= stored_item.id%>_donation_li"><%= link_to "cancel donation", "/stored_items/#{stored_item.id}/cancel_donation_request", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
+								<li id="stored_item_<%= stored_item.id %>_checkout_li"><a href="/account/check_out">checkout</a></li>
+							<% elsif !current_user.cart.nil? && current_user.cart.contains_mailing_request_for(stored_item) %>
+								<li id="stored_item_<%= stored_item.id%>_mailing_li"><%= link_to "cancel mailing", "/stored_items/#{stored_item.id}/cancel_mailing_request", :remote => true, :id => "stored_item_#{stored_item.id}_mailing_link" %></li>
 								<li id="stored_item_<%= stored_item.id %>_checkout_li"><a href="/account/check_out">checkout</a></li>
 							<% end %>
 						</ul>
 					</div>
-					<% if stored_item.status == StoredItem::DONATION_REQUESTED_STATUS || stored_item.status == StoredItem::DONATED_STATUS || (current_user.cart && current_user.cart.contains_donation_request_for(stored_item)) %>
+					<% if stored_item.service_status? || (current_user.cart && current_user.cart.contains_service_request_for(stored_item)) %>
 						<div class="browse-item-service" id="item-<%= stored_item.id %>-service-div">
 							<% if current_user.cart && current_user.cart.contains_donation_request_for(stored_item) %>
 								Donation<br>Requested
@@ -88,6 +91,13 @@ ul.ui-autocomplete {
 								Donation<br>Requested
 							<% elsif stored_item.status == StoredItem::DONATED_STATUS %>
 								DONATED<br><div style="font-size: 50%">to <%= stored_item.donated_to %></div>
+							<% elsif current_user.cart && current_user.cart.contains_mailing_request_for(stored_item) %>
+								Mailing<br>Requested
+							<% elsif stored_item.status == StoredItem::MAILING_REQUESTED_STATUS %>
+								Mailing<br>Requested
+							<% elsif stored_item.status == StoredItem::MAILED_STATUS %>
+								MAILED<br>
+								to address TBD
 							<% end %>
 						</div>
 					<% end %>

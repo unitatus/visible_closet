@@ -70,10 +70,18 @@ class StoredItemsController < ApplicationController
   end
   
   def cancel_donation_request
-    @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
-    @cart = current_user.cart
+    cancel_item_service
     
-    @cart.remove_donation_request(@stored_item)
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def request_mailing
+    @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
+    @cart = current_user.get_or_create_cart
+    
+    @cart.add_mailing_request_for(@stored_item)
     @cart.save
     
     respond_to do |format|
@@ -81,7 +89,24 @@ class StoredItemsController < ApplicationController
     end
   end
   
+  def cancel_mailing_request
+    cancel_item_service
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  
   private
+  
+  def cancel_item_service
+    @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
+    @cart = current_user.cart
+    
+    @cart.remove_service_request_for(@stored_item)
+    @cart.save
+  end
   
   def construct_json_label(item, tags = [])
     tag_str = item[:tag_matches].downcase

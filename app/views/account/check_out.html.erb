@@ -66,17 +66,18 @@ function openMemberAgreement() {
 		</td>
 		<td>
 				<%= number_to_currency(cart_item.total_unit_price_after_discount) %> <%= cart_item.product.price_comment %>
-				<a href="#discount_synopsis" id="discount_synopsis_link">
+				
 					<% if cart_item.discount? %>
-						 <br>(<%= number_to_percentage(cart_item.discount.unit_discount_perc*100.0, :precision => 0)%> discount)
-					<% elsif cart_item.product.price > 0 %>
-						<br>(no discount)
+						 <a href="#discount_synopsis" id="discount_synopsis_link"><br>(<%= number_to_percentage(cart_item.discount.unit_discount_perc*100.0, :precision => 0)%> discount)</a>
+					<% elsif cart_item.product.price > 0 && !cart_item.item_service? %>
+						<a href="#discount_synopsis" id="discount_synopsis_link"><br>(no discount)</a>
 					<% end %>	
-				</a>
 		</td>
 		<td style="max-width: 150px">
 			<% if cart_item.donation? %>
 				You will be able to choose your charity after completing your order. For more details, please email us at <a href="mailto:contact@thevisiblecloset.com">contact@thevisiblecloset.com</a>.
+			<% elsif cart_item.item_mailing? %>
+				Shipping costs for item mailing will be emailed to you after submitting your order. You will have an opportunity to cancel your order before committing to pay for shipping costs if you wish.
 			<% elsif cart_item.committed_months.nil? %>
 				NA
 			<% else %>
@@ -118,17 +119,26 @@ function openMemberAgreement() {
 </table>
 <hr>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
-	Shipping Cost: 
-	<% if !@cart.contains_ship_charge_items? %>
-		$0.00
-	<% elsif @cart.contains_only_ordered_boxes %>
-		TBD when you ship filled box(es)
-	<% elsif @cart.contains_ordered_boxes && !@cart.quoted_shipping_cost_success %>
-		<a href="#explain_tbd_shipping" id="explain_tbd_shipping_link">TBD</a> on shipment date
-	<% elsif @cart.contains_ordered_boxes %>
-		TBD for new boxes, plus <%= number_to_currency @cart.quoted_shipping_cost %> for other services ordered.
-	<% else %>
-		<%= number_to_currency @cart.quoted_shipping_cost %>
+	<% if @cart.contains_ordered_boxes %>
+		New Box Shipping Cost: 
+		<% if @cart.contains_only_ordered_boxes && @cart.discount.free_shipping? %>
+			$0.00
+		<% else %>
+			TBD (calculated when you ship a full box)
+		<% end %>
+		<br>
+	<% end %>
+	
+	<% if !@cart.contains_only_ordered_boxes %>
+		<% if @cart.contains_ship_charge_items? && !@cart.quoted_shipping_cost_success %>
+			Box return shipping charges: <a href="#explain_tbd_shipping" id="explain_tbd_shipping_link">TBD</a> on shipment date
+		<% elsif @cart.contains_ship_charge_items? %>
+			Box return shipping charges: <%= number_to_currency @cart.quoted_shipping_cost %>
+		<% end %>
+		
+		<% if @cart.contains_item_mailings? %>
+		<br>Item Shipping Charges: TBD (will be emailed)
+		<% end %>
 	<% end %>
 	<br><br>
 	<b>Total Due Now: <%= number_to_currency(@cart.estimated_total) %></b>

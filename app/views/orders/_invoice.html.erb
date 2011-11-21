@@ -99,17 +99,26 @@
 			<br><hr><br>
 			<div style="text-align: right">
 				Subtotal: <%= number_to_currency(@invoice.subtotal_in_cents / 100)%><br>
-				Shipping & Handling: 
-				<% if @invoice.free_shipping? %>
-				$0.00<br>
-				<% elsif @invoice.only_non_shippable_lines? %>
-				NA
-				<% elsif @invoice.contains_only_ordered_boxes || !@invoice.quoted_shipping_cost_success %>
-				TBD on shipment date<br>
-				<% elsif @invoice.contains_ordered_boxes %>
-				TBD on shipment date, plus <%= number_to_currency @invoice.shipping_cost %> now.
-				<% else %>
-					<%= number_to_currency @invoice.shipping_cost %>
+				<% if @invoice.contains_ordered_boxes %>
+					New Box Shipping Cost: 
+					<% if @invoice.contains_only_ordered_boxes && @invoice.free_shipping? %>
+						$0.00
+					<% else %>
+						TBD (calculated when you ship a full box)
+					<% end %>
+					<br>
+				<% end %>
+
+				<% if !@invoice.contains_only_ordered_boxes %>
+					<% if @invoice.contains_ship_charge_items? && !@invoice.quoted_shipping_cost_success %>
+						Box return shipping charges: TBD on shipment date
+					<% elsif @invoice.contains_ship_charge_items? %>
+						Box return shipping charges: <%= number_to_currency @invoice.shipping_cost %>
+					<% end %>
+
+					<% if @invoice.contains_item_mailings? %>
+						<br>Item Shipping Charges: TBD (will be emailed)
+					<% end %>
 				<% end %>
 			</div>
 			<hr>

@@ -98,6 +98,14 @@ class Invoice < ActiveRecord::Base
     self.order.contains_only_ordered_boxes
   end
   
+  def contains_ship_charge_items?
+    self.order.contains_ship_charge_items
+  end
+  
+  def contains_item_mailings?
+    self.order.contains_item_mailings?
+  end
+  
   def contains_ordered_boxes
     self.order.contains_ordered_boxes
   end

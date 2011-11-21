@@ -22,8 +22,7 @@ VisibleCloset::Application.routes.draw do
   match "boxes/finish_inventorying_box" => "boxes#finish_inventorying"
   get "stored_items/autocomplete_stored_item_tags"
   match "stored_items/:id" => "stored_items#view"
-  match "stored_items/:id/request_charitable_donation" => "stored_items#request_charitable_donation"
-  match "stored_items/:id/cancel_donation_request" => "stored_items#cancel_donation_request"
+  
   match "payment_profiles/:id/set_default" => "payment_profiles#set_default"
   match "addresses/:id/set_default_shipping" => "addresses#set_default_shipping"
   match "m" => "pages#marketing_hit"
@@ -42,6 +41,12 @@ VisibleCloset::Application.routes.draw do
   match "account/set_checkout_shipping_address" => "addresses#set_checkout_shipping_address"
   match "account/new_checkout_shipping_address" => "addresses#new_checkout_shipping_address"
   match "/account/update_new_checkout_shipping_address/:id" => "addresses#update_new_checkout_shipping_address"
+  
+  # Stored Item Services
+  match "stored_items/:id/request_donation" => "stored_items#request_charitable_donation"
+  match "stored_items/:id/cancel_donation_request" => "stored_items#cancel_donation_request"
+  match "stored_items/:id/request_mailing" => "stored_items#request_mailing"
+  match "stored_items/:id/cancel_mailing_request" => "stored_items#cancel_mailing_request"
   
   resources :boxes
   resources :addresses

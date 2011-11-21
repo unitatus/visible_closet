@@ -20,6 +20,8 @@ class StoredItem < ActiveRecord::Base
   IN_STORAGE_STATUS = :in_storage_status
   DONATION_REQUESTED_STATUS = :donation_requested
   DONATED_STATUS = :donated
+  MAILING_REQUESTED_STATUS = :mailing_requested
+  MAILED_STATUS = :mailed
   
   symbolize :status
   
@@ -126,6 +128,8 @@ class StoredItem < ActiveRecord::Base
   def process_service(product)
     if product.id == Rails.application.config.item_donation_product_id
       update_attribute(:status, DONATION_REQUESTED_STATUS)
+    elsif product.id == Rails.application.config.item_mailing_product_id
+      update_attribute(:status, MAILING_REQUESTED_STATUS)
     else
       raise "Invalid product id for item service product: " + product.id.to_s
     end
@@ -142,6 +146,10 @@ class StoredItem < ActiveRecord::Base
   
   def donated?
     status == DONATED_STATUS
+  end
+  
+  def service_status?
+    status == DONATED_STATUS || status == DONATION_REQUESTED_STATUS || status == MAILING_REQUESTED_STATUS || status == MAILED_STATUS
   end
   
   private

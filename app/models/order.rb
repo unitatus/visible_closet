@@ -61,6 +61,11 @@ class Order < ActiveRecord::Base
     return !ship_charge_items.empty?
   end
   
+  def contains_item_mailings?
+    item_mailing_items = order_lines.select { |o| o.product.item_mailing? }
+    return !item_mailing_items.empty?
+  end
+  
   def free_shipping?
     order_lines.each do |line|
       if !line.discount.free_shipping?
@@ -277,10 +282,6 @@ class Order < ActiveRecord::Base
     order_lines.select { |order_line| order_line.product_id == Rails.application.config.return_box_product_id }
   end
   
-  def item_service_lines
-    order_lines.select { |order_line| order_line.product.item_service? }
-  end
-    
   private
   
   # This method saves the transactions
