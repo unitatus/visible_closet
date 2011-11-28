@@ -66,6 +66,10 @@ class Order < ActiveRecord::Base
     return !item_mailing_items.empty?
   end
   
+  def unpaid_mail_item_lines
+    order_lines.select { |o| o.item_mailing? && o.item_mail_shipping_charge.nil? }
+  end
+  
   def free_shipping?
     order_lines.each do |line|
       if !line.discount.free_shipping?
@@ -153,16 +157,14 @@ class Order < ActiveRecord::Base
     order_line
   end
   
-  def status
-    status = OrderLine::PROCESSED_STATUS
-    
+  def status    
     order_lines.each do |order_line|
       if order_line.status == OrderLine::NEW_STATUS
-        status = OrderLine::NEW_STATUS
+        return OrderLine::NEW_STATUS
       end
     end
     
-    return status
+    return OrderLine::PROCESSED_STATUS
   end
   
   # this method saves the charges
@@ -193,6 +195,91 @@ class Order < ActiveRecord::Base
     end
     
     charges
+  end
+
+  # This method can only be called on order lines with the same address.
+  def process_mailing_order_lines(amount, order_lines, comments=nil)
+    new_charge = nil
+    message = nil
+    
+    # Validate that all passed order lines have the same address
+    last_address = nil
+    order_lines.each do |order_line|
+      if last_address.nil?
+        last_address = order_line.shipping_address
+      else
+        if last_address != order_line.shipping_address
+          raise "Cannot call this method with order lines with multiple shipping addresses"
+        end
+      end
+    end
+    
+    self.transaction do
+      new_charge = Charge.new(:user_id => user.id, :comments => comments, :total_in_cents => amount.to_f*100)
+
+      # a little validation
+      order_lines.each do |order_line|
+        if order_line.order != self
+          raise "Invalid call - order line id for different order."
+        end
+      
+        if order_line.item_mail_shipping_charge
+          raise "Invalid call -- order line " + order_line.id.to_s + " already has a shipping charge."
+        end
+      end
+
+      shipment = generate_item_mail_shipment(order_lines[0].shipping_address)
+      
+      order_lines.each do |order_line|      
+        order_line.process(nil, new_charge, shipment)
+      end
+    
+      # associate with this object
+      charges << new_charge
+    
+      # actually attempt to pay
+      new_transaction, message = PaymentTransaction.pay(new_charge.amount, user.default_payment_profile, self.id)
+    
+      # if transaction failed we won't save anything - pop out of the transaction without error
+      if new_transaction.nil?
+        new_charge = nil
+        raise ActiveRecord::Rollback
+      end
+    
+      # transaction was fine; save and return
+      new_charge.save
+      order_lines.each do |order_line|
+        order_line.save
+      end
+    
+      save
+    end # transaction
+    
+    return new_charge, message
+  end
+  
+  def generate_item_mail_shipment(to_address_id)
+      shipment = Shipment.new
+
+      shipment.from_address_id = Rails.application.config.fedex_vc_address_id
+      shipment.to_address_id = to_address_id
+      shipment.payor = Shipment::CUSTOMER # TODO: At some point this may change based on customer subscription
+
+      if (!shipment.save)
+        raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+      end
+
+      begin
+        if !shipment.generate_fedex_label
+          shipment.destroy
+          raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+        end
+      rescue Exception => e
+        shipment.destroy
+        raise e
+      end
+
+      shipment
   end
   
   def vc_box_count

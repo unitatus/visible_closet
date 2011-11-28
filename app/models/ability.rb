@@ -76,7 +76,10 @@ class Ability
       can :show, StoragePaymentProcessingRecord
       can :index, StoragePaymentProcessingRecord
       can :get_label, Shipment
-      can :impersonate_user, :admin      
+      can :impersonate_user, :admin 
+      can :process_item_mailing_order_lines, Order
+      can :price_item_mailing_order_lines, Order
+      can :ship_item_mailing_order_lines, Order
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      

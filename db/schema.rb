@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111113163317) do
+ActiveRecord::Schema.define(:version => 20111127181642) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(:version => 20111113163317) do
     t.integer  "service_box_id"
     t.integer  "shipment_id"
     t.integer  "service_item_id"
+    t.integer  "item_mail_shipping_charge_id"
   end
 
   add_index "order_lines", ["order_id"], :name => "index_order_lines_on_order_id"
@@ -299,6 +300,7 @@ ActiveRecord::Schema.define(:version => 20111113163317) do
     t.string   "access_token"
     t.string   "status"
     t.string   "donated_to"
+    t.integer  "shipment_id"
   end
 
   add_index "stored_items", ["box_id"], :name => "index_stored_items_on_box_id"

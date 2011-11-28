@@ -97,6 +97,16 @@ class Cart < ActiveRecord::Base
     end
   end
   
+  def free_shipping?
+    cart_items.each do |cart_item|
+      if !cart_item.discount.free_shipping?
+        return false
+      end
+    end
+    
+    return true
+  end
+  
   def remove_return_box(box)
     cart_items_to_remove = cart_items.select { |c| c.box == box }
     
@@ -234,18 +244,12 @@ class Cart < ActiveRecord::Base
     if !contains_ship_charge_items?
       update_attributes(:quoted_shipping_cost => 0.0, :quoted_shipping_cost_success => false) and return 0.0
     end
-        
-    grouped_cart_items = group_cart_items_by_address
-    
-    puts("grouped cart items is " + grouped_cart_items.inspect)
-    
-    fedex = Fedex::Base.new(basic_fedex_options)
-    vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
+
     total_shipping_cost = 0.0
     
     begin
-      grouped_cart_items.each do |cart_item_group|
-        total_shipping_cost += get_shipping_price(fedex, vc_address, cart_item_group[:to_address], cart_item_group[:cart_items])
+      Shipment.get_shipping_prices(create_address_package_mappings).each do |pricing_line|
+        total_shipping_cost += pricing_line[:shipping_price]
       end
       update_attribute(:quoted_shipping_cost_success, true)
     rescue Fedex::FedexError => e
@@ -261,8 +265,9 @@ class Cart < ActiveRecord::Base
   
   private
   
-  def group_cart_items_by_address
+  def create_address_package_mappings
     hash_of_arrays = Hash.new
+    from_address = Address.find(Rails.application.config.fedex_vc_address_id)
     
     cart_items.each do |cart_item|
       if cart_item.customer_pays_shipping_up_front?
@@ -270,67 +275,16 @@ class Cart < ActiveRecord::Base
           hash_of_arrays[cart_item.address] = Array.new
         end
       
-        hash_of_arrays[cart_item.address] << cart_item
+        hash_of_arrays[cart_item.address] << { :weight => cart_item.weight, :length => cart_item.length, :width => cart_item.width, :height => cart_item.height }
       end
     end
     
     return_array = Array.new
     
     hash_of_arrays.keys.each do |address|
-      return_array << { :to_address => address, :cart_items => hash_of_arrays[address] }
+      return_array << { :to_address => address, :from_address => from_address, :packages => hash_of_arrays[address] }
     end
     
     return return_array
-  end
-  
-  def get_shipping_price(fedex_connection, from_address, to_address, cart_items)
-    shipper = {
-      :name => from_address.first_name + " " + from_address.last_name,
-      :phone_number => from_address.day_phone
-    }
-    recipient = {
-      :name => to_address.first_name + " " + to_address.last_name,
-      :phone_number => to_address.day_phone
-    }
-    origin = {
-       :street_lines => (from_address.address_line_2.blank? ? [from_address.address_line_1] : [from_address.address_line_1, from_address.address_line_2]),
-       :city => from_address.city,
-       :state => from_address.state,
-       :zip => from_address.zip,
-       :country => from_address.country
-     }
-     destination = {
-      :street_lines => (to_address.address_line_2.blank? ? [to_address.address_line_1] : [to_address.address_line_1, to_address.address_line_2]),
-      :city => to_address.city,
-      :state => to_address.state,
-      :zip => to_address.zip,
-      :country => to_address.country,
-      :residential => true # this seems reasonable enough for now; there is a TODO to try to figure this out more precisely
-    }
-    
-    packages = Array.new
-    cart_items.each do |cart_item|
-      if cart_item.product.customer_pays_shipping_up_front?
-        packages << { :weight => cart_item.weight, :length => cart_item.length, :width => cart_item.width, :height => cart_item.height }
-      end
-    end
-    
-    fedex_connection.price(
-      :shipper => { :contact => shipper, :address => origin },
-      :recipient => { :contact => recipient, :address => destination },
-      :service_type => Fedex::ServiceTypes::FEDEX_GROUND,
-      :packages => packages
-    )
-  end
-  
-  def basic_fedex_options
-    { 
-       :auth_key => Rails.application.config.fedex_auth_key,
-       :security_code => Rails.application.config.fedex_security_code,
-       :account_number => Rails.application.config.fedex_account_number,
-       :meter_number => Rails.application.config.fedex_meter_number, 
-       :debug => Rails.application.config.fedex_debug,
-       :dimension_uom => Rails.application.config.box_dimension_uom
-     }
-  end
+  end  
 end

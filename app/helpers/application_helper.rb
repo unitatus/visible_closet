@@ -110,6 +110,22 @@ module ApplicationHelper
     return return_str + (address.fedex_validation_status == Address::VALID ? "" : "<br>FEDEX UNVALIDATED")
   end
   
+  def addresses_for_select(addresses, selected)
+    addresses_array = Array.new
+    
+    addresses.each do |address|
+      address_str = address.first_name + " " + address.last_name + ", " + address.address_line_1
+      if !address.address_line_2.blank?
+        address_str << ", " + address.address_line_2
+      end
+      address_str << ", " + address.city + ", " + address.state + ", " + address.zip
+      
+      addresses_array << [address_str, address.id]
+    end
+    
+    options_for_select(addresses_array, :selected => selected.id)
+  end
+  
   def vc_address
     address_summary(Address.find(Rails.application.config.fedex_vc_address_id))
   end

@@ -28,4 +28,14 @@ module MiscHelper
     
     return false
   end
+  
+  def MiscHelper.contains_item_mailings(order_lines)
+    order_lines.each do |order_line|
+      if order_line.item_mailing?
+        return true
+      end
+    end
+    
+    return false
+  end
 end

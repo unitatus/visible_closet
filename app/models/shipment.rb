@@ -148,7 +148,7 @@ class Shipment < ActiveRecord::Base
       label_image_type = Rails.application.config.fedex_customer_label_image_type
     end
         
-     fedex = Fedex::Base.new(basic_fedex_options.merge(
+     fedex = Fedex::Base.new(Shipment.basic_fedex_options.merge(
        :label_image_type => label_image_type,
        :label_stock_type => label_stock_type
      ))
@@ -297,6 +297,51 @@ class Shipment < ActiveRecord::Base
     # process_fedex_tracking_results
   end
   
+  # Expects an array with each line being a Hash mapping with from address, to address, and a series of packages in a sub-array.
+  # Returns 
+  def Shipment.get_shipping_prices(address_package_mappings)
+    address_package_mappings.each do |address_package_mapping|
+      from_address = address_package_mapping[:from_address]
+      to_address = address_package_mapping[:to_address]
+      packages = address_package_mapping[:packages]
+      
+      shipper = {
+        :name => from_address.first_name + " " + from_address.last_name,
+        :phone_number => from_address.day_phone
+      }
+      recipient = {
+        :name => to_address.first_name + " " + to_address.last_name,
+        :phone_number => to_address.day_phone
+      }
+      origin = {
+         :street_lines => (from_address.address_line_2.blank? ? [from_address.address_line_1] : [from_address.address_line_1, from_address.address_line_2]),
+         :city => from_address.city,
+         :state => from_address.state,
+         :zip => from_address.zip,
+         :country => from_address.country
+       }
+        destination = {
+         :street_lines => (to_address.address_line_2.blank? ? [to_address.address_line_1] : [to_address.address_line_1, to_address.address_line_2]),
+         :city => to_address.city,
+         :state => to_address.state,
+         :zip => to_address.zip,
+         :country => to_address.country,
+         :residential => true # this seems reasonable enough for now; there is a TODO to try to figure this out more precisely
+       }
+       
+       fedex_connection = Fedex::Base.new(basic_fedex_options)
+       
+       address_package_mapping[:shipping_price] = fedex_connection.price(
+         :shipper => { :contact => shipper, :address => origin },
+         :recipient => { :contact => recipient, :address => destination },
+         :service_type => Fedex::ServiceTypes::FEDEX_GROUND,
+         :packages => packages
+       )
+    end
+    
+    return address_package_mappings
+  end
+    
   private
   
   def cancel_fedex_shipment
@@ -304,7 +349,7 @@ class Shipment < ActiveRecord::Base
       return true
     end
     
-    fedex = Fedex::Base.new(basic_fedex_options)
+    fedex = Fedex::Base.new(Shipment.basic_fedex_options)
        
     # It's possible for each shipment that it's actually been shipped, in which case this code will cancel it.
     # If it has not been shipped then the FedEx system will return an error, which at most we want to log.
@@ -317,7 +362,7 @@ class Shipment < ActiveRecord::Base
     return (box.nil? || box.status != Box::BEING_PREPARED_STATUS)
   end
   
-  def basic_fedex_options
+  def Shipment.basic_fedex_options
     { 
        :auth_key => Rails.application.config.fedex_auth_key,
        :security_code => Rails.application.config.fedex_security_code,

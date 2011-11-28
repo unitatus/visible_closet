@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20111030203554
+# Schema version: 20111127181642
 #
 # Table name: stored_items
 #
@@ -14,6 +14,7 @@
 #  access_token       :string(255)
 #  status             :string(255)
 #  donated_to         :string(255)
+#  shipment_id        :integer
 #
 
 class StoredItem < ActiveRecord::Base
@@ -26,6 +27,7 @@ class StoredItem < ActiveRecord::Base
   symbolize :status
   
   belongs_to :box
+  belongs_to :shipment
   has_many :stored_item_tags, :dependent => :destroy
   has_many :service_order_lines, :class_name => 'OrderLine'
   attr_accessible :file
@@ -135,10 +137,14 @@ class StoredItem < ActiveRecord::Base
     end
   end
   
-  def finalize_service(product, charity_name=nil)
+  def finalize_service(product, charity_name=nil, shipment=nil)
     if product.id == Rails.application.config.item_donation_product_id
       update_attribute(:status, DONATED_STATUS)
       update_attribute(:donated_to, charity_name)
+    elsif product.id == Rails.application.config.item_mailing_product_id
+      update_attribute(:status, MAILED_STATUS)
+      self.shipment = shipment
+      save
     else
       raise "Invalid product id for item service product: " + product.id.to_s
     end

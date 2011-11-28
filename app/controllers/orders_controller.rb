@@ -9,6 +9,119 @@ class OrdersController < ApplicationController
     @order = Order.find(params[:id])
   end
   
+  def process_item_mailing_order_lines
+    @order = Order.find(params[:id])
+  end
+  
+  def price_item_mailing_order_lines
+    @order = Order.find(params[:id])
+
+    @selected_order_lines = Hash.new
+    
+    @errors = Array.new
+    
+    if params[:order_line_ids].blank?
+      @errors << "Please select at least one order line to which to apply this charge."
+    else
+      params[:order_line_ids].each do |order_line_id|
+        @selected_order_lines[order_line_id] = true
+      end
+    end
+    
+    if params[:box_weight].blank?
+      @errors << "Please enter a box weight."
+    end
+
+    if params[:box_height].blank?
+      @errors << "Please enter a box height."
+    end
+
+    if params[:box_width].blank?
+      @errors << "Please enter a box width."
+    end
+
+    if params[:box_length].blank?
+      @errors << "Please enter a box length."
+    end
+    
+    order_lines = params[:order_line_ids].blank? ? Array.new : OrderLine.find(params[:order_line_ids])
+    
+    # save the suggested addresses
+    order_lines.each do |order_line|
+      new_address_id = params[("order_line_" + order_line.id.to_s + "_address").to_sym]
+      if new_address_id && new_address_id.to_i != order_line.shipping_address_id
+        order_line.shipping_address = Address.find(new_address_id)
+        order_line.save
+      end
+    end
+    
+    last_address_id = nil
+    mismatch = false
+    order_lines.each do |order_line|
+      if last_address_id.nil?
+        last_address_id = order_line.shipping_address_id
+      else
+        if last_address_id != order_line.shipping_address_id
+          mismatch = true
+        end
+      end
+    end
+    
+    if mismatch
+      @errors << "Please only select order lines that have the same shipping address."
+    end
+    
+    if !@errors.empty?
+      flash[:notice] = "Please correct the following errors:"
+    else
+      packages = [{:height => params[:box_height].to_f, :width => params[:box_width].to_f, :length => params[:box_length].to_f, :weight => params[:box_weight].to_f}]
+      address_package_mapping = [{:from_address => Address.find(Rails.application.config.fedex_vc_address_id), :to_address => order_lines[0].shipping_address, :packages => packages}]
+
+      @proposed_shipping_charge = Shipment.get_shipping_prices(address_package_mapping).first[:shipping_price]
+    end
+
+    render :process_item_mailing_order_lines and return
+  end
+  
+  def ship_item_mailing_order_lines
+    @order = Order.find(params[:id])
+    @selected_order_lines = Hash.new
+    
+    @errors = Array.new
+    
+    if params[:order_line_ids].blank?
+      @errors << "Please select at least one order line to which to apply this charge."
+    else
+      params[:order_line_ids].each do |order_line_id|
+        @selected_order_lines[order_line_id] = true
+      end
+    end
+    
+    if params[:proposed_shipping_charge].blank?
+      @errors << "Please enter a shipping charge."
+    end
+    
+    if !@errors.empty?
+      flash[:notice] = "Please correct the following errors:"
+      render :process_item_mailing_order_lines and return
+    end
+    
+    @order_lines = OrderLine.find(params[:order_line_ids])
+
+    # If we already have a shipping charge then this means the user hit refresh. Deal with that gracefully.
+    if @order_lines.first.item_mail_shipping_charge.nil?
+      new_charge, payment_message = @order.process_mailing_order_lines(params[:proposed_shipping_charge], @order_lines, params[:charge_comment])
+    
+      if new_charge.nil?
+        @errors << "Customer credit card was declined or otherwise failed. Credit card message: " + payment_message
+        flash[:notice] = "There were errors: "
+        render :new_shipping_charge and return
+      end
+    end
+    
+    render :ship_order_lines
+  end
+  
   def ship_order_lines
     @order = Order.find(params[:order_id])
 

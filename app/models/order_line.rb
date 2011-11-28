@@ -1,22 +1,22 @@
 # == Schema Information
-# Schema version: 20111030000336
+# Schema version: 20111127181642
 #
 # Table name: order_lines
 #
-#  id                  :integer         not null, primary key
-#  order_id            :integer
-#  product_id          :integer
-#  quantity            :integer
-#  status              :string(255)
-#  created_at          :datetime
-#  updated_at          :datetime
-#  committed_months    :integer
-#  shipping_address_id :integer
-#  service_box_id      :integer
-#  shipment_id         :integer
-#  service_item_id     :integer
+#  id                           :integer         not null, primary key
+#  order_id                     :integer
+#  product_id                   :integer
+#  quantity                     :integer
+#  status                       :string(255)
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  committed_months             :integer
+#  shipping_address_id          :integer
+#  service_box_id               :integer
+#  shipment_id                  :integer
+#  service_item_id              :integer
+#  item_mail_shipping_charge_id :integer
 #
-
 class OrderLine < ActiveRecord::Base
   NEW_STATUS = "new"
   PROCESSED_STATUS = "processed"
@@ -27,6 +27,7 @@ class OrderLine < ActiveRecord::Base
   belongs_to :service_box, :class_name => 'Box'
   belongs_to :shipment
   belongs_to :service_item, :class_name => 'StoredItem'
+  belongs_to :item_mail_shipping_charge, :class_name => 'Charge'
   has_many :ordered_boxes, :class_name => 'Box', :foreign_key => :ordering_order_line_id, :dependent => :destroy
   has_many :inventoried_boxes, :foreign_key => :inventorying_order_line_id, :class_name => "Box"
   
@@ -39,7 +40,7 @@ class OrderLine < ActiveRecord::Base
     end
   end
   
-  def process(charity_name=nil)
+  def process(charity_name=nil, shipping_charge=nil, shipment=nil)
     self.status = PROCESSED_STATUS
     
     self.transaction do
@@ -72,8 +73,10 @@ class OrderLine < ActiveRecord::Base
         end
       end
       
-      # When we implement item return we will have to take care of shipment information here.
-      service_item.finalize_service(product, charity_name) if service_item
+      if service_item
+        self.item_mail_shipping_charge = shipping_charge
+        service_item.finalize_service(product, charity_name, shipment)
+      end
       
       if (!save)
         raise "Unable to save OrderLine " << self.inspect
@@ -106,6 +109,14 @@ class OrderLine < ActiveRecord::Base
   
   def item_service?
     self.product.item_service?
+  end
+  
+  def item_donation?
+    self.product.donation?
+  end
+  
+  def item_mailing?
+    self.product.item_mailing?
   end
   
   def unit_price_after_discount

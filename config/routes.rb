@@ -54,6 +54,10 @@ VisibleCloset::Application.routes.draw do
   resources :rental_agreement_versions
   
   match "orders/:id/process" => "orders#process_order"
+  match "orders/:id/process_item_mailing_order_lines" => "orders#process_item_mailing_order_lines"
+  match "orders/:id/ship_item_mailing_order_lines" => "orders#ship_item_mailing_order_lines"
+  match "orders/:id/price_item_mailing_order_lines" => "orders#price_item_mailing_order_lines"
+  match "orders/:id/add_shipping_charge" => "orders#add_shipping_charge"
   match "orders/:id/ship_order_lines" => "orders#ship_order_lines"
   match "boxes/:box_id/stored_items" => "stored_items#index"
   match "boxes/:id/request_inventory" => "boxes#request_inventory"

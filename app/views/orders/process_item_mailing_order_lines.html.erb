@@ -1,0 +1,129 @@
+<% @admin_page = :shipping %>
+<%= render :partial => "admin/admin_menu", :locals => { :admin_page => @admin_page } %>
+
+<% # set some repeat variables %>
+<% if @errors && !@errors.empty? %>
+<div class="error_label">
+	<%= flash[:notice] %><br><br>
+	<% @errors.each do |error| %>
+	<%= error %><br>
+	<% end %>
+	</div>
+<% end %>
+<div id="internal-right">
+	<% if @proposed_shipping_charge %>
+		<% shipping_post = "/orders/#{@order.id}/ship_item_mailing_order_lines" %>
+	<% else %>
+		<% shipping_post = "/orders/#{@order.id}/price_item_mailing_order_lines" %>
+	<% end %>
+<%= form_tag(shipping_post, :class => "standard", :id => "add_shipping_charge_form", :name => "add_shipping_charge_form", :onsubmit => "cf_submit.disabled=true;") %>
+For reference: user email is <a href="mailto:<%= @order.user.email %>"><%= @order.user.email %></a>.
+<br><br>
+<table class="lightly_padded_table">
+		<tr>
+			<td>Order:</td><td><a href="/admin/user/<%= @order.user.id %>/orders/<%= @order.id %>"><%= @order.id %></a></td>
+		</tr>
+		<tr>
+			<td colspan="2">Existing charges:</td>
+		</tr>
+		<tr><td></td><td>
+<table class="prices_table">
+	<tr>
+		<th>Charge ID</th>
+		<th>Amount</th>
+		<th>For</th>
+		<th>Comments</th>
+	</tr>
+	<% @order.charges.each do |charge| %>
+	<tr>
+		<td><%= charge.id %></td>
+		<td><%= number_to_currency charge.amount %></td>
+		<td>
+			<% if charge.product_id %>
+				Product <%= charge.product_id %>: <%= charge.product.name %><br>
+			<% end %>
+			<% if charge.shipment_id %>
+				Shipment <a href="/admin/shipment/<%=charge.shipment_id%>"><%= charge.shipment_id %></a>
+			<% end %>
+		</td>
+		<td>
+			<%= charge.comments %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+	<br></td></tr>
+	<% if @proposed_shipping_charge %>
+		<tr>
+			<td>Proposed charge amount:</td>
+			<td><%= text_field_tag :proposed_shipping_charge, @proposed_shipping_charge %></td>
+		</tr>
+		<tr>
+			<td>Charge comment:</td>
+			<td><%= text_field_tag :charge_comment, params[:charge_comment] %></td>
+		</tr>
+	<% else %>
+		<tr>
+			<td>Packed box weight (lbs):</td>
+			<td><%= text_field_tag :box_weight, params[:box_weight] %></td>
+		</tr>
+		<tr>
+			<td>Packed box height (inches):</td>
+			<td><%= text_field_tag :box_height, params[:box_height] %></td>
+		</tr>
+		<tr>
+			<td>Packed box width (inches):</td>
+			<td><%= text_field_tag :box_width, params[:box_width] %></td>
+		</tr>
+		<tr>
+			<td>Packed box length (inches):</td>
+			<td><%= text_field_tag :box_length, params[:box_length] %></td>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="2">Pay for order lines:</td>
+	</tr>
+	<tr><td colspan="2">
+<table class="prices_table">
+	<tr>
+		<th>
+			<% if @proposed_shipping_charge.nil? %>
+				<%= check_box_tag('check_all', 'check_all', false,  :onClick => "SetAllCheckBoxes('add_shipping_charge_form', 'order_line_ids[]', this.checked)")%>
+			<% end %>
+			 Select?
+		</th>
+		<th>Order Line</th>
+		<th>You know, this one</th>
+		<th>Address</th>
+	</tr>
+	<% @order.unpaid_mail_item_lines.each do |order_line| %>
+	<tr>
+		<td>
+			<%= check_box_tag("order_line_ids[]", order_line.id, !@selected_order_lines.nil? && !@selected_order_lines[order_line.id.to_s].nil?, :disabled => !@proposed_shipping_charge.nil?) %>
+			<% if @proposed_shipping_charge %>
+				<%= hidden_field_tag "order_line_ids[]", params[:order_line_ids] %>
+			<% end %>
+		</td>
+		<td><%= order_line.id %></td>
+		<td><a id="<%= order_line.service_item_id %>_details_link" class="grouped_images" rel="grouped_images" href="/stored_items/<%= order_line.service_item_id %>"><%= image_tag(order_line.service_item.photo.url(:thumb), :name => "thumb_" + order_line.service_item.id.to_s, :height => 100, :width => 100) %></a></td>
+		<td>
+			<%= raw address_summary order_line.shipping_address %>
+			<% if @proposed_shipping_charge.nil? %>
+				<br><br>Choose other address:<br>
+				<%= select_tag "order_line_" + order_line.id.to_s + "_address", addresses_for_select(order_line.order.user.addresses, order_line.shipping_address)%>
+			<% end %>
+		</td>
+	</tr>
+	<% end %>
+</table>
+	</td></tr></table>
+<br>
+<div class="right">
+	<% if @proposed_shipping_charge %>
+		<%= submit_tag("Commit Shipping Charges", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();", :confirm => "This will charge the user right now. Are you sure?") %>
+	<% else %>
+		<%= submit_tag("Get proposed shipping price", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();") %>
+	<% end %>
+</div>
+</div>
+<div class="clearer"></div>
