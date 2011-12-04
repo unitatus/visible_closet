@@ -169,4 +169,8 @@ module ApplicationHelper
     # this is a bit of a hack, but it reflects the fact that we are overriding the current_user method in application_controller
     current_user != @current_user
   end
+  
+  def tracking_url(text, tracking_number)
+    "<a href=\"http://www.fedex.com/Tracking?action=track&tracknumbers=" + tracking_number + "\" target=\"new\">" + text + "</a>"
+  end
 end

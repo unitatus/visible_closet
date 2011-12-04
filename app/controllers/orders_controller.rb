@@ -11,6 +11,15 @@ class OrdersController < ApplicationController
   
   def process_item_mailing_order_lines
     @order = Order.find(params[:id])
+    
+    # Need to create the list of addresses, even if the current selected address was deactivated subequently by the user
+    @addresses = @order.user.addresses
+    
+    @order.order_lines.each do |order_line|
+      if order_line.item_mailing? && !@addresses.include?(order_line.shipping_address)
+        @addresses << order_line.shipping_address
+      end
+    end
   end
   
   def price_item_mailing_order_lines
@@ -77,7 +86,13 @@ class OrdersController < ApplicationController
       packages = [{:height => params[:box_height].to_f, :width => params[:box_width].to_f, :length => params[:box_length].to_f, :weight => params[:box_weight].to_f}]
       address_package_mapping = [{:from_address => Address.find(Rails.application.config.fedex_vc_address_id), :to_address => order_lines[0].shipping_address, :packages => packages}]
 
-      @proposed_shipping_charge = Shipment.get_shipping_prices(address_package_mapping).first[:shipping_price]
+      begin
+        @proposed_shipping_charge = Shipment.get_shipping_prices(address_package_mapping).first[:shipping_price]
+      rescue Fedex::FedexError => e
+        flash[:notice] = "There were errors:"
+        @errors << "Unable to retrieve shipping price from FedEx. Something is seriously wrong. You need to validate the address with the user and either correct it in the system and re-attempt this page, or use the fedex website to get the shipping price and manually enter it below."
+        @proposed_shipping_charge = "ENTER MANUALLY"
+      end
     end
 
     render :process_item_mailing_order_lines and return
@@ -86,6 +101,7 @@ class OrdersController < ApplicationController
   def ship_item_mailing_order_lines
     @order = Order.find(params[:id])
     @selected_order_lines = Hash.new
+    @proposed_shipping_charge = params[:proposed_shipping_charge]
     
     @errors = Array.new
     
@@ -97,8 +113,8 @@ class OrdersController < ApplicationController
       end
     end
     
-    if params[:proposed_shipping_charge].blank?
-      @errors << "Please enter a shipping charge."
+    if params[:proposed_shipping_charge].blank? || !params[:proposed_shipping_charge].is_number?
+      @errors << "Please enter a numeric shipping charge."
     end
     
     if !@errors.empty?

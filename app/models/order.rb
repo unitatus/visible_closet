@@ -253,6 +253,8 @@ class Order < ActiveRecord::Base
       end
     
       save
+      
+      UserMailer.deliver_order_lines_processed(user, order_lines)
     end # transaction
     
     return new_charge, message
@@ -274,9 +276,8 @@ class Order < ActiveRecord::Base
           shipment.destroy
           raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
         end
-      rescue Exception => e
-        shipment.destroy
-        raise e
+      rescue Fedex::FedexError => e
+        # this is actually fine
       end
 
       shipment

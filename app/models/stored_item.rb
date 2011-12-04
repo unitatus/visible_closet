@@ -158,6 +158,10 @@ class StoredItem < ActiveRecord::Base
     status == DONATED_STATUS || status == DONATION_REQUESTED_STATUS || status == MAILING_REQUESTED_STATUS || status == MAILED_STATUS
   end
   
+  def mailed?
+    status == MAILED_STATUS
+  end
+  
   private
   
   # simple random salt

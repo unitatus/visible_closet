@@ -141,6 +141,16 @@ class Address < ActiveRecord::Base
     return return_val
   end
   
+  def has_active_payment_profiles?
+    payment_profiles.each do |payment_profile|
+      if payment_profile.active?
+        return true
+      end
+    end
+    
+    return false
+  end
+  
   def externally_valid?
     if !errors.empty?
       # there are errors. Back out -- these can cause fatal consequences in fedex call.

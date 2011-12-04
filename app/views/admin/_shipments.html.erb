@@ -17,7 +17,7 @@
 		<tr>
 			<td><a href="/admin/shipment/<%= shipment.id %>"><%= shipment.id %></a></td>
 			<td><%= shipment.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
-			<td><a href="http://www.fedex.com/Tracking?tracknumbers=<%=shipment.tracking_number%>" target="new"><%= shipment.tracking_number %></a></td>
+			<td><%= raw tracking_url shipment.tracking_number, shipment.tracking_number %></td>
 			<td>
 				<% if shipment.user %>
 					<a href="/admin/user/<%= shipment.user.id %>"><%= shipment.user.first_name %> <%= shipment.user.last_name %></a>

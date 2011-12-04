@@ -44,7 +44,13 @@
 		<br>(nothing returned)
 		<% end # end returned_boxes size check %>
 		<% if MiscHelper.contains_item_mailings(@order_lines) %>
-			<br><br>You have now processed order line(s) for mailing items, which means you should have already packed the boxes. Click <a href="/shipment/<%=@order_lines.first.service_item.shipment_id%>/get_label">here</a> to print the FedEx address label to affix to the box and send it off. The customer has been emailed to indicate that the items are on their way.
+			<br><br>You have now processed order line(s) for mailing items, which means you should have already packed the boxes. 
+			<% if @order_lines.first.service_item.shipment.tracking_number %>
+			Click <a href="/shipment/<%=@order_lines.first.service_item.shipment_id%>/get_label">here</a> to print the FedEx address label to affix to the box and send it off. 
+			<% else %>
+			The address was insufficient to generate a shipping label, so you will need to do that via the fedex website.
+			<% end %>
+			The customer has been emailed to indicate that the items are on their way.
 		<% end %>
 	</div>
 	<% if MiscHelper.contains_non_shipping_item_services(@order_lines) %>

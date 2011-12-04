@@ -110,7 +110,7 @@ For reference: user email is <a href="mailto:<%= @order.user.email %>"><%= @orde
 			<%= raw address_summary order_line.shipping_address %>
 			<% if @proposed_shipping_charge.nil? %>
 				<br><br>Choose other address:<br>
-				<%= select_tag "order_line_" + order_line.id.to_s + "_address", addresses_for_select(order_line.order.user.addresses, order_line.shipping_address)%>
+				<%= select_tag "order_line_" + order_line.id.to_s + "_address", addresses_for_select(@addresses, order_line.shipping_address)%>
 			<% end %>
 		</td>
 	</tr>

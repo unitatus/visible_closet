@@ -76,6 +76,7 @@ class OrderLine < ActiveRecord::Base
       if service_item
         self.item_mail_shipping_charge = shipping_charge
         service_item.finalize_service(product, charity_name, shipment)
+        self.shipment = shipment
       end
       
       if (!save)

@@ -41,7 +41,7 @@
 		<td><b>FedEx Tracking:</b></td>
 		<td>
 			<% if @shipment.tracking_number %>
-				<a href="http://www.fedex.com/Tracking?tracknumbers=<%=@shipment.tracking_number%>" target="new"><%= @shipment.tracking_number %></a>
+				<%= raw tracking_url @shipment.tracking_number, @shipment.tracking_number %>
 			<% else %>
 				No tracking number
 			<% end %>
