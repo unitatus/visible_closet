@@ -62,7 +62,7 @@ class StoredItem < ActiveRecord::Base
   end
   
   def StoredItem.find_all_by_assigned_to_user_id(user_id, box_id=nil)
-    box_conditions = { :assigned_to_user_id => user_id }
+    box_conditions = { :assigned_to_user_id => user_id, :status => Box::IN_STORAGE_STATUS }
     
     if !box_id.blank?
       box_conditions[:id] = box_id
@@ -73,8 +73,9 @@ class StoredItem < ActiveRecord::Base
   
   def StoredItem.tags_search(tags, user, json_ready=true)
     conditions = Array.new
-    conditions[0] = "boxes.assigned_to_user_id = ? AND ("
+    conditions[0] = "boxes.assigned_to_user_id = ? AND boxes.status = ? AND ("
     conditions << user.id.to_s
+    conditions << Box::IN_STORAGE_STATUS
     
     tags.each_with_index do |tag, index|
       if (index > 0)
