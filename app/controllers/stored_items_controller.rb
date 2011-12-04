@@ -22,7 +22,7 @@ class StoredItemsController < ApplicationController
         params[:box_id] = @selected_item.box.id.to_s
       end
     end
-    @boxes = Box.find_all_by_assigned_to_user_id_and_inventorying_status(current_user.id, Box::INVENTORIED)
+    @boxes = Box.find_all_by_assigned_to_user_id_and_inventorying_status_and_status(current_user.id, Box::INVENTORIED, Box::IN_STORAGE_STATUS)
     @hide_item_search = true
   end
   
