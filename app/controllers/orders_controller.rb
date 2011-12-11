@@ -24,6 +24,7 @@ class OrdersController < ApplicationController
   
   def price_item_mailing_order_lines
     @order = Order.find(params[:id])
+    @addresses = @order.user.addresses
 
     @selected_order_lines = Hash.new
     
