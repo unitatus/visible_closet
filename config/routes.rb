@@ -59,6 +59,7 @@ VisibleCloset::Application.routes.draw do
   match "orders/:id/price_item_mailing_order_lines" => "orders#price_item_mailing_order_lines"
   match "orders/:id/add_shipping_charge" => "orders#add_shipping_charge"
   match "orders/:id/ship_order_lines" => "orders#ship_order_lines"
+  match "order_lines/:id/cancel" => "orders#cancel_order_line"
   match "boxes/:box_id/stored_items" => "stored_items#index"
   match "boxes/:id/request_inventory" => "boxes#request_inventory"
   match "/stored_items" => "stored_items#index"

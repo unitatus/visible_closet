@@ -171,6 +171,10 @@ module ApplicationHelper
   end
   
   def tracking_url(text, tracking_number)
-    "<a href=\"http://www.fedex.com/Tracking?action=track&tracknumbers=" + tracking_number + "\" target=\"new\">" + text + "</a>"
+    if text.nil? || tracking_number.nil?
+      return nil
+    else
+      return "<a href=\"http://www.fedex.com/Tracking?action=track&tracknumbers=" + tracking_number + "\" target=\"new\">" + text + "</a>"
+    end
   end
 end

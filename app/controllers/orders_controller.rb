@@ -177,6 +177,23 @@ class OrdersController < ApplicationController
     do_show_invoice(@invoice)
   end
   
+  def cancel_order_line
+    order_line = OrderLine.find(params[:id])
+    
+    success, message = order_line.cancel
+    
+    if !success
+      flash[:notice] = message
+    end
+    
+    if order_line.order.status == OrderLine::NEW_STATUS
+      @order = order_line.order
+      render :process_order
+    else
+      redirect_to "/admin/home"
+    end
+  end
+  
   private
   
   def missing_charity?(order_line_ids)

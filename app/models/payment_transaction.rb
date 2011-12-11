@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110930213450
+# Schema version: 20111210184710
 #
 # Table name: payment_transactions
 #
@@ -16,6 +16,7 @@
 #  payment_profile_id                   :integer
 #  status                               :string(255)
 #  storage_payment_processing_record_id :integer
+#  auth_transaction_id                  :string(255)
 #
 
 #
@@ -29,6 +30,8 @@ class PaymentTransaction < ActiveRecord::Base
   SUCCESS_STATUS = :success
   FAILURE_STATUS = :failure
   RECTIFY_STATUS = :rectify
+  
+  REQUIRES_SETTLEMENT_MSG = "The referenced transaction does not meet the criteria for issuing a credit."
   
   belongs_to :payment_profile
   belongs_to :storage_payment_processing_record
@@ -55,25 +58,37 @@ class PaymentTransaction < ActiveRecord::Base
     self.status == RECTIFY_STATUS
   end
   
+  def PaymentTransaction.refund(amount, payment_profile, transaction)
+    create_transaction(:refund, amount, payment_profile, nil, transaction.auth_transaction_id)
+  end
+
   def PaymentTransaction.pay(amount, payment_profile, order_id=nil)
+    create_transaction(:auth_capture, amount, payment_profile, order_id, nil)
+  end
+  
+  private
+  
+  def PaymentTransaction.create_transaction(type, amount, payment_profile, order_id=nil, transaction_id=nil)
+    amt_to_save = ((type == :refund) ? amount * -1 : amount)
     if payment_profile.user.test_user?
       action_msg = "FAKE PURCHASE for testing; did not call active_merchant interface"
-      new_payment = create!(:action => action_msg, :status => SUCCESS_STATUS, :amount => amount, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment = create!(:action => action_msg, :status => SUCCESS_STATUS, :amount => amt_to_save, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, nil]
     end
     
-    response = CIM_GATEWAY.create_customer_profile_transaction({:transaction => {:type => :auth_capture,
+    response = CIM_GATEWAY.create_customer_profile_transaction({:transaction => {:type => type,
                                                                   :amount => amount,
                                                                   :customer_profile_id => payment_profile.user.cim_id,
-                                                                  :customer_payment_profile_id => payment_profile.identifier}})
+                                                                  :customer_payment_profile_id => payment_profile.identifier,
+                                                                  :trans_id => transaction_id}})
 
     if response.success?
-      new_payment = create!(:action => "purchase", :status => SUCCESS_STATUS, :amount => amount, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment = create!(:action => "purchase", :status => SUCCESS_STATUS, :amount => amt_to_save, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id, :auth_transaction_id => response.params["direct_response"]["transaction_id"])
       return [new_payment, nil]
-    elsif order_id.nil? # this means that it was a storage charge, in which case we need to keep track of the payment for repayment later
-      new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :amount => amount, :response => response, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+    elsif order_id.nil? && type == :auth_capture # this means that it was a storage charge, in which case we need to keep track of the payment for repayment later
+      new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :amount => amt_to_save, :response => response, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, response.message]
-    else # this was an attempt to pay for an order, which we can allow to just die
+    else # this was an attempt to pay for an order or submit a refund, which we can allow to just die
       [nil, response.message]
     end
   end

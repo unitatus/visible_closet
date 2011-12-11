@@ -18,7 +18,15 @@
 		</tr>
 		<tr>
 			<td><b>Total Paid:</b></td>
-			<td><%= number_to_currency @order.amount_paid %></td>
+			<td>
+				<% @order.payment_transactions.each do |payment| %>
+					<%= payment.created_at.strftime "%m/%d/%Y" %> <%= number_to_currency payment.amount %>
+					<% if payment.amount < 0 %>
+						 (refund)
+					<% end %>
+					<br>
+				<% end %>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>Order Lines:</b></td>

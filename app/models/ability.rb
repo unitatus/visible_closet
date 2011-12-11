@@ -80,6 +80,7 @@ class Ability
       can :process_item_mailing_order_lines, Order
       can :price_item_mailing_order_lines, Order
       can :ship_item_mailing_order_lines, Order
+      can :cancel_order_line, Order
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      

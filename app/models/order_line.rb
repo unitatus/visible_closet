@@ -1,25 +1,7 @@
-# == Schema Information
-# Schema version: 20111127181642
-#
-# Table name: order_lines
-#
-#  id                           :integer         not null, primary key
-#  order_id                     :integer
-#  product_id                   :integer
-#  quantity                     :integer
-#  status                       :string(255)
-#  created_at                   :datetime
-#  updated_at                   :datetime
-#  committed_months             :integer
-#  shipping_address_id          :integer
-#  service_box_id               :integer
-#  shipment_id                  :integer
-#  service_item_id              :integer
-#  item_mail_shipping_charge_id :integer
-#
 class OrderLine < ActiveRecord::Base
   NEW_STATUS = "new"
   PROCESSED_STATUS = "processed"
+  CANCELLED_STATUS = "cancelled"
   
   belongs_to :order
   belongs_to :product
@@ -28,6 +10,7 @@ class OrderLine < ActiveRecord::Base
   belongs_to :shipment
   belongs_to :service_item, :class_name => 'StoredItem'
   belongs_to :item_mail_shipping_charge, :class_name => 'Charge'
+  belongs_to :product_charge, :class_name => 'Charge'
   has_many :ordered_boxes, :class_name => 'Box', :foreign_key => :ordering_order_line_id, :dependent => :destroy
   has_many :inventoried_boxes, :foreign_key => :inventorying_order_line_id, :class_name => "Box"
   
@@ -108,6 +91,10 @@ class OrderLine < ActiveRecord::Base
     product_id == Rails.application.config.our_box_product_id
   end
   
+  def return_box?
+    product_id == Rails.application.config.return_box_product_id
+  end
+  
   def item_service?
     self.product.item_service?
   end
@@ -120,8 +107,57 @@ class OrderLine < ActiveRecord::Base
     self.product.item_mailing?
   end
   
+  def new?
+    self.status == NEW_STATUS
+  end
+  
   def unit_price_after_discount
     self.discount.unit_price_after_discount
+  end
+  
+  def cancel
+    return_msg = ""
+    transaction_successful = false
+    
+    self.transaction do
+      update_attribute(:status, CANCELLED_STATUS)
+      
+      if cust_box? || vc_box?
+        ordered_boxes.each do |box|
+          box.destroy
+        end
+      elsif item_service?
+        service_item.update_attribute(:status, StoredItem::IN_STORAGE_STATUS)
+      elsif box_return?
+        raise "Box return cancellation not yet supported."
+      end
+      
+      if !order.payment_transactions.empty?
+        amt_to_refund = amount_paid_at_purchase
+        original_transaction = order.payment_transactions.first
+        original_pmt_profile = original_transaction.payment_profile
+        
+        refund_payment, auth_message = PaymentTransaction.refund(amt_to_refund, original_pmt_profile, original_transaction)
+        
+        if refund_payment.nil? 
+          return_msg << " Failed to refund on default payment profile as well, with message \"" + auth_message + "\""
+          if auth_message == PaymentTransaction::REQUIRES_SETTLEMENT_MSG
+            return_msg << " Usually this means that the original payment transaction must be settled -- i.e., wait 24 hours."
+          end
+          raise ActiveRecord::Rollback
+        end
+        
+        order.payment_transactions << refund_payment
+      end
+      
+      # refund shipping payments - TBD
+      
+      transaction_successful = true
+    end
+    
+    UserMailer.deliver_order_line_cancelled(self) if transaction_successful
+    
+    return transaction_successful, return_msg
   end
   
   def associated_boxes
@@ -146,6 +182,16 @@ class OrderLine < ActiveRecord::Base
   
   def return_order_line?
     product_id == Rails.application.config.return_box_product_id
+  end
+  
+  def add_to_amount_paid_at_purchase(amount)
+    return nil if amount.nil?
+    
+    if amount_paid_at_purchase.nil?
+      update_attribute(:amount_paid_at_purchase, amount)
+    else
+      update_attribute(:amount_paid_at_purchase, amount_paid_at_purchase + amount)
+    end
   end
   
   def OrderLine.total_quantity(order_lines)

@@ -120,7 +120,7 @@ For reference: user email is <a href="mailto:<%= @order.user.email %>"><%= @orde
 <br>
 <div class="right">
 	<% if @proposed_shipping_charge %>
-		<%= submit_tag("Commit Shipping Charges", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();", :confirm => "This will charge the user right now. Are you sure?") %>
+		<%= submit_tag("Commit Shipping Charges", :class => "button", :id => "cf_submit", :confirm => "This will charge the user right now. Are you sure?") %>
 	<% else %>
 		<%= submit_tag("Get proposed shipping price", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();") %>
 	<% end %>

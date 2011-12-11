@@ -26,6 +26,7 @@
 				Line Id: <%= line.id %><br>
 				Qty: <%= line.quantity %><br>
 				Product: <%= line.product.name %><br>
+				Status: <%= line.status %><br>
 				Boxes: 
 				<% if line.service_box.nil? %>
 					<% line.ordered_boxes.each_with_index do |box, index| %>

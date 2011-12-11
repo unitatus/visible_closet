@@ -19,7 +19,9 @@ class Order < ActiveRecord::Base
   belongs_to :user
   has_many :charges, :dependent => :destroy
   has_many :invoices, :dependent => :destroy
-
+  
+  before_destroy :destroy_associated_shipments
+  
   attr_accessible :user_id, :created_at
 
   def purchase()
@@ -172,7 +174,7 @@ class Order < ActiveRecord::Base
   def generate_charges
     raise "Attempted to call generate charges on unsaved order" unless self.id
     charges = Array.new
-    
+
     order_lines.each do | order_line |
       if order_line.associated_boxes.size > 0 # this is a box-related order
         order_line.associated_boxes.each do |box|
@@ -181,11 +183,15 @@ class Order < ActiveRecord::Base
             new_charge.total_in_cents = ((order_line.discount.charged_at_purchase/order_line.associated_boxes.size)*100).ceil
             new_charge.associate_with(box)
             new_charge.save
+            order_line.add_to_amount_paid_at_purchase(new_charge.amount)
             charges << new_charge
           end
         end
       elsif order_line.discount.charged_at_purchase > 0 # this is a non-box related order with a charge
-        charges << Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.charged_at_purchase*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
+        
+        new_charge = Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.charged_at_purchase*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
+        charges << new_charge
+        order_line.add_to_amount_paid_at_purchase(new_charge.amount)
       end
     end
     
@@ -379,7 +385,9 @@ class Order < ActiveRecord::Base
     
     #calculate the prepayments
     order_lines.each do |order_line|
-      amount += order_line.discount.prepaid_at_purchase
+      prepay_amt = order_line.discount.prepaid_at_purchase
+      amount += prepay_amt
+      order_line.add_to_amount_paid_at_purchase(prepay_amt)
     end
     
     # calculate the charges
@@ -477,6 +485,12 @@ class Order < ActiveRecord::Base
         # this automatically saves, and only works at all if the box is already saved (thank you rails)
         new_box.subscriptions << subscription if subscription
       end # inner for loop
+    end
+  end
+  
+  def destroy_associated_shipments
+    order_lines.each do |order_line|
+      order_line.shipment.destroy if order_line.shipment
     end
   end
 end

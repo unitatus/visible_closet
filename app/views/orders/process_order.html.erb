@@ -100,6 +100,11 @@ We are processing order <a href="/admin/user/<%= @order.user.id %>/orders/<%= @o
 	</td>
 	<td class="<%= class_name %>">
       <%= order_line.status %>
+		<% if order_line.new? && !order_line.return_box? %>
+			<br>(<a href="/order_lines/<%=order_line.id%>/cancel" data-confirm="Are you sure? This is not reversible, and the user will be refunded and emailed.">cancel</a>)
+	 	<% elsif order_line.new? && order_line.return_box? %>
+			<br>(cannot cancel)
+		<% end %>
     </td>
 	<% if contains_inventory_services %>
 		<td class="<%= class_name %>">

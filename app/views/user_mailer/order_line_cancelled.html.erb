@@ -1,0 +1,18 @@
+Dear <%= @user.first_name %> <%= @user.last_name %>,
+<br><br>
+We just wanted to inform you that one of your order lines for order <%= @order_line.order.id %> has been cancelled by our staff. Here are some details on this order line:
+	<br><br>
+		<% if @order_line.return_order_line? %>
+			Box <%= @order_line.service_box.box_num %> return.
+		<% elsif @order_line.vc_box? %>
+			New Visible Closet box storage.
+		<% elsif @order_line.item_mailing? %>
+			<%= image_tag(@order_line.service_item.photo.url(:thumb), :name => "thumb_" + @order_line.service_item.id.to_s, :height => 100, :width => 100) %> Item #<%= @order_line.service_item_id %> mailing to: <br><br><%= raw address_summary @order_line.shipping_address %>
+		<% end %>
+<br><br>
+If you did not intend for this order line to be cancelled, please contact us immediately by calling us at (888) 628-9994 or emailing us at <a href="mailto:<%= Rails.application.config.admin_email %>"><%= Rails.application.config.admin_email %></a>. Otherwise, you can ignore this message.
+<br><br>
+Thanks for using The Visible Closet, and have a great day!
+<br><br>
+<div style="padding 0 0 0 15px">~ The Visible Closet Team</div>
+<br><br>

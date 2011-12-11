@@ -68,6 +68,18 @@ class UserMailer < ActionMailer::Base
     mail(:to => user.email, :subject => "Notification from The Visible Closet")
   end
   
+  def UserMailer.deliver_order_line_cancelled(order_line)
+    if order_line.order.user.not_test_user?
+      order_line_cancelled(order_line).deliver
+    end
+  end
+  
+  def order_line_cancelled(order_line)
+    @order_line = order_line
+    @user = @order_line.order.user
+    mail(:to => @user.email, :subject => "Notification from The Visible Closet")
+  end
+  
   def UserMailer.deliver_box_received(box)
     if box.user.not_test_user?
       box_received(box).deliver
