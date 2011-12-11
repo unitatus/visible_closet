@@ -1,3 +1,24 @@
+# == Schema Information
+# Schema version: 20111210184710
+#
+# Table name: order_lines
+#
+#  id                           :integer         not null, primary key
+#  order_id                     :integer
+#  product_id                   :integer
+#  quantity                     :integer
+#  status                       :string(255)
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  committed_months             :integer
+#  shipping_address_id          :integer
+#  service_box_id               :integer
+#  shipment_id                  :integer
+#  service_item_id              :integer
+#  item_mail_shipping_charge_id :integer
+#  amount_paid_at_purchase      :float
+#
+
 class OrderLine < ActiveRecord::Base
   NEW_STATUS = "new"
   PROCESSED_STATUS = "processed"

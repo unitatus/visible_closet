@@ -234,7 +234,7 @@ class Order < ActiveRecord::Base
         end
       end
 
-      shipment = generate_item_mail_shipment(order_lines[0].shipping_address)
+      shipment = generate_item_mail_shipment(order_lines[0].shipping_address, new_charge)
       
       order_lines.each do |order_line|      
         order_line.process(nil, new_charge, shipment)
@@ -266,12 +266,13 @@ class Order < ActiveRecord::Base
     return new_charge, message
   end
   
-  def generate_item_mail_shipment(to_address_id)
+  def generate_item_mail_shipment(to_address_id, shipment_charge)
       shipment = Shipment.new
 
       shipment.from_address_id = Rails.application.config.fedex_vc_address_id
       shipment.to_address_id = to_address_id
       shipment.payor = Shipment::CUSTOMER # TODO: At some point this may change based on customer subscription
+      shipment.charge = shipment_charge
 
       if (!shipment.save)
         raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
