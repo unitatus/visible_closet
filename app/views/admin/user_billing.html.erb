@@ -1,6 +1,20 @@
 <%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+
+<% @errors = Array.new unless @errors %>
+
 <div id="internal-right">
 	<h1>Billing & Payment History for User #<%= @user.id %> (<%= @user.first_name %> <%= @user.last_name %>)</h1><br>
+	<% if !@errors.empty? %>
+		<div class="error_label">
+			Please correct the following errors:
+			<ul>
+				<% @errors.each do |msg| %>
+					<li><%= msg %></li>
+				<% end %>
+			</ul>
+			<br>
+		</div>
+	<% end %>
 	<table class="lightly_padded_table">
 		<tr>
 			<th style="text-align: center"><b>Date</b></th>
@@ -9,6 +23,7 @@
 			<th style="text-align: center"><b>Debit</b></th>
 			<th style="text-align: center"><b>Credit</b></th>
 			<th style="text-align: center"><b>Running Total</b></th>
+			<th style="text-align: center"><b>Delete?</td></th>
 		</tr>
 		<% running_total = 0.0 %>
 		<% @transactions.each do |transaction| %>
@@ -28,6 +43,8 @@
 						shipping for order <a href="/admin/user/<%= @user.id %>/orders/<%= transaction.core_transaction.order_id %>">#<%= transaction.core_transaction.order_id %></a>
 				   	<% elsif transaction.core_transaction.storage_charge %>
 						storage of box <a href="/admin/user/<%= @userid %>/box/<%= transaction.core_transaction.storage_charge.box_id %>">#<%= transaction.core_transaction.storage_charge.box_id %><a/> from <%= transaction.core_transaction.storage_charge.start_date.strftime "%m/%d/%Y" %> to <%= transaction.core_transaction.storage_charge.end_date.strftime "%m/%d/%Y" %>
+					<% else %>
+						<%= transaction.core_transaction.comments %>
 				  <% end %>
 				<% end %>
 			</td>
@@ -35,8 +52,87 @@
 			<td style="text-align: center"><%= number_to_currency transaction.credit %></td>
 			<% running_total += transaction.value %></td>
 			<td style="text-align: center"><%= number_to_currency running_total %></td>
+			<td style="text-align: center">
+				<% if transaction.deletable? %>
+					<a href="/admin/billing/charges/<%=transaction.id%>/destroy" data-confirm="Are you sure?">Delete</a>
+				<% end %>
+			</td>
 		</tr>
 		<% end %>
 	</table>
+	<br>
+	<hr>
+	<table class="lightly_padded_table">
+	<%= form_tag("/admin/users/#{@user.id}/add_charge", :class => "standard", :onsubmit => "new_charge_submit.disabled=true;") do %>
+		<tr>
+			<td colspan="5"><b><u>Create new charge</u></b></td>
+		</tr>
+		<tr>
+			<td>Amount:</td>
+			<td><%= text_field_tag :new_charge_amount, params[:new_charge_amount], :class => "textbox" %></td>
+			<td>Comment:</td>
+			<td><%= text_field_tag :new_charge_comment, params[:new_charge_comment], :class => "textbox" %></td>
+			<td><%= submit_tag "Create Charge", :class => "button",  :id => "new_charge_submit", :confirm => "Are you sure? This will create a charge for this customer, though the customer's credit card will not be charged. Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes." %></td>
+		</tr>
+		<tr>
+			<td colspan="5"><br></td>
+		</tr>
+	<% end %>
+
+	<%= form_tag "/admin/users/#{@user.id}/add_credit" do %>
+		<tr>
+			<td colspan="5"><b><u>Create new credit</u></b></td>
+		</tr>
+		<tr>
+			<td>Amount:</td>
+			<td><%= text_field_tag :new_credit_amount, params[:new_credit_amount], :class => "textbox" %></td>
+			<td>Comment:</td>
+			<td><%= text_field_tag :new_credit_comment, params[:new_credit_comment], :class => "textbox" %></td>
+			<td><%= submit_tag "Create Credit", :confirm => "Are you sure? This will create a credit on the customer's account, NOT a credit card payment. Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes." %></td>
+		</tr>
+		<tr>
+			<td colspan="5"><br></td>
+		</tr>
+	<% end %>
+	<%= form_tag "/admin/users/#{@user.id}/charge_default_card" do %>
+		<tr>
+			<td colspan="5"><b><u>Charge customer credit card</b></u></td>
+		</tr>
+		<tr>
+			<td>Amount:</td>
+			<td><%= text_field_tag :new_cc_charge_amount, params[:new_cc_charge_amount], :class => "textbox" %></td>
+			<td>Comment:</td>
+			<td><%= text_field_tag :new_cc_charge_comment, params[:new_cc_charge_comment], :class => "textbox" %></td>
+			<td><%= submit_tag "Charge Default Card", :confirm => "Are you sure? Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes." %></td>
+		</tr>
+		<tr>
+			<td colspan="5"><br></td>
+		</tr>
+	<% end %>
+	<%= form_tag "/admin/users/#{@user.id}/refund_customer_card" do %>
+		<tr>
+			<td colspan="5"><b><u>Refund customer credit card</u></b></td>
+		</tr>
+		<tr>
+			<td>Amount:</td>
+			<td><%= text_field_tag :amount, params[:amount], :class => "textbox" %></td>
+			<td>Comment:</td>
+			<td colspan="2"><%= text_field_tag :comment, params[:comment], :class => "textbox" %></td>
+		</tr>
+		<tr>
+			<td>Card #:</td>
+			<td><%= text_field_tag :cc_number, params[:cc_number], :placeholder => "#################", :class => "textbox" %></td>
+			<td>Expiration:</td>
+			<td><%= select_tag :month, options_for_select(months_select_array, :selected => params[:month]) %></td>
+			<td><%= select_tag :year, options_for_select(year_array, :selected => params[:year]) %></td>
+		</tr>
+		<tr>
+			<td>Security Code:</td>
+			<td><%= text_field_tag :verification_value, params[:verification_value], :placeholder => "###", :class => "textbox", :style => "width: 30px;" %></td>
+			<td colspan="3"><%= submit_tag "Create Refund", :confirm => "Are you sure? If you want to cancel an order line you need to go into the order screen. Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes if you continue." %></td>
+		</tr>
+	<% end %>
+	</table>
+
 </div>
 <div class="clearer"></div>

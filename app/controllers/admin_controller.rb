@@ -172,6 +172,17 @@ class AdminController < ApplicationController
     redirect_to "/admin/user/#{params[:user_id]}/boxes"
   end
   
+  def destroy_billing_charge
+    charge = Charge.find(params[:id])
+    @user = charge.user
+    @admin_page = :users
+    @transactions = @user.transaction_history
+
+    charge.destroy
+    
+    redirect_to "/admin/user/#{@user.id}/billing"
+  end
+  
   def delete_shipment
     shipment = Shipment.find(params[:id])
     shipment.destroy
@@ -283,7 +294,35 @@ class AdminController < ApplicationController
     redirect_to "/admin/home"
   end
 
-
+  def add_user_charge
+    @admin_page = :users
+    @user = User.find(params[:id])
+    @transactions = @user.transaction_history
+    @errors = Array.new
+    
+    if(params[:new_charge_amount].blank?)
+      @errors << "Must enter amount."
+    elsif !params[:new_charge_amount].is_number?
+      @errors << "Please enter a number for the charge amount."
+    end
+    
+    
+    if (params[:new_charge_comment].blank?)
+      @errors << "Must enter comment."
+    end
+    
+    if !@errors.empty?
+      render :user_billing and return
+    else
+      if !@user.add_miscellaneous_charge(Float(params[:new_charge_amount]), params[:new_charge_comment], current_user)
+        @errors << @user.errors
+        render :user_billing and return
+      else
+        redirect_to "/admin/user/#{@user.id}/billing"
+      end
+    end
+  end
+  
 private
 
   def get_orders(order_lines)

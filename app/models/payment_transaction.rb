@@ -66,6 +66,10 @@ class PaymentTransaction < ActiveRecord::Base
     create_transaction(:auth_capture, amount, payment_profile, order_id, nil)
   end
   
+  def deletable?
+    false
+  end
+  
   private
   
   def PaymentTransaction.create_transaction(type, amount, payment_profile, order_id=nil, transaction_id=nil)

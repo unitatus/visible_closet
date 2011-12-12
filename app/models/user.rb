@@ -557,6 +557,18 @@ class User < ActiveRecord::Base
     !test_user?
   end
   
+  def add_miscellaneous_charge(amount, comment, created_by_admin)
+    if created_by_admin.nil?
+      raise "Cannot create a miscellaneous charge without providing the administrator reference."
+    end
+    
+    new_charge = Charge.create!(:user_id => self.id, :total_in_cents => amount*100, :comments => comment, :created_by_admin_id => created_by_admin.id)
+    
+    charges << new_charge
+    
+    return new_charge
+  end
+  
   private 
 
   def delete_cim_profile

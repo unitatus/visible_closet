@@ -29,6 +29,10 @@ class GenericTransaction
     core_transaction.id
   end
   
+  def deletable?
+    core_transaction.deletable?
+  end
+  
   def debit
     if core_transaction.is_a?(Charge)
       return core_transaction.total_in_cents/100.0

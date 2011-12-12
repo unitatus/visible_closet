@@ -43,8 +43,8 @@ class Event
 				msg += "shipping for "
 			  if charge.shipment.box_id
 					msg += "box #{charge.shipment.box.box_num}"
-				elsif charge.order_line
-          msg += "order #{charge.shipment.order_line.order_id}"
+				elsif charge.order
+          msg += "order #{charge.order_id}"
 				else
 					msg += "(unknown shipment type)"
 			  end
