@@ -31,8 +31,10 @@
 			<td style="text-align: center"><%= transaction.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
 			<td style="text-align: center"><%= transaction.id %></td>
 			<td style="text-align: center">
-				<% if transaction.core_transaction.is_a?(PaymentTransaction) %>
-					payment - card ending in <%= transaction.core_transaction.payment_profile.last_four_digits %>
+				<% if transaction.credit? && transaction.core_transaction.payment_transaction %>
+					payment - card ending in <%= transaction.core_transaction.payment_transaction.payment_profile.last_four_digits %>
+				<% elsif transaction.credit? %>
+					credit for "<% transaction.core_transaction.description %>"
 				<% else %>
 					charge for 
 				  	<% if transaction.core_transaction.shipment_id %>

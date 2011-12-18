@@ -9,13 +9,13 @@ class GenericTransaction
   end
   
   def GenericTransaction.find_all_by_user_id(user_id)
-    payment_transactions = PaymentTransaction.find_all_by_user_id(user_id)
+    credits = Credit.find_all_by_user_id(user_id)
     charges = Charge.find_all_by_user_id(user_id)
     
     return_array = Array.new()
     
-    payment_transactions.each do |transaction|
-      return_array << GenericTransaction.new(transaction)
+    credits.each do |credit|
+      return_array << GenericTransaction.new(credit)
     end
     
     charges.each do |charge|
@@ -33,6 +33,14 @@ class GenericTransaction
     core_transaction.deletable?
   end
   
+  def credit?
+    core_transaction.is_a?(Credit)
+  end
+  
+  def charge?
+    core_transaction.is_a?(Charge)
+  end
+  
   def debit
     if core_transaction.is_a?(Charge)
       return core_transaction.total_in_cents/100.0
@@ -42,7 +50,7 @@ class GenericTransaction
   end
   
   def credit
-    if core_transaction.is_a?(PaymentTransaction)
+    if core_transaction.is_a?(Credit)
       return core_transaction.amount
     else
       return nil
@@ -64,8 +72,10 @@ class GenericTransaction
   def type_en
     if core_transaction.is_a?(Charge)
       return "charge"
-    else
+    elsif core_transaction.payment_transaction
       return "payment"
+    else
+      return "credit"
     end
   end
 end

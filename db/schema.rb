@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111212133514) do
+ActiveRecord::Schema.define(:version => 20111218224103) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -109,6 +109,14 @@ ActiveRecord::Schema.define(:version => 20111212133514) do
   add_index "charges", ["order_id"], :name => "index_charges_on_order_id"
   add_index "charges", ["user_id"], :name => "index_charges_on_user_id"
 
+  create_table "credits", :force => true do |t|
+    t.float    "amount"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "description"
+  end
+
   create_table "interested_people", :force => true do |t|
     t.string   "email"
     t.datetime "created_at"
@@ -182,7 +190,6 @@ ActiveRecord::Schema.define(:version => 20111212133514) do
   create_table "payment_transactions", :force => true do |t|
     t.integer  "order_id"
     t.string   "action"
-    t.float    "amount"
     t.string   "authorization"
     t.string   "message"
     t.text     "params"
@@ -193,6 +200,8 @@ ActiveRecord::Schema.define(:version => 20111212133514) do
     t.string   "status"
     t.integer  "storage_payment_processing_record_id"
     t.string   "auth_transaction_id"
+    t.integer  "credit_id"
+    t.float    "back_up_amount"
   end
 
   add_index "payment_transactions", ["order_id"], :name => "index_payment_transactions_on_order_id"

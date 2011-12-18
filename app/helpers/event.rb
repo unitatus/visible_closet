@@ -65,8 +65,10 @@ class Event
       msg = "Payment of #{ActionController::Base.helpers.number_to_currency(payment.amount)} for "
       if payment.order_id
         msg += "order #{payment.order_id}"
+      elsif payment.credit.description
+        msg += payment.credit.description
       else
-        msg += "box #{payment.box.box_num}"
+        msg += "storage charges"
       end
       all_events << Event.new(:description => msg, :date => payment.created_at.to_date)
     end

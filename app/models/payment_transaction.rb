@@ -1,12 +1,11 @@
 # == Schema Information
-# Schema version: 20111210184710
+# Schema version: 20111218224103
 #
 # Table name: payment_transactions
 #
 #  id                                   :integer         not null, primary key
 #  order_id                             :integer
 #  action                               :string(255)
-#  amount                               :float
 #  authorization                        :string(255)
 #  message                              :string(255)
 #  params                               :text
@@ -17,6 +16,8 @@
 #  status                               :string(255)
 #  storage_payment_processing_record_id :integer
 #  auth_transaction_id                  :string(255)
+#  credit_id                            :integer
+#  back_up_amount                       :float
 #
 
 #
@@ -37,6 +38,7 @@ class PaymentTransaction < ActiveRecord::Base
   belongs_to :storage_payment_processing_record
   belongs_to :user
   has_many :charges_paid, :class_name => 'Charge'
+  belongs_to :credit, :dependent => :destroy
   
   symbolize :status
 
@@ -70,6 +72,28 @@ class PaymentTransaction < ActiveRecord::Base
     false
   end
   
+  def amount
+    self.credit ||= Credit.new(:user_id => self.user_id)
+    self.credit.amount
+  end
+  
+  def amount=(an_amount)
+    self.credit ||= Credit.new(:user_id => self.user_id)
+    
+    self.credit.amount = an_amount
+  end
+  
+  def set_old_amount(amount)
+    write_attribute(:amount, amount)
+  end
+  
+  def after_save
+    if self.credit.user.nil?
+      self.credit.user = self.user
+    end
+    self.credit.save if !self.credit.nil?
+  end
+  
   private
   
   def PaymentTransaction.create_transaction(type, amount, payment_profile, order_id=nil, transaction_id=nil)
@@ -95,5 +119,14 @@ class PaymentTransaction < ActiveRecord::Base
     else # this was an attempt to pay for an order or submit a refund, which we can allow to just die
       [nil, response.message]
     end
+  end
+  
+  def PaymentTransaction.create(attrs)
+    puts("Getting called")
+    return_transaction = super(attrs)
+    
+    return_transaction.amount = attrs[:amount]
+    
+    return return_transaction
   end
 end
