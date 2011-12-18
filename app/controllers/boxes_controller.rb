@@ -256,7 +256,7 @@ class BoxesController < ApplicationController
   def user_add_tag
     @stored_item = StoredItem.find(params[:stored_item_id])
     if @stored_item.box.user != current_user
-      raise "Error - security breech. Attempt to create tag for stored item not owned by user. User id: " + current_user.id
+      raise "Error - security breech. Attempt to create tag for stored item not owned by user. User id: " + current_user.id.to_s
     end
     
     do_add_tag

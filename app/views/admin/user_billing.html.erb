@@ -44,7 +44,7 @@
 				   	<% elsif transaction.core_transaction.storage_charge %>
 						storage of box <a href="/admin/user/<%= @userid %>/box/<%= transaction.core_transaction.storage_charge.box_id %>">#<%= transaction.core_transaction.storage_charge.box_id %><a/> from <%= transaction.core_transaction.storage_charge.start_date.strftime "%m/%d/%Y" %> to <%= transaction.core_transaction.storage_charge.end_date.strftime "%m/%d/%Y" %>
 					<% else %>
-						<%= transaction.core_transaction.comments %>
+						"<%= transaction.core_transaction.comments %>"
 				  <% end %>
 				<% end %>
 			</td>
@@ -88,7 +88,7 @@
 			<td><%= text_field_tag :new_credit_amount, params[:new_credit_amount], :class => "textbox" %></td>
 			<td>Comment:</td>
 			<td><%= text_field_tag :new_credit_comment, params[:new_credit_comment], :class => "textbox" %></td>
-			<td><%= submit_tag "Create Credit", :confirm => "Are you sure? This will create a credit on the customer's account, NOT a credit card payment. Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes." %></td>
+			<td>TBD<% submit_tag "Create Credit", :confirm => "Are you sure? This will create a credit on the customer's account, NOT a credit card payment. Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes." %></td>
 		</tr>
 		<tr>
 			<td colspan="5"><br></td>
@@ -103,7 +103,7 @@
 			<td><%= text_field_tag :new_cc_charge_amount, params[:new_cc_charge_amount], :class => "textbox" %></td>
 			<td>Comment:</td>
 			<td><%= text_field_tag :new_cc_charge_comment, params[:new_cc_charge_comment], :class => "textbox" %></td>
-			<td><%= submit_tag "Charge Default Card", :confirm => "Are you sure? Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes." %></td>
+			<td>TBD<% submit_tag "Charge Default Card", :confirm => "Are you sure? Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes." %></td>
 		</tr>
 		<tr>
 			<td colspan="5"><br></td>
@@ -129,7 +129,7 @@
 		<tr>
 			<td>Security Code:</td>
 			<td><%= text_field_tag :verification_value, params[:verification_value], :placeholder => "###", :class => "textbox", :style => "width: 30px;" %></td>
-			<td colspan="3"><%= submit_tag "Create Refund", :confirm => "Are you sure? If you want to cancel an order line you need to go into the order screen. Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes if you continue." %></td>
+			<td colspan="3">TBD<% submit_tag "Create Refund", :confirm => "Are you sure? If you want to cancel an order line you need to go into the order screen. Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes if you continue." %></td>
 		</tr>
 	<% end %>
 	</table>

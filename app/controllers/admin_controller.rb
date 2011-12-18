@@ -300,12 +300,7 @@ class AdminController < ApplicationController
     @transactions = @user.transaction_history
     @errors = Array.new
     
-    if(params[:new_charge_amount].blank?)
-      @errors << "Must enter amount."
-    elsif !params[:new_charge_amount].is_number?
-      @errors << "Please enter a number for the charge amount."
-    end
-    
+    @errors << check_dollar_entry(params[:new_charge_amount])
     
     if (params[:new_charge_comment].blank?)
       @errors << "Must enter comment."

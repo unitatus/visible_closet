@@ -33,6 +33,22 @@ class ApplicationController < ActionController::Base
     return devise_controller? || params[:controller] == "switch_user"
   end
   
+  def check_dollar_entry(entry)
+    @errors = Array.new
+    
+    if(entry.blank?)
+      @errors << "Must enter amount."
+    elsif !entry.is_number?
+      @errors << "Please enter a number for the charge amount."
+    elsif !entry.split('.')[1].nil? && entry.split('.')[1].length > 2
+      @errors << "Only two decimal places please."
+    elsif Float(entry) < 0.01
+      @errors << "Positive numbers .01 or higher please."
+    end
+    
+    return @errors
+  end
+  
   # This is a bit of a hack -- the warden code below is taken from devise -- but it is the only way I could come up with to
   # safely intercept current user, since otherwise the current_user method is added dynamically at the end of the class load
   # process by devise (which means that if we decorated that method it would either break the console (because devise does 
