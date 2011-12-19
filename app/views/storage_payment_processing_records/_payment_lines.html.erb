@@ -3,7 +3,7 @@
 		<td><%= payment.id %></td>
 		<td><a href="/admin/user/<%= payment.user.id %>"><%= payment.user.id %></a></td>
 		<td><%= payment.user.first_name %> <%= payment.user.last_name %></td>
-		<td><%= number_to_currency payment.amount %></td>
+		<td><%= number_to_currency payment.submitted_amount %></td>
 		<td><%= payment.status %>
 	</tr>
 <% end %>

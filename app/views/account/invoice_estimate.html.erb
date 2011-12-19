@@ -14,16 +14,16 @@
 			<td colspan="2"><b>Account Balance as of <%= @start_of_month.strftime "%m/%d/%Y" %>:</b></td>
 			<td><%= number_to_currency (@user.account_balance_as_of(@start_of_month-1)) %></td>
 		</tr>
-		<% payments_during_month = @user.payments_during_month %>
-		<% if payments_during_month.size > 0 %>
+		<% credits_during_month = @user.credits_during_month %>
+		<% if credits_during_month.size > 0 %>
 			<tr>
-				<td colspan="2"><br><b>Payments Made this Month</td>
+				<td colspan="2"><br><b>Credits Made this Month</td>
 				<td></td>
 			</tr>
-<%= render :partial => "payments_list", :locals => { :payments => payments_during_month }%>
+<%= render :partial => "payments_list", :locals => { :credits => credits_during_month }%>
 			<tr>
-				<td colspan="2"><b>Total payments:</b></td>
-				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(payments_during_month)%></b></td>
+				<td colspan="2"><b>Total credits:</b></td>
+				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(credits_during_month)%></b></td>
 			</tr>
 		<% end %>
 		<% charges_during_month = @user.charges_during_month %>

@@ -135,7 +135,7 @@ class Order < ActiveRecord::Base
     the_amount = 0.0
     
     payment_transactions.each do |transaction|
-      the_amount += transaction.amount
+      the_amount += transaction.credit.amount if transaction.credit
     end
     
     return the_amount

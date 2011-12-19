@@ -61,8 +61,8 @@ class Event
 		  all_events << Event.new(:description => msg, :date => charge.created_at.to_date)
     end # end loop on charges
     
-    user.payment_transactions.each do |payment|
-      msg = "Payment of #{ActionController::Base.helpers.number_to_currency(payment.amount)} for "
+    user.successful_payment_transactions.each do |payment|
+      msg = "Payment of #{ActionController::Base.helpers.number_to_currency(payment.credit.amount)} for "
       if payment.order_id
         msg += "order #{payment.order_id}"
       elsif payment.credit.description
@@ -71,6 +71,11 @@ class Event
         msg += "storage charges"
       end
       all_events << Event.new(:description => msg, :date => payment.created_at.to_date)
+    end
+    
+    credits = user.credits.select {|credit| credit.payment_transaction.nil? }
+    credits.each do |credit|
+      all_events << Event.new(:description => "Credit for \"#{credit.description}\"", :date => credit.created_at.to_date) 
     end
     
     return all_events.sort {|x,y| y.date <=> x.date }

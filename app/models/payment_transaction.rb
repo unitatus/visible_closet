@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20111218224103
+# Schema version: 20111219025650
 #
 # Table name: payment_transactions
 #
@@ -17,7 +17,7 @@
 #  storage_payment_processing_record_id :integer
 #  auth_transaction_id                  :string(255)
 #  credit_id                            :integer
-#  back_up_amount                       :float
+#  submitted_amount                     :float
 #
 
 #
@@ -72,20 +72,16 @@ class PaymentTransaction < ActiveRecord::Base
     false
   end
   
-  def amount
-    self.credit ||= Credit.new(:user_id => self.user_id)
-    self.credit.amount
-  end
-  
-  def amount=(an_amount)
-    self.credit ||= Credit.new(:user_id => self.user_id)
-    
-    self.credit.amount = an_amount
-  end
-  
-  def set_old_amount(amount)
-    write_attribute(:amount, amount)
-  end
+  # def amount
+  #   self.credit ||= Credit.new(:user_id => self.user_id)
+  #   self.credit.amount
+  # end
+  # 
+  # def amount=(an_amount)
+  #   self.credit ||= Credit.new(:user_id => self.user_id)
+  #   
+  #   self.credit.amount = an_amount
+  # end
   
   def after_save
     if self.credit && self.credit.user.nil?
@@ -100,7 +96,9 @@ class PaymentTransaction < ActiveRecord::Base
     amt_to_save = ((type == :refund) ? amount * -1 : amount)
     if payment_profile.user.test_user?
       action_msg = "FAKE PURCHASE for testing; did not call active_merchant interface"
-      new_payment = create!(:action => action_msg, :status => SUCCESS_STATUS, :amount => amt_to_save, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment = create!(:action => action_msg, :status => SUCCESS_STATUS, :submitted_amount => amt_to_save, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment.credit = Credit.create!(:amount => amt_to_save, :user_id => payment_profile.user_id)
+      new_payment.save
       return [new_payment, nil]
     end
     
@@ -111,22 +109,15 @@ class PaymentTransaction < ActiveRecord::Base
                                                                   :trans_id => transaction_id}})
 
     if response.success?
-      new_payment = create!(:action => "purchase", :status => SUCCESS_STATUS, :amount => amt_to_save, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id, :auth_transaction_id => response.params["direct_response"]["transaction_id"])
+      new_payment = create!(:action => "purchase", :status => SUCCESS_STATUS, :submitted_amount => amt_to_save, :response => response, :order_id => order_id, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id, :auth_transaction_id => response.params["direct_response"]["transaction_id"])
+      new_payment.credit = Credit.create!(:amount => amt_to_save, :user_id => payment_profile.user_id)
+      new_payment.save
       return [new_payment, nil]
     elsif order_id.nil? && type == :auth_capture # this means that it was a storage charge, in which case we need to keep track of the payment for repayment later
-      new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :amount => amt_to_save, :response => response, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
+      new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :submitted_amount => amt_to_save, :response => response, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, response.message]
     else # this was an attempt to pay for an order or submit a refund, which we can allow to just die
       [nil, response.message]
     end
-  end
-  
-  def PaymentTransaction.create(attrs)
-    puts("Getting called")
-    return_transaction = super(attrs)
-    
-    return_transaction.amount = attrs[:amount]
-    
-    return return_transaction
   end
 end

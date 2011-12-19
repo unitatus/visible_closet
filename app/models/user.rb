@@ -375,7 +375,7 @@ class User < ActiveRecord::Base
       rectify_payment_transactions.each do |rectify_payment|
         # A rectify payment signifies that "this needs to be taken care of". By "failing" old rectify payments and re-attempting, we 
         # keep a record of the failed payments while either getting new, "good" payments of replacing them with new "rectify" payments.
-        new_payment, message = PaymentTransaction.pay(rectify_payment.amount, default_payment_profile)
+        new_payment, message = PaymentTransaction.pay(rectify_payment.submitted_amount, default_payment_profile)
         payment_transactions << new_payment
         rectify_payment.update_attribute(:status, PaymentTransaction::FAILURE_STATUS)
         # want the rectify payment to show up in the list of associated storage processing records
@@ -454,25 +454,32 @@ class User < ActiveRecord::Base
         running_total = running_total - charge.amount
       end
     end
-    
+
+    # we want to manage both payments (failed and otherwise) as well as general credits
     payments = include_rectify ? non_failed_payment_transactions : successful_payment_transactions
-    payments.each do |payment_transaction|
-      running_total = running_total + payment_transaction.amount.to_f if payment_transaction.created_at.to_date <= date.to_date
+
+    the_credits = payments.collect {|payment| payment.credit }
+    the_credits = the_credits | Credit.find_all_by_user_id(self.id).select {|credit| credit.payment_transaction.nil? }
+    
+    the_credits.compact! # removes nils
+    
+    the_credits.each do |credit|
+      running_total = running_total + credit.amount.to_f if credit.created_at.to_date <= date.to_date
     end
 
     return running_total.round(2) # takes care of obnoxious adding errors
   end
   
-  def payments_during_month(date=nil)
+  def credits_during_month(date=nil)
     if date.nil?
       date = Date.today
     end
     
-    payments_between(DateHelper.start_of_month(date), DateHelper.end_of_month(date))
+    credits_between(DateHelper.start_of_month(date), DateHelper.end_of_month(date))
   end
   
-  def payments_between(start_date, end_date)
-    non_failed_payment_transactions.select {|payment| payment.created_at >= start_date && payment.created_at <= end_date }
+  def credits_between(start_date, end_date)
+    credits.select {|credit| credit.created_at >= start_date && credit.created_at <= end_date }
   end
   
   def charges_during_month(date=nil)

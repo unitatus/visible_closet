@@ -20,8 +20,8 @@
 			<td><b>Total Paid:</b></td>
 			<td>
 				<% @order.payment_transactions.each do |payment| %>
-					<%= payment.created_at.strftime "%m/%d/%Y" %> <%= number_to_currency payment.amount %>
-					<% if payment.amount < 0 %>
+					<%= payment.created_at.strftime "%m/%d/%Y" %> <%= payment.credit.nil? ? "" : number_to_currency(payment.credit.amount) %>
+					<% if payment.credit && payment.credit.amount < 0 %>
 						 (refund)
 					<% end %>
 					<br>

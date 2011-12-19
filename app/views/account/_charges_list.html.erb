@@ -7,7 +7,7 @@
 			shipping for 
 			<% if charge.shipment.box_id %>
 				box <%= charge.shipment.box.box_num %>
-			<% elsif charge.order_line %>
+			<% elsif charge.shipment.order_line %>
 				<a href="/orders/<%= charge.shipment.order_line.order_id %>">order <%= charge.shipment.order_line.order_id %></a>
 			<% else %>
 				(unknown shipment type)

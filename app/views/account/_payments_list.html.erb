@@ -1,14 +1,17 @@
-<% payments.each do |payment| %>
+<% credits.each do |credit| %>
 	<tr>
-		<td style="padding-left: 10px">payment for 
-			<% if payment.order_id %>
-				<a href="/orders/<%= payment.order_id %>">order <%= payment.order_id %></a>
+		<td style="padding-left: 10px">
+			<%= credit.payment_transaction.nil? ? "credit" : "payment" %> for 
+			<% if credit.payment_transaction && credit.payment_transaction.order_id %>
+				<a href="/orders/<%= credit.payment_transaction.order_id %>">order <%= credit.payment_transaction.order_id %></a>
+			<% elsif credit.description %>
+				<%= credit.description %>
 			<% else %>
 				storage charges
 			<% end %>
 			:
 		</td>
-		<td><%= number_to_currency payment.amount %></td>
+		<td><%= number_to_currency credit.amount %> <%= credit.amount < 0 ? "(refund)" : "" %></td>
 		<td></td>
 	</tr>
 <% end %>
