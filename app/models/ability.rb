@@ -81,6 +81,10 @@ class Ability
       can :price_item_mailing_order_lines, Order
       can :ship_item_mailing_order_lines, Order
       can :cancel_order_line, Order
+      can :destroy_billing_charge, :admin
+      can :add_user_charge, :admin
+      can :add_user_credit, :admin
+      can :destroy_billing_credit, :admin
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      

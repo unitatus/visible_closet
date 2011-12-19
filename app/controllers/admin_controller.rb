@@ -175,10 +175,17 @@ class AdminController < ApplicationController
   def destroy_billing_charge
     charge = Charge.find(params[:id])
     @user = charge.user
-    @admin_page = :users
-    @transactions = @user.transaction_history
 
     charge.destroy
+    
+    redirect_to "/admin/user/#{@user.id}/billing"
+  end
+  
+  def destroy_billing_credit
+    credit = Credit.find(params[:id])
+    @user = credit.user
+    
+    credit.destroy
     
     redirect_to "/admin/user/#{@user.id}/billing"
   end
@@ -310,6 +317,30 @@ class AdminController < ApplicationController
       render :user_billing and return
     else
       if !@user.add_miscellaneous_charge(Float(params[:new_charge_amount]), params[:new_charge_comment], current_user)
+        @errors << @user.errors
+        render :user_billing and return
+      else
+        redirect_to "/admin/user/#{@user.id}/billing"
+      end
+    end
+  end
+  
+  def add_user_credit
+    @admin_page = :users
+    @user = User.find(params[:id])
+    @transactions = @user.transaction_history
+    @errors = Array.new
+    
+    @errors << check_dollar_entry(params[:new_credit_amount])
+    
+    if (params[:new_credit_comment].blank?)
+      @errors << "Must enter comment."
+    end
+    
+    if !@errors.empty?
+      render :user_billing and return
+    else
+      if !@user.add_miscellaneous_credit(Float(params[:new_credit_amount]), params[:new_credit_comment], current_user)
         @errors << @user.errors
         render :user_billing and return
       else

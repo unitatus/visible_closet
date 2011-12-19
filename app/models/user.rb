@@ -66,6 +66,7 @@ class User < ActiveRecord::Base
   has_many :orders, :dependent => :destroy
   has_many :carts, :dependent => :destroy
   has_many :charges, :dependent => :destroy
+  has_many :credits, :dependent => :destroy
   has_many :payment_transactions, :dependent => :destroy
   has_many :subscriptions, :dependent => :destroy
   has_many :storage_charge_processing_records, :dependent => :destroy, :foreign_key => :generated_by_user_id
@@ -196,6 +197,12 @@ class User < ActiveRecord::Base
     if !self.id.nil?
       update_cim_profile
     end    
+  end
+  
+  def name
+    the_first_name = first_name.nil? ? "" : first_name
+    the_last_name = last_name.nil? ? "" : last_name
+    the_first_name + " " + the_last_name
   end
   
   def transaction_history
@@ -567,6 +574,18 @@ class User < ActiveRecord::Base
     charges << new_charge
     
     return new_charge
+  end
+  
+  def add_miscellaneous_credit(amount, comment, created_by_admin)
+    if created_by_admin.nil?
+      raise "Cannot create a miscellaneous credit without providing the administrator reference."
+    end
+    
+    new_credit = Credit.create!(:user_id => self.id, :amount => amount, :description => comment, :created_by_admin_id => created_by_admin.id)
+    
+    credits << new_credit
+    
+    return new_credit
   end
   
   private 

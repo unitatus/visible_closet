@@ -136,6 +136,8 @@ VisibleCloset::Application.routes.draw do
   match "admin/stop_impersonating" => "admin#stop_impersonating"
   match "admin/users/:id/add_charge" => "admin#add_user_charge"
   match "admin/billing/charges/:id/destroy" => "admin#destroy_billing_charge"
+  match "admin/users/:id/add_credit" => "admin#add_user_credit"
+  match "admin/billing/credits/:id/destroy" => "admin#destroy_billing_credit"
   
   # Account
   get "account/store_more_boxes"
