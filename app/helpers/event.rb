@@ -75,7 +75,7 @@ class Event
     
     credits = user.credits.select {|credit| credit.payment_transaction.nil? }
     credits.each do |credit|
-      all_events << Event.new(:description => "Credit for \"#{credit.description}\"", :date => credit.created_at.to_date) 
+      all_events << Event.new(:description => "Credit of #{ActionController::Base.helpers.number_to_currency(credit.amount)} for \"#{credit.description}\"", :date => credit.created_at.to_date) 
     end
     
     return all_events.sort {|x,y| y.date <=> x.date }
