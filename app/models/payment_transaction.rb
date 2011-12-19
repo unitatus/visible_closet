@@ -88,7 +88,7 @@ class PaymentTransaction < ActiveRecord::Base
   end
   
   def after_save
-    if self.credit.user.nil?
+    if self.credit && self.credit.user.nil?
       self.credit.user = self.user
     end
     self.credit.save if !self.credit.nil?
