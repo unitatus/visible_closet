@@ -97,21 +97,6 @@
 			<td colspan="5"><br></td>
 		</tr>
 	<% end %>
-	<%= form_tag "/admin/users/#{@user.id}/charge_default_card" do %>
-		<tr>
-			<td colspan="5"><b><u>Charge customer credit card</b></u></td>
-		</tr>
-		<tr>
-			<td>Amount:</td>
-			<td><%= text_field_tag :new_cc_charge_amount, params[:new_cc_charge_amount], :class => "textbox" %></td>
-			<td>Comment:</td>
-			<td><%= text_field_tag :new_cc_charge_comment, params[:new_cc_charge_comment], :class => "textbox" %></td>
-			<td>TBD<% submit_tag "Charge Default Card", :confirm => "Are you sure? Your name (#{current_user.first_name} #{current_user.last_name}) will be recorded for auditing purposes." %></td>
-		</tr>
-		<tr>
-			<td colspan="5"><br></td>
-		</tr>
-	<% end %>
 	<%= form_tag "/admin/users/#{@user.id}/refund_customer_card" do %>
 		<tr>
 			<td colspan="5"><b><u>Refund customer credit card</u></b></td>
