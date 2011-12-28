@@ -103,7 +103,7 @@ class PaymentTransaction < ActiveRecord::Base
     end
     
     response = CIM_GATEWAY.create_customer_profile_transaction({:transaction => {:type => type,
-                                                                  :amount => amount,
+                                                                  :amount => amount.round(2),
                                                                   :customer_profile_id => payment_profile.user.cim_id,
                                                                   :customer_payment_profile_id => payment_profile.identifier,
                                                                   :trans_id => transaction_id}})
@@ -117,7 +117,8 @@ class PaymentTransaction < ActiveRecord::Base
       new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :submitted_amount => amt_to_save, :response => response, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, response.message]
     else # this was an attempt to pay for an order or submit a refund, which we can allow to just die
-      [nil, response.message]
+      # TODO: Email admin when this happens
+      return [nil, response.message]
     end
   end
 end
