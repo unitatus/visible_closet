@@ -131,6 +131,8 @@ class PaymentProfilesController < ApplicationController
     # on top of it.
     if params[:payment_profile][:billing_address_id] == "on" # user entered an address
       @profile.billing_address = current_user.addresses.build(params[:payment_profile][:billing_address_attributes])
+    elsif params[:payment_profile][:billing_address_id].blank? # user did not enter an address
+      @profile.billing_address = nil
     else # user selected an address
       @profile.billing_address = Address.find(params[:payment_profile][:billing_address_id])
     end
@@ -156,7 +158,7 @@ class PaymentProfilesController < ApplicationController
       @addresses = current_user.addresses
       if params[:payment_profile][:billing_address_id] == "on"
         @new_address = @profile.billing_address
-        current_user.addresses.delete(@profile.billing_address) # so new address doens't show up in the list of addresses159
+        current_user.addresses.delete(@profile.billing_address) # so new address doens't show up in the list of addresses
       else
         @new_address = Address.new
       end

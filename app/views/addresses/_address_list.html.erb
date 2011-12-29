@@ -8,6 +8,8 @@
 			<% check_this_one = false %>
 			<% if @profile.billing_address_id == address.id && !@profile.billing_address_id.nil? %>
 			<%   check_this_one = true %>
+			<% elsif @profile.billing_address_id.nil? && index == 0 %>
+			<%   check_this_one = true %>
 			<% elsif address.id.nil? && params[:payment_profile] && params[:payment_profile][:billing_address_id] == "on" %>
 			<%   check_this_one = true %>
 			<% end %>

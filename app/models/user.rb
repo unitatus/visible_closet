@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20111113163317
+# Schema version: 20111229021146
 #
 # Table name: users
 #
@@ -33,6 +33,7 @@
 #  default_shipping_address_id :integer
 #  test_user                   :boolean
 #  acting_as_user_id           :integer
+#  first_time_signed_up        :boolean
 #
 
 class User < ActiveRecord::Base
@@ -593,6 +594,16 @@ class User < ActiveRecord::Base
     credits << new_credit
     
     return new_credit
+  end
+  
+  def first_time_signed_up?
+    first_time = read_attribute(:first_time_signed_up)
+    if first_time.nil?
+      update_attribute(:first_time_signed_up, false)
+      return true
+    else
+      return first_time
+    end
   end
   
   private 

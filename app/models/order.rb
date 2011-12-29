@@ -377,6 +377,16 @@ class Order < ActiveRecord::Base
     order_lines.select { |order_line| order_line.product_id == Rails.application.config.return_box_product_id }
   end
   
+  def customer_boxes
+    cust_order_lines = order_lines.select { |order_line| order_line.cust_box? }
+    ordered_boxes = Array.new
+    cust_order_lines.each do |order_line|
+      ordered_boxes = ordered_boxes | order_line.ordered_boxes
+    end
+    
+    return ordered_boxes
+  end
+  
   private
   
   # This method saves the transactions

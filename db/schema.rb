@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111219025650) do
+ActiveRecord::Schema.define(:version => 20111229021146) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -359,6 +359,7 @@ ActiveRecord::Schema.define(:version => 20111219025650) do
     t.integer  "default_shipping_address_id"
     t.boolean  "test_user"
     t.integer  "acting_as_user_id"
+    t.boolean  "first_time_signed_up"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -71,7 +71,16 @@ class Address < ActiveRecord::Base
       phone_number = phone_number.gsub(/\D/, '')
     end
     
-    super(phone_number)
+    write_attribute(:day_phone, phone_number)
+  end
+  
+  def evening_phone=(phone_number)
+    if phone_number.is_a?(String)
+      phone_number = phone_number.gsub(/\D/, '')
+    end
+    
+    write_attribute(:evening_phone, phone_number)
+    
   end
 
   # Hard coded country for now

@@ -1,3 +1,6 @@
+<% if @address.nil? %>
+  <% @address = Address.new %>
+<% end %>
 	<tr>
 		<td>
 			Address First Name:

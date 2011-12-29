@@ -19,6 +19,8 @@ class AddressesController < ApplicationController
   def new_default_shipping_address
     @user = current_user
     @address = Address.new
+    @address.first_name = current_user.first_name
+    @address.last_name = current_user.last_name
   end
   
   def set_default_shipping_address

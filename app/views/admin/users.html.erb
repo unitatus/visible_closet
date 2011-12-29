@@ -39,9 +39,11 @@
 			<td><a href="/admin/user/<%= user.id %>/boxes">Boxes</a></td>
 			<td><a href="/admin/user/<%= user.id %>/shipments">Shipments</a></td>
 			<td><a href="/admin/user/<%= user.id %>/billing">Billing</a></td>
-			<% if current_user.admin? %>
+			<% if current_user.admin? && user.test_user? %>
 				<td><a href="/admin/user/<%= user.id %>/clear_test_data" data-confirm="This will delete all orders, shipments, boxes, charges, EVERYTHING for this user except default information. Are you SURE?" data-method="delete" rel="nofollow">Clear Test Data</a></td>
 				<td><a href="/admin/user/<%= user.id %>/destroy" data-confirm="This will delete this user ENTIRELY, including all related records. Are you SURE?" data-method="delete" rel="nofollow">Delete</a></td>
+			<% elsif current_user.admin? %>
+				<td></td><td></td>
 			<% end %>
 		</tr>
 		<% end %>

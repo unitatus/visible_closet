@@ -29,7 +29,15 @@
 			<% product = Product.find(order_line.product_id) %>
 		<tr>
 			<td align="left">
-				<%= product.name %>
+				<%= order_line.product.name %>
+				<% if order_line.vc_box? %>
+					<br> <a href="#checkout_inventorying_vcbox_inline" id="co_inv_link">(what about inventorying?)<a/>
+				<% elsif order_line.cust_box? %>
+					<br> <a href="#checkout_inventorying_custbox_inline" id="co_inv_link">(what about inventorying?)<a/>
+				<% elsif order_line.item_service? %>
+					<br>
+					<%= image_tag(order_line.service_item.photo.url(:thumb), :name => "thumb_" + order_line.service_item.id.to_s, :height => 100, :width => 100) %>
+				<% end %>
 			</td>
 			<td>
 				<%= order_line.quantity %>
@@ -87,8 +95,12 @@
 	<% if @order.cust_box_count > 0 %>
 	<br>
 	<div class="simple_header">Your <%= @order.cust_box_count > 1 ? 'Boxes' : 'Box' %></div>
-	<br><br>You have chosen to store <%= @order.cust_box_count %> <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %> of your own. When you are ready, go to <a href="/boxes">Browse Boxes</a> to print out <%= @order.cust_box_count > 1 ? 'a label for each box' : 'a label for your box' %>, and call 1-800-GO-FEDEX to have Fedex pick up your <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %>. 
-
+	<br>You have chosen to store <%= @order.cust_box_count %> <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %> of your own. Click below to download FedEx labels to affix to your boxes (you can also access these labels via the "Browse Boxes" link at the left). When you are ready, call 1-800-GO-FEDEX to have Fedex pick up your <%= @order.cust_box_count > 1 ? 'boxes' : 'box' %>. <br><br>
+	<ul>
+		<% @order.customer_boxes.each do |cust_box| %>
+			<li><a href="/box/<%=cust_box.id %>/get_label">Box <%= cust_box.box_num %> Label</a></li>
+		<% end %>
+	</ul>
 	<% end %>
 	<br><br>
 <% end # end check for ordered boxes %>
@@ -115,3 +127,4 @@ if (30) {
 <img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/1018132341/?value=30&amp;label=p256CNvamgIQ9e695QM&amp;guid=ON&amp;script=0"/>
 </div>
 </noscript>
+<%= render :partial => "checkout_explanations" %>

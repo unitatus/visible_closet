@@ -4,8 +4,11 @@
 	<% end %>
 <br><br>
 <h1>Set Shipping Address</h1>
-<% if flash[:notice] %>
-<div class="error_label"><%= flash[:notice] %></div>
+<%= flash[:notice]%>
+<% if current_user.first_time_signed_up? %>
+<script language="Javascript">
+alert("You have successfully signed up for an account, and will receive an email to confirm your email address. Please click the link in that email within 24 hours to avoid being locked out of your account.")
+</script>
 <% end %>
 <% if @address.errors.empty? %>
 	Please enter a default shipping address

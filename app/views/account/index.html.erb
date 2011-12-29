@@ -74,13 +74,13 @@
 	<div class="simple_header">Account Options</div>
 	<div class="indent-div">
 		<% if payment_profile.nil? %>
-			<a href="/payment_profiles/new">Set up a default credit card &gt;&gt;</a>
+			<a href="/payment_profiles/new_default_payment_profile">Set up a default credit card &gt;&gt;</a>
 		<% else %>
 			<a href="/payment_profiles">Manage your credit cards on file &gt;&gt;</a>
 		<% end %>
 		<br>
 		<% if current_user.default_shipping_address.nil? %>
-			<a href="/addresses/new">Set up a default shipping address &gt;&gt;</a>
+			<a href="/addresses/new_default_shipping_address">Set up a default shipping address &gt;&gt;</a>
 		<% else %>
 			<a href="/addresses">Manage your addresses &gt;&gt;</a>
 		<% end %>

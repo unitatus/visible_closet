@@ -1,5 +1,8 @@
 <div class="login-slim-centered">
 <h1>Sign in</h1>
+<div class="error_label">
+<%= raw flash[:alert] %>
+</div>
 <%= render :partial => 'login_form' %>
 
 <%= render :partial => "devise/shared/links" %>
