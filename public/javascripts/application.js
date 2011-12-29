@@ -534,9 +534,6 @@ $(document).ready(function(){
 	});
 	
 	$("#pricing_explainer_link").fancybox({
-		ajax : {
-		    type	: "GET"
-		},
 		'titleShow'		: true,
 		'transitionIn'		: 'none',
 		'transitionOut'		: 'none',

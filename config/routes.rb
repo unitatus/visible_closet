@@ -162,7 +162,6 @@ VisibleCloset::Application.routes.draw do
   match "account/history" => "account#account_history"
   match "orders/:id/print_invoice" => "orders#print_invoice"
   get "account/external_addresses_validate"
-  get "account/pricing_explainer"
   
   post "boxes/create_stored_item"
   get "account/closet_main"

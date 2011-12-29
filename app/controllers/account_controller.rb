@@ -32,13 +32,11 @@ class AccountController < ApplicationController
     @events = Event.all(current_user)
   end
   
-  # If order id is passed, this will subtract that order's contents from the explainer; otherwise it will treat the "additional" as 
-  # whatever is in the current user's cart
-  def pricing_explainer
-    if params[:order_id].blank?
-      box_line = current_user.cart.vc_box_line
+  def prep_pricing_explainer(order=nil)
+    if order
+      box_line = order.vc_box_line
       if box_line.nil?
-        box_line = current_user.cart.cust_box_line
+        box_line = order.cust_box_line
         if box_line
           @type = Box::CUST_BOX_TYPE
         end
@@ -46,10 +44,9 @@ class AccountController < ApplicationController
         @type = Box::VC_BOX_TYPE
       end
     else
-      order = Order.find(params[:order_id])
-      box_line = order.vc_box_line
+      box_line = current_user.cart.vc_box_line
       if box_line.nil?
-        box_line = order.cust_box_line
+        box_line = current_user.cart.cust_box_line
         if box_line
           @type = Box::CUST_BOX_TYPE
         end
@@ -66,10 +63,6 @@ class AccountController < ApplicationController
     @discount_perc_sans_commitment = Discount.new(box_line.product, @new_count, 0, @old_count).unit_discount_perc
     @committed_months = box_line.discount.month_count
     @committed_months_discount = Discount.new(box_line.product, 1, box_line.discount.month_count, 0).unit_discount_perc
-        
-    respond_to do |format|
-      format.html { render :layout => false }
-    end
   end
   
   def store_more_boxes
@@ -227,6 +220,8 @@ class AccountController < ApplicationController
     end
     
     @order = Order.new
+    
+    prep_pricing_explainer
   end
 
   def add_new_shipping_address
@@ -241,6 +236,7 @@ class AccountController < ApplicationController
     # That means we should render nicely as though it did.
     if @cart.nil?
       @order = Order.find_all_by_user_id(current_user.id, :first, :order => 'created_at DESC').first
+      prep_pricing_explainer(@order)
       return
     elsif @cart.order # this means we failed the last time through, after the payment was created; be nice about it
       @order = @cart.order
@@ -270,6 +266,7 @@ class AccountController < ApplicationController
     end
     
     @cart = nil
+    prep_pricing_explainer(@order)
   end
   
   def fail_checkout

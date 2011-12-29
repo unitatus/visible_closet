@@ -68,7 +68,7 @@ function openMemberAgreement() {
 				<%= number_to_currency(cart_item.total_unit_price_after_discount) %> <%= cart_item.product.price_comment %>
 				
 					<% if cart_item.new_box_line? %>
-					<br><a id="pricing_explainer_link" href="/account/pricing_explainer">(pricing explanation)</a>
+					<br><a id="pricing_explainer_link" href="#pricing_explainer">(pricing explanation)</a>
 					<% end %>	
 		</td>
 		<td style="max-width: 150px">
@@ -153,3 +153,4 @@ function openMemberAgreement() {
 <% end %> <!-- end form -->
 <div class="clearer"></div>
 <%= render :partial => "checkout_explanations" %>
+<%= render :partial => "pricing_explainer" %>

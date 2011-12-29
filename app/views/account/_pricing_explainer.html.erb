@@ -1,0 +1,46 @@
+<div style="display: none">
+<div id="pricing_explainer">
+<div style="align:center"><h1>Pricing Details</h1></div>
+<% if @type %>
+<u>Volume Discounts</u><br>
+	You currently have 
+	<% if @type == Box::VC_BOX_TYPE %>
+		<%= pluralize(@old_count, "Visible Closet box", "Visible Closet boxes") %>
+	<% else %> 
+		<%= pluralize(number_with_precision(@old_count.round(0), :precision => 0), "cubic foot", "cubic feet") %> 
+	<% end %>
+		in storage. You are now ordering <%= pluralize(@new_count, "additional box", "additional boxes") %>.
+	<% if @type == Box::CUST_BOX_TYPE %>
+		For purposes of pricing at check-out, we are assuming that <%= @new_count > 1 ? "each of these boxes" : "this box" %> is 1 cubic foot in size; when we receive your <%= @new_count > 1 ? "boxes" : "box" %> we will measure <%= @new_count > 1 ? "them" : "it" %> and alter charges to your account appropriately. 
+	<% end %>
+	<% if @discount_perc_sans_commitment > 0 %>
+		This means you will get a volume discount of <%= number_to_percentage @discount_perc_sans_commitment*100, :precision => 0 %>!
+	<% else %>
+		This total quantity of <%= @type == Box::VC_BOX_TYPE ? pluralize(@old_count + @new_count, "box") : pluralize(@old_count + @new_count, "cubic foot", "cubic feet") %> is not enough to be eligible for any volume discounts.
+	<% end %>
+<br><br><u>Commitment Discounts</u><br>
+	<% if @committed_months > 0 %>
+		You have committed to store <%= @new_count > 1 ? "these new boxes" : "this new box" %> for <%= pluralize(@committed_months, "month") %>.
+		<% if @committed_months > Discount::FREE_SHIPPING_MONTH_THRESHOLD && @committed_months < Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1 %>
+			This grants you free shipping!
+		<% elsif @committed_months >= Discount::BOX_COUNT_DISCOUNT_THRESHOLD_1 %>
+			This grants you free shipping and an additional discount of <%= number_to_percentage @committed_months_discount*100, :precision => 0 %>, for a total discount of <%= number_to_percentage @discount_perc*100, :precision => 0 %>!
+		<% else %>
+			This does not grant you any additional discounts.
+		<% end %>
+	<% end %>
+<br><br><u>Totals</u><br>
+	Your total anticipated monthly cost for your new <%= @new_count > 1 ? "boxes" : "box" %> will therefore be <%= number_to_currency @new_cost %>.
+	<% if @committed_months > Discount::FREE_SHIPPING_MONTH_THRESHOLD %>
+		Since you are getting free shipping, you must pay for your first <%= pluralize(Discount::FREE_SHIPPING_MONTH_THRESHOLD, "month") %> of storage up front, for a total of <%= number_to_currency @due_now %> due now.
+	<% elsif @type == Box::VC_BOX_TYPE %>
+		You must pay your first month's storage charges up front, for a total of <%= number_to_currency @due_now %> due now.
+	<% else %>
+		Since you are storing your own boxes, you do not need to start paying for storage until we receive your <%= @new_count > 1 ? "boxes" : "box"%>.
+	<% end %>
+<br><br><u>Important Note</u><br>
+Your monthly recurring charges will not actually change until we receive your <%= @new_count > 1 ? "boxes" : "box" %>. When we receive your <%= @new_count > 1 ? "boxes" : "box" %> you will start to accrue storage charges on a monthly basis based on the total <%= @type == Box::VC_BOX_TYPE ? "Visible Closet boxes" : "cubic feet of your boxes" %> in storage, the discounts you are eligible for that month, and whether or not you have chosen to have any of your boxes inventoried.
+<% else %>
+ You currently don't have any new boxes in your cart. Click <a href="/account/store_more_boxes">here</a> to store more with The Visible Closet!
+<% end %>
+</div></div>
