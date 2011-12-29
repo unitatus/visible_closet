@@ -1,0 +1,7 @@
+Visible Closet Administrator,<br><br>
+
+A customer has attempted to pay for an order and their payment failed! Details:
+<br><br>
+Customer Name: <%= @user.first_name %> <%= @user.last_name %> (user id <%= @user.id %>)<br>
+Customer Email: <a href="mailto:<%= @user.email %>"><%= @user.email %></a><br>
+Payment Message: <%= @message %>

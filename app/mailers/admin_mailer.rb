@@ -38,6 +38,19 @@ class AdminMailer < ActionMailer::Base
     mail(:subject => "New Inventorying Order")
   end
   
+  def AdminMailer.deliver_failed_payment(user, message)
+    if user.not_test_user?
+      failed_payment(user, message).deliver
+    end
+  end
+  
+  def failed_payment(user, message)
+    @user = user
+    @message = message
+    
+    mail(:subject => "Customer payment failed!")
+  end
+  
   def contact_post(email, text, remote_ip)
     
     @text = text

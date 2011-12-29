@@ -117,7 +117,7 @@ class PaymentTransaction < ActiveRecord::Base
       new_payment = create!(:action => "purchase", :status => RECTIFY_STATUS, :submitted_amount => amt_to_save, :response => response, :payment_profile_id => payment_profile.id, :user_id => payment_profile.user_id)
       return [new_payment, response.message]
     else # this was an attempt to pay for an order or submit a refund, which we can allow to just die
-      # TODO: Email admin when this happens
+      AdminMailer.deliver_failed_payment(payment_profile.user, response.message)
       return [nil, response.message]
     end
   end
