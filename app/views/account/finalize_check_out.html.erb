@@ -44,7 +44,9 @@
 			</td>
 			<td>
 				<%= number_to_currency(order_line.total_in_cents/100) %> <%= product.price_comment %>
+				<% if order_line.new_box_line? %>
 				<br><a id="pricing_explainer_link" href="#pricing_explainer">(pricing explanation)</a>
+				<% end %>
 			</td>
 			<td>
 				<% if order_line.box_order_line? %>
