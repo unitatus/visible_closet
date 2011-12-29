@@ -67,10 +67,8 @@ function openMemberAgreement() {
 		<td>
 				<%= number_to_currency(cart_item.total_unit_price_after_discount) %> <%= cart_item.product.price_comment %>
 				
-					<% if cart_item.discount? %>
-						 <a href="#discount_synopsis" id="discount_synopsis_link"><br>(<%= number_to_percentage(cart_item.discount.unit_discount_perc*100.0, :precision => 0)%> discount)</a>
-					<% elsif cart_item.product.price > 0 && !cart_item.item_service? %>
-						<a href="#discount_synopsis" id="discount_synopsis_link"><br>(no discount)</a>
+					<% if cart_item.new_box_line? %>
+					<br><a id="pricing_explainer_link" href="/account/pricing_explainer">(pricing explanation)</a>
 					<% end %>	
 		</td>
 		<td style="max-width: 150px">
