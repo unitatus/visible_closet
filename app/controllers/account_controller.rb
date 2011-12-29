@@ -32,6 +32,46 @@ class AccountController < ApplicationController
     @events = Event.all(current_user)
   end
   
+  # If order id is passed, this will subtract that order's contents from the explainer; otherwise it will treat the "additional" as 
+  # whatever is in the current user's cart
+  def pricing_explainer
+    if params[:order_id].blank?
+      box_line = current_user.cart.vc_box_line
+      if box_line.nil?
+        box_line = current_user.cart.cust_box_line
+        if box_line
+          @type = Box::CUST_BOX_TYPE
+        end
+      else
+        @type = Box::VC_BOX_TYPE
+      end
+    else
+      order = Order.find(params[:order_id])
+      box_line = order.vc_box_line
+      if box_line.nil?
+        box_line = order.cust_box_line
+        if box_line
+          @type = Box::CUST_BOX_TYPE
+        end
+      else
+        @type = Box::VC_BOX_TYPE
+      end
+    end
+    
+    @old_count = @type == Box::VC_BOX_TYPE ? current_user.stored_box_count(@type) : current_user.cust_cubic_feet_in_storage
+    @new_count = box_line.quantity
+    @new_cost = box_line.discount.total_monthly_price_after_discount
+    @due_now = box_line.discount.prepaid_at_purchase
+    @discount_perc = box_line.discount.unit_discount_perc
+    @discount_perc_sans_commitment = Discount.new(box_line.product, @new_count, 0, @old_count).unit_discount_perc
+    @committed_months = box_line.discount.month_count
+    @committed_months_discount = Discount.new(box_line.product, 1, box_line.discount.month_count, 0).unit_discount_perc
+        
+    respond_to do |format|
+      format.html { render :layout => false }
+    end
+  end
+  
   def store_more_boxes
     # If you circumvented the normal sign-up procedures then you must take care of those now
     if current_user.default_shipping_address.nil?

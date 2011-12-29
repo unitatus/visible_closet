@@ -316,6 +316,20 @@ class User < ActiveRecord::Base
     end
   end
   
+  def cust_cubic_feet_in_storage
+    total_cubic_feet = 0
+    
+    cust_boxes_in_storage.each do |box|
+      total_cubic_feet += box.cubic_feet
+    end
+    
+    return total_cubic_feet
+  end
+  
+  def cust_boxes_in_storage
+    boxes_in_storage.select { |box| box.cust_box? }
+  end
+  
   def boxes_in_storage
     all_boxes = self.boxes
     all_boxes.select { |box| box.status == Box::IN_STORAGE_STATUS }

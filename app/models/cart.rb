@@ -263,6 +263,26 @@ class Cart < ActiveRecord::Base
     return total_shipping_cost
   end
   
+  def vc_box_line
+    cart_items.each do |cart_item|
+      if cart_item.vc_box?
+        return cart_item
+      end
+    end
+    
+    return nil
+  end
+  
+  def cust_box_line
+    cart_items.each do |cart_item|
+      if cart_item.cust_box?
+        return cart_item
+      end
+    end
+    
+    return nil
+  end
+  
   private
   
   def create_address_package_mappings

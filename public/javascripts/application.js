@@ -533,6 +533,18 @@ $(document).ready(function(){
 		'height': 100
 	});
 	
+	$("#pricing_explainer_link").fancybox({
+		ajax : {
+		    type	: "GET"
+		},
+		'titleShow'		: true,
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'autoDimensions': false, 
+		'width': 600,
+		'height': 400
+	});
+	
 	/************ Autocomplete **************/
 	$('#tags').bind('railsAutocomplete.select', function(event, data){
 	    document.forms['tags_search'].submit();

@@ -294,6 +294,26 @@ class Order < ActiveRecord::Base
     count_lines(Rails.application.config.our_box_product_id)
   end
   
+  def vc_box_line
+    order_lines.each do |order_line|
+      if order_line.vc_box?
+        return order_line
+      end
+    end
+    
+    return nil
+  end
+  
+  def cust_box_line
+    order_lines.each do |order_line|
+      if order_line.cust_box?
+        return order_line
+      end
+    end
+    
+    return nil
+  end
+  
   def cust_box_count
     count_lines(Rails.application.config.your_box_product_id)
   end
@@ -377,14 +397,49 @@ class Order < ActiveRecord::Base
     order_lines.select { |order_line| order_line.product_id == Rails.application.config.return_box_product_id }
   end
   
+  def cust_order_lines
+    order_lines.select { |order_line| order_line.cust_box? }
+  end
+  
+  def vc_order_lines
+    order_lines.select { |order_line| order_line.vc_box? }
+  end
+  
   def customer_boxes
-    cust_order_lines = order_lines.select { |order_line| order_line.cust_box? }
     ordered_boxes = Array.new
     cust_order_lines.each do |order_line|
       ordered_boxes = ordered_boxes | order_line.ordered_boxes
     end
     
     return ordered_boxes
+  end
+  
+  def vc_boxes
+    ordered_boxes = Array.new
+    vc_order_lines.each do |order_line|
+      ordered_boxes = ordered_boxes | order_line.ordered_boxes
+    end
+    
+    return ordered_boxes
+  end
+  
+  def customer_box_qty
+    total = 0
+    cust_order_lines.each do |order_line|
+      total += order_line.quantity
+    end
+    
+    return total
+  end
+  
+  def vc_box_qty
+    total = 0
+
+    vc_order_lines.each do |order_line|
+      total += order_line.quantity
+    end
+    
+    return total    
   end
   
   private
