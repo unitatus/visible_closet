@@ -56,13 +56,13 @@ class AccountController < ApplicationController
     end
     
     @old_count = @type == Box::VC_BOX_TYPE ? current_user.stored_box_count(@type) : current_user.cust_cubic_feet_in_storage
-    @new_count = box_line.quantity
-    @new_cost = box_line.discount.total_monthly_price_after_discount
-    @due_now = box_line.discount.prepaid_at_purchase
-    @discount_perc = box_line.discount.unit_discount_perc
-    @discount_perc_sans_commitment = Discount.new(box_line.product, @new_count, 0, @old_count).unit_discount_perc
-    @committed_months = box_line.discount.month_count
-    @committed_months_discount = Discount.new(box_line.product, 1, box_line.discount.month_count, 0).unit_discount_perc
+    @new_count = box_line ? box_line.quantity : nil
+    @new_cost = box_line ? box_line.discount.total_monthly_price_after_discount : nil
+    @due_now = box_line ? box_line.discount.prepaid_at_purchase : nil
+    @discount_perc = box_line ? box_line.discount.unit_discount_perc : nil
+    @discount_perc_sans_commitment = box_line ? Discount.new(box_line.product, @new_count, 0, @old_count).unit_discount_perc : nil
+    @committed_months = box_line ? box_line.discount.month_count : nil
+    @committed_months_discount = box_line ? Discount.new(box_line.product, 1, box_line.discount.month_count, 0).unit_discount_perc : nil
   end
   
   def store_more_boxes
