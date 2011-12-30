@@ -87,7 +87,7 @@
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>
 						<% end %>
 						<% if box.box_type == Box::CUST_BOX_TYPE && box.status == Box::BEING_PREPARED_STATUS %>
-							<li><a href="/box/<%=box.id%>/get_label" onclick="alert('This will download a PDF of a FedEx label for you to print. Call 1-800-GO-FEDEX to have FedEx pick up your package. Be sure to click the \'inventorying\' checkbox on the label if you would like us to inventory your box!')">shipping label</a></li>
+							<li><a href="/box/<%=box.id%>/get_label" onclick="alert('This will download a PDF of a FedEx label for you to print. Call 1-800-GO-FEDEX to have FedEx pick up your package. Be sure to mark the \'inventorying\' checkbox on the label if you would like us to inventory your box!')">shipping label</a></li>
 						<% end %>                        
                     </ul>
                 </div>
