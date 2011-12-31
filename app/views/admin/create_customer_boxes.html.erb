@@ -1,0 +1,47 @@
+<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>
+		Customer #<%= @user.id %> (<%= @user.first_name %> <%= @user.last_name %>) - Add Customer Boxes
+	</h1><br>
+<%= form_tag "/admin/users/#{@user.id}/add_customer_boxes", :class => "standard", :onsubmit => "new_customer_boxes_submit.disabled=true;" do %>
+<table class="lightly_padded_table">
+	<tr>
+		<th>Weight</th>
+		<th>Height</th>
+		<th>Width</th>
+		<th>Length</th>
+		<th>Customer Description</th>
+		<th>Location</th>
+		<th>Duration</th>
+		<th>Inventory Requested?</th>
+	</tr>
+	<% for index in 1..10 %>
+		<tr>
+			<td>
+				<%= text_field_tag "box_" + index.to_s + "_weight", params[("box_" + index.to_s + "_weight").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "weight" %>
+			</td>
+			<td>
+				<%= text_field_tag "box_" + index.to_s + "_height", params[("box_" + index.to_s + "_height").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "height" %>
+			</td>
+			<td>
+				<%= text_field_tag "box_" + index.to_s + "_width", params[("box_" + index.to_s + "_width").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "width" %>
+			</td>
+			<td>
+				<%= text_field_tag "box_" + index.to_s + "_length", params[("box_" + index.to_s + "_length").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "length" %>
+			</td>
+			<td>
+				<%= text_field_tag "box_" + index.to_s + "description", params[("box_" + index.to_s + "_description").to_sym], :class => "textbox", :style => "width: 120px; font-size: 8px", :placeholder => "description" %>
+			</td>
+			<td>
+				<%= text_field_tag "box_" + index.to_s + "_location", params[("box_" + index.to_s + "_location").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "location" %>
+			</td>
+			<td>
+				<%= select_tag "box_" + index.to_s + "duration", options_for_select(duration_options, :selected => params["box_" + index.to_s + "duration"])%>
+			</td>
+			<td>inventory?</td>
+		</tr>
+	<% end # loop %>
+</table>
+<% end # form %>
+</div>
+<div class="clearer"></div>

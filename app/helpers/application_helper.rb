@@ -82,21 +82,22 @@ module ApplicationHelper
     years
   end
   
-  def address_summary(address, show_name=true)
+  def address_summary(address, show_name=true, line_breaks=true)
     return_str = ""
+    line_breaker = (line_breaks ? "<br>" : " ")
     
     if show_name
       return_str << (address.first_name.blank? ? "" : address.first_name)
       return_str << " "
       return_str << (address.last_name.blank? ? "" : address.last_name)
-      return_str << "<br>" if !return_str.blank?
+      return_str << line_breaker if !return_str.blank?
     end
     return_str << (address.address_line_1.blank? ? "" : address.address_line_1)
     if (not address.address_line_2.blank?)
-      return_str << "<br>" if !return_str.blank?
+      return_str << line_breaker if !return_str.blank?
       return_str << address.address_line_2
     end
-    return_str << "<br>" if !return_str.blank?
+    return_str << line_breaker if !return_str.blank?
     return_str << (address.city.blank? ? "" : truncate(address.city, :length => 10) + ", ")
     return_str << (address.state.blank? ? "" : address.state)
     return_str << " "
@@ -176,5 +177,9 @@ module ApplicationHelper
     else
       return "<a href=\"http://www.fedex.com/Tracking?action=track&tracknumbers=" + tracking_number + "\" target=\"new\">" + text + "</a>"
     end
+  end
+  
+  def duration_options
+    [["I don't want to commit right now", "Unspecified"], ["Less than 3", "Less than 3"], ["3 - FREE SHIPPING VOUCHER", "3"], ["6 - FREE SHIPPING VOUCHER, SAVE 10%", "6"], ["12 - FREE SHIPPING VOUCHER, SAVE 20%", "12"]]
   end
 end

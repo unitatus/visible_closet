@@ -139,6 +139,10 @@ class AdminController < ApplicationController
     @admin_page = :monthly_charges
     @users = User.all
   end
+    
+    def create_customer_boxes
+      @user = User.find(params[:id])
+    end
   
   def set_shipment_charge
     @admin_page = :users

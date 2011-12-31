@@ -36,7 +36,7 @@
                 <tr>
                     <td class="detailtext">How many months would you like to store your items? <a href="#pricing_box_inline" id="pricing_link" title="Visible Closet Box Details" style="font-size: 80%">(why do we ask this?)</a></td>
                     <td colspan="2"  style="vertical-align: middle">
-							<%= select "num_months", "num_months", options_for_select([["I don't want to commit right now", "Unspecified"], ["Less than 3", "Less than 3"], ["3 - FREE SHIPPING VOUCHER", "3"], ["6 - FREE SHIPPING VOUCHER, SAVE 10%", "6"], ["12 - FREE SHIPPING VOUCHER, SAVE 20%", "12"]]) %>
+							<%= select "num_months", "num_months", options_for_select(duration_options) %>
 					</td>
                 </tr>
                 <tr>

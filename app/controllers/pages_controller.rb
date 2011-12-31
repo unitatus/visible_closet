@@ -79,9 +79,14 @@ class PagesController < ApplicationController
     @cust_inv_no_discount_disc = Discount.new(@cust_inventorying, 1, 1)
   end
   
+  def privacy
+    @vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
+  end
+  
   def contact
     @top_menu_page = :contact
     @error_messages = Hash.new
+    @vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
   end
   
   def contact_post
