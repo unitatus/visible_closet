@@ -112,6 +112,7 @@ VisibleCloset::Application.routes.draw do
   match "admin/user/:id/orders" => "admin#user_orders"
   match "admin/user/:user_id/order/:order_id/destroy" => "admin#delete_user_order"
   match "admin/users/:id/create_customer_boxes" => "admin#create_customer_boxes"
+  match "admin/users/:id/add_customer_boxes" => "admin#add_customer_boxes"
   match "admin/shipment/:id/destroy" => "admin#delete_shipment"
   match "admin/user/:id/shipments" => "admin#user_shipments"
   match "admin/user/:id/shipment/:shipment_id/destroy" => "admin#delete_user_shipment"

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110927202410
+# Schema version: 20120102000112
 #
 # Table name: boxes
 #
@@ -22,6 +22,7 @@
 #  return_requested_at        :datetime
 #  location                   :string(255)
 #  inventoried_at             :datetime
+#  created_by_id              :integer
 #
 
 class Box < ActiveRecord::Base
@@ -40,7 +41,7 @@ class Box < ActiveRecord::Base
   CUST_BOX_TYPE = "cust_box"
   VC_BOX_TYPE = "vc_box"
   
-  attr_accessible :assigned_to_user_id, :ordering_order_line_id, :status, :box_type, :description, :inventorying_status, :subscription_id
+  attr_accessible :assigned_to_user_id, :ordering_order_line_id, :status, :box_type, :description, :inventorying_status, :subscription_id, :height, :weight, :width, :length, :location, :created_by_id
   after_create :set_box_num
 
   has_many :stored_items, :dependent => :destroy
@@ -51,6 +52,7 @@ class Box < ActiveRecord::Base
   belongs_to :ordering_order_line, :class_name => "OrderLine"
   belongs_to :inventorying_order_line, :class_name => "OrderLine", :foreign_key => :inventorying_order_line_id
   belongs_to :user, :foreign_key => :assigned_to_user_id
+  belongs_to :created_by, :class_name => "User"
   has_and_belongs_to_many :subscriptions
   before_destroy :destroy_certain_parents
   
@@ -229,6 +231,63 @@ class Box < ActiveRecord::Base
     earliest_receipt_date
   end
   
+  def Box.batch_create_boxes(user, box_type, submitted_info, creator)
+    created_boxes = Array.new
+    
+    submitted_info.each do |submitted_box_info|
+      options = Hash.new.merge(submitted_box_info)
+      options[:box_type] = box_type
+      options[:created_by_id] = creator.id
+      created_box = create_box!(user, options)
+      if created_box.nil?
+        raise "Failed to create a box!"
+      end
+      
+      created_box.receive(submitted_box_info[:inventory_requested])
+      
+      created_boxes << created_box
+    end
+    
+    return created_boxes
+  end
+  
+  # Must pass either box_type or product in options
+  def Box.create_box!(owner, options)
+    if options[:committed_months].nil? || options[:committed_months] == 0
+      subscription = nil
+    else
+      subscription = Subscription.create!(:duration_in_months => options[:committed_months], :user_id => owner.id)
+    end
+    
+    box_type = options[:box_type]
+    if box_type.nil?
+      box_type = options[:product].vc_box? ? Box::VC_BOX_TYPE : Box::CUST_BOX_TYPE
+    end
+
+    if box_type == Box::VC_BOX_TYPE
+      status = Box::NEW_STATUS
+    else
+      status = Box::BEING_PREPARED_STATUS
+    end
+    
+    new_box = create!(:assigned_to_user_id => owner.id, 
+                      :ordering_order_line_id => options[:ordering_order_line_id], 
+                      :status => status,
+                      :box_type => box_type,
+                      :inventorying_status => Box::NO_INVENTORYING_REQUESTED, # Boxes are always created this way; you have to switch inventorying on after creation as part of receiving
+                      :height => options[:height],
+                      :width => options[:width],
+                      :length => options[:length],
+                      :weight => options[:weight],
+                      :description => options[:description],
+                      :location => options[:location],
+                      :created_by_id => options[:created_by_id])
+    
+    new_box.subscriptions << subscription if subscription
+    
+    return new_box
+  end
+  
   def extra_inventorying_cost
     if inventorying_status != NO_INVENTORYING_REQUESTED
       return 0.0
@@ -250,20 +309,13 @@ class Box < ActiveRecord::Base
   end
   
   def subscription_on(date)
-    # @subscriptions variable is for performance
-    @date_subscriptions ||= Hash.new
-    
-    if @date_subscriptions[date]
-      return @date_subscriptions[date]
-    end
-    
     matching_subscriptions = subscriptions.select { |subscription| !subscription.start_date.nil? \
                                 && subscription.start_date.to_date <= date \
                                 && ((!subscription.end_date.nil? && subscription.end_date.to_date >= date) \
                                     || (subscription.end_date.nil? && date <= (subscription.start_date.to_date >> subscription.duration_in_months.months))) \
                          }
 
-    @date_subscriptions[date] = matching_subscriptions.last
+    return matching_subscriptions.last
   end
   
   def charged_already_on(day)
@@ -307,6 +359,10 @@ class Box < ActiveRecord::Base
   
   def never_inventoried?
     return inventoried_at.nil?
+  end
+  
+  def inventory_requested?
+    inventorying_status == INVENTORYING_REQUESTED
   end
   
   def has_charges?
@@ -379,7 +435,7 @@ class Box < ActiveRecord::Base
   end
   
   def ordering_order
-    ordering_order_line.order
+    ordering_order_line.nil? ? nil : ordering_order_line.order
   end
   
   # this is only called when the user submits the order for a return; when they mark a box for a return, it just goes in the cart!
@@ -418,7 +474,6 @@ class Box < ActiveRecord::Base
       self.status = Box::IN_STORAGE_STATUS
       self.received_at = Time.now
 
-      # need to check for both, since one disables the other which means that it is not posted
       if inventorying_requested
         process_inventory_request
       end
@@ -438,8 +493,8 @@ class Box < ActiveRecord::Base
         shipment.save
       end
       
-      if !subscription.nil?
-        subscription.start_subscription
+      if !current_subscription.nil?
+        current_subscription.start_subscription
       end
             
       return self.save
@@ -498,17 +553,6 @@ class Box < ActiveRecord::Base
     end
     
     shipment
-  end
-  
-  def current_subscription
-    current_subscriptions = self.subscriptions.select { |subscription| subscription.start_date.nil? || subscription.start_date <= Date.today }
-    if current_subscriptions.size == 0
-      return nil
-    elsif current_subscriptions.size > 1
-      raise "Box has multiple subscriptions"
-    else
-      current_subscriptions.first
-    end
   end
   
   def ship
@@ -665,9 +709,7 @@ class Box < ActiveRecord::Base
     else
       raise "Invalid box type for box " << inspect
     end
-    
-    ordering_line = OrderLine.find(self.ordering_order_line_id)
-    
+        
     order = Order.new
     
     order.user_id = assigned_to_user_id
@@ -681,7 +723,6 @@ class Box < ActiveRecord::Base
     order_line.product_id = product_id
     order_line.order_id = order.id
     order_line.quantity = 1
-    order_line.committed_months = ordering_line.committed_months.nil? ? 0 : ordering_line.committed_months
     
     if (!order_line.save)
       raise "Failed to save order line " + order_line.inspect + " for box " + inspect

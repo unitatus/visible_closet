@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111229021146) do
+ActiveRecord::Schema.define(:version => 20120102000112) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(:version => 20111229021146) do
     t.datetime "return_requested_at"
     t.string   "location"
     t.datetime "inventoried_at"
+    t.integer  "created_by_id"
   end
 
   add_index "boxes", ["assigned_to_user_id"], :name => "index_boxes_on_assigned_to_user_id"

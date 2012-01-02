@@ -49,7 +49,7 @@ class OrderLine < ActiveRecord::Base
     
     self.transaction do
 
-      # This won't do anything on an order line that doe not include associated boxes
+      # This won't do anything on an order line that does not include associated boxes
       associated_boxes.each do |box|
         box_shipment = box.ship # the box will check its state and behave accordingly; new boxes will have their shipment back to us generated; returned boxes will have their outgoing shipment created
         

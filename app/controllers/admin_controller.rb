@@ -140,9 +140,63 @@ class AdminController < ApplicationController
     @users = User.all
   end
     
-    def create_customer_boxes
-      @user = User.find(params[:id])
+  def create_customer_boxes
+    @user = User.find(params[:id])
+    @errors = Hash.new
+  end
+  
+  def add_customer_boxes
+    @user = User.find(params[:id])
+    @errors = Hash.new
+    submitted_boxes = Array.new
+    
+    for index in 1..10
+      submitted_weight = params[("box_" + index.to_s + "_weight").to_sym]
+      submitted_height = params[("box_" + index.to_s + "_height").to_sym]
+      submitted_width = params[("box_" + index.to_s + "_width").to_sym]
+      submitted_length = params[("box_" + index.to_s + "_length").to_sym]
+      submitted_description = params[("box_" + index.to_s + "_description").to_sym]
+      submitted_location = params[("box_" + index.to_s + "_location").to_sym]
+      submitted_duration = params[("box_" + index.to_s + "_duration").to_sym]
+      submitted_inventory_req = params[("box_" + index.to_s + "_inventory").to_sym]
+      
+      if submitted_weight.blank? && submitted_height.blank? && submitted_width.blank? && submitted_length.blank? && submitted_description.blank? && submitted_location.blank?
+        next # ignore this entry
+      end
+      
+      @errors["box_" + index.to_s + "_weight"] = "cannot be blank" if submitted_weight.blank?
+      @errors["box_" + index.to_s + "_height"] = "cannot be blank" if submitted_height.blank?
+      @errors["box_" + index.to_s + "_width"] = "cannot be blank" if submitted_width.blank?
+      @errors["box_" + index.to_s + "_length"] = "cannot be blank" if submitted_length.blank?
+      @errors["box_" + index.to_s + "_location"] = "cannot be blank" if submitted_location.blank?
+      
+      submitted_box = Hash.new
+      submitted_box[:weight] = submitted_weight
+      submitted_box[:height] = submitted_height
+      submitted_box[:width] = submitted_width
+      submitted_box[:length] = submitted_length
+      submitted_box[:description] = submitted_description
+      submitted_box[:location] = submitted_location
+      submitted_box[:committed_months] = submitted_duration
+      submitted_box[:inventory_requested] = !submitted_inventory_req.nil?
+      
+      submitted_boxes << submitted_box
     end
+    
+    if submitted_boxes.empty?
+      @errors[""] = "You didn't enter anything."
+    end
+    
+    if !@errors.empty?
+      render :create_customer_boxes and return
+    end
+    
+    if Box.batch_create_boxes(@user, Box::CUST_BOX_TYPE, submitted_boxes, current_user).nil?
+      @errors[""] = "General error with batch box create!"
+    else
+      redirect_to "/admin/user/#{@user.id}/boxes"
+    end
+  end
   
   def set_shipment_charge
     @admin_page = :users

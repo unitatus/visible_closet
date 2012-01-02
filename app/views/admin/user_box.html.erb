@@ -6,7 +6,14 @@
 		<td><b>Created At: </b></td><td><%= @box.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
 	</tr>
 	<tr>
-		<td><b>Ordering Order Id: </b></td><td><a href="/admin/user/<%= @user.id %>/orders/<%= @box.ordering_order.id %>"><%= @box.ordering_order.id %></a></td>
+		<% if @box.ordering_order %>
+			<td><b>Ordering Order Id: </b></td><td>
+			<a href="/admin/user/<%= @user.id %>/orders/<%= @box.ordering_order.id %>"><%= @box.ordering_order.id %></a>
+		<% else %>
+			<td><b>Created by administrator:</b></td>
+			<td><%= @box.created_by.first_name %> <%= @box.created_by.last_name %>
+		<% end %>
+		</td>
 	</tr>
 	<tr>
 		<td><b>Inventorying Order Id: </b></td>

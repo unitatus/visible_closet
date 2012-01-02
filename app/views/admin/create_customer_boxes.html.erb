@@ -3,9 +3,21 @@
 	<h1>
 		Customer #<%= @user.id %> (<%= @user.first_name %> <%= @user.last_name %>) - Add Customer Boxes
 	</h1><br>
+	<% if !@errors.empty? %>
+		<div class="error_label">
+			The following problems were found with your submission:<br>
+			<ul>
+				<% @errors.keys.each do |key| %>
+				<li><%= key %> <%= @errors[key] %></li>
+				<% end %>
+			</ul>
+			<br>
+		</div>
+	<% end %>
 <%= form_tag "/admin/users/#{@user.id}/add_customer_boxes", :class => "standard", :onsubmit => "new_customer_boxes_submit.disabled=true;" do %>
 <table class="lightly_padded_table">
 	<tr>
+		<th>Row</th>
 		<th>Weight</th>
 		<th>Height</th>
 		<th>Width</th>
@@ -17,30 +29,34 @@
 	</tr>
 	<% for index in 1..10 %>
 		<tr>
+			<td style="text-align: center"><%= index %></td>
 			<td>
-				<%= text_field_tag "box_" + index.to_s + "_weight", params[("box_" + index.to_s + "_weight").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "weight" %>
+				<%= text_field_tag "box_" + index.to_s + "_weight", params[("box_" + index.to_s + "_weight").to_sym], :class => "textbox" + (@errors["box_" + index.to_s + "_weight"].blank? ? "" : " error"), :style => "width: 30px; font-size: 8px", :placeholder => "pounds" %>
 			</td>
 			<td>
-				<%= text_field_tag "box_" + index.to_s + "_height", params[("box_" + index.to_s + "_height").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "height" %>
+				<%= text_field_tag "box_" + index.to_s + "_height", params[("box_" + index.to_s + "_height").to_sym], :class => "textbox" + (@errors["box_" + index.to_s + "_height"].blank? ? "" : " error"), :style => "width: 30px; font-size: 8px", :placeholder => "inches" %>
 			</td>
 			<td>
-				<%= text_field_tag "box_" + index.to_s + "_width", params[("box_" + index.to_s + "_width").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "width" %>
+				<%= text_field_tag "box_" + index.to_s + "_width", params[("box_" + index.to_s + "_width").to_sym], :class => "textbox" + (@errors["box_" + index.to_s + "_width"].blank? ? "" : " error"), :style => "width: 30px; font-size: 8px", :placeholder => "inches" %>
 			</td>
 			<td>
-				<%= text_field_tag "box_" + index.to_s + "_length", params[("box_" + index.to_s + "_length").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "length" %>
+				<%= text_field_tag "box_" + index.to_s + "_length", params[("box_" + index.to_s + "_length").to_sym], :class => "textbox" + (@errors["box_" + index.to_s + "_length"].blank? ? "" : " error"), :style => "width: 30px; font-size: 8px", :placeholder => "inches" %>
 			</td>
 			<td>
-				<%= text_field_tag "box_" + index.to_s + "description", params[("box_" + index.to_s + "_description").to_sym], :class => "textbox", :style => "width: 120px; font-size: 8px", :placeholder => "description" %>
+				<%= text_field_tag "box_" + index.to_s + "_description", params[("box_" + index.to_s + "_description").to_sym], :class => "textbox" + (@errors["box_" + index.to_s + "_description"].blank? ? "" : " error"), :style => "width: 120px; font-size: 8px", :placeholder => "description" %>
 			</td>
 			<td>
-				<%= text_field_tag "box_" + index.to_s + "_location", params[("box_" + index.to_s + "_location").to_sym], :class => "textbox", :style => "width: 30px; font-size: 8px", :placeholder => "location" %>
+				<%= text_field_tag "box_" + index.to_s + "_location", params[("box_" + index.to_s + "_location").to_sym], :class => "textbox" + (@errors["box_" + index.to_s + "_location"].blank? ? "" : " error"), :style => "width: 33px; font-size: 8px", :placeholder => "location" %>
 			</td>
 			<td>
-				<%= select_tag "box_" + index.to_s + "duration", options_for_select(duration_options, :selected => params["box_" + index.to_s + "duration"])%>
+				<%= select_tag "box_" + index.to_s + "_duration", options_for_select([["none", "none"], ["6 months", "6"], ["12 months", "12"]], :selected => params["box_" + index.to_s + "_duration"])%>
 			</td>
-			<td>inventory?</td>
+			<td style="text-align: center"><%= check_box_tag("box_" + index.to_s + "_inventory", "box_" + index.to_s + "_inventory", !params[("box_" + index.to_s + "_inventory").to_sym].nil?) %></td>
 		</tr>
 	<% end # loop %>
+	<tr>
+		<td colspan="8" style="text-align: right; padding-right: 45px; padding-top: 10px"><%= submit_tag "Submit", :confirm => "Are you sure? This will commit the boxes to the user account." %></td>
+	</tr>
 </table>
 <% end # form %>
 </div>

@@ -33,11 +33,13 @@
 				<td><a href="/admin/user/<%= @user.id %>/boxes/<%= box.id %>"><%= box.id %></a></td>
 				<td><%= box.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
 				<td>
-					<a href="/admin/user/<%= @user.id %>/orders/<%= box.ordering_order.id %>"><%= box.ordering_order.id %></a>(Ordering)
-					<% if !box.inventorying_order.nil? %>
+					<% if box.ordering_order %>
+						<a href="/admin/user/<%= @user.id %>/orders/<%= box.ordering_order.id %>"><%= box.ordering_order.id %></a>(Ordering)
+					<% end %>
+					<% if box.inventorying_order %>
 						<br><a href="/admin/user/<%= @user.id %>/orders/<%= box.inventorying_order.id %>"><%= box.inventorying_order.id %></a>(Inventorying)
 					<% end %>
-					<% if !box.servicing_order.nil? %>
+					<% if box.servicing_order %>
 						<br><a href="/admin/user/<%= @user.id %>/orders/<%= box.servicing_order.id %>"><%= box.servicing_order.id %></a>(Servicing)
 					<% end %>
 				</td>
