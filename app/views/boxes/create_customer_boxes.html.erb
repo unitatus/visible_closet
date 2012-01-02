@@ -1,4 +1,4 @@
-<%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
 	<h1>
 		Customer #<%= @user.id %> (<%= @user.first_name %> <%= @user.last_name %>) - Add Customer Boxes
@@ -55,7 +55,7 @@
 		</tr>
 	<% end # loop %>
 	<tr>
-		<td colspan="8" style="text-align: right; padding-right: 45px; padding-top: 10px"><%= submit_tag "Submit", :confirm => "Are you sure? This will commit the boxes to the user account." %></td>
+		<td colspan="8" style="text-align: right; padding-right: 45px; padding-top: 10px"><%= submit_tag "Submit", :id => "new_customer_boxes_submit", :confirm => "Are you sure? This will commit the boxes to the user account." %></td>
 	</tr>
 </table>
 <% end # form %>

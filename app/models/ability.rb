@@ -85,6 +85,8 @@ class Ability
       can :add_user_charge, :admin
       can :add_user_credit, :admin
       can :destroy_billing_credit, :admin
+      can :add_customer_boxes, Box
+      can :create_customer_boxes, Box
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      
