@@ -16,7 +16,7 @@ var container = document.getElementById("stored_item_<%=@stored_item.id%>_menu_l
 
 <% if svc_name != "sell" %>
 	var sell_element = document.createElement('li');
-	sell_element.innerHTML = '<a href="#">sell</a>';
+	sell_element.innerHTML = '<a href="javascript:alert(\'This service is coming soon! Email us at help@thevisiblecloset.com for more details.\')">sell (coming soon!)</a>';
 	sell_element.id = 'stored_item_<%=@stored_item.id%>_sell_li';
 	container.insertBefore(sell_element, container.childNodes[4]);
 <% end %>
@@ -26,13 +26,6 @@ var container = document.getElementById("stored_item_<%=@stored_item.id%>_menu_l
 	donation_element.innerHTML = '<%= link_to "donate to charity", "/stored_items/#{@stored_item.id}/request_donation", :remote => true, :id => "stored_item_#{@stored_item.id}_donation_link" %>';
 	donation_element.id = 'stored_item_<%=@stored_item.id%>_donation_li';
 	container.insertBefore(donation_element, container.childNodes[5]);
-<% end %>
-
-<% if svc_name != "dispose" %>
-	var dispose_element = document.createElement('li');
-	dispose_element.innerHTML = '<a href="#">safely dispose</a>';
-	dispose_element.id = 'stored_item_<%=@stored_item.id%>_dispose_li';
-	container.insertBefore(dispose_element, container.lastChild.nextSibling);
 <% end %>
 
 // remove unnecessary checkout element and div indicator

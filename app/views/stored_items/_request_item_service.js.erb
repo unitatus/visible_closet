@@ -22,10 +22,6 @@ var container = document.getElementById("stored_item_<%=@stored_item.id%>_menu_l
 	var sell_element = document.getElementById("stored_item_<%=@stored_item.id%>_sell_li")
 	container.removeChild(sell_element)
 <% end %>
-<% if svc_name != "dispose" %>
-	var dispose_element = document.getElementById("stored_item_<%=@stored_item.id%>_dispose_li")
-	container.removeChild(dispose_element)
-<% end %>
 
 var new_element = document.createElement('li');
 new_element.innerHTML = '<a href="/account/check_out">checkout</a>';

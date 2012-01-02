@@ -71,9 +71,8 @@ ul.ui-autocomplete {
 							<li><a id="<%= stored_item.id %>_details_link" class="grouped_images_class" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">details</a></li>
 							<% if stored_item.status == StoredItem::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_service_request_for(stored_item)) %>
 								<li id="stored_item_<%= stored_item.id%>_mailing_li"><%= link_to "mail this item", "/stored_items/#{stored_item.id}/request_mailing", :remote => true, :id => "stored_item_#{stored_item.id}_mailing_link" %></li>
-								<li id="stored_item_<%= stored_item.id%>_sell_li"><a href="#">sell</a></li>
+								<li id="stored_item_<%= stored_item.id%>_sell_li"><a href="javascript:alert('This service is coming soon! Email us at help@thevisiblecloset.com for more details.')">sell (coming soon!)</a></li>
 	                        	<li id="stored_item_<%= stored_item.id%>_donation_li"><%= link_to "donate to charity", "/stored_items/#{stored_item.id}/request_donation", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
-								<li id="stored_item_<%= stored_item.id%>_dispose_li"><a href="#">safely dispose of</a></li>
 							<% elsif !current_user.cart.nil? && current_user.cart.contains_donation_request_for(stored_item) %>
 								<li id="stored_item_<%= stored_item.id%>_donation_li"><%= link_to "cancel donation", "/stored_items/#{stored_item.id}/cancel_donation_request", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
 								<li id="stored_item_<%= stored_item.id %>_checkout_li"><a href="/account/check_out">checkout</a></li>

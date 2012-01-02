@@ -258,14 +258,15 @@ class BoxesController < ApplicationController
   
   def create_stored_item
     @stored_item = StoredItem.new
-    @stored_item.photo = params[:file] if params.has_key?(:file)
+    @stored_item_photo = StoredItemPhoto.new
+    @stored_item_photo.photo = params[:file] if params.has_key?(:file)
     
     @stored_item.box_id = params[:box_id]
-
     # detect Mime-Type (mime-type detection doesn't work in flash)
-    @stored_item.photo_content_type = MIME::Types.type_for(params[:name]).to_s if params.has_key?(:name)
+    @stored_item_photo.photo_content_type = MIME::Types.type_for(params[:name]).to_s if params.has_key?(:name)
     @stored_item.save!
-    
+    @stored_item_photo.save!
+    @stored_item.stored_item_photos << @stored_item_photo
     respond_to :js
   end
   
@@ -377,9 +378,11 @@ class BoxesController < ApplicationController
     
     @box.save!
     
-    @order_line = OrderLine.find(@box.inventorying_order_line_id)
-    @order_line.status = OrderLine::PROCESSED_STATUS
-    @order_line.save!
+    if @box.inventorying_order_line
+      @order_line = OrderLine.find(@box.inventorying_order_line_id)
+      @order_line.status = OrderLine::PROCESSED_STATUS
+      @order_line.save!
+    end
     
     UserMailer.deliver_box_inventoried(@box)
     
