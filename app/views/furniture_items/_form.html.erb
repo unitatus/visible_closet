@@ -1,0 +1,91 @@
+<% if !@furniture_item.errors.empty? %>
+	<div class="error_label">
+		Please correct the following errors:<br><br>
+		<ul>
+			<% @furniture_item.errors.each do |key, msg| %>
+				<% if key.blank? %>
+				<li><%= msg %></li>
+				<% end %>
+			<% end %>
+		</ul>
+	</div>
+<% end %>
+	<% form_for(@furniture_item, :url => url, :html => { :class => "standard", :onsubmit => "furniture_submit.disabled=true" }) do |f| %>
+<table class="lightly_padded_table">
+	<tr>
+		<td>Height:</td>
+		<td>
+			<%= f.text_field :height, :class => "textbox" + (@furniture_item.errors[:height].blank? ? "" : " error"), :style => "width: 25px; font-size: 8px", :placeholder => "inches" %>
+			<div class="error_label">
+				<% @furniture_item.errors[:height].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>Width:</td>
+		<td>
+			<%= f.text_field :width, :class => "textbox" + (@furniture_item.errors[:width].blank? ? "" : " error"), :style => "width: 25px; font-size: 8px", :placeholder => "inches" %>
+			<div class="error_label">
+				<% @furniture_item.errors[:width].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>Length:</td>
+		<td>
+			<%= f.text_field :length, :class => "textbox" + (@furniture_item.errors[:length].blank? ? "" : " error"), :style => "width: 25px; font-size: 8px", :placeholder => "inches" %>
+			<div class="error_label">
+				<% @furniture_item.errors[:length].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>Location: </td>
+		<td>
+			<%= f.text_field :location, :class => "textbox" + (@furniture_item.errors[:location].blank? ? "" : " error"), :style => "width: 100px" %>
+			<div class="error_label">
+				<% @furniture_item.errors[:location].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>Subscription Duration:</td>
+		<td>
+			<% @selected = params["duration"] %>
+			<% if !@selected && !@furniture_item.subscriptions.empty? %>
+				<% @selected = @furniture_item.subscriptions.last.duration_in_months %>
+			<% end %>
+			<%= select_tag "duration", options_for_select([["none", "none"], ["6 months", "6"], ["12 months", "12"]], :selected => @selected)%>
+		</td>
+	</tr>
+	<tr>
+		<td>Comma-delimited tags:</td>
+		<td>
+			<%= f.text_area :comma_delimited_tags, :class => "textbox", :cols => 40, :rows => 10, :placeholder => "tag1, tag2, etc" %>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right; padding-top: 20px"><%= f.submit submit_text, :class => "button" %>
+	</tr>
+</table>
+<% end %>

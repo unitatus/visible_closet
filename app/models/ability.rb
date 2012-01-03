@@ -87,6 +87,9 @@ class Ability
       can :destroy_billing_credit, :admin
       can :add_customer_boxes, Box
       can :create_customer_boxes, Box
+      can :admin_index, FurnitureItem
+      can :admin_create, FurnitureItem
+      can :admin_add, FurnitureItem
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      

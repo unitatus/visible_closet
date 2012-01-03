@@ -264,6 +264,7 @@ class BoxesController < ApplicationController
     @stored_item.box_id = params[:box_id]
     # detect Mime-Type (mime-type detection doesn't work in flash)
     @stored_item_photo.photo_content_type = MIME::Types.type_for(params[:name]).to_s if params.has_key?(:name)
+    @stored_item_photo.visibility = StoredItemPhoto::CUSTOMER_VISIBILITY
     @stored_item.save!
     @stored_item_photo.save!
     @stored_item.stored_item_photos << @stored_item_photo

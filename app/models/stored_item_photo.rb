@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120102163720
+# Schema version: 20120103033154
 #
 # Table name: stored_item_photos
 #
@@ -12,6 +12,7 @@
 #  stored_item_id     :integer
 #  created_at         :datetime
 #  updated_at         :datetime
+#  visibility         :string(255)
 #
 
 class StoredItemPhoto < ActiveRecord::Base
@@ -34,6 +35,21 @@ class StoredItemPhoto < ActiveRecord::Base
   validates_attachment_presence :photo
   validates_attachment_content_type :photo, :content_type => [/image\/jpg/, /image\/jpeg/, /image\/pjpeg/, /image\/gif/, /image\/png/, /image\/x-png/]
   before_create :generate_access_token
+  
+  CUSTOMER_VISIBILITY = :customer
+  ADMIN_VISIBILITY = :admin
+  
+  symbolize :visibility
+  
+  def StoredItemPhoto.new(attrs=nil)
+    photo = super(attrs)
+    photo.visibility = ADMIN_VISIBILITY
+    return photo
+  end
+  
+  def StoredItemPhoto.visibilities_select
+    [[CUSTOMER_VISIBILITY.to_s,CUSTOMER_VISIBILITY.to_s],[ADMIN_VISIBILITY.to_s,ADMIN_VISIBILITY.to_s]]
+  end
 
   private
   

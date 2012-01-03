@@ -1,0 +1,8 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>
+		Furniture Item <%= @furniture_item.id %> for User #<%= @furniture_item.user.id %> (<%= @furniture_item.user.first_name %> <%= @furniture_item.user.last_name %>)
+	</h1><br>
+Put detail here, including ability to add and remove tags.
+</div>
+<div class="clearer"></div>

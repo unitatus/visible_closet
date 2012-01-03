@@ -1,0 +1,29 @@
+
+<% content_for :head do %>
+	<%= stylesheet_link_tag "/css/application.css" %>
+	<%= javascript_include_tag "/javascripts/plupload/plupload.full.min.js" %>
+	<%= javascript_include_tag "/javascripts/plupload/jquery.plupload.queue.min.js" %>
+
+	<%= javascript_tag do %>
+		<%= render "plupload.js" %>
+	<% end %>
+<% end %>
+ <h1>Manage photos for furniture item # <%= @furniture_item.id %></h1>
+<a href="/admin/users/<%=@furniture_item.user_id%>/furniture">Furniture Items for User</a> | <a href="/admin/home">Admin Home</a><br>
+Note: There can be only one default customer-visible and admin-visible picture. If none is set then the first defaults.<br>
+  <div id='flash'></div> 
+  <div id='photos_container' style="width:50%"> 
+	<table>
+   <% @furniture_item.photos.each do |photo| %>
+		<% @photo = photo %> <!-- need to do this to pass value to partial, unfortunately -->
+		<%= render("photo", :locals => {:photo => @photo}) %>
+		<% @photo = nil %>
+	<% end %>
+	</table>
+</div> <!-- photos_container -->
+<div>
+  <div id='uploader'> 
+    <p>Your browser doesn't have HTML5, Flash or Silverlight support.</p> 
+  </div>
+</div> 
+<div class="clearer"></div>

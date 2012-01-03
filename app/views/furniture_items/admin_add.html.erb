@@ -1,0 +1,8 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>
+		Add Furniture for User #<%= @user.id %> (<%= @user.first_name %> <%= @user.last_name %>)
+	</h1><br>
+<%= render :partial => "form", :locals => { :url => "/admin/users/#{@user.id}/create_furniture_item", :submit_text => "Create and add pictures" } %>
+</div>
+<div class="clearer"></div>

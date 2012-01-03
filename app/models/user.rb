@@ -72,6 +72,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions, :dependent => :destroy
   has_many :storage_charge_processing_records, :dependent => :destroy, :foreign_key => :generated_by_user_id
   has_many :storage_payment_processing_records, :dependent => :destroy, :foreign_key => :generated_by_user_id
+  has_many :furniture_items, :dependent => :destroy
   has_and_belongs_to_many :rental_agreement_versions
   belongs_to :acting_as, :foreign_key => :acting_as_user_id, :class_name => "User"
 

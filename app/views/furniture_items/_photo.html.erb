@@ -1,0 +1,23 @@
+<tr>
+	<td>
+		<div class="imgteaser"> 
+			<a href="/admin/furniture_items/<%= @photo.stored_item_id %>/photos/<%= @photo.id %>/destroy">
+			<%= image_tag(@photo.photo.url(:thumb)) %>
+				<span class="desc"> 
+					Delete
+				</span> 
+			</a>
+		</div>
+	</td>
+	<%= form_tag "/admin/furniture_items/#{@photo.stored_item_id}/photos/#{@photo.id}/save", :class => "standard" do %>
+	<td style="vertical-align: middle">
+		Visibility: <%= select_tag :visibility, options_for_select(StoredItemPhoto.visibilities_select, :selected => @photo.visibility) %>
+	</td>
+	<td style="vertical-align: middle">
+		Default: <%= check_box_tag :default, 1, @photo.stored_item.default_photo(@photo.visibility) == @photo %>
+	</td>
+	<td style="vertical-align: middle">
+		<%= submit_tag "Submit" %>
+	</td>
+	<% end %>
+</tr>

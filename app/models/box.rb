@@ -309,13 +309,7 @@ class Box < ActiveRecord::Base
   end
   
   def subscription_on(date)
-    matching_subscriptions = subscriptions.select { |subscription| !subscription.start_date.nil? \
-                                && subscription.start_date.to_date <= date \
-                                && ((!subscription.end_date.nil? && subscription.end_date.to_date >= date) \
-                                    || (subscription.end_date.nil? && date <= (subscription.start_date.to_date >> subscription.duration_in_months.months))) \
-                         }
-
-    return matching_subscriptions.last
+    subscriptions.select { |subscription| subscription.applies_on(date) }.last
   end
   
   def charged_already_on(day)

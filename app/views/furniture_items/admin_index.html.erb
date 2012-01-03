@@ -1,0 +1,88 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>
+		Furniture for User #<%= @user.id %> (<%= @user.first_name %> <%= @user.last_name %>)
+	</h1><br>
+<table class="lightly_padded_table">
+	<tr>
+		<th>ID</th>
+		<th>Height</th>
+		<th>Width</th>
+		<th>Length</th>
+		<th>Location</th>
+		<th>Status</th>
+		<th>Subscription</th>
+		<th>Photos</th>
+		<th>Edit?</th>
+		<% if current_user.admin? %>
+			<th>Delete?</th>
+		<% end %>
+	</tr>
+	<% if @user.furniture_items.empty? %>
+		<tr><td colspan="10" style="text-align: center">no furniture items</td></tr>
+	<% else %>
+		<% @user.furniture_items.each do |item| %>
+			<tr>
+				<td>
+					<a href="/admin/furniture_items/<%=item.id%>"><%= item.id %></a>
+				</td>
+				<td>
+					<%= item.height %>
+				</td>
+				<td>
+					<%= item.width %>
+				</td>
+				<td>
+					<%= item.length %>
+				</td>
+				<td>
+					<%= item.location %>
+				</td>
+				<td style="text-align: center">
+					<%= item.status %><br>
+					<% if item.incomplete? %>
+						<a href="/admin/furniture_items/<%=item.id%>/publish" data-confirm="Are you sure? The user will be able to see the furniture item and all public photos. Only administrators can unpublish.">Publish?</a>
+					<% elsif current_user.admin? %>
+						<a href="/admin/furniture_items/<%=item.id%>/unpublish" data-confirm="Are you sure? The item will disappear from the user's inventory.">Unpublish?</a>
+					<% end %>
+				</td>
+				<td style="text-align: center">
+					<% if !item.subscriptions.empty? %>
+						<% item.subscriptions.each_with_index do |subscription, index| %>
+							<% if index > 1 %>
+								, 
+							<% end %>
+							<a href="/admin/user/<%=@user.id%>/subscriptions/<%= subscription.id%>"><%= subscription.id %></a>
+						<% end %>
+					<% else %>
+						NA
+					<% end %>
+				</td>
+				<td>
+					<a href="/admin/furniture_items/<%=item.id%>/photos">Photos</a>
+				</td>
+				<td>
+					<% if item.incomplete? %>
+						<a href="/admin/furniture_items/<%=item.id%>/edit">Edit</a>
+					<% else %>
+						NA
+					<% end %>
+				</td>
+				<% if current_user.admin? %>
+					<td>
+						<% if item.incomplete? %>
+							<a href="/admin/furniture_items/<%=item.id%>/destroy">Destroy</a>
+						<% else %>
+							NA
+						<% end %>
+					</td>
+				<% end %>
+			</tr>
+		<% end %>
+	<% end %>
+	<tr>
+		<td colspan="10" style="text-align: right"><a href="/admin/users/<%=@user.id%>/add_furniture_item">Add furniture items &gt;&gt;</a></td>
+	</tr>
+</table>
+</div>
+<div class="clearer"></div>

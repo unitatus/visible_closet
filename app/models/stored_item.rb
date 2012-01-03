@@ -1,15 +1,24 @@
 # == Schema Information
-# Schema version: 20120102175823
+# Schema version: 20120103033154
 #
 # Table name: stored_items
 #
-#  id          :integer         not null, primary key
-#  box_id      :integer
-#  created_at  :datetime
-#  updated_at  :datetime
-#  status      :string(255)
-#  donated_to  :string(255)
-#  shipment_id :integer
+#  id                                    :integer         not null, primary key
+#  box_id                                :integer
+#  created_at                            :datetime
+#  updated_at                            :datetime
+#  status                                :string(255)
+#  donated_to                            :string(255)
+#  shipment_id                           :integer
+#  type                                  :string(255)
+#  height                                :float
+#  width                                 :float
+#  length                                :float
+#  location                              :string(255)
+#  creator_id                            :integer
+#  user_id                               :integer
+#  default_customer_stored_item_photo_id :integer
+#  default_admin_stored_item_photo_id    :integer
 #
 
 class StoredItem < ActiveRecord::Base
@@ -23,13 +32,17 @@ class StoredItem < ActiveRecord::Base
   
   belongs_to :box
   belongs_to :shipment
+  belongs_to :default_customer_photo, :foreign_key => :default_customer_stored_item_photo_id, :class_name => "StoredItemPhoto"
+  belongs_to :default_admin_photo, :foreign_key => :default_admin_stored_item_photo_id, :class_name => "StoredItemPhoto"
   has_many :stored_item_tags, :dependent => :destroy
   has_many :service_order_lines, :class_name => 'OrderLine'
+  
+  # Note: height, width, length, location, user and creator exist only for subclass FurnitureItem
   attr_accessible :file, :access_token
   has_many :stored_item_photos, :dependent => :destroy
   
-  def StoredItem.new()
-    stored_item = super
+  def StoredItem.new(attrs=nil)
+    stored_item = super(attrs)
     stored_item.status = IN_STORAGE_STATUS
     stored_item
   end
@@ -40,6 +53,30 @@ class StoredItem < ActiveRecord::Base
   
   def photo
     stored_item_photo.photo
+  end
+  
+  def default_photo(visibility)
+    if visibility == StoredItemPhoto::CUSTOMER_VISIBILITY
+      if default_customer_photo.nil?
+        stored_item_photos_visibility(visibility).first
+      else
+        default_customer_photo
+      end
+    elsif visibility == StoredItemPhoto::ADMIN_VISIBILITY
+      if default_admin_photo.nil?
+        stored_item_photos_visibility(visibility).first
+      else
+        default_admin_photo
+      end
+    end
+  end
+  
+  def stored_item_photos_visibility(visibility)
+    stored_item_photos.select {|photo| photo.visibility == visibility }
+  end
+  
+  def photos
+    stored_item_photos
   end
   
   def StoredItem.count_items(user)
@@ -146,5 +183,24 @@ class StoredItem < ActiveRecord::Base
   
   def mailed?
     status == MAILED_STATUS
+  end
+  
+  def remove_default(photo)
+    if default_customer_photo == photo
+      default_customer_photo = nil
+    elsif default_admin_photo == photo
+      default_admin_photo = nil
+    end
+    save
+  end
+  
+  def set_default(photo)
+    remove_default(photo)
+    if photo.visibility == StoredItemPhoto::CUSTOMER_VISIBILITY
+      default_customer_photo = photo
+    else
+      default_admin_photo = photo
+    end
+    save
   end
 end

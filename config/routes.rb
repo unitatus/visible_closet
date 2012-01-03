@@ -113,6 +113,9 @@ VisibleCloset::Application.routes.draw do
   match "admin/user/:user_id/order/:order_id/destroy" => "admin#delete_user_order"
   match "admin/users/:id/create_customer_boxes" => "boxes#create_customer_boxes"
   match "admin/users/:id/add_customer_boxes" => "boxes#add_customer_boxes"
+  match "admin/users/:id/furniture" => "furniture_items#admin_index"
+  match "admin/users/:id/add_furniture_item" => "furniture_items#admin_add"
+  match "admin/users/:id/create_furniture_item" => "furniture_items#admin_create"
   match "admin/shipment/:id/destroy" => "admin#delete_shipment"
   match "admin/user/:id/shipments" => "admin#user_shipments"
   match "admin/user/:id/shipment/:shipment_id/destroy" => "admin#delete_user_shipment"
@@ -140,6 +143,18 @@ VisibleCloset::Application.routes.draw do
   match "admin/billing/charges/:id/destroy" => "admin#destroy_billing_charge"
   match "admin/users/:id/add_credit" => "admin#add_user_credit"
   match "admin/billing/credits/:id/destroy" => "admin#destroy_billing_credit"
+
+  # Furniture
+  match "admin/furniture_items/:id/photos" => "furniture_items#admin_manage_photos"
+  match "admin/furniture_items/:id/create_photo" => "furniture_items#admin_create_photo"
+  match "admin/furniture_items/:id/edit" => "furniture_items#admin_edit"
+  match "admin/furniture_items/:id/save" => "furniture_items#admin_save"
+  match "admin/furniture_items/:id/destroy" => "furniture_items#admin_destroy_furniture_item"
+  match "admin/furniture_items/:furniture_item_id/photos/:photo_id/destroy" => "furniture_items#admin_destroy_photo"
+  match "admin/furniture_items/:id/publish" => "furniture_items#admin_publish_furniture_item"
+  match "admin/furniture_items/:id/unpublish" => "furniture_items#admin_unpublish_furniture_item"
+  match "admin/furniture_items/:furniture_item_id/photos/:photo_id/save" => "furniture_items#save_photo"
+  match "admin/furniture_items/:id" => "furniture_items#admin_view"
   
   # Account
   get "account/store_more_boxes"

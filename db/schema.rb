@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120102175823) do
+ActiveRecord::Schema.define(:version => 20120103033154) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -118,6 +118,14 @@ ActiveRecord::Schema.define(:version => 20120102175823) do
     t.string   "description"
     t.integer  "created_by_admin_id"
   end
+
+  create_table "furniture_items_subscriptions", :id => false, :force => true do |t|
+    t.integer "furniture_item_id"
+    t.integer "subscription_id"
+  end
+
+  add_index "furniture_items_subscriptions", ["furniture_item_id"], :name => "index_furniture_items_subscriptions_on_furniture_item_id"
+  add_index "furniture_items_subscriptions", ["subscription_id"], :name => "index_furniture_items_subscriptions_on_subscription_id"
 
   create_table "interested_people", :force => true do |t|
     t.string   "email"
@@ -303,6 +311,7 @@ ActiveRecord::Schema.define(:version => 20120102175823) do
     t.integer  "stored_item_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "visibility"
   end
 
   create_table "stored_item_tags", :force => true do |t|
@@ -321,6 +330,15 @@ ActiveRecord::Schema.define(:version => 20120102175823) do
     t.string   "status"
     t.string   "donated_to"
     t.integer  "shipment_id"
+    t.string   "type"
+    t.float    "height"
+    t.float    "width"
+    t.float    "length"
+    t.string   "location"
+    t.integer  "creator_id"
+    t.integer  "user_id"
+    t.integer  "default_customer_stored_item_photo_id"
+    t.integer  "default_admin_stored_item_photo_id"
   end
 
   add_index "stored_items", ["box_id"], :name => "index_stored_items_on_box_id"
