@@ -6,9 +6,8 @@
 <table class="lightly_padded_table">
 	<tr>
 		<th>ID</th>
-		<th>Height</th>
-		<th>Width</th>
-		<th>Length</th>
+		<th>Default Img</th>
+		<th>Cubic Feet</th>
 		<th>Location</th>
 		<th>Status</th>
 		<th>Subscription</th>
@@ -23,22 +22,27 @@
 	<% else %>
 		<% @user.furniture_items.each do |item| %>
 			<tr>
-				<td>
+				<td style="vertical-align: middle">
 					<a href="/admin/furniture_items/<%=item.id%>"><%= item.id %></a>
 				</td>
-				<td>
-					<%= item.height %>
+				<td style="vertical-align: middle">
+					<% item_photo = item.default_photo(StoredItemPhoto::ADMIN_VISIBILITY) %>
+					<% if item_photo.nil? %>
+						<% item_photo = item.default_photo(StoredItemPhoto::CUSTOMER_VISIBILITY) %>
+					<% end %>
+					<% if item_photo %>
+						<%= image_tag(item_photo.photo.url(:thumb), :name => "small_" + item_photo.id.to_s) %>
+					<% else %>
+						(no photos)
+					<% end %>
 				</td>
-				<td>
-					<%= item.width %>
+				<td style="vertical-align: middle">
+					<%= item.cubic_feet.round(2) %>
 				</td>
-				<td>
-					<%= item.length %>
-				</td>
-				<td>
+				<td style="vertical-align: middle">
 					<%= item.location %>
 				</td>
-				<td style="text-align: center">
+				<td style="text-align: center; vertical-align: middle">
 					<%= item.status %><br>
 					<% if item.incomplete? %>
 						<a href="/admin/furniture_items/<%=item.id%>/publish" data-confirm="Are you sure? The user will be able to see the furniture item and all public photos. Only administrators can unpublish.">Publish?</a>
@@ -46,7 +50,7 @@
 						<a href="/admin/furniture_items/<%=item.id%>/unpublish" data-confirm="Are you sure? The item will disappear from the user's inventory.">Unpublish?</a>
 					<% end %>
 				</td>
-				<td style="text-align: center">
+				<td style="text-align: center; vertical-align: middle">
 					<% if !item.subscriptions.empty? %>
 						<% item.subscriptions.each_with_index do |subscription, index| %>
 							<% if index > 1 %>
@@ -58,10 +62,10 @@
 						NA
 					<% end %>
 				</td>
-				<td>
+				<td style="vertical-align: middle">
 					<a href="/admin/furniture_items/<%=item.id%>/photos">Photos</a>
 				</td>
-				<td>
+				<td style="vertical-align: middle">
 					<% if item.incomplete? %>
 						<a href="/admin/furniture_items/<%=item.id%>/edit">Edit</a>
 					<% else %>
@@ -69,7 +73,7 @@
 					<% end %>
 				</td>
 				<% if current_user.admin? %>
-					<td>
+					<td style="vertical-align: middle">
 						<% if item.incomplete? %>
 							<a href="/admin/furniture_items/<%=item.id%>/destroy">Destroy</a>
 						<% else %>

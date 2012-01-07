@@ -55,6 +55,10 @@ class StoredItem < ActiveRecord::Base
     stored_item_photo.photo
   end
   
+  def user
+    box.user
+  end
+  
   def default_photo(visibility)
     if visibility == StoredItemPhoto::CUSTOMER_VISIBILITY
       if default_customer_photo.nil?

@@ -74,6 +74,15 @@ class FurnitureItem < StoredItem
     end
   end
   
+  def cubic_feet
+    if self.length.nil? || self.width.nil? || self.height.nil?
+      return nil
+    else
+      divisor = Rails.application.config.box_dimension_divisor
+      return (self.length/divisor) * (self.width/divisor) * (self.height/divisor)
+    end
+  end
+  
   private 
   
   def destroy_certain_relationships

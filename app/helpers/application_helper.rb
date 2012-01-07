@@ -182,4 +182,23 @@ module ApplicationHelper
   def duration_options
     [["I don't want to commit right now", "Unspecified"], ["Less than 3", "Less than 3"], ["3 - FREE SHIPPING VOUCHER", "3"], ["6 - FREE SHIPPING VOUCHER, SAVE 10%", "6"], ["12 - FREE SHIPPING VOUCHER, SAVE 20%", "12"]]
   end
+  
+  def print_table_row_start(index, items_per_row, tr="<tr>")
+    if index % items_per_row == 0
+      return tr
+    end
+  end
+  
+  def print_table_row_end(index, items_per_row, total, td="<td>")
+    return_str = ""
+    if index + 1 == total
+      for i in 1..(total % items_per_row == 0 ? 0 : items_per_row - (total % items_per_row))
+        return_str << (td + "&nbsp;</td>")
+      end
+      return_str << "</tr>"
+    elsif (index + 1) % items_per_row == 0
+      return_str << "</tr>"
+    end
+    return return_str
+  end
 end

@@ -11,7 +11,6 @@
  <h1>Manage photos for furniture item # <%= @furniture_item.id %></h1>
 <a href="/admin/users/<%=@furniture_item.user_id%>/furniture">Furniture Items for User</a> | <a href="/admin/home">Admin Home</a><br>
 Note: There can be only one default customer-visible and admin-visible picture. If none is set then the first defaults.<br>
-  <div id='flash'></div> 
   <div id='photos_container' style="width:50%"> 
 	<table>
    <% @furniture_item.photos.each do |photo| %>

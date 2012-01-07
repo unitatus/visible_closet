@@ -1,8 +1,65 @@
 <%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
 	<h1>
-		Furniture Item <%= @furniture_item.id %> for User #<%= @furniture_item.user.id %> (<%= @furniture_item.user.first_name %> <%= @furniture_item.user.last_name %>)
+		Furniture Item <%= @furniture_item.id %> for User #<%= @furniture_item.user.id %> (<%= @furniture_item.user.name %>)
 	</h1><br>
-Put detail here, including ability to add and remove tags.
+<table class="lightly_padded_table">
+	<tr>
+		<td>Height:</td>
+		<td><%= pluralize @furniture_item.height, "inch" %></td>
+	</tr>
+	<tr>
+		<td>Width:</td>
+		<td><%= pluralize @furniture_item.width, "inch" %></td>
+	</tr>
+	<tr>
+		<td>Length:</td>
+		<td><%= pluralize @furniture_item.length, "inch" %></td>
+	</tr>
+	<tr>
+		<td>Cubic Feet:</td>
+		<td><%= pluralize @furniture_item.cubic_feet, "cubic foot", "cubic feet" %></td>
+	</tr>
+	<tr>
+		<td>Created by:</td>
+		<td><a href="/admin/user/<%= @furniture_item.creator_id %>"><%= @furniture_item.creator.name %></a></td>
+	</tr>
+	<tr>
+		<td>User:</td>
+		<td><a href="/admin/user/<%= @furniture_item.creator_id %>"><%= @furniture_item.user.name %></a></td>
+	</tr>
+	<tr>
+		<td>Location:</td>
+		<td><%= @furniture_item.location %></td>
+	</tr>
+	</table><table style="lightly_padded_table">
+	<tr>
+		<td><br>Images:</td>
+	</tr>
+	<tr>
+		<td>
+			<table>
+				<% @furniture_item.stored_item_photos.each_with_index do |item_photo, index| %>
+					<%= raw print_table_row_start(index, 4) %>
+					<td style="text-align: center">
+						<%= image_tag(item_photo.photo.url(:medium), :name => "medium_" + item_photo.id.to_s, :height => 150, :width => 150) %>
+						<br>Visibility: <%= item_photo.visibility %>
+						<br>Default? <%= item_photo.default? %>
+					</td>
+					<%= raw print_table_row_end(index, 4, @furniture_item.stored_item_photos.size) %>
+				<% end %>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td><br>Tags:</td>
+	</tr>
+	<tr>
+		<td style="text-align: center">
+			<% @stored_item = @furniture_item %>
+			<%= render :partial => "/stored_item_tags/tags_editor", :locals => { :stored_item => @furniture_item }%>
+		</td>
+	</tr>
+</table>
 </div>
 <div class="clearer"></div>

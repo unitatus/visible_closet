@@ -1,0 +1,9 @@
+<div id="tags_container" style="text-align: center; margin-left: auto; margin-right: auto; text-wrap: unrestricted; width: 420px; position: relative; z-index: 2000">
+	<%= render :partial => "boxes/user_stored_item_tags", :locals => { :stored_item => @stored_item }%>
+</div>
+<br>
+<%= form_tag( { :controller => "boxes", :action => "user_add_tag"}, { :remote => true, :name => "tags_form", :onsubmit => "return validateTagForm()" } ) do %>
+	<%= hidden_field_tag :stored_item_id, @stored_item.id %>
+	<%= text_field_tag "tag", "", :alt => "enter new tag", :placeholder => "enter new tag", :id => "tag" %>
+	<%= submit_tag "Add Tag" %>
+<% end %>

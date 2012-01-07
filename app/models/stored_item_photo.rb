@@ -50,6 +50,10 @@ class StoredItemPhoto < ActiveRecord::Base
   def StoredItemPhoto.visibilities_select
     [[CUSTOMER_VISIBILITY.to_s,CUSTOMER_VISIBILITY.to_s],[ADMIN_VISIBILITY.to_s,ADMIN_VISIBILITY.to_s]]
   end
+  
+  def default?
+    stored_item.default_photo(visibility) == self
+  end
 
   private
   

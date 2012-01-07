@@ -90,6 +90,15 @@ class Ability
       can :admin_index, FurnitureItem
       can :admin_create, FurnitureItem
       can :admin_add, FurnitureItem
+      can :admin_manage_photos, FurnitureItem
+      can :admin_create_photo, FurnitureItem
+      can :admin_edit, FurnitureItem
+      can :admin_save, FurnitureItem
+      can :admin_destroy_furniture_item, FurnitureItem
+      can :admin_destroy_photo, FurnitureItem
+      can :admin_publish_furniture_item, FurnitureItem
+      can :save_photo, FurnitureItem
+      can :admin_view, FurnitureItem
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      
