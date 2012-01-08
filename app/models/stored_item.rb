@@ -39,7 +39,7 @@ class StoredItem < ActiveRecord::Base
   
   # Note: height, width, length, location, user and creator exist only for subclass FurnitureItem
   attr_accessible :file, :access_token
-  has_many :stored_item_photos, :dependent => :destroy
+  has_many :stored_item_photos, :dependent => :destroy, :order => "created_at"
   
   def StoredItem.new(attrs=nil)
     stored_item = super(attrs)
