@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120108183638) do
+ActiveRecord::Schema.define(:version => 20120108204741) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -91,6 +91,15 @@ ActiveRecord::Schema.define(:version => 20120108183638) do
 
   add_index "carts", ["user_id"], :name => "index_carts_on_user_id"
 
+  create_table "chargeable_unit_properties", :force => true do |t|
+    t.float   "height"
+    t.float   "width"
+    t.float   "length"
+    t.string  "location"
+    t.integer "chargeable_unit_id"
+    t.string  "chargeable_unit_type"
+  end
+
   create_table "charges", :force => true do |t|
     t.integer  "user_id"
     t.float    "total_in_cents"
@@ -113,15 +122,6 @@ ActiveRecord::Schema.define(:version => 20120108183638) do
     t.datetime "updated_at"
     t.string   "description"
     t.integer  "created_by_admin_id"
-  end
-
-  create_table "dimension_sets", :force => true do |t|
-    t.float   "height"
-    t.float   "width"
-    t.float   "length"
-    t.string  "location"
-    t.integer "measured_object_id"
-    t.string  "measured_object_type"
   end
 
   create_table "furniture_items_subscriptions", :id => false, :force => true do |t|

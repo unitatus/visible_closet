@@ -22,7 +22,7 @@
 #
 
 class Box < ActiveRecord::Base
-  include HasDimensions
+  include HasChargeableUnitProperties
   
   NEW_STATUS = "new"
   IN_TRANSIT_TO_YOU_STATUS = "in_transit_to_cust"
