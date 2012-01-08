@@ -90,6 +90,7 @@ class PagesController < ApplicationController
   end
   
   def contact_post
+    @vc_address = Address.find(Rails.application.config.fedex_vc_address_id)
     email_post(:contact, params[:email])
   end
   
@@ -172,7 +173,7 @@ class PagesController < ApplicationController
       @error_messages[:email] = "Please enter a valid email."
     end
   
-    if params[:comment][:text].blank?
+    if params[:comment].blank? || params[:comment][:text].blank?
       @error_messages[:text] = "Please enter text."
     end
   
