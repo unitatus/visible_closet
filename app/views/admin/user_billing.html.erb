@@ -44,7 +44,8 @@
 					<% elsif transaction.core_transaction.order_id %>
 						shipping for order <a href="/admin/user/<%= @user.id %>/orders/<%= transaction.core_transaction.order_id %>">#<%= transaction.core_transaction.order_id %></a>
 				   	<% elsif transaction.core_transaction.storage_charge %>
-						storage of box <a href="/admin/user/<%= @userid %>/box/<%= transaction.core_transaction.storage_charge.box_id %>">#<%= transaction.core_transaction.storage_charge.box_id %><a/> from <%= transaction.core_transaction.storage_charge.start_date.strftime "%m/%d/%Y" %> to <%= transaction.core_transaction.storage_charge.end_date.strftime "%m/%d/%Y" %>
+						<% chargeable_unit_type = transaction.core_transaction.storage_charge.chargeable_unit_properties.chargeable_unit_type.downcase %>
+						storage of <%= chargeable_unit_type %> <a href="/admin/user/<%= @user.id %>/<%= no_num_pluralize 2, chargeable_unit_type %>/<%= transaction.core_transaction.storage_charge.chargeable_unit.id %>">#<%= transaction.core_transaction.storage_charge.chargeable_unit.id %></a> from <%= transaction.core_transaction.storage_charge.start_date.strftime "%m/%d/%Y" %> to <%= transaction.core_transaction.storage_charge.end_date.strftime "%m/%d/%Y" %>
 					<% else %>
 						"<%= transaction.core_transaction.comments %>"
 				  <% end %>

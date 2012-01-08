@@ -45,7 +45,6 @@ class Box < ActiveRecord::Base
   has_many :stored_items, :dependent => :destroy
   has_many :shipments, :dependent => :destroy, :order => "created_at ASC"
   has_many :stored_item_tags, :through => :stored_items
-  has_many :storage_charges, :order => "end_date ASC" # This way .first means the first ever charge, and .last means the last ever storage charge, by end_date
   has_one :servicing_order_line, :class_name => "OrderLine", :foreign_key => :service_box_id
   belongs_to :ordering_order_line, :class_name => "OrderLine"
   belongs_to :inventorying_order_line, :class_name => "OrderLine", :foreign_key => :inventorying_order_line_id

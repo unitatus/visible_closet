@@ -20,9 +20,9 @@
 	<% @record.storage_charges.each do |storage_charge| %>
 		<tr>
 			<td><%= storage_charge.id %></td>
-			<td><a href="/admin/user/<%= storage_charge.box.user.id %>"><%= storage_charge.box.user.id %></a></td>
-			<td><%= storage_charge.box.user.first_name %> <%= storage_charge.box.user.last_name %></td>
-			<td><a href="/admin/user/<%= storage_charge.box.user.id %>/boxes/<%= storage_charge.box.id %>"><%= storage_charge.box.id %></a></td>
+			<td><a href="/admin/user/<%= storage_charge.chargeable_unit.user.id %>"><%= storage_charge.chargeable_unit.user.id %></a></td>
+			<td><%= storage_charge.chargeable_unit.user.name %></td>
+			<td><a href="/admin/user/<%= storage_charge.chargeable_unit.user.id %>/<%= no_num_pluralize 2, storage_charge.chargeable_unit_properties.chargeable_unit_type.downcase %>/<%= storage_charge.chargeable_unit.id %>"><%= storage_charge.chargeable_unit.id %></a></td>
 			<td><%= number_to_currency storage_charge.charge.amount %></td>
 			<td><%= storage_charge.charge.comments %></td>
 			<td>

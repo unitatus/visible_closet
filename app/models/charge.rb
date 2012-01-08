@@ -49,12 +49,8 @@ class Charge < ActiveRecord::Base
     sum_total.to_f/100.0
   end
   
-  def box
-    if storage_charge.nil?
-      nil
-    else
-      storage_charge.box
-    end
+  def chargeable_unit
+    storage_charge.nil? ? nil : storage_charge.chargeable_unit
   end
   
   def after_save
@@ -63,17 +59,17 @@ class Charge < ActiveRecord::Base
     end
   end
   
-  def associate_with(box, start_date=nil, end_date=nil)
-    if !associated_with?(box)
-      new_storage_charge = box.storage_charges.build(:start_date => start_date, :end_date => end_date)
+  def associate_with(chargeable_unit, start_date=nil, end_date=nil)
+    if !associated_with?(chargeable_unit)
+      new_storage_charge = chargeable_unit.storage_charges.build(:start_date => start_date, :end_date => end_date)
       new_storage_charge.charge = self
       self.storage_charge = new_storage_charge
       return new_storage_charge
     end
   end
   
-  def associated_with?(box)
-    storage_charge && storage_charge.box == box
+  def associated_with?(chargeable_unit)
+    storage_charge && storage_charge.chargeable_unit == chargeable_unit
   end
 
   def amount

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120108204741) do
+ActiveRecord::Schema.define(:version => 20120108223243) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -289,16 +289,15 @@ ActiveRecord::Schema.define(:version => 20120108204741) do
   end
 
   create_table "storage_charges", :force => true do |t|
-    t.integer  "box_id"
     t.integer  "charge_id"
     t.datetime "start_date"
     t.datetime "end_date"
     t.integer  "storage_charge_processing_record_id"
+    t.integer  "chargeable_unit_properties_id"
   end
 
-  add_index "storage_charges", ["box_id"], :name => "index_storage_charges_on_box_id"
   add_index "storage_charges", ["charge_id"], :name => "index_storage_charges_on_charge_id"
-  add_index "storage_charges", ["storage_charge_processing_record_id"], :name => "index_storage_charges_on_storage_charge_processing_record_id"
+  add_index "storage_charges", ["storage_charge_processing_record_id"], :name => "index_storage_charges_on_stor_chg_proc_rec_id"
 
   create_table "storage_payment_processing_records", :force => true do |t|
     t.integer  "generated_by_user_id"

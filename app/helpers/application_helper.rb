@@ -201,4 +201,9 @@ module ApplicationHelper
     end
     return return_str
   end
+  
+  def no_num_pluralize(number, singular, plural=nil)
+    pluralized = pluralize(number, singular, plural)
+    pluralized.sub(number.to_s + " ", "")
+  end
 end
