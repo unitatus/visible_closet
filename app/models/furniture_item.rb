@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120103033154
+# Schema version: 20120108183638
 #
 # Table name: stored_items
 #
@@ -11,10 +11,6 @@
 #  donated_to                            :string(255)
 #  shipment_id                           :integer
 #  type                                  :string(255)
-#  height                                :float
-#  width                                 :float
-#  length                                :float
-#  location                              :string(255)
 #  creator_id                            :integer
 #  user_id                               :integer
 #  default_customer_stored_item_photo_id :integer
@@ -22,11 +18,13 @@
 #
 
 class FurnitureItem < StoredItem
+  include HasDimensions
+  
   belongs_to :creator, :class_name => "User"
   belongs_to :user
   has_and_belongs_to_many :subscriptions
   
-  attr_accessible :height, :width, :length, :location, :comma_delimited_tags
+  attr_accessible :comma_delimited_tags, :height, :width, :length, :location
   
   validates_presence_of :height, :message => "can't be blank"
   validates_numericality_of :height, :message => "must be a number", :unless => Proc.new { |furniture_item| furniture_item.height.nil? }
@@ -34,7 +32,6 @@ class FurnitureItem < StoredItem
   validates_numericality_of :width, :message => "must be a number", :unless => Proc.new { |furniture_item| furniture_item.width.nil? }
   validates_presence_of :length, :message => "can't be blank"
   validates_numericality_of :length, :message => "must be a number", :unless => Proc.new { |furniture_item| furniture_item.length.nil? }
-  validates_presence_of :location, :message => "can't be blank"
   validates_presence_of :creator_id, :message => "must have creator"
   validates_presence_of :user_id, :message => "must be assigned to a user"
   
@@ -56,6 +53,12 @@ class FurnitureItem < StoredItem
     subscriptions.select { |subscription| subscription.applies_on(date) }.last
   end
   
+  def add_subscription(duration)
+    subscription = subscriptions.create!(:duration_in_months => duration, :user_id => user_id)
+    subscription.start_subscription
+    return subscription
+  end
+  
   def incomplete?
     status == INCOMPLETE_STATUS
   end
@@ -70,16 +73,7 @@ class FurnitureItem < StoredItem
     stored_item_tags.destroy_all
     
     tags_array.each do |tag|
-      StoredItemTag.create!(:stored_item_id => self.id, :tag => tag)
-    end
-  end
-  
-  def cubic_feet
-    if self.length.nil? || self.width.nil? || self.height.nil?
-      return nil
-    else
-      divisor = Rails.application.config.box_dimension_divisor
-      return (self.length/divisor) * (self.width/divisor) * (self.height/divisor)
+      stored_item_tags.build(:tag => tag)
     end
   end
   

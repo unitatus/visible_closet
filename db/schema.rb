@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120103033154) do
+ActiveRecord::Schema.define(:version => 20120108183638) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -45,13 +45,9 @@ ActiveRecord::Schema.define(:version => 20120103033154) do
     t.string   "inventorying_status"
     t.integer  "inventorying_order_line_id"
     t.datetime "received_at"
-    t.float    "height"
-    t.float    "width"
-    t.float    "length"
     t.float    "weight"
     t.integer  "box_num"
     t.datetime "return_requested_at"
-    t.string   "location"
     t.datetime "inventoried_at"
     t.integer  "created_by_id"
   end
@@ -117,6 +113,15 @@ ActiveRecord::Schema.define(:version => 20120103033154) do
     t.datetime "updated_at"
     t.string   "description"
     t.integer  "created_by_admin_id"
+  end
+
+  create_table "dimension_sets", :force => true do |t|
+    t.float   "height"
+    t.float   "width"
+    t.float   "length"
+    t.string  "location"
+    t.integer "measured_object_id"
+    t.string  "measured_object_type"
   end
 
   create_table "furniture_items_subscriptions", :id => false, :force => true do |t|
@@ -331,10 +336,6 @@ ActiveRecord::Schema.define(:version => 20120103033154) do
     t.string   "donated_to"
     t.integer  "shipment_id"
     t.string   "type"
-    t.float    "height"
-    t.float    "width"
-    t.float    "length"
-    t.string   "location"
     t.integer  "creator_id"
     t.integer  "user_id"
     t.integer  "default_customer_stored_item_photo_id"

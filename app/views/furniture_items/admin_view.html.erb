@@ -18,7 +18,7 @@
 	</tr>
 	<tr>
 		<td>Cubic Feet:</td>
-		<td><%= pluralize @furniture_item.cubic_feet, "cubic foot", "cubic feet" %></td>
+		<td><%= pluralize @furniture_item.cubic_feet.round(2), "cubic foot", "cubic feet" %></td>
 	</tr>
 	<tr>
 		<td>Created by:</td>
@@ -26,11 +26,26 @@
 	</tr>
 	<tr>
 		<td>User:</td>
-		<td><a href="/admin/user/<%= @furniture_item.creator_id %>"><%= @furniture_item.user.name %></a></td>
+		<td><a href="/admin/user/<%= @furniture_item.user_id %>"><%= @furniture_item.user.name %></a></td>
 	</tr>
 	<tr>
 		<td>Location:</td>
 		<td><%= @furniture_item.location %></td>
+	</tr>
+	<tr>
+		<td>Subscriptions:</td>
+		<td>
+			<% if !@furniture_item.subscriptions.empty? %>
+				<% @furniture_item.subscriptions.each_with_index do |subscription, index| %>
+					<% if index > 0 %>
+					, 
+					<% end %>
+					<a href="/admin/user/<%=@furniture_item.user.id%>/subscriptions/<%=subscription.id%>"><%= subscription.id %></a>
+				<% end %>
+			<% else %>
+				None
+			<% end %>
+		</td>
 	</tr>
 	</table><table style="lightly_padded_table">
 	<tr>

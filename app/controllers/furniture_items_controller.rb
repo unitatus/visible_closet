@@ -22,9 +22,7 @@ class FurnitureItemsController < ApplicationController
     
     if @furniture_item.save
       if !params[:duration].blank? && params[:duration].is_number?
-        new_subscription = Subscription.new(:duration_in_months => params[:duration], :user_id => @furniture_item.user_id)
-        new_subscription.save
-        @furniture_item.subscriptions << new_subscription
+        @furniture_item.add_subscription(params[:duration])
       end
       
       redirect_to "/admin/furniture_items/#{@furniture_item.id}/photos"
@@ -72,6 +70,7 @@ class FurnitureItemsController < ApplicationController
         else
           subscription = @furniture_item.subscriptions.last
           subscription.update_attribute(:duration_in_months, params[:duration])
+          subscription.start_subscription
         end
       else
         @furniture_item.subscriptions.each do |subscription|

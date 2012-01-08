@@ -22,10 +22,10 @@
 	<% else %>
 		<% @user.furniture_items.each do |item| %>
 			<tr>
-				<td style="vertical-align: middle">
+				<td style="text-align: center; vertical-align: middle">
 					<a href="/admin/furniture_items/<%=item.id%>"><%= item.id %></a>
 				</td>
-				<td style="vertical-align: middle">
+				<td style="text-align: center; vertical-align: middle">
 					<% item_photo = item.default_photo(StoredItemPhoto::ADMIN_VISIBILITY) %>
 					<% if item_photo.nil? %>
 						<% item_photo = item.default_photo(StoredItemPhoto::CUSTOMER_VISIBILITY) %>
@@ -36,10 +36,10 @@
 						(no photos)
 					<% end %>
 				</td>
-				<td style="vertical-align: middle">
+				<td style="text-align: center; vertical-align: middle">
 					<%= item.cubic_feet.round(2) %>
 				</td>
-				<td style="vertical-align: middle">
+				<td style="text-align: center; vertical-align: middle">
 					<%= item.location %>
 				</td>
 				<td style="text-align: center; vertical-align: middle">
@@ -62,10 +62,10 @@
 						NA
 					<% end %>
 				</td>
-				<td style="vertical-align: middle">
+				<td style="text-align: center; vertical-align: middle">
 					<a href="/admin/furniture_items/<%=item.id%>/photos">Photos</a>
 				</td>
-				<td style="vertical-align: middle">
+				<td style="text-align: center; vertical-align: middle">
 					<% if item.incomplete? %>
 						<a href="/admin/furniture_items/<%=item.id%>/edit">Edit</a>
 					<% else %>
@@ -73,7 +73,7 @@
 					<% end %>
 				</td>
 				<% if current_user.admin? %>
-					<td style="vertical-align: middle">
+					<td style="text-align: center; vertical-align: middle">
 						<% if item.incomplete? %>
 							<a href="/admin/furniture_items/<%=item.id%>/destroy">Destroy</a>
 						<% else %>

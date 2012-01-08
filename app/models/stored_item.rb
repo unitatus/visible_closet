@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120103033154
+# Schema version: 20120108183638
 #
 # Table name: stored_items
 #
@@ -11,10 +11,6 @@
 #  donated_to                            :string(255)
 #  shipment_id                           :integer
 #  type                                  :string(255)
-#  height                                :float
-#  width                                 :float
-#  length                                :float
-#  location                              :string(255)
 #  creator_id                            :integer
 #  user_id                               :integer
 #  default_customer_stored_item_photo_id :integer

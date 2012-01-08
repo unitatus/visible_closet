@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120102000112
+# Schema version: 20120108183638
 #
 # Table name: boxes
 #
@@ -14,18 +14,16 @@
 #  inventorying_status        :string(255)
 #  inventorying_order_line_id :integer
 #  received_at                :datetime
-#  height                     :float
-#  width                      :float
-#  length                     :float
 #  weight                     :float
 #  box_num                    :integer
 #  return_requested_at        :datetime
-#  location                   :string(255)
 #  inventoried_at             :datetime
 #  created_by_id              :integer
 #
 
 class Box < ActiveRecord::Base
+  include HasDimensions
+  
   NEW_STATUS = "new"
   IN_TRANSIT_TO_YOU_STATUS = "in_transit_to_cust"
   IN_TRANSIT_TO_TVC_STATUS = "in_transit_to_tvc"
@@ -603,14 +601,14 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def cubic_feet
-    if self.length.nil? || self.width.nil? || self.height.nil?
-      return nil
-    else
-      divisor = Rails.application.config.box_dimension_divisor
-      return (self.length/divisor) * (self.width/divisor) * (self.height/divisor)
-    end
-  end
+  # def cubic_feet
+  #   if self.length.nil? || self.width.nil? || self.height.nil?
+  #     return nil
+  #   else
+  #     divisor = Rails.application.config.box_dimension_divisor
+  #     return (self.length/divisor) * (self.width/divisor) * (self.height/divisor)
+  #   end
+  # end
   
   def Box.count_boxes(user, status=nil, type=nil)
     conditions = {:conditions => "assigned_to_user_id = #{user.id}"}
