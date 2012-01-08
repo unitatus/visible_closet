@@ -1,4 +1,5 @@
-<tr>
+<%= form_tag "/admin/furniture_items/#{@photo.stored_item_id}/photos/#{@photo.id}/save", :class => "standard", :onsubmit => "submit_#{@photo.id}.disabled=true" do %>
+<table class="lightly_padded_table"><tr>
 	<td>
 		<div class="imgteaser"> 
 			<a href="/admin/furniture_items/<%= @photo.stored_item_id %>/photos/<%= @photo.id %>/destroy">
@@ -9,7 +10,6 @@
 			</a>
 		</div>
 	</td>
-	<%= form_tag "/admin/furniture_items/#{@photo.stored_item_id}/photos/#{@photo.id}/save", :class => "standard" do %>
 	<td style="vertical-align: middle">
 		Visibility: <%= select_tag :visibility, options_for_select(StoredItemPhoto.visibilities_select, :selected => @photo.visibility) %>
 	</td>
@@ -17,7 +17,8 @@
 		Default: <%= check_box_tag :default, 1, @photo.stored_item.default_photo(@photo.visibility) == @photo %>
 	</td>
 	<td style="vertical-align: middle">
-		<%= submit_tag "Submit" %>
+		<%= submit_tag "Submit", :id => "submit_#{@photo.id}" %>
 	</td>
-	<% end %>
 </tr>
+</table>
+<% end %>

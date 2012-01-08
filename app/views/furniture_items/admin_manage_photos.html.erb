@@ -12,13 +12,11 @@
 <a href="/admin/users/<%=@furniture_item.user_id%>/furniture">Furniture Items for User</a> | <a href="/admin/home">Admin Home</a><br>
 Note: There can be only one default customer-visible and admin-visible picture. If none is set then the first defaults.<br>
   <div id='photos_container' style="width:50%"> 
-	<table>
    <% @furniture_item.photos.each do |photo| %>
 		<% @photo = photo %> <!-- need to do this to pass value to partial, unfortunately -->
 		<%= render("photo", :locals => {:photo => @photo}) %>
 		<% @photo = nil %>
 	<% end %>
-	</table>
 </div> <!-- photos_container -->
 <div>
   <div id='uploader'> 
