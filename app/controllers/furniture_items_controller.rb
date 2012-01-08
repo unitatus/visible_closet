@@ -112,15 +112,18 @@ class FurnitureItemsController < ApplicationController
   end
   
   def save_photo
-    puts("Got here!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     furniture_item = FurnitureItem.find(params[:furniture_item_id])
     photo = StoredItemPhoto.find(params[:photo_id])
     
+    puts "Updating photo #{photo.id} to visibility #{params[:visibility]}"
     photo.update_attribute(:visibility, params[:visibility]) if params[:visibility]
     
+    puts "Default is #{params[:default]}"
     if params[:default].blank?
+      puts "removing default photo"
       furniture_item.remove_default(photo)
     else
+      puts "setting furniture item default photo at visibility #{photo.visibility}"
       furniture_item.set_default(photo)
     end
     

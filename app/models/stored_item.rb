@@ -191,9 +191,9 @@ class StoredItem < ActiveRecord::Base
   
   def remove_default(photo)
     if default_customer_photo == photo
-      default_customer_photo = nil
+      self.default_customer_photo = nil
     elsif default_admin_photo == photo
-      default_admin_photo = nil
+      self.default_admin_photo = nil
     end
     save
   end
@@ -201,9 +201,9 @@ class StoredItem < ActiveRecord::Base
   def set_default(photo)
     remove_default(photo)
     if photo.visibility == StoredItemPhoto::CUSTOMER_VISIBILITY
-      default_customer_photo = photo
+      self.default_customer_photo = photo
     else
-      default_admin_photo = photo
+      self.default_admin_photo = photo
     end
     save
   end
