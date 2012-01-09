@@ -62,7 +62,7 @@ class AccountController < ApplicationController
     @discount_perc = box_line ? box_line.discount.unit_discount_perc : nil
     @discount_perc_sans_commitment = box_line ? Discount.new(box_line.product, @new_count, 0, @old_count).unit_discount_perc : nil
     @committed_months = box_line ? box_line.discount.month_count : nil
-    @committed_months_discount = box_line ? Discount.new(box_line.product, 1, box_line.discount.month_count, 0).unit_discount_perc : nil
+    @committed_months_discount = box_line ? Discount.new(box_line.product, 1, box_line.discount.month_count, @old_count).unit_discount_perc : nil
   end
   
   def store_more_boxes
