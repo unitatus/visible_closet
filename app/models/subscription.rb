@@ -23,6 +23,10 @@ class Subscription < ActiveRecord::Base
   
   validates_presence_of :chargeable_unit_properties
   
+  def started?
+    start_date != nil
+  end
+  
   def start_subscription
     update_attribute(:start_date, Date.today)
     update_attribute(:end_date, Date.today >> duration_in_months)
