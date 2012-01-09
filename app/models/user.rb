@@ -284,12 +284,11 @@ class User < ActiveRecord::Base
     StoredItem.joins(:box).count(:conditions => "assigned_to_user_id = #{self.id}")
   end
   
-  # this only tests customer boxes; vc box cubic feet are always the same size
-  def stored_cubic_feet_count
-    matching_boxes = boxes.select { |box| box.box_type == Box::CUST_BOX_TYPE && box.status = Box::IN_STORAGE_STATUS }
-    total_cubic_feet = 0.0
-    matching_boxes.each do |box|
-      total_cubic_feet += (box.cubic_feet.nil? ? 0.0 : box.cubic_feet)
+  def cust_cubic_feet_in_storage
+    total_cubic_feet = 0
+    
+    cust_boxes_in_storage.each do |box|
+      total_cubic_feet += box.cubic_feet if box.cubic_feet
     end
     
     return total_cubic_feet
@@ -315,16 +314,6 @@ class User < ActiveRecord::Base
     else
       @stored_box_counts[type]
     end
-  end
-  
-  def cust_cubic_feet_in_storage
-    total_cubic_feet = 0
-    
-    cust_boxes_in_storage.each do |box|
-      total_cubic_feet += box.cubic_feet
-    end
-    
-    return total_cubic_feet
   end
   
   def cust_boxes_in_storage

@@ -101,7 +101,7 @@ class OrderLine < ActiveRecord::Base
   
   def discount
     # don't need to worry about the products on this order, because they would never be in storage if we are looking at the discount for the order
-    Discount.new(product, quantity, committed_months, self.cust_box? ? order.user.stored_cubic_feet_count : order.user.stored_box_count(Box.get_type(product)))
+    Discount.new(product, quantity, committed_months, self.cust_box? ? order.user.cust_cubic_feet_in_storage : order.user.stored_box_count(Box.get_type(product)))
   end
   
   def cust_box?

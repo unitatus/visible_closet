@@ -53,7 +53,7 @@ class CartItem < ActiveRecord::Base
   
   def discount
     # Box will return nil for non-box products, which is then translated as "any type" in the user method, which doesn't really matter for other products, since they are one-off
-    Discount.new(product, quantity, committed_months, cust_box? ? cart.user.stored_cubic_feet_count : cart.user.stored_box_count(Box.get_type(product)))
+    Discount.new(product, quantity, committed_months, cust_box? ? cart.user.cust_cubic_feet_in_storage : cart.user.stored_box_count(Box.get_type(product)))
   end
   
   def cust_box?

@@ -575,7 +575,7 @@ class Box < ActiveRecord::Base
     end
     
     if box_type == CUST_BOX_TYPE
-      total_new_quantity = user.stored_cubic_feet_count + added_quantity * cubic_feet
+      total_new_quantity = user.cust_cubic_feet_in_storage + added_quantity * cubic_feet
       storage_product = Product.find(Rails.application.config.your_box_product_id)
       inventorying_product = Product.find(Rails.application.config.your_box_inventorying_product_id)
     else
