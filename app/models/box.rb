@@ -483,8 +483,9 @@ class Box < ActiveRecord::Base
         shipment.save
       end
       
-      if !current_subscription.nil?
-        current_subscription.start_subscription
+      # We are receiving this for the first time, so it should realy only have one subscription!
+      if !subscriptions.empty?
+        subscription.last.start_subscription
       end
             
       return self.save
