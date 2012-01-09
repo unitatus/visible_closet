@@ -16,8 +16,6 @@
 class Subscription < ActiveRecord::Base
   include RelatedToOneChargeableProperties
 
-  has_and_belongs_to_many :boxes
-  has_and_belongs_to_many :furniture_items
   belongs_to :user # technically not necessary? Perhaps better than just grabbing from the first box.
   has_many :storage_charges
   

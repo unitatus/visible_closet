@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120109010107) do
+ActiveRecord::Schema.define(:version => 20120109021749) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -55,14 +55,6 @@ ActiveRecord::Schema.define(:version => 20120109010107) do
   add_index "boxes", ["assigned_to_user_id"], :name => "index_boxes_on_assigned_to_user_id"
   add_index "boxes", ["inventorying_order_line_id"], :name => "index_boxes_on_inventorying_order_line_id"
   add_index "boxes", ["ordering_order_line_id"], :name => "index_boxes_on_order_line_id"
-
-  create_table "boxes_subscriptions", :id => false, :force => true do |t|
-    t.integer "box_id"
-    t.integer "subscription_id"
-  end
-
-  add_index "boxes_subscriptions", ["box_id"], :name => "index_boxes_subscriptions_on_box_id"
-  add_index "boxes_subscriptions", ["subscription_id"], :name => "index_boxes_subscriptions_on_subscription_id"
 
   create_table "cart_items", :force => true do |t|
     t.integer  "quantity"
@@ -123,14 +115,6 @@ ActiveRecord::Schema.define(:version => 20120109010107) do
     t.string   "description"
     t.integer  "created_by_admin_id"
   end
-
-  create_table "furniture_items_subscriptions", :id => false, :force => true do |t|
-    t.integer "furniture_item_id"
-    t.integer "subscription_id"
-  end
-
-  add_index "furniture_items_subscriptions", ["furniture_item_id"], :name => "index_furniture_items_subscriptions_on_furniture_item_id"
-  add_index "furniture_items_subscriptions", ["subscription_id"], :name => "index_furniture_items_subscriptions_on_subscription_id"
 
   create_table "interested_people", :force => true do |t|
     t.string   "email"
