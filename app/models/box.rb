@@ -485,7 +485,7 @@ class Box < ActiveRecord::Base
       
       # We are receiving this for the first time, so it should realy only have one subscription!
       if !subscriptions.empty? && !subscriptions.last.started?
-        subscription.last.start_subscription
+        subscriptions.last.start_subscription
       end
             
       return self.save
