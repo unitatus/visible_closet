@@ -50,6 +50,7 @@ We are processing order <a href="/admin/user/<%= @order.user.id %>/orders/<%= @o
 	<% if contains_box_services %>
 		<td class="<%= class_name %>">
 			<% box = Box.find_by_inventorying_order_line_id(order_line.id) %>
+			<% boxes = nil %>
 			<% if box.nil? %>
 				<% boxes = Box.find_all_by_ordering_order_line_id(order_line.id) %>
 			<% end %>
@@ -63,7 +64,7 @@ We are processing order <a href="/admin/user/<%= @order.user.id %>/orders/<%= @o
 				<%= box.id %><br><%= box.location %>
 			<% elsif boxes %>
 				multiple
-			<% end %>
+			<% else %>
 			NA or many
 			<% end %>
 		</td>
