@@ -50,7 +50,6 @@ class Box < ActiveRecord::Base
   belongs_to :inventorying_order_line, :class_name => "OrderLine", :foreign_key => :inventorying_order_line_id
   belongs_to :user, :foreign_key => :assigned_to_user_id
   belongs_to :created_by, :class_name => "User"
-  has_and_belongs_to_many :subscriptions
   before_destroy :destroy_certain_parents
   
   # TODO: Figure out internationalization
@@ -634,7 +633,7 @@ class Box < ActiveRecord::Base
     end
     
     subscriptions.each do |subscription|
-      if !subscription.nil? && subscription.boxes.size == 1
+      if !subscription.nil?
         subscription.destroy
       end
     end

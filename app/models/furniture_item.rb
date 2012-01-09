@@ -22,7 +22,6 @@ class FurnitureItem < StoredItem
   
   belongs_to :creator, :class_name => "User"
   belongs_to :user
-  has_and_belongs_to_many :subscriptions
   
   attr_accessible :comma_delimited_tags, :height, :width, :length, :location
   

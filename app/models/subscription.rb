@@ -1,22 +1,27 @@
 # == Schema Information
-# Schema version: 20110815030426
+# Schema version: 20120109004045
 #
 # Table name: subscriptions
 #
-#  id                 :integer         not null, primary key
-#  start_date         :datetime
-#  end_date           :datetime
-#  user_id            :integer
-#  duration_in_months :integer
-#  created_at         :datetime
-#  updated_at         :datetime
+#  id                            :integer         not null, primary key
+#  start_date                    :datetime
+#  end_date                      :datetime
+#  user_id                       :integer
+#  duration_in_months            :integer
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  chargeable_unit_properties_id :integer
 #
 
 class Subscription < ActiveRecord::Base
+  include RelatedToOneChargeableProperties
+
   has_and_belongs_to_many :boxes
   has_and_belongs_to_many :furniture_items
   belongs_to :user # technically not necessary? Perhaps better than just grabbing from the first box.
   has_many :storage_charges
+  
+  validates_presence_of :chargeable_unit_properties
   
   def start_subscription
     update_attribute(:start_date, Date.today)

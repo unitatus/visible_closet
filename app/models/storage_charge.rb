@@ -1,10 +1,9 @@
 # == Schema Information
-# Schema version: 20120108215537
+# Schema version: 20120108233808
 #
 # Table name: storage_charges
 #
 #  id                                  :integer         not null, primary key
-#  box_id                              :integer
 #  charge_id                           :integer
 #  start_date                          :datetime
 #  end_date                            :datetime
@@ -13,7 +12,8 @@
 #
 
 class StorageCharge < ActiveRecord::Base
-  belongs_to :chargeable_unit_properties
+  include RelatedToOneChargeableProperties
+  
   belongs_to :charge
   belongs_to :storage_charge_processing_record
   
@@ -28,19 +28,5 @@ class StorageCharge < ActiveRecord::Base
   
   def end_date
     read_attribute(:end_date).nil? ? nil : read_attribute(:end_date).to_date
-  end
-  
-  # No such thing as "belongs to through"
-  def chargeable_unit
-    self.chargeable_unit_properties.nil? ? nil : self.chargeable_unit_properties.chargeable_unit
-  end
-  
-  # No such thing as "belongs to through"
-  def chargeable_unit=(chargeable_unit)
-    if chargeable_unit.nil?
-      self.chargeable_unit_properties = nil
-    else
-      self.chargeable_unit_properties = chargeable_unit.chargeable_unit_properties
-    end
   end
 end

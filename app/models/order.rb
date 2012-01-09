@@ -527,12 +527,6 @@ class Order < ActiveRecord::Base
   
   def process_box_orders
     box_order_lines.each do |order_line|
-      if order_line.committed_months.nil? || order_line.committed_months == 0
-        subscription = nil
-      else
-        subscription = Subscription.create!(:duration_in_months => order_line.committed_months, :user_id => self.user_id)
-      end
-      
       if order_line.product_id == Rails.application.config.our_box_product_id
         type = Box::VC_BOX_TYPE
         status = Box::NEW_STATUS
@@ -548,8 +542,10 @@ class Order < ActiveRecord::Base
         if !new_box.save
           raise "Standard box creation failed."
         end
-        # this automatically saves, and only works at all if the box is already saved (thank you rails)
-        new_box.subscriptions << subscription if subscription
+
+        if order_line.committed_months && order_line.committed_months > 0
+          new_box.subscriptions.create!(:duration_in_months => order_line.committed_months, :user_id => self.user_id)
+        end
       end # inner for loop
     end
   end

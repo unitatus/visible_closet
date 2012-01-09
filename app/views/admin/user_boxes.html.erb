@@ -22,7 +22,7 @@
 			<% end %>
 			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=box_type<%= type_desc_string %>">Type</a></th>
 			<th>Box Num</th>
-			<th>Subscription</th>
+			<th>Subscriptions</th>
 			<th>Receive</th>
 			<% if current_user.admin? %>
 				<th>Destroy?</th>
@@ -49,11 +49,18 @@
 				</td>
 				<td><%= box.box_type %></td>
 				<td><%= box.box_num %></td>
-				<% if box.current_subscription.nil? %>
-					<td>NA</td>
-				<% else %>
-					<td><a href="/admin/user/<%= @user.id %>/subscriptions/<%= box.current_subscription.id %>"><%= box.current_subscription.id %></a></td>
-				<% end %>
+				<td>
+					<% if box.subscriptions.empty? %>
+						NA
+					<% else %>
+						<% box.subscriptions.each_with_index do |subscription, index| %>
+							<% if index > 0 %>
+								, 
+							<% end %>
+							<a href="/admin/user/<%= @user.id %>/subscriptions/<%= subscription.id %>"><%= subscription.id %></a>
+						<% end %>
+					<% end %>
+				</td>
 				<td>
 					<a href="/boxes/receive_box?box_id=<%= box.id %>">Receive</a>
 				</td>

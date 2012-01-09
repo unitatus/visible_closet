@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120108223243) do
+ActiveRecord::Schema.define(:version => 20120109010107) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -350,6 +350,7 @@ ActiveRecord::Schema.define(:version => 20120108223243) do
     t.integer  "duration_in_months"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "chargeable_unit_properties_id"
   end
 
   add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"

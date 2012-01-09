@@ -15,5 +15,5 @@
 class ChargeableUnitProperties < ActiveRecord::Base
   belongs_to :chargeable_unit, :polymorphic => true, :dependent => :destroy
   has_many :storage_charges, :order => "end_date ASC" # This way .first means the first ever charge, and .last means the last ever storage charge, by end_date
-
+  has_many :subscriptions
 end
