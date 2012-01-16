@@ -6,22 +6,28 @@ var <%=svc_name%>_link_element = document.getElementById('stored_item_<%= @store
 var container = document.getElementById("stored_item_<%=@stored_item.id%>_menu_list");
 
 // re-add menu items
-<% if svc_name != "mailing" %>
+<% if svc_name != "mailing" && !@stored_item.is_a?(FurnitureItem) %>
 	var mail_element = document.createElement('li');
 	mail_element.innerHTML = '<%= link_to "mail this item", "/stored_items/#{@stored_item.id}/request_mailing", :remote => true, :id => "stored_item_#{@stored_item.id}_mailing_link" %>';
 	mail_element.id = 'stored_item_<%=@stored_item.id%>_mailing_li';
 	container.insertBefore(mail_element, container.childNodes[2]);
 <% end %>
 
+<% if svc_name != "retrieval" %>
+	var retrieve_element = document.createElement('li');
+	retrieve_element.innerHTML = '<%= link_to "retrieve item", "/stored_items/#{@stored_item.id}/request_pickup", :remote => true, :id => "stored_item_#{@stored_item.id}_retrieval_link" %>';
+	retrieve_element.id = 'stored_item_<%=@stored_item.id%>_retrieval_li';
+	container.insertBefore(retrieve_element, container.childNodes[2]);
+<% end %>
 
-<% if svc_name != "sell" %>
+<% if svc_name != "sell" && !@stored_item.is_a?(FurnitureItem) %>
 	var sell_element = document.createElement('li');
 	sell_element.innerHTML = '<a href="javascript:alert(\'This service is coming soon! Email us at help@thevisiblecloset.com for more details.\')">sell (coming soon!)</a>';
 	sell_element.id = 'stored_item_<%=@stored_item.id%>_sell_li';
 	container.insertBefore(sell_element, container.childNodes[4]);
 <% end %>
 
-<% if svc_name != "donation" %>
+<% if svc_name != "donation" && false %>
 	var donation_element = document.createElement('li');
 	donation_element.innerHTML = '<%= link_to "donate to charity", "/stored_items/#{@stored_item.id}/request_donation", :remote => true, :id => "stored_item_#{@stored_item.id}_donation_link" %>';
 	donation_element.id = 'stored_item_<%=@stored_item.id%>_donation_li';
@@ -29,8 +35,10 @@ var container = document.getElementById("stored_item_<%=@stored_item.id%>_menu_l
 <% end %>
 
 // remove unnecessary checkout element and div indicator
-var checkout_element = document.getElementById("stored_item_<%=@stored_item.id%>_checkout_li")
-container.removeChild(checkout_element)
+<% if svc_name != "retrieval" %>
+	var checkout_element = document.getElementById("stored_item_<%=@stored_item.id%>_checkout_li")
+	container.removeChild(checkout_element)
+<% end %>
 
 var blocking_div = document.getElementById('item-<%=@stored_item.id%>-service-div')
 var wider_container = document.getElementById("stored_item_<%=@stored_item.id%>_menu");

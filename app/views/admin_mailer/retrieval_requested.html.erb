@@ -1,0 +1,20 @@
+Visible Closet Administrator,<br><br>
+
+Customer <%= @furniture_item.user.name %> has requested that furniture item #<%= @furniture_item.id %> be picked up. Please email <%= @furniture_item.user.first_name %> at <a href="mailto:<%= @furniture_item.user.email %>"><%= @furniture_item.user.email %></a> immediately to schedule a time for the pick-up, and arrange for the item to be ready.
+<br><br>
+<b>Item Details:</b>
+<br><br>
+Description:<%= @furniture_item.description %><br>
+Location: <%= @furniture_item.location %><br>
+Tags:
+<% @furniture_item.stored_item_tags.each_with_index do |tag, index| %>
+	<% if index > 0 %>
+	, 
+	<% end %>
+	<%= tag.tag %>
+<% end %>
+<br>
+Images:
+<% @furniture_item.stored_item_photos.each do |stored_item_photo| %>
+	<%= image_tag(stored_item_photo.photo.url(:medium), :name => "medium_" + stored_item_photo.id.to_s, :height => 150, :width => 150, :style => "border-style: solid; border-width: 1px; border-color: black") %>
+<% end %>

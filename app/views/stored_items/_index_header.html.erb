@@ -1,0 +1,25 @@
+<%= render 'account/account_nav' %>
+<style type="text/css"> 
+#fancybox-left-ico { 
+ left: 20px; 
+} 
+
+#fancybox-right-ico { 
+ right: 20px; 
+ left: auto; 
+} 
+#fancybox-left, #fancybox-right {
+	width: 15%;
+}
+
+ul.ui-autocomplete {
+
+}
+</style>
+<% if @selected_item %>
+	<script language="javascript">
+		jQuery(document).ready(function() {
+		    $("#<%=@selected_item.id.to_s%>_details_link").trigger('click');
+		});
+	</script>
+<% end %>

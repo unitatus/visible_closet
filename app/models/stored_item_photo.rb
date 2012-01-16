@@ -54,6 +54,10 @@ class StoredItemPhoto < ActiveRecord::Base
   def default?
     stored_item.default_photo(visibility) == self
   end
+  
+  def real_photo?
+    self.id != Rails.application.config.furniture_stock_photo_id
+  end
 
   private
   

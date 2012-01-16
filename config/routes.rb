@@ -47,6 +47,12 @@ VisibleCloset::Application.routes.draw do
   match "stored_items/:id/cancel_donation_request" => "stored_items#cancel_donation_request"
   match "stored_items/:id/request_mailing" => "stored_items#request_mailing"
   match "stored_items/:id/cancel_mailing_request" => "stored_items#cancel_mailing_request"
+  match "stored_items/:id/cancel_retrieval_request" => "stored_items#cancel_retrieval_request"
+  match "stored_items/:id/request_retrieval" => "stored_items#request_retrieval"
+  match "/stored_items" => "stored_items#index"
+  match "/furniture_items" => "furniture_items#index"
+  match "/furniture_items/:id" => "furniture_items#view"
+  match "furniture_items/:id/save_description" => "furniture_items#save_description"
   
   resources :boxes
   resources :addresses
@@ -62,7 +68,6 @@ VisibleCloset::Application.routes.draw do
   match "order_lines/:id/cancel" => "orders#cancel_order_line"
   match "boxes/:box_id/stored_items" => "stored_items#index"
   match "boxes/:id/request_inventory" => "boxes#request_inventory"
-  match "/stored_items" => "stored_items#index"
   match "box/:id/get_label" => "boxes#get_label"
   match "shipment/:id/get_label" => "shipments#get_label"
   match "stored_item_tags/:id/delete" => "stored_item_tags#delete"

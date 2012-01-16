@@ -44,6 +44,30 @@ class AdminMailer < ActionMailer::Base
     end
   end
   
+  def AdminMailer.deliver_retrieval_requested(furniture_item)
+    if furniture_item.user.not_test_user?
+      retrieval_requested(furniture_item).deliver
+    end
+  end
+  
+  def retrieval_requested(furniture_item)
+    @furniture_item = furniture_item
+    
+    mail(:subject => "Customer requested furniture item retrieval")
+  end
+  
+  def AdminMailer.deliver_retrieval_cancelled(furniture_item)
+    if furniture_item.user.not_test_user?
+      retrieval_cancelled(furniture_item).deliver
+    end
+  end
+  
+  def retrieval_cancelled(furniture_item)
+    @furniture_item = furniture_item
+    
+    mail(:subject => "Furniture request cancelled")
+  end
+  
   def failed_payment(user, message)
     @user = user
     @message = message

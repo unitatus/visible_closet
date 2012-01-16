@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120109021749) do
+ActiveRecord::Schema.define(:version => 20120115205941) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -323,6 +323,7 @@ ActiveRecord::Schema.define(:version => 20120109021749) do
     t.integer  "user_id"
     t.integer  "default_customer_stored_item_photo_id"
     t.integer  "default_admin_stored_item_photo_id"
+    t.string   "description"
   end
 
   add_index "stored_items", ["box_id"], :name => "index_stored_items_on_box_id"

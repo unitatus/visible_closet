@@ -12,13 +12,16 @@ class StoredItemsController < ApplicationController
       @stored_items = StoredItem.find_all_by_assigned_to_user_id(current_user.id, params[:box_id])
     elsif !params[:selected_item].blank? # someone selected a searched-for item -- show that box, and tell the page to highlight the selected item
       @selected_item = StoredItem.find(params[:selected_item])
+      if @selected_item.is_a?(FurnitureItem)
+        redirect_to "/furniture_items?selected_item=#{params[:selected_item]}" and return
+      end
       @stored_items = @selected_item.box.stored_items
       params[:box_id] = @selected_item.box.id.to_s
     else # someone hit enter while typing in the stored item search field -- show the results of what they selected
       @stored_items = StoredItem.tags_search(params[:tags].split, current_user, false)
       if @stored_items.size == 1 # the user probably thought they were selecting a single item, so act like they did
         @selected_item = @stored_items[0]
-        @stored_items = @selected_item.box.stored_items
+        @stored_items = @selected_item.is_a?(FurnitureItem) ? Array.new : @selected_item.box.stored_items
         params[:box_id] = @selected_item.box.id.to_s
       end
     end
@@ -59,6 +62,9 @@ class StoredItemsController < ApplicationController
   
   def request_charitable_donation
     @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
+    if @stored_item.nil? # might be furniture item type
+      @stored_item = FurnitureItem.find_by_id_and_user_id(params[:id], current_user.id)
+    end
     @cart = current_user.get_or_create_cart
     
     @cart.add_donation_request_for(@stored_item)
@@ -70,6 +76,14 @@ class StoredItemsController < ApplicationController
   end
   
   def cancel_donation_request
+    cancel_item_service
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def cancel_retrieval_request
     cancel_item_service
     
     respond_to do |format|
@@ -96,15 +110,31 @@ class StoredItemsController < ApplicationController
       format.js
     end
   end
-
+  
+  def request_retrieval
+    @stored_item = FurnitureItem.find_by_id_and_user_id(params[:id], current_user.id)
+    
+    @stored_item.request_retrieval
+    
+    respond_to do |format|
+      format.js
+    end
+  end
   
   private
   
   def cancel_item_service
     @stored_item = StoredItem.find_by_id_and_user_id(params[:id], current_user.id)
+    if @stored_item.nil?
+      @stored_item = FurnitureItem.find_by_id_and_user_id(params[:id], current_user.id)
+    end
     @cart = current_user.cart
     
-    @cart.remove_service_request_for(@stored_item)
+    if @stored_item.is_a?(FurnitureItem)
+      @stored_item.cancel_service_request
+    else
+      @cart.remove_service_request_for(@stored_item)
+    end
     @cart.save
   end
   
@@ -119,8 +149,10 @@ class StoredItemsController < ApplicationController
     
     if item[:donated]
       return_str += " (item donated to \"" + item[:donated_to].to_s + "\")"
-    else
+    elsif item[:box_num]
       return_str += " (Box " + item[:box_num].to_s + ")"
+    else
+      return_str += " (Furniture)"
     end
     
     return return_str

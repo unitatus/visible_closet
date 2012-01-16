@@ -1,0 +1,14 @@
+<div style="display: none">
+	<a href="#first_item_processing_div" id="first_item_processing_link"></a>
+	<div id="first_item_processing_div" style="width: 500px; border: 1px solid black; padding: 5px 5px 5px 5px; text-align: center">
+		You have added an item service to your cart. You can choose to add more item services to your cart (or remove them) by continuing to click the links on the item menus on this page, or you can proceed to checkout now to confirm your order and pay.
+		<br><br>
+		If you choose to add or cancel more item services, simply click the "cart" box at the top of the screen to proceed to checkout when you are ready.
+		<br><br>
+		What would you like to do now?<br><br>
+		<%= form_tag "/account/check_out", :class => "standard", :method => "get" do  %>
+			<input type="submit" class="button" value="Add / Cancel More Item Services" onclick="$.fancybox.close(); return false;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="submit" class="button" value="Go to Checkout">
+		<% end %>
+	</div>
+</div>

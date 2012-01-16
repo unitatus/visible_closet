@@ -69,6 +69,20 @@
 		</td>
 	</tr>
 	<tr>
+		<td>Description:</td>
+		<td>
+			<%= f.text_area :description, :class => "textbox" + (@furniture_item.errors[:description].blank? ? "" : " error"), :cols => 40, :rows => 10, :placeholder => "Description (255 characters or less)" %>
+			<div class="error_label">
+				<% @furniture_item.errors[:description].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
 		<td>Subscription Duration:</td>
 		<td>
 			<% @selected = params["duration"] %>
@@ -79,7 +93,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td>Comma-delimited tags:</td>
+		<td style="vertical-align: middle">Comma-delimited tags:</td>
 		<td>
 			<%= f.text_area :comma_delimited_tags, :class => "textbox", :cols => 40, :rows => 10, :placeholder => "tag1, tag2, etc" %>
 		</td>

@@ -1,0 +1,56 @@
+<% @stored_items.each_with_index do |stored_item, index| %>
+    <div class="browse-item">
+		<a href="#" onclick="return false;" class="browse-item-menu-link"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150, :style => "border-style: solid; border-width: 1px; border-color: black") %></a>
+		<!-- use this when offline image_tag("/images/electronic-musical-toy.jpg", :height => 150, :width => 150) -->
+		<% if stored_item.box_id %>
+			<p>(Box: <%= stored_item.box.box_num %>)</p>
+		<% elsif stored_item.is_a? FurnitureItem %>
+			<p style="text-align: left"><b>Description:</b> <br><%= stored_item.description %></p>
+		<% end %>
+		<div class="browse-item-menu" id="stored_item_<%=stored_item.id%>_menu">
+			<div class="browse-item-menu-contents" id="stored_item_<%=stored_item.id%>_menu_contents">
+				<p class="browse-item-menu-contents-head">Item Options</p>
+				<ul id="stored_item_<%=stored_item.id%>_menu_list">
+					<% if stored_item.is_a? FurnitureItem %>
+						<li><a id="<%= stored_item.id %>_details_link" class="grouped_images_class" rel="grouped_images" href="/furniture_items/<%= stored_item.id %>">details</a></li>
+					<% else %>
+						<li><a id="<%= stored_item.id %>_details_link" class="grouped_images_class" rel="grouped_images" href="/stored_items/<%= stored_item.id %>">details</a></li>
+					<% end %>
+					<% if stored_item.status == StoredItem::IN_STORAGE_STATUS && (current_user.cart.nil? || !current_user.cart.contains_service_request_for(stored_item)) %>
+
+						<% if stored_item.is_a? FurnitureItem %>
+							<li id="stored_item_<%= stored_item.id%>_retrieval_li"><%= link_to "retrieve item", "/stored_items/#{stored_item.id}/request_retrieval", :remote => true, :id => "stored_item_#{stored_item.id}_retrieval_link" %></li>
+						<% else %>
+							<li id="stored_item_<%= stored_item.id%>_mailing_li"><%= link_to "mail this item", "/stored_items/#{stored_item.id}/request_mailing", :remote => true, :id => "stored_item_#{stored_item.id}_mailing_link" %></li>
+							<li id="stored_item_<%= stored_item.id%>_sell_li"><a href="javascript:alert('This service is coming soon! Email us at help@thevisiblecloset.com for more details.')">sell (coming soon!)</a></li>
+	                    	<li id="stored_item_<%= stored_item.id%>_donation_li"><%= link_to "donate to charity", "/stored_items/#{stored_item.id}/request_donation", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
+						<% end %>
+					<% elsif !current_user.cart.nil? && current_user.cart.contains_donation_request_for(stored_item) %>
+						<li id="stored_item_<%= stored_item.id%>_donation_li"><%= link_to "cancel donation", "/stored_items/#{stored_item.id}/cancel_donation_request", :remote => true, :id => "stored_item_#{stored_item.id}_donation_link" %></li>
+						<li id="stored_item_<%= stored_item.id %>_checkout_li"><a href="/account/check_out">checkout</a></li>
+					<% elsif !current_user.cart.nil? && current_user.cart.contains_mailing_request_for(stored_item) %>
+						<li id="stored_item_<%= stored_item.id%>_mailing_li"><%= link_to "cancel mailing", "/stored_items/#{stored_item.id}/cancel_mailing_request", :remote => true, :id => "stored_item_#{stored_item.id}_mailing_link" %></li>
+						<li id="stored_item_<%= stored_item.id %>_checkout_li"><a href="/account/check_out">checkout</a></li>
+					<% end %>
+				</ul>
+			</div>
+			<% if stored_item.service_status? || (current_user.cart && current_user.cart.contains_service_request_for(stored_item)) %>
+				<div class="browse-item-service" id="item-<%= stored_item.id %>-service-div">
+					<% if current_user.cart && current_user.cart.contains_donation_request_for(stored_item) %>
+						Donation<br>Requested
+					<% elsif stored_item.status == StoredItem::DONATION_REQUESTED_STATUS %>
+						Donation<br>Requested
+					<% elsif stored_item.status == StoredItem::DONATED_STATUS %>
+						DONATED<br><div style="font-size: 50%">to <%= stored_item.donated_to %></div>
+					<% elsif current_user.cart && current_user.cart.contains_mailing_request_for(stored_item) %>
+						Mailing<br>Requested
+					<% elsif stored_item.status == StoredItem::MAILING_REQUESTED_STATUS %>
+						Mailing<br>Requested
+					<% elsif stored_item.status == StoredItem::MAILED_STATUS %>
+						MAILED
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+<% end %>

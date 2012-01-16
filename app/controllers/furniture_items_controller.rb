@@ -132,4 +132,46 @@ class FurnitureItemsController < ApplicationController
   def admin_view
     @furniture_item = FurnitureItem.find(params[:id])
   end
+  
+  def index
+    @top_menu_page = :account
+    if !params[:selected_item].blank? # someone selected a searched-for item -- show that box, and tell the page to highlight the selected item
+      @selected_item = FurnitureItem.find(params[:selected_item])
+      @stored_items = Array.new # makes this behave nicely with StoredItem code
+      @stored_items << @selected_item
+    elsif params[:tags].blank? # Someone hit the page from a link -- no search necessary
+        @stored_items = FurnitureItem.find_all_by_user_id_and_status(current_user.id, StoredItem::IN_STORAGE_STATUS)
+    else # someone hit enter while typing in the stored item search field -- show the results of what they selected
+      @stored_items = FurnitureItem.tags_search(params[:tags].split, current_user, false)
+      if @stored_items.size == 1 # the user probably thought they were selecting a single item, so act like they did
+        @selected_item = @stored_items[0]
+        @stored_items = Array.new
+      end
+    end
+    @hide_item_search = true
+  end
+  
+  # This call is made from fancybox when viewing an individual item
+  def view
+    if current_user.admin? || current_user.manager?
+      @stored_item = FurnitureItem.find(params[:id])
+    else
+      @stored_item = FurnitureItem.find_by_id_and_user_id(params[:id], current_user.id)
+    end
+    
+    respond_to do |format|
+      format.html { render :layout => false }
+    end
+  end
+  
+  def save_description
+    @stored_item = FurnitureItem.find_by_id_and_user_id(params[:id], current_user.id)
+    
+    if @stored_item
+      @stored_item.update_attribute(:description, params[:description])
+    end
+    
+    redirect_to "/furniture_items"
+  end
+
 end

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120108183638
+# Schema version: 20120115205941
 #
 # Table name: stored_items
 #
@@ -15,6 +15,7 @@
 #  user_id                               :integer
 #  default_customer_stored_item_photo_id :integer
 #  default_admin_stored_item_photo_id    :integer
+#  description                           :string(255)
 #
 
 class StoredItem < ActiveRecord::Base
@@ -111,6 +112,8 @@ class StoredItem < ActiveRecord::Base
     
     matching_tags = StoredItemTag.joins("INNER JOIN stored_items ON stored_item_tags.stored_item_id = stored_items.id INNER JOIN boxes ON stored_items.box_id = boxes.id " \
       + "WHERE " + sanitize_sql_array(conditions))
+    matching_tags = matching_tags | FurnitureItem.tags_search(tags, user)
+      
     grouped_item_tags = Hash.new
     item_counts = Hash.new # used to narrow down the search; tricky in rails to find only the items with both matches and pull back the tags too all in SQL
     
@@ -136,7 +139,7 @@ class StoredItem < ActiveRecord::Base
     
     if json_ready
       grouped_item_tags.keys.collect do |stored_item_id|
-        { :id => stored_item_id, :tag_matches => grouped_item_tags[stored_item_id], :box_num => cache[stored_item_id].box.box_num, \
+        { :id => stored_item_id, :tag_matches => grouped_item_tags[stored_item_id], :box_num => cache[stored_item_id].box ? cache[stored_item_id].box.box_num : nil, \
           :img => cache[stored_item_id].photo.url(:thumb), :donated => cache[stored_item_id].donated?, :donated_to => cache[stored_item_id].donated_to }
       end
     else

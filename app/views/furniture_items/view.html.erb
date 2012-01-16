@@ -1,0 +1,24 @@
+<!-- This page is loaded via ajax, so we must do all the partial work manually. -->
+<body>
+	<div class="item_summary">
+		<% if @stored_item.stored_item_photo.real_photo? %>
+			<%= image_tag(@stored_item.photo.url(:normal), :name => "normal_" + @stored_item.id.to_s) %>
+		<% else %>
+			<br><br><br><br>(no photo -- not indexed)<br><br><br><br>
+		<% end %>
+		<br><br>
+		<% if @stored_item.donated? %>
+			NOTE: Item no longer in storage; donated to &quot;<%= @stored_item.donated_to %>&quot;.
+		<br><br>
+		<% end %>
+		Tags: <br>
+<%= render :partial => "stored_item_tags/tags_editor" %>
+		<br>
+		<%= form_tag "/furniture_items/#{@stored_item.id}/save_description" do %>
+			<%= text_field_tag "description", @stored_item.description, :alt => "modify description", :id => "description" %>
+			<%= submit_tag "Save Description" %>
+		<% end %>
+		<br>
+	</div>
+</body>
+</html>

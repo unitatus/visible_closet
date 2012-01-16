@@ -168,6 +168,11 @@ class Ability
       can :cancel_donation_request, StoredItem
       can :request_mailing, StoredItem
       can :cancel_mailing_request, StoredItem
+      can :cancel_retrieval_request, StoredItem
+      can :request_retrieval, StoredItem
+      
+      # furniture items
+      can :save_description, FurnitureItem
       
       # payment profiles
       can :index, PaymentProfile

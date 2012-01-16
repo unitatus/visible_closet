@@ -1,0 +1,7 @@
+<%= form_tag "/stored_items", :id => "tags_search" do %>
+	<div style="text-align:center">
+		<%= autocomplete_field_tag 'tags', params[:tags], '/stored_items/autocomplete_stored_item_tags', :placeholder => "search your items", :style => "width: 400px; margin-bottom: 25px; ", :id_element => "#selected_item" %>
+		<%= hidden_field_tag :selected_item %>
+		<%= submit_tag "Search" %>
+		</div>
+<% end %>

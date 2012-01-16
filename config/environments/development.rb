@@ -33,5 +33,7 @@ VisibleCloset::Application.configure do
   # if more products are added, be sure to update the constants and functions in the Product object
 
   config.fedex_vc_address_id = 7
+  
+  config.furniture_stock_photo_id = 301
 end
 

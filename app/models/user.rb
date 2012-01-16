@@ -280,6 +280,14 @@ class User < ActiveRecord::Base
     stored_item_count > 0
   end
   
+  def published_furniture
+    furniture_items.select { |furniture_item| furniture_item.published? }
+  end
+  
+  def has_published_furniture?
+    published_furniture.size > 0
+  end
+  
   def stored_item_count
     StoredItem.joins(:box).count(:conditions => "assigned_to_user_id = #{self.id}")
   end

@@ -1,5 +1,5 @@
 <% active_class_str = " class='active'" %>
-<% boxes_class = ""; items_class = ""; store_class = ""; cart_class = ""; support_class = ""; %>
+<% boxes_class = ""; items_class = ""; store_class = ""; cart_class = ""; support_class = ""; furniture_class = "" %>
 <% case @menu_page %>
 <% when :boxes %>
 <%   boxes_class = active_class_str %>
@@ -9,8 +9,8 @@
 <%   items_class = active_class_str %>
 <% when :store_more_stuff %>
 <%   store_class = active_class_str %>
-<% when :cart %>
-<%   cart_class = active_class_str %>
+<% when :furniture %>
+<%   furniture_class = active_class_str %>
 <% when :support %>
 <%   support_class = active_class_str %>
 <% when :account %>
@@ -24,7 +24,9 @@
 	        <li<%= store_class %>><a href="/account/store_more_boxes">Store More Stuff</a></li>
 	        <li<%= boxes_class %>><a href="/boxes">Browse Boxes</a></li>
 	        <li<%= items_class %>><a href="/stored_items">Browse Items</a></li>
-	 		<!--<li<%= cart_class %>><a href="/account/cart">My Cart</a></li> -->
+	 		<% if current_user.has_published_furniture? %>
+				<li<%= furniture_class %>><a href="/furniture_items">Browse Furniture</a></li>
+			<% end %>
 	        <li<%= support_class %>><a href="/support">Support</a></li>
 	    </ul>
 	</div>
