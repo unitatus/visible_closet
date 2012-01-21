@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120115205941
+# Schema version: 20120116141356
 #
 # Table name: stored_items
 #
@@ -15,7 +15,6 @@
 #  user_id                               :integer
 #  default_customer_stored_item_photo_id :integer
 #  default_admin_stored_item_photo_id    :integer
-#  description                           :string(255)
 #
 
 class StoredItem < ActiveRecord::Base

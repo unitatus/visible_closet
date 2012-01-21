@@ -100,7 +100,7 @@ class FurnitureItemsController < ApplicationController
   
   def admin_publish_furniture_item
     furniture_item = FurnitureItem.find(params[:id])
-    furniture_item.update_attribute(:status, StoredItem::IN_STORAGE_STATUS)
+    furniture_item.publish
     redirect_to "/admin/users/#{furniture_item.user_id}/furniture"
   end
   

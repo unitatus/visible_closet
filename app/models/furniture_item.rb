@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120115205941
+# Schema version: 20120116141356
 #
 # Table name: stored_items
 #
@@ -15,7 +15,6 @@
 #  user_id                               :integer
 #  default_customer_stored_item_photo_id :integer
 #  default_admin_stored_item_photo_id    :integer
-#  description                           :string(255)
 #
 
 class FurnitureItem < StoredItem
@@ -47,12 +46,11 @@ class FurnitureItem < StoredItem
     furniture_item
   end
   
-  def current_subscription
-    subscription_on(Date.today)
-  end
-  
-  def subscription_on(date)
-    subscriptions.select { |subscription| subscription.applies_on(date) }.last
+  def publish
+    update_attribute(:status, StoredItem::IN_STORAGE_STATUS)
+    if subscriptions.last
+      subscriptions.last.start_subscription
+    end
   end
   
   def add_subscription(duration)

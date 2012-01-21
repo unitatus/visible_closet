@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120108183638
+# Schema version: 20120116141356
 #
 # Table name: boxes
 #
@@ -10,7 +10,6 @@
 #  ordering_order_line_id     :integer
 #  status                     :string(255)
 #  box_type                   :string(255)
-#  description                :text
 #  inventorying_status        :string(255)
 #  inventorying_order_line_id :integer
 #  received_at                :datetime
@@ -304,10 +303,6 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def subscription_on(date)
-    subscriptions.select { |subscription| subscription.applies_on(date) }.last
-  end
-  
   def charged_already_on(day)
     # Hash is for performance
     @days_already_charged ||= Hash.new
@@ -325,10 +320,6 @@ class Box < ActiveRecord::Base
     end
     
     @days_already_charged[day] = false and return false
-  end
-  
-  def current_subscription
-    subscription_on(Date.today)
   end
   
   def in_storage_on(a_date)
@@ -483,7 +474,7 @@ class Box < ActiveRecord::Base
         shipment.save
       end
       
-      # We are receiving this for the first time, so it should realy only have one subscription!
+      # We are receiving this for the first time, so it should really only have one subscription!
       if !subscriptions.empty? && !subscriptions.last.started?
         subscriptions.last.start_subscription
       end

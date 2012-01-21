@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120115205941) do
+ActiveRecord::Schema.define(:version => 20120116141356) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -41,7 +41,6 @@ ActiveRecord::Schema.define(:version => 20120115205941) do
     t.integer  "ordering_order_line_id"
     t.string   "status"
     t.string   "box_type"
-    t.text     "description"
     t.string   "inventorying_status"
     t.integer  "inventorying_order_line_id"
     t.datetime "received_at"
@@ -90,6 +89,7 @@ ActiveRecord::Schema.define(:version => 20120115205941) do
     t.string  "location"
     t.integer "chargeable_unit_id"
     t.string  "chargeable_unit_type"
+    t.string  "description"
   end
 
   create_table "charges", :force => true do |t|
@@ -323,7 +323,6 @@ ActiveRecord::Schema.define(:version => 20120115205941) do
     t.integer  "user_id"
     t.integer  "default_customer_stored_item_photo_id"
     t.integer  "default_admin_stored_item_photo_id"
-    t.string   "description"
   end
 
   add_index "stored_items", ["box_id"], :name => "index_stored_items_on_box_id"
