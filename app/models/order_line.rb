@@ -205,6 +205,10 @@ class OrderLine < ActiveRecord::Base
     product_id == Rails.application.config.our_box_product_id || product_id == Rails.application.config.your_box_product_id
   end
   
+  def box_return?
+    product_id == Rails.application.config.return_box_product_id
+  end
+  
   def return_order_line?
     product_id == Rails.application.config.return_box_product_id
   end
