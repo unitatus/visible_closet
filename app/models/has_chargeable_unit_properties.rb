@@ -1,24 +1,24 @@
 # For more on this pattern, visit http://mediumexposure.com/multiple-table-inheritance-active-record/
 module HasChargeableUnitProperties
   def self.included(base)
-    # Makes it so that any object (base) that includes HasDimensions automatically has a relationship with a DimensionSet object
-    base.has_one :chargeable_unit_properties, :as => :chargeable_unit, :autosave => true
+    # Makes it so that any object (base) that includes HasChargeableUnitProperties automatically has a relationship with a ChargeableUnitProperties object
+    base.has_one :chargeable_unit_properties, :as => :chargeable_unit, :autosave => true, :dependent => :destroy
     # Any DimensionSet validation must show up in the object that includes HasDimensions
     base.validate :chargeable_unit_properties_must_be_valid
-    # Makes it so that whenever anyone accesses dimension set by calling dimension_set the dimension_set_with_autobuild method is called
+    # Makes it so that whenever anyone accesses chargeable unit properties by calling chargeable_unit_properties the chargeable_unit_properties_with_autobuild method is called
     base.alias_method_chain :chargeable_unit_properties, :autobuild
     # Add a method to the base and call it.
     base.extend ClassMethods
     base.define_chargeable_unit_properties_accessors
   end
 
-  # Makes it so that when anyone calls dimension_set on an object that includes HasDimensions the DimensionSet will be built automatically
+  # Makes it so that when anyone calls chargeable_unit_properties on an object that includes HasChargeableUnitProperties the ChargeableUnitProperties will be built automatically
   def chargeable_unit_properties_with_autobuild
     chargeable_unit_properties_without_autobuild || build_chargeable_unit_properties
   end
   
-  # Make it so that any time a method is called on an object that includes HasDimensions, if that method exists on the associated DimensionSet object,
-  # then that's the method that's going to be sent; otherwise, the method is sent to the object whose class includes HasDimensions.
+  # Make it so that any time a method is called on an object that includes HasChargeableUnitProperties, if that method exists on the associated ChargeableUnitProperties object,
+  # then that's the method that's going to be sent; otherwise, the method is sent to the object whose class includes HasChargeableUnitProperties.
   def method_missing(meth, *args, &blk)
     meth.to_s == 'id' ? super : chargeable_unit_properties.send(meth, *args, &blk)
   rescue NoMethodError

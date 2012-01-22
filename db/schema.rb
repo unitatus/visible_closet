@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120116141356) do
+ActiveRecord::Schema.define(:version => 20120122040952) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -107,6 +107,10 @@ ActiveRecord::Schema.define(:version => 20120116141356) do
   add_index "charges", ["order_id"], :name => "index_charges_on_order_id"
   add_index "charges", ["user_id"], :name => "index_charges_on_user_id"
 
+  create_table "coupons", :force => true do |t|
+    t.integer "assigned_to_user_id"
+  end
+
   create_table "credits", :force => true do |t|
     t.float    "amount"
     t.integer  "user_id"
@@ -114,6 +118,12 @@ ActiveRecord::Schema.define(:version => 20120116141356) do
     t.datetime "updated_at"
     t.string   "description"
     t.integer  "created_by_admin_id"
+  end
+
+  create_table "free_storage_benefit_properties", :force => true do |t|
+    t.integer "free_storage_offer_benefit_id"
+    t.integer "num_boxes"
+    t.integer "num_months"
   end
 
   create_table "interested_people", :force => true do |t|
@@ -136,6 +146,29 @@ ActiveRecord::Schema.define(:version => 20120116141356) do
     t.string   "source"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "offer_benefits", :force => true do |t|
+    t.integer  "offer_properties_id"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "offer_properties", :force => true do |t|
+    t.datetime "start_date"
+    t.datetime "expiration_date"
+    t.integer  "created_by_user_id"
+    t.string   "unique_identifier"
+    t.integer  "offer_id"
+    t.string   "offer_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "offer_properties", ["unique_identifier"], :name => "index_offer_properties_on_unique_identifier"
+
+  create_table "offers", :force => true do |t|
   end
 
   create_table "order_lines", :force => true do |t|
