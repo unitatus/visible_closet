@@ -1,6 +1,7 @@
 <%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
-	<h1>Coupons Print Page</h1>
+	<h1>Coupons Print Page for Offer <a href="/offers/<%= @offer.id %>"><%= @offer.id %></a></h1>
+	<br>
 	<table class="prices_table">
 		<% @offer.coupons.each do |coupon| %>
 		<tr>
