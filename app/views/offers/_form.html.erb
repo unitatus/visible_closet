@@ -1,0 +1,132 @@
+<%= javascript_include_tag "/javascripts/prototype.js" %>
+<%= calendar_date_select_includes %>
+
+<% if !@offer.errors.empty? %>
+	<div class="error_label">
+		Please correct the following errors:<br><br>
+		<ul>
+			<% @offer.errors.each do |key, msg| %>
+				<% if key.blank? %>
+				<li><%= msg %></li>
+				<% end %>
+			<% end %>
+		</ul>
+	</div>
+<% end %>
+	<% form_for(@offer, :url => url, :html => { :class => "standard", :onsubmit => "offer_submit.disabled=true" }) do |f| %>
+<table class="lightly_padded_table">
+	<tr>
+		<td>Type:</td>
+		<td>
+			<% if @offer.id %>
+				<%= @offer.class.name %>
+			<% else %>
+				<%= select_tag "type", options_for_select([["General Offer", "General"], ["Coupon Offer", "Coupon"]], :selected => params[:type])%>
+			<% end %>
+				<div class="error_label">
+				<% @offer.errors[:type].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<% if @offer.id.nil? || @offer.is_a?(CouponOffer) %>
+		<tr>
+			<td># coupons to generate<br>(coupon offer only):</td>
+			<td>
+				<%= text_field_tag :num_coupons, params[:num_coupons], :class => "textbox" + (@offer.errors[:num_coupons].blank? ? "" : " error"),  %>
+				<div class="error_label">
+					<% @offer.errors[:type].each_with_index do |msg, index| %>
+						<% if index > 0 %>
+							, 
+						<% end %>
+						<%= msg %>
+					<% end %>
+				</div>
+			</td>
+		</tr>
+	<tr>
+		<td>Unique identifier<br>(coupon offer only):</td>
+		<td style="vertical-align: middle">
+			<%= f.text_field :unique_identifier, :class => "textbox" + (@offer.errors[:unique_identifier].blank? ? "" : " error"),  %>
+			<div class="error_label">
+				<% @offer.errors[:unique_identifier].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<% end %>
+	<tr>
+		<td>Start Date:</td>
+		<td>
+			<%= f.calendar_date_select "start_date", :time => false, :class => "textbox" + (@offer.errors[:start_date].blank? ? "" : " error"),  %>
+			<div class="error_label">
+				<% @offer.errors[:start_date].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>Expiration Date:</td>
+		<td>
+			<%= f.calendar_date_select "expiration_date", :time => false, :class => "textbox" + (@offer.errors[:expiration_date].blank? ? "" : " error"),  %>
+			<div class="error_label">
+				<% @offer.errors[:expiration_date].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<hr>
+			Offer Benefits: &quot;Months Free&quot;
+		</td>
+	</tr>
+	<tr>
+		<td>Num Months:</td>
+		<td>
+			<%= text_field_tag :benefit_num_months, @offer.benefits.first.num_months, :class => "textbox" + (@offer.benefits.first.errors[:num_months].blank? ? "" : " error"),  %>
+			<div class="error_label">
+				<% @offer.benefits.first.errors[:num_months].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>Num Boxes:</td>
+		<td>
+			<%= text_field_tag :benefit_num_boxes, @offer.benefits.first.num_boxes, :class => "textbox" + (@offer.benefits.first.errors[:num_boxes].blank? ? "" : " error"),  %>
+			<div class="error_label">
+				<% @offer.benefits.first.errors[:num_boxes].each_with_index do |msg, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right; padding-top: 20px"><%= f.submit submit_text, :class => "button", :id => "offer_submit" %>
+	</tr>
+</table>
+<% end %>

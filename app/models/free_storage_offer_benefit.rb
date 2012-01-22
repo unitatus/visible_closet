@@ -12,6 +12,7 @@
 
 class FreeStorageOfferBenefit < OfferBenefit
   has_one :free_storage_benefit_properties, :autosave => true, :dependent => :destroy
+  belongs_to :offer
   
   validate :free_storage_benefit_properties_must_be_valid
   

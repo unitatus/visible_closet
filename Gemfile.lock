@@ -1,3 +1,9 @@
+GIT
+  remote: http://github.com/paneq/calendar_date_select.git
+  revision: 977048211b94599fe0f08eb37a481f3d69df48f6
+  specs:
+    calendar_date_select (1.16.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -144,6 +150,7 @@ DEPENDENCIES
   annotate-models
   authorize-net
   aws-s3
+  calendar_date_select!
   cancan
   devise
   hoptoad_notifier

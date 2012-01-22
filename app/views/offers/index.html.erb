@@ -1,0 +1,39 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Offers</h1>
+	<table class="prices_table">
+		<tr>
+			<th>ID</th>
+			<th>Type</th>
+			<th>Start Date</th>
+			<th>Expiration Date</th>
+			<th>Unique Identifier</th>
+			<th>Coupons</th>
+			<th>Edit</th>
+			<th>Delete</th>
+			<th>Active</th>
+		</tr>
+		<% if @offers.empty? %>
+			<td colspan="8">None</td>
+		<% else %>
+			<% @offers.each do |offer| %>
+				<tr>
+					<td><a href="/offers/<%= offer.id %>"><%= offer.id %></a></td>
+					<td><%= offer.class.name %></td>
+					<td><%= offer.start_date.strftime "%m/%d/%Y" %></td>
+					<td><%= offer.expiration_date.strftime "%m/%d/%Y" %></td>
+					<td><%= offer.unique_identifier ? offer.unique_identifier : "(NA)" %></td>
+					<td><%= raw offer.respond_to?(:coupons) ? "<a href=""/offers/#{offer.id}/coupons"">Coupons</a>" : "NA" %></td>
+					<td><%= raw offer.active? ? "NA" : "<a href=""/offers/#{offer.id}/edit"">Edit</a>" %></td>
+					<td><%= raw offer.active? ? "NA" : link_to('Delete', "/offers/#{offer.id}", :confirm => 'Are you sure?', :method => :delete) %></td>
+					<td><%= offer.active? ? "active" : link_to('Activate', "/offers/#{offer.id}/activate", :confirm => 'Are you sure? Once you activate you can''t delete or edit') %></td>
+				</tr>
+			<% end %>
+		<% end %>
+	</table>
+	<div style="text-align: right">
+		<br>
+		<a href="/offers/new">New Offer &gt;&gt;</a><br>
+	</div>
+</div>
+<div class="clearer"></div>

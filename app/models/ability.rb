@@ -56,7 +56,6 @@ class Ability
       can :delete_charge, :admin
       can :generate_payments, :admin
       can :user_account_balances, :admin
-      can :marketing, :admin
       can :receive_box, Box
       can :inventory_box, Box
       can :inventory_boxes, Box
@@ -100,6 +99,8 @@ class Ability
       can :admin_publish_furniture_item, FurnitureItem
       can :save_photo, FurnitureItem
       can :admin_view, FurnitureItem
+      can :index, Offer
+      can :new, Offer
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      

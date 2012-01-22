@@ -1,0 +1,8 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>
+		Create Offer
+	</h1><br>
+<%= render :partial => "form", :locals => { :url => "/offers", :submit_text => "Create Offer" } %>
+</div>
+<div class="clearer"></div>

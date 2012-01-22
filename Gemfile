@@ -23,6 +23,7 @@ gem 'ssl_requirement'
 gem 'hoptoad_notifier'
 gem 'jquery-rails'
 gem 'rails3-jquery-autocomplete'
+gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git'
 
 group :development do
   gem 'rspec-rails'

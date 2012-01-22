@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120122055753
+# Schema version: 20120122173933
 #
 # Table name: offers
 #
@@ -11,10 +11,11 @@
 #  type               :string(255)
 #  created_at         :datetime
 #  updated_at         :datetime
+#  active             :boolean
 #
 
 class CouponOffer < Offer
-  has_many :coupons, :dependent => :destroy
+  has_many :coupons, :as => :offer, :dependent => :destroy
   
   def identifier_overridden
     true

@@ -1,0 +1,77 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>
+		Offer #<%= @offer.id %> 
+		<% if !@offer.has_users? %>
+			<a href="/offers/<%= @offer.id %>/edit">(Edit)</a>
+		<% end %>
+	</h1><br>
+<table class="lightly_padded_table">
+	<tr>
+		<td>Type:</td>
+		<td><%= @offer.class.name %></td>
+	</tr>
+	<tr>
+		<td>Start Date:</td>
+		<td><%= @offer.start_date.strftime "%m/%d/%Y" %></td>
+	</tr>
+	<tr>
+		<td>Expiration Date:</td>
+		<td><%= @offer.expiration_date.strftime "%m/%d/%Y" %></td>
+	</tr>
+	<tr>
+		<td>Activated?</td>
+		<td><%= @offer.active? %></td>
+	</tr>
+	<% if @offer.unique_identifier %>
+		<tr>
+			<td>Unique Identifier:</td>
+			<td><%= @offer.unique_identifier %></td>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="2">Benefits:</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<table>
+				<% @offer.benefits.each do |benefit| %>
+					<tr>
+						<td>Benefit Type:</td>
+						<td><%= benefit.class.name %></td>
+						<td>Num Months:</td>
+						<td><%= benefit.num_months %></td>
+						<td>Num Boxes:</td>
+						<td><%= benefit.num_boxes %></td>
+					</tr>
+				<% end %>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td>Users who have used:</td>
+		<td>TBD</td>
+	</tr>
+	<% if @offer.respond_to?(:coupons) %>
+	<tr>
+		<td colspan="2">Coupons:</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<table>
+			<% @offer.coupons.each do |coupon| %>
+				<tr>
+					<td>Unique Identifier:</td>
+					<td><%= coupon.unique_identifier %></td>
+					<td>User:</td>
+					<td><%= coupon.user ? "<a href=""/admin/user/#{coupon.assigned_to_user_id}"">#{coupon.user.name}</a>" : "None" %></td>
+				</tr>
+			<% end %>
+			</table>
+		</td>
+	</tr>
+	<% end %>
+
+</table>
+</div>
+<div class="clearer"></div>

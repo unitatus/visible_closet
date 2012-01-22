@@ -150,7 +150,8 @@ VisibleCloset::Application.routes.draw do
   match "admin/billing/credits/:id/destroy" => "admin#destroy_billing_credit"
   
   # Marketing
-  match "admin/marketing" => "marketing#offers"
+  resources :offers
+  match "offers/:id/activate" => "offers#activate"
 
   # Furniture
   match "admin/furniture_items/:id/photos" => "furniture_items#admin_manage_photos"
