@@ -110,4 +110,8 @@ class OffersController < ApplicationController
     
     redirect_to "/offers/#{@offer.id}"
   end
+  
+  def coupons
+    @offer = Offer.find(params[:id])
+  end
 end
