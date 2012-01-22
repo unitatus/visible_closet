@@ -129,6 +129,8 @@ class BoxesController < ApplicationController
       submitted_duration = params[("box_" + index.to_s + "_duration").to_sym]
       submitted_inventory_req = params[("box_" + index.to_s + "_inventory").to_sym]
 
+      submitted_duration = nil if submitted_duration == "none"
+
       if submitted_weight.blank? && submitted_height.blank? && submitted_width.blank? && submitted_length.blank? && submitted_description.blank? && submitted_location.blank?
         next # ignore this entry
       end

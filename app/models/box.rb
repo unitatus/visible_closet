@@ -248,10 +248,10 @@ class Box < ActiveRecord::Base
   
   # Must pass either box_type or product in options
   def Box.create_box!(owner, options)
-    if options[:committed_months].nil? || options[:committed_months] == 0
+    if options[:committed_months].blank? || options[:committed_months] == 0
       subscription = nil
     else
-      subscription = Subscription.create!(:duration_in_months => options[:committed_months], :user_id => owner.id)
+      subscription = Subscription.create(:duration_in_months => options[:committed_months], :user_id => owner.id)
     end
     
     box_type = options[:box_type]
