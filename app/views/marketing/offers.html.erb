@@ -1,0 +1,37 @@
+<%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
+<div id="internal-right">
+	<h1>Offers</h1>
+	<table class="prices_table">
+		<tr>
+			<th>ID</th>
+			<th>Type</th>
+			<th>Start Date</th>
+			<th>Expiration Date</th>
+			<th>Unique Identifier</th>
+			<th>Coupons</th>
+			<th>Edit</th>
+			<th>Delete</th>
+		</tr>
+		<% if @offers.empty? %>
+			<td colspan="8">None</td>
+		<% else %>
+			<% @offers.each do |offer| %>
+				<tr>
+					<td><a href="/admin/offers/<%= offer.id %>"><%= offer.id %></a></td>
+					<td><%= offer.type %></td>
+					<td><%= offer.start_date.strftime "%m/%d/%Y" %></td>
+					<td><%= offer.expiration_date.strftime "%m/%d/%Y" %></td>
+					<td><%= offer.respond_to?(:unique_identifier) ? offer.unique_identifier : "NA" %></td>
+					<td><%= raw offer.respond_to?(:coupons) ? "<a href=""/admin/offer/#{offer.id}/coupons"">Coupons</a>" : "NA" %></td>
+					<td><%= raw offer.current? ? "NA" : "<a href=""/admin/offer/#{offer.id}/edit"">Edit</a>" %></td>
+					<td><%= raw offer.current? ? "NA" : "<a href=""/admin/offer/#{offer.id}/destroy"">Delete</a>" %></td>
+				</tr>
+			<% end %>
+		<% end %>
+	</table>
+	<div style="text-align: right">
+		<br>
+		<a href="/admin/offers/new_standard">New Offer &gt;&gt;</a><br>
+	</div>
+</div>
+<div class="clearer"></div>

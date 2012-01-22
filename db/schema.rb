@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120122040952) do
+ActiveRecord::Schema.define(:version => 20120122060545) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -109,7 +109,11 @@ ActiveRecord::Schema.define(:version => 20120122040952) do
 
   create_table "coupons", :force => true do |t|
     t.integer "assigned_to_user_id"
+    t.string  "unique_identifier"
+    t.integer "offer_id"
   end
+
+  add_index "coupons", ["unique_identifier"], :name => "index_coupons_on_unique_identifier"
 
   create_table "credits", :force => true do |t|
     t.float    "amount"
@@ -149,27 +153,23 @@ ActiveRecord::Schema.define(:version => 20120122040952) do
   end
 
   create_table "offer_benefits", :force => true do |t|
-    t.integer  "offer_properties_id"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "offer_id"
+  end
+
+  create_table "offers", :force => true do |t|
+    t.string   "unique_identifier"
+    t.datetime "start_date"
+    t.datetime "expiration_date"
+    t.integer  "created_by_user_id"
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "offer_properties", :force => true do |t|
-    t.datetime "start_date"
-    t.datetime "expiration_date"
-    t.integer  "created_by_user_id"
-    t.string   "unique_identifier"
-    t.integer  "offer_id"
-    t.string   "offer_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "offer_properties", ["unique_identifier"], :name => "index_offer_properties_on_unique_identifier"
-
-  create_table "offers", :force => true do |t|
-  end
+  add_index "offers", ["unique_identifier"], :name => "index_offers_on_unique_identifier"
 
   create_table "order_lines", :force => true do |t|
     t.integer  "order_id"

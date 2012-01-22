@@ -1,5 +1,5 @@
 <% active_class_str = " class='active'" %>
-<% orders_class = ""; materials_class = ""; receiving_class = ""; inventorying_class = ""; users_class = "" ;%>
+<% orders_class = ""; materials_class = ""; receiving_class = ""; inventorying_class = ""; users_class = "" ; marketing_class = "" %>
 <% case @admin_page %>
 <% when :orders %>
 <%   orders_class = active_class_str %>
@@ -15,6 +15,8 @@
 <%   users_class = active_class_str %>
 <% when :monthly_charges %>
 <%   monthly_charges_class = active_class_str %>
+<% when :marketing %>
+<%   marketing_class = active_class_str %>
 <% end %>
 <div id="internal-left">
     <div id="side-menu">
@@ -26,6 +28,7 @@
 		  <li<%= inventorying_class %>><a href="/boxes/inventory_boxes">Inventorying</a></li>
 		  <li<%= users_class %>><a href="/admin/users">CRM</a></li>
 		  <li<%= monthly_charges_class %>><a href="/admin/monthly_charges">Monthly Charges</a></li>
+		  <li<%= marketing_class %>><a href="/admin/marketing">Marketing</a></li>
 			<% if current_user.role == User::ADMIN %>
 		  <li<%= legal_class %>><a href="/rental_agreement_versions">Legal Maint.</a></li>
 		<% end %>

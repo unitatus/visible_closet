@@ -1,12 +1,12 @@
 # == Schema Information
-# Schema version: 20120122023727
+# Schema version: 20120122044449
 #
 # Table name: free_storage_benefit_properties
 #
-#  id               :integer         not null, primary key
-#  offer_benefit_id :integer
-#  num_boxes        :integer
-#  num_months       :integer
+#  id                            :integer         not null, primary key
+#  free_storage_offer_benefit_id :integer
+#  num_boxes                     :integer
+#  num_months                    :integer
 #
 
 class FreeStorageBenefitProperties < ActiveRecord::Base
