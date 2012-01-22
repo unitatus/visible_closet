@@ -16,6 +16,7 @@
 
 class Offer < ActiveRecord::Base  
   validates_presence_of :unique_identifier, :message => "can't be blank", :unless => :identifier_overridden
+  validates_uniqueness_of :unique_identifier, :message => "this identifier is not unique!", :unless => :identifier_overridden
   
   belongs_to :creator, :class_name => "User", :foreign_key => :created_by_user_id
   has_many :benefits, :dependent => :destroy, :autosave => true, :class_name => "OfferBenefit"
@@ -23,7 +24,6 @@ class Offer < ActiveRecord::Base
   validates_presence_of :start_date, :message => "can't be blank"
   validates_presence_of :expiration_date, :message => "can't be blank"
   validates_presence_of :creator, :message => "must specify creating administrator"
-  validates_uniqueness_of :unique_identifier, :message => "this identifier is not unique!"
   
   validate :start_date_lte_exp_date
   validate :at_least_one_benefit

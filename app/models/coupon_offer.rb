@@ -20,4 +20,13 @@ class CouponOffer < Offer
   def identifier_overridden
     true
   end
+  
+  def add_coupons(num_coupons)
+    for index in 1..num_coupons
+      coupon = coupons.new
+      if !coupon.save # in case this number doesn't happen to be random
+        redo
+      end
+    end
+  end
 end

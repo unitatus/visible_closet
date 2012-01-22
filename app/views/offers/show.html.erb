@@ -65,9 +65,23 @@
 					<td><%= coupon.unique_identifier %></td>
 					<td>User:</td>
 					<td><%= coupon.user ? "<a href=""/admin/user/#{coupon.assigned_to_user_id}"">#{coupon.user.name}</a>" : "None" %></td>
+					<td>
+						<% if coupon.user.nil? %>
+							<%= link_to "X", "/coupons/#{coupon.id}/delete" %>
+						<% end %>
+					</td>
 				</tr>
 			<% end %>
 			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<br>
+		<%= form_tag "/offers/#{@offer.id}/add_coupons" do %>
+			<%= text_field_tag :num_coupons, params[:num_coupons], :placeholder => "# coupons" %>
+			<%= submit_tag "Add Coupons" %>
+		<% end %>
 		</td>
 	</tr>
 	<% end %>

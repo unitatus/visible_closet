@@ -15,13 +15,12 @@ class OffersController < ApplicationController
   def create
     @admin_page = :marketing
     if params[:type] == "General"
-      @offer = Offer.new
+      @offer = Offer.new(params[:offer])
     else
-      @offer = CouponOffer.new
+      @offer = CouponOffer.new(params[:offer])
     end
     
-    @offer.update_attributes(params[:offer])
-    if !@offer.is_a?(CouponOffer)
+    if @offer.is_a?(CouponOffer)
       @offer.unique_identifier = nil
     end
     @offer.creator = current_user
@@ -32,7 +31,21 @@ class OffersController < ApplicationController
     benefit.num_boxes = params[:benefit_num_boxes]
     @offer.benefits << benefit
     
+    # need to validate separately to sneak our extra message in there
+    @offer.valid?
+    if @offer.is_a?(CouponOffer) && !params[:num_coupons].blank? && !params[:num_coupons].is_number?
+      @offer.errors.add(:num_coupons, "Must be a number")
+    end
+    
+    if !@offer.errors.empty?
+      render :new and return
+    end
+    
     if @offer.save
+      if @offer.is_a?(CouponOffer)
+        @offer.add_coupons(params[:num_coupons].to_i)
+      end
+      
       redirect_to offers_url
     else
       render :new
@@ -79,5 +92,22 @@ class OffersController < ApplicationController
     @offer.destroy
     
     redirect_to offers_url
+  end
+  
+  def add_coupons
+    @offer = CouponOffer.find(params[:id])
+    if !params[:num_coupons].blank? && params[:num_coupons].is_number?
+      @offer.add_coupons(params[:num_coupons].to_i)
+    end
+    
+    redirect_to "/offers/#{@offer.id}"
+  end
+  
+  def destroy_coupon
+    @coupon = Coupon.find(params[:id])
+    @offer = @coupon.offer
+    @coupon.destroy
+    
+    redirect_to "/offers/#{@offer.id}"
   end
 end

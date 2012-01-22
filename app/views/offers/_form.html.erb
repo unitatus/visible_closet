@@ -13,7 +13,7 @@
 		</ul>
 	</div>
 <% end %>
-	<% form_for(@offer, :url => url, :html => { :class => "standard", :onsubmit => "offer_submit.disabled=true" }) do |f| %>
+	<% form_for(@offer, :as => :offer, :url => url, :html => { :class => "standard", :onsubmit => "offer_submit.disabled=true" }) do |f| %>
 <table class="lightly_padded_table">
 	<tr>
 		<td>Type:</td>
@@ -33,13 +33,13 @@
 			</div>
 		</td>
 	</tr>
-	<% if @offer.id.nil? || @offer.is_a?(CouponOffer) %>
+	<% if @offer.id.nil? %>
 		<tr>
 			<td># coupons to generate<br>(coupon offer only):</td>
 			<td>
-				<%= text_field_tag :num_coupons, params[:num_coupons], :class => "textbox" + (@offer.errors[:num_coupons].blank? ? "" : " error"),  %>
+				<%= text_field_tag :num_coupons, params[:num_coupons], :class => "textbox" + (@offer.errors[:num_coupons].blank? ? "" : " error")  %>
 				<div class="error_label">
-					<% @offer.errors[:type].each_with_index do |msg, index| %>
+					<% @offer.errors[:num_coupons].each_with_index do |msg, index| %>
 						<% if index > 0 %>
 							, 
 						<% end %>
@@ -48,10 +48,12 @@
 				</div>
 			</td>
 		</tr>
+	<% end %>
+	<% if @offer.id.nil? || !@offer.is_a?(CouponOffer) %>
 	<tr>
-		<td>Unique identifier<br>(coupon offer only):</td>
+		<td>Unique identifier<br>(general offer only):</td>
 		<td style="vertical-align: middle">
-			<%= f.text_field :unique_identifier, :class => "textbox" + (@offer.errors[:unique_identifier].blank? ? "" : " error"),  %>
+			<%= f.text_field :unique_identifier, :class => "textbox" + (@offer.errors[:unique_identifier].blank? ? "" : " error")  %>
 			<div class="error_label">
 				<% @offer.errors[:unique_identifier].each_with_index do |msg, index| %>
 					<% if index > 0 %>
@@ -66,7 +68,7 @@
 	<tr>
 		<td>Start Date:</td>
 		<td>
-			<%= f.calendar_date_select "start_date", :time => false, :class => "textbox" + (@offer.errors[:start_date].blank? ? "" : " error"),  %>
+			<%= f.calendar_date_select "start_date", :time => false, :class => "textbox" + (@offer.errors[:start_date].blank? ? "" : " error")  %>
 			<div class="error_label">
 				<% @offer.errors[:start_date].each_with_index do |msg, index| %>
 					<% if index > 0 %>
@@ -80,7 +82,7 @@
 	<tr>
 		<td>Expiration Date:</td>
 		<td>
-			<%= f.calendar_date_select "expiration_date", :time => false, :class => "textbox" + (@offer.errors[:expiration_date].blank? ? "" : " error"),  %>
+			<%= f.calendar_date_select "expiration_date", :time => false, :class => "textbox" + (@offer.errors[:expiration_date].blank? ? "" : " error")  %>
 			<div class="error_label">
 				<% @offer.errors[:expiration_date].each_with_index do |msg, index| %>
 					<% if index > 0 %>
@@ -100,7 +102,7 @@
 	<tr>
 		<td>Num Months:</td>
 		<td>
-			<%= text_field_tag :benefit_num_months, @offer.benefits.first.num_months, :class => "textbox" + (@offer.benefits.first.errors[:num_months].blank? ? "" : " error"),  %>
+			<%= text_field_tag :benefit_num_months, @offer.benefits.first.num_months, :class => "textbox" + (@offer.benefits.first.errors[:num_months].blank? ? "" : " error")  %>
 			<div class="error_label">
 				<% @offer.benefits.first.errors[:num_months].each_with_index do |msg, index| %>
 					<% if index > 0 %>
@@ -114,7 +116,7 @@
 	<tr>
 		<td>Num Boxes:</td>
 		<td>
-			<%= text_field_tag :benefit_num_boxes, @offer.benefits.first.num_boxes, :class => "textbox" + (@offer.benefits.first.errors[:num_boxes].blank? ? "" : " error"),  %>
+			<%= text_field_tag :benefit_num_boxes, @offer.benefits.first.num_boxes, :class => "textbox" + (@offer.benefits.first.errors[:num_boxes].blank? ? "" : " error")  %>
 			<div class="error_label">
 				<% @offer.benefits.first.errors[:num_boxes].each_with_index do |msg, index| %>
 					<% if index > 0 %>

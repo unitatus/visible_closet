@@ -24,6 +24,7 @@ gem 'hoptoad_notifier'
 gem 'jquery-rails'
 gem 'rails3-jquery-autocomplete'
 gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git'
+gem 'rufus-mnemo'
 
 group :development do
   gem 'rspec-rails'

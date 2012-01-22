@@ -152,6 +152,8 @@ VisibleCloset::Application.routes.draw do
   # Marketing
   resources :offers
   match "offers/:id/activate" => "offers#activate"
+  match "offers/:id/add_coupons" => "offers#add_coupons"
+  match "coupons/:id/delete" => "offers#destroy_coupon"
 
   # Furniture
   match "admin/furniture_items/:id/photos" => "furniture_items#admin_manage_photos"
