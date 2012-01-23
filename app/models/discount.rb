@@ -16,7 +16,8 @@ class Discount
   CF_DISCOUNT_THRESHOLD_2 = 30
   CF_DISCOUNT_THRESHOLD_3 = 60
   
-  FREE_SHIPPING_MONTH_THRESHOLD = 3
+  # Changed to 0 from 3 to reflect the fact that we always pay shipping now
+  FREE_SHIPPING_MONTH_THRESHOLD = 0
   
   attr_accessor :product, :new_product_count, :month_count, :existing_product_count
   

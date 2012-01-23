@@ -95,6 +95,7 @@ class AccountController < ApplicationController
       @cart.remove_cart_item(Rails.application.config.your_box_product_id)
       @cart.remove_cart_item(Rails.application.config.our_box_inventorying_product_id)
       @cart.remove_cart_item(Rails.application.config.your_box_inventorying_product_id)
+      @cart.remove_cart_item(Rails.application.config.stocking_fee_product_id)
     end
     
     if params[:box_type] == "vc_boxes"
@@ -107,13 +108,17 @@ class AccountController < ApplicationController
       raise "Illegal box type selected."
     end    
 
-    # This is a numeric check. Why doesn't this exist in Ruby?
-    if params[:num_months][:num_months].to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) != nil
-      committed_months = params[:num_months][:num_months]
-    else
-      committed_months = 1
-    end
-
+    # # This is a numeric check. Why doesn't this exist in Ruby?
+    # if params[:num_months][:num_months].to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) != nil
+    #   committed_months = params[:num_months][:num_months]
+    # else
+    #   committed_months = 1
+    # end
+    # 
+    
+    # We no longer have discounts, so committed months is set to zero. Leaving it in in case we change back to discounts.
+    committed_months = 1
+    
     @cart.add_cart_item(box_product_id, num_boxes, committed_months)
     
     # The following code is for the cart maintenance pages, which as of 8/17/2011 are turned off.
@@ -157,10 +162,13 @@ class AccountController < ApplicationController
     end
 
     cart_item = CartItem.find(params[:cart_item_id])
+    stocking_fee_item = cart_item.cart.stocking_fee_line
 
     cart_item.quantity = params[:quantity]
+    stocking_fee_item.quantity = params[:quantity] if stocking_fee_item
 
     if (cart_item.save())
+      stocking_fee_item.save if stocking_fee_item
       flash.now[:notice] = "Cart item quantity updated to #{cart_item.quantity}!"
     else
       flash.now[:alert] = "There was a problem saving your update."
@@ -182,9 +190,10 @@ class AccountController < ApplicationController
       return
     end
    
-    CartItem.delete(params[:cart_item_id])
-
-    flash.now[:notice] = "Cart item removed."
+    if cart_item.deletable?
+      CartItem.delete(params[:cart_item_id])
+      flash.now[:notice] = "Cart item removed."
+    end
 
     @cart = Cart.find(cart_item.cart_id)
 

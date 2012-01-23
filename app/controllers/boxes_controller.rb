@@ -126,10 +126,10 @@ class BoxesController < ApplicationController
       submitted_length = params[("box_" + index.to_s + "_length").to_sym]
       submitted_description = params[("box_" + index.to_s + "_description").to_sym]
       submitted_location = params[("box_" + index.to_s + "_location").to_sym]
-      submitted_duration = params[("box_" + index.to_s + "_duration").to_sym]
+      # submitted_duration = params[("box_" + index.to_s + "_duration").to_sym]
       submitted_inventory_req = params[("box_" + index.to_s + "_inventory").to_sym]
 
-      submitted_duration = nil if submitted_duration == "none"
+      # submitted_duration = nil if submitted_duration == "none"
 
       if submitted_weight.blank? && submitted_height.blank? && submitted_width.blank? && submitted_length.blank? && submitted_description.blank? && submitted_location.blank?
         next # ignore this entry
@@ -148,7 +148,7 @@ class BoxesController < ApplicationController
       submitted_box[:length] = submitted_length
       submitted_box[:description] = submitted_description
       submitted_box[:location] = submitted_location
-      submitted_box[:committed_months] = submitted_duration
+      # submitted_box[:committed_months] = submitted_duration
       submitted_box[:inventory_requested] = !submitted_inventory_req.nil?
 
       submitted_boxes << submitted_box

@@ -77,6 +77,10 @@ class PagesController < ApplicationController
     @vc_inv_no_discount_disc = Discount.new(@vc_inventorying, 1, 1)
     @cust_box_no_discount_disc = Discount.new(@cust_box, 1, 1)
     @cust_inv_no_discount_disc = Discount.new(@cust_inventorying, 1, 1)
+    @return_box_product = Product.find(Rails.application.config.return_box_product_id)
+    @return_item_product = Product.find(Rails.application.config.item_mailing_product_id)
+    @donate_item_product = Product.find(Rails.application.config.item_donation_product_id)
+    @stocking_product = Product.find(Rails.application.config.stocking_fee_product_id)
   end
   
   def privacy

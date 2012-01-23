@@ -48,13 +48,18 @@ VisibleCloset::Application.configure do
   config.active_support.deprecation = :notify
 
   # Customizations for The Visible Closet
-  config.our_box_product_id = 1
-  config.your_box_product_id = 3
-  config.our_box_inventorying_product_id = 5
-  config.your_box_inventorying_product_id = 6
+  config.our_box_product_id = 10
+  config.our_box_product_id_gf = 'tbd'
+  config.your_box_product_id = 11
+  config.your_box_product_id_gf = 'tbd'
+  config.our_box_inventorying_product_id = 12
+  config.our_box_inventorying_product_id_gf = 'tbd'
+  config.your_box_inventorying_product_id = 13
+  config.your_box_inventorying_product_id_gf = 'tbd'
   config.return_box_product_id = 7
   config.item_donation_product_id = 8
   config.item_mailing_product_id = 9
+  config.stocking_fee_product_id = 14
 
   config.fedex_vc_address_id = 6
 

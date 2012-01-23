@@ -68,7 +68,8 @@ function openMemberAgreement() {
 				<%= number_to_currency(cart_item.total_unit_price_after_discount) %> <%= cart_item.product.price_comment %>
 				
 					<% if cart_item.new_box_line? %>
-					<br><a id="pricing_explainer_link" href="#pricing_explainer">(pricing explanation)</a>
+					<% # <br><a id="pricing_explainer_link" href="#pricing_explainer">(pricing explanation)</a> %>
+					<% # removed when pricing was changed to remove discounts %>
 					<% end %>	
 		</td>
 		<td style="max-width: 150px">
@@ -85,7 +86,7 @@ function openMemberAgreement() {
 					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %>-month plan
 				<% elsif cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
 					<%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>-month plan
-				<% else %>
+				<% elsif cart_item.product.box? %>
 					Monthly
 				<% end %>
 			<% end %>
@@ -93,11 +94,7 @@ function openMemberAgreement() {
 		<td align="right">
 			<%= number_to_currency(cart_item.discount.charged_at_purchase + cart_item.discount.prepaid_at_purchase) %>
 			<br>
-			<% if !cart_item.committed_months.nil? && cart_item.committed_months >= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %>
-				<a href="#plan_inline" id="checkout_plan_link">(why?)</a>
-			<% elsif cart_item.product.id == Rails.application.config.our_box_product_id %>
-				<a href="#vc_box_inline" id="vc_product_link" title="Visible Closet Box Details">(why?)</a>
-			<% elsif cart_item.product.id == Rails.application.config.your_box_product_id %>
+			<% if cart_item.product.id == Rails.application.config.your_box_product_id %>
 				<a href="#cust_box_inline" id="cust_product_link" title="Customer Box Details">(why?)</a>
 			<% end %>
 		</td>
@@ -112,7 +109,11 @@ function openMemberAgreement() {
 				NA
 			<% end %>
 		</td>
-		<td><a href="/account/check_out_remove_cart_item?id=<%=cart_item.id%>">X</a></td>
+		<td>
+			<% if cart_item.deletable? %>
+				<a href="/account/check_out_remove_cart_item?id=<%=cart_item.id%>">X</a>
+			<% end %>
+		</td>
 	</tr><% end %> <!-- end loop -->
 </table>
 <hr>
@@ -153,4 +154,5 @@ function openMemberAgreement() {
 <% end %> <!-- end form -->
 <div class="clearer"></div>
 <%= render :partial => "checkout_explanations" %>
-<%= render :partial => "pricing_explainer" %>
+<% # render :partial => "pricing_explainer" %>
+<% # removed when pricing was changed %>

@@ -38,7 +38,6 @@
 						<tr>
 							<th>Item Ordered</b></th>
 							<th>Quantity</th>
-							<th>Subscription months</th>
 							<th>Associated boxes</th>
 							<th>Associated shipping address</th>
 						</tr>
@@ -48,13 +47,6 @@
 							<td><%= order_line.product.name %></td>
 							<td><%= order_line.quantity %></td>
 							<td>
-								<% if order_line.committed_months %>
-									<%= order_line.committed_months %>
-								<% else %>
-									NA
-								<% end %>
-							</td>
-							<td>
 								<% order_line.associated_boxes.each_with_index do |box, index| %>
 									<% if index > 0 %>
 									, 
@@ -62,7 +54,13 @@
 									<a href="/boxes">Box <%= box.box_num %></a>
 								<% end %>
 							</td>
-							<td><%= raw address_summary(order_line.shipping_address)%>
+							<td>
+								<% if order_line.shippable? %>
+									<%= raw address_summary(order_line.shipping_address)%>
+								<% else %>
+									NA
+								<% end %>
+							</td>
 						</tr>
 					<% end %>
 				</table>

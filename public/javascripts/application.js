@@ -504,6 +504,9 @@ $(document).ready(function(){
 	$("#cust_product_link").fancybox({
 		'titleShow'		: false,
 		'transitionIn'		: 'none',
+		'autoDimensions': false, 
+		'width': 600,
+		'height': 125,
 		'transitionOut'		: 'none'
 	});
 	

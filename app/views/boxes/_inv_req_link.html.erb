@@ -1,2 +1,2 @@
-<% confirm_message = "Are you sure? Once your box is inventoried you will be charged an extra #{number_to_currency(box.extra_inventorying_cost)} per month for this box. This amount may change in the future depending on how many boxes you place in storage and on any storage subscriptions you purchase." %>
+<% confirm_message = "Please confirm that you want us to open and inventory your box." %>
 <%= link_to "create inventory", "/boxes/#{box.id}/request_inventory", :remote => true, :confirm => confirm_message %>

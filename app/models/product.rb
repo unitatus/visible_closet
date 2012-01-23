@@ -18,23 +18,30 @@
 class Product < ActiveRecord::Base
   
   def prepay?
-    return vc_box?
+    return false
   end
   
   def vc_box?
-    id == Rails.application.config.our_box_product_id
+    id == Rails.application.config.our_box_product_id || id == Rails.application.config.our_box_product_id_gf
   end
   
   def cust_box?
-    id == Rails.application.config.your_box_product_id
+    id == Rails.application.config.your_box_product_id || id == Rails.application.config.your_box_product_id_gf
   end
   
   def shippable?
-    id != Rails.application.config.item_donation_product_id
+    id != Rails.application.config.item_donation_product_id && id != Rails.application.config.stocking_fee_product_id
   end
   
   def item_service?
     id == Rails.application.config.item_donation_product_id || id == Rails.application.config.item_mailing_product_id
+  end
+  
+  def grandfathered?
+    id == Rails.application.config.your_box_product_id_gf \
+    || id == Rails.application.config.our_box_product_id_gf \
+    || id == Rails.application.config.your_box_inventorying_product_id_gf \
+    || id == Rails.application.config.our_box_inventorying_product_id_gf
   end
   
   def box?
@@ -53,7 +60,11 @@ class Product < ActiveRecord::Base
     return id == Rails.application.config.return_box_product_id
   end
   
+  def stocking_fee?
+    return id == Rails.application.config.stocking_fee_product_id
+  end
+  
   def incurs_charge_at_purchase?
-    id == Rails.application.config.return_box_product_id || id == Rails.application.config.item_donation_product_id || id == Rails.application.config.item_mailing_product_id
+    id == Rails.application.config.return_box_product_id || id == Rails.application.config.item_donation_product_id || id == Rails.application.config.item_mailing_product_id || id == Rails.application.config.stocking_fee_product_id
   end
 end

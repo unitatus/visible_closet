@@ -19,18 +19,18 @@ class Event
     all_events = Array.new
     
     user.boxes.each do |box|
-      all_events << Event.new(:description => "Box #{box.box_num} ordered", :date => box.created_at.to_date)
+      all_events << Event.new(:description => "Box #{box.box_num} ordered", :date => box.created_at.to_datetime)
       
       if box.received_at
-        all_events << Event.new(:description => "Box #{box.box_num} received", :date => box.received_at.to_date)
+        all_events << Event.new(:description => "Box #{box.box_num} received", :date => box.received_at.to_datetime)
       end
       
       if box.inventoried_at
-        all_events << Event.new(:description => "Box #{box.box_num} inventoried", :date => box.inventoried_at.to_date)
+        all_events << Event.new(:description => "Box #{box.box_num} inventoried", :date => box.inventoried_at.to_datetime)
       end
       
       if box.return_requested_at
-        all_events << Event.new(:description => "Box #{box.box_num} return requested", :date => box.return_requested_at.to_date)
+        all_events << Event.new(:description => "Box #{box.box_num} return requested", :date => box.return_requested_at.to_datetime)
       end
     end
     
@@ -58,7 +58,7 @@ class Event
 		    msg += " for storage starting #{charge.storage_charge.start_date.strftime('%m/%d/%Y')} and ending #{charge.storage_charge.start_date.strftime('%m/%d/%Y')}"
 	    end
 		  
-		  all_events << Event.new(:description => msg, :date => charge.created_at.to_date)
+		  all_events << Event.new(:description => msg, :date => charge.created_at.to_datetime)
     end # end loop on charges
     
     user.successful_payment_transactions.each do |payment|
@@ -70,12 +70,12 @@ class Event
       else
         msg += "storage charges"
       end
-      all_events << Event.new(:description => msg, :date => payment.created_at.to_date)
+      all_events << Event.new(:description => msg, :date => payment.created_at.to_datetime)
     end
     
     credits = user.credits.select {|credit| credit.payment_transaction.nil? }
     credits.each do |credit|
-      all_events << Event.new(:description => "Credit of #{ActionController::Base.helpers.number_to_currency(credit.amount)} for \"#{credit.description}\"", :date => credit.created_at.to_date) 
+      all_events << Event.new(:description => "Credit of #{ActionController::Base.helpers.number_to_currency(credit.amount)} for \"#{credit.description}\"", :date => credit.created_at.to_datetime) 
     end
     
     return all_events.sort {|x,y| y.date <=> x.date }

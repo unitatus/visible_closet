@@ -157,6 +157,19 @@ class Cart < ActiveRecord::Base
     cart_item.committed_months = committed_months
     
     cart_items << cart_item
+    
+    if cart_item.product.box?
+      setup_item = CartItem.new
+      setup_item.product_id = Rails.application.config.stocking_fee_product_id
+      setup_item.quantity = quantity
+      setup_item.committed_months = committed_months
+      
+      cart_items << setup_item
+    end
+  end
+  
+  def stocking_fee_line
+    cart_items.select {|cart_item| cart_item.product.stocking_fee? }.first
   end
   
   def add_return_request_for(obj)

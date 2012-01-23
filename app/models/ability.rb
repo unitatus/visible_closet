@@ -101,6 +101,14 @@ class Ability
       can :admin_view, FurnitureItem
       can :index, Offer
       can :new, Offer
+      can :create, Offer
+      can :destroy, Offer
+      can :update, Offer
+      can :activate, Offer
+      can :coupons, Offer
+      can :destroy_coupon, Offer
+      can :add_coupons, Offer
+      can :show, Offer
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      

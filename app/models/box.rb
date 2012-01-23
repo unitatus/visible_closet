@@ -164,19 +164,21 @@ class Box < ActiveRecord::Base
     boxes.each do |box|
       start_date.upto(end_date) do |day|
         if box.in_storage_on(day) && !box.charged_already_on(day)
-
+if box.id == 639
+  debugger
+end
           subscription = box.subscription_on(day)
           subscription_months = subscription.nil? ? 0 : subscription.duration_in_months
         
           existing_product_count = box.vc_box? ? total_vc_boxes_in_storage_by_day[day] : total_cust_cf_in_storage_by_day[day]
           
-          storage_discount_calc = Discount.new(Box.get_product(box.box_type), 0, subscription_months, existing_product_count)
+          storage_discount_calc = Discount.new(Box.get_product(box), 0, subscription_months, existing_product_count)
           
           units = box.vc_box? ? 1 : box.cubic_feet
           box_charges[box] += Rational(storage_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
 
           if box.inventoried_on(day)
-            inventory_discount_calc = Discount.new(Box.get_product(box.box_type, true), 0, subscription_months, existing_product_count)
+            inventory_discount_calc = Discount.new(Box.get_product(box, true), 0, subscription_months, existing_product_count)
             box_charges[box] += Rational(inventory_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
           end
         end
@@ -248,11 +250,11 @@ class Box < ActiveRecord::Base
   
   # Must pass either box_type or product in options
   def Box.create_box!(owner, options)
-    if options[:committed_months].blank? || options[:committed_months] == 0
-      subscription = nil
-    else
-      subscription = Subscription.create(:duration_in_months => options[:committed_months], :user_id => owner.id)
-    end
+    # if options[:committed_months].blank? || options[:committed_months] == 0
+    #   subscription = nil
+    # else
+    #   subscription = Subscription.create(:duration_in_months => options[:committed_months], :user_id => owner.id)
+    # end
     
     box_type = options[:box_type]
     if box_type.nil?
@@ -278,7 +280,7 @@ class Box < ActiveRecord::Base
                       :location => options[:location],
                       :created_by_id => options[:created_by_id])
     
-    new_box.subscriptions << subscription if subscription
+    # new_box.subscriptions << subscription if subscription
     
     return new_box
   end
@@ -288,7 +290,7 @@ class Box < ActiveRecord::Base
       return 0.0
     end
     
-    product = Box.get_product(box_type, true)
+    product = Box.get_product(self, true)
     new_product_count = 0
     subscription = current_subscription
     month_count = subscription.nil? ? 0 : subscription.duration_in_months
@@ -367,24 +369,40 @@ class Box < ActiveRecord::Base
   end
   
   def Box.get_type(product)
-    if product.id == Rails.application.config.your_box_product_id
+    if product.cust_box?
       CUST_BOX_TYPE
-    elsif product.id == Rails.application.config.our_box_product_id
+    elsif product.vc_box?
       VC_BOX_TYPE
     else
       nil
     end
   end
   
-  def Box.get_product(type, inventory=false)
-    if type == CUST_BOX_TYPE && inventory
-      Product.find(Rails.application.config.your_box_inventorying_product_id)
-    elsif type == CUST_BOX_TYPE
-      Product.find(Rails.application.config.your_box_product_id)
-    elsif type == VC_BOX_TYPE && inventory
-      Product.find(Rails.application.config.our_box_inventorying_product_id)
-    elsif type == VC_BOX_TYPE
-      Product.find(Rails.application.config.our_box_product_id)
+  def Box.get_product(box, inventory=false)
+    if box.box_type == CUST_BOX_TYPE && inventory
+      if box.ordering_order_line && box.ordering_order_line.product.grandfathered?
+        Product.find(Rails.application.config.your_box_inventorying_product_id_gf)
+      else
+        Product.find(Rails.application.config.your_box_inventorying_product_id)
+      end
+    elsif box.box_type == CUST_BOX_TYPE
+      if box.ordering_order_line && box.ordering_order_line.product.grandfathered?
+        Product.find(Rails.application.config.your_box_product_id_gf)
+      else
+        Product.find(Rails.application.config.your_box_product_id)
+      end
+    elsif box.box_type == VC_BOX_TYPE && inventory
+      if box.ordering_order_line && box.ordering_order_line.product.grandfathered?
+        Product.find(Rails.application.config.our_box_inventorying_product_id_gf)
+      else
+        Product.find(Rails.application.config.our_box_inventorying_product_id)
+      end
+    elsif box.box_type == VC_BOX_TYPE
+      if box.ordering_order_line && box.ordering_order_line.product.grandfathered?
+        Product.find(Rails.application.config.our_box_product_id_gf)
+      else
+        Product.find(Rails.application.config.our_box_product_id)
+      end
     elsif 
       nil
     end

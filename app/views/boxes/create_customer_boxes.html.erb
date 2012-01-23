@@ -24,7 +24,6 @@
 		<th>Length</th>
 		<th>Customer Description</th>
 		<th>Location</th>
-		<th>Duration</th>
 		<th>Inventory Requested?</th>
 	</tr>
 	<% for index in 1..10 %>
@@ -47,9 +46,6 @@
 			</td>
 			<td>
 				<%= text_field_tag "box_" + index.to_s + "_location", params[("box_" + index.to_s + "_location").to_sym], :class => "textbox" + (@errors["box_" + index.to_s + "_location"].blank? ? "" : " error"), :style => "width: 33px; font-size: 8px", :placeholder => "location" %>
-			</td>
-			<td>
-				<%= select_tag "box_" + index.to_s + "_duration", options_for_select([["none", "none"], ["6 months", "6"], ["12 months", "12"]], :selected => params["box_" + index.to_s + "_duration"])%>
 			</td>
 			<td style="text-align: center"><%= check_box_tag("box_" + index.to_s + "_inventory", "box_" + index.to_s + "_inventory", !params[("box_" + index.to_s + "_inventory").to_sym].nil?) %></td>
 		</tr>

@@ -31,6 +31,8 @@
 		                    <div class="increment-up"></div>
 		                    <div class="increment-down"></div>
 		                </div>
+					<% elsif cart_item.product.stocking_fee? %>
+						<%= cart_item.quantity %>
 					<% else %>
 						NA
 					<% end %>
@@ -43,7 +45,11 @@
 					NA
 				<% end %>
 				</td>
-                <td><a href="/account/remove_cart_item?cart_item_id=<%= cart_item.id %>">Remove</a></td>
+                <td>
+					<% if cart_item.deletable? %>
+						<a href="/account/remove_cart_item?cart_item_id=<%= cart_item.id %>">Remove</a>
+					<% end %>
+				</td>
             </tr>
 				<% end # form tag %>
 			<% end # cart item loop %>

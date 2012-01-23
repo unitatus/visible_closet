@@ -19,10 +19,10 @@
               <tbody class="top-line">
                 <tr>
                     <td class="detailtext">Would you like to store your own boxes or receive free boxes from The Visible Closet?</td>
-                    <td style="vertical-align: middle">
+                    <td style="vertical-align: middle; width: 150px">
 	                	<%= radio_button_tag("box_type", "vc_boxes", true, :onclick => "toggleBoxCountSelect()")%> Visible Closet Boxes
 					</td>
-                    <td style="vertical-align: middle">
+                    <td style="vertical-align: middle; width: 100px">
 	                	<%= radio_button_tag("box_type", "cust_boxes", false, :onclick => "toggleBoxCountSelect()")%> My Boxes
 					</td>
                 </tr>
@@ -31,12 +31,6 @@
                     <td colspan="2"  style="vertical-align: middle">
 						<div id="vc_boxes" name="vc_boxes" style="display:block"><%= select "num_vc_boxes", "num_vc_boxes", box_number_options(Rails.application.config.our_box_product_id) %></div>
 						<div id="cust_boxes"  name="cust_boxes" style="display:none"><%= select "num_cust_boxes", "num_cust_boxes", box_number_options(Rails.application.config.your_box_product_id) %></div>
-					</td>
-                </tr>
-                <tr>
-                    <td class="detailtext">How many months would you like to store your items? <a href="#pricing_box_inline" id="pricing_link" title="Visible Closet Box Details" style="font-size: 80%">(why do we ask this?)</a></td>
-                    <td colspan="2"  style="vertical-align: middle">
-							<%= select "num_months", "num_months", options_for_select(duration_options) %>
 					</td>
                 </tr>
                 <tr>

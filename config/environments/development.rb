@@ -23,13 +23,18 @@ VisibleCloset::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   # Customizations for The Visible Closet
-  config.our_box_product_id = 1
-  config.your_box_product_id = 2
-  config.our_box_inventorying_product_id = 3
-  config.your_box_inventorying_product_id = 4
+  config.our_box_product_id = 8
+  config.our_box_product_id_gf = 1
+  config.your_box_product_id = 9
+  config.your_box_product_id_gf = 2
+  config.our_box_inventorying_product_id = 10
+  config.our_box_inventorying_product_id_gf = 3
+  config.your_box_inventorying_product_id = 11
+  config.your_box_inventorying_product_id_gf = 4
   config.return_box_product_id = 5
   config.item_donation_product_id = 6
   config.item_mailing_product_id = 7
+  config.stocking_fee_product_id = 12
   # if more products are added, be sure to update the constants and functions in the Product object
 
   config.fedex_vc_address_id = 7

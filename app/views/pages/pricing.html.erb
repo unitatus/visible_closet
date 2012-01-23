@@ -1,77 +1,21 @@
 <div class="slim-centered" >
 	<h1>Pricing</h1><br>
-	With The Visible Closet, you have the freedom to store as much or as little as you want, and to only inventory the boxes you want. We do offer significant savings, however, to those who want to store a large number of boxes, or who wish to store for an extended period of time. See below for our pricing options!<br>
+	With The Visible Closet, you get the luxury of seeing exactly what you have in storage at any time, accessing your items at any time and treating them the same way you would if they were in your home closet. <br><br>You get all this for a flat fee of <b><%= number_to_currency @cust_box.price %> per cubic foot, per month</b>. Shipping to us, boxes, and packing supplies are included in this price. All of our free boxes are 2 cubic feet. <br><br>We charge a one-time stocking fee of <b><%= number_to_currency @stocking_product.price %> per box</b>, regardless of size, to receive and store your box. You may also choose to have your moving company deliver boxes or other items to us at no additional charge; simply <a href="mailto:contact@thevisiblecloset.com">contact us</a> if you wish to do so. In the Chicago area you can take advantage of the services of our partner, <a href="http://www.move-tastic.com/" target="new">Move-tastic</a>, to help you pack and delivery your items to us at The Visible Closet.<br><br>
+	Additional services may incur a modest fee. See below for details.<br><br>
+	<table class="prices_table">
+		<tr>
+			<td>Send box to any address</td>
+			<td><%= number_to_currency @return_box_product.price %> + shipping</td>
+		</tr>
+		<tr>
+			<td>Send item to any address</td>
+			<td><%= number_to_currency @return_item_product.price %> + shipping</td>
+		</tr>
+		<tr>
+			<td>Donate item to charity</td>
+			<td><%= number_to_currency @donate_item_product.price %></td>
+		</tr>
+	</table>
 </div>
-<div id="pricing" >
-    <div id="choosebox">
-        <a href="#" class="chooser active" id="our-boxes">&nbsp;</a><a href="#" class="chooser" id="your-boxes">&nbsp;</a>
-    </div>
-    <p class="select-text">&nbsp;</p>
-    <!-- PRICE BOX FOR OUR BOXES -->
-    <div class="price-box our-boxes">
-        <div class="nav">
-            <ul>
-                <li class="box1 active"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %></strong> month</a></li>
-                <li class="box2"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %></strong> month</a></li>
-                <li class="box3"><a href="#"><strong><%= Discount::FREE_SHIPPING_MONTH_THRESHOLD %></strong> month</a></li>
-				<li class="box4"><a href="#">Ad Hoc</a></li>
-            </ul>
-        </div>
-        <div class="viewer" id="price-box-viewer">
-            <div id="box1">
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @vc_box_count_1_months_3_disc, :inventory_discount => @vc_inventorying_count_1_months_3_disc } %>
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @vc_box_count_2_months_3_disc, :inventory_discount => @vc_inventorying_count_2_months_3_disc } %>
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @vc_box_count_3_months_3_disc, :inventory_discount => @vc_inventorying_count_3_months_3_disc } %>
-            </div>
-            <div id="box2" style="display:none">
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @vc_box_count_1_months_2_disc, :inventory_discount => @vc_inventorying_count_1_months_2_disc } %>
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @vc_box_count_2_months_2_disc, :inventory_discount => @vc_inventorying_count_2_months_2_disc } %>
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @vc_box_count_3_months_2_disc, :inventory_discount => @vc_inventorying_count_3_months_2_disc } %>
-            </div>
-            <div id="box3" style="display:none">
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @vc_box_count_1_months_1_disc, :inventory_discount => @vc_inventorying_count_1_months_1_disc } %>
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @vc_box_count_2_months_1_disc, :inventory_discount => @vc_inventorying_count_2_months_1_disc } %>
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @vc_box_count_3_months_1_disc, :inventory_discount => @vc_inventorying_count_3_months_1_disc } %>
-            </div>
-            <div id="box4" style="display:none">
-				<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @vc_box_no_discount_disc, :inventory_discount => @vc_inv_no_discount_disc } %>
-             </div>
-           </div>
-       </div>
-<!-- END PRICE BOX FOR OUR BOXES -->
-<!-- PRICE BOX FOR YOUR BOXES -->
-    <div class="price-box your-boxes" style="display:none">
-	        <div class="nav">
-	            <ul>
-	                <li class="box1 active"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_3 %></strong> month</a></li>
-	                <li class="box2"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_2 %></strong> month</a></li>
-	                <li class="box3"><a href="#"><strong><%= Discount::MONTH_COUNT_DISCOUNT_THRESHOLD_1 %></strong> month</a></li>
-					<li class="box4"><a href="#">Ad Hoc</a></li>
-	            </ul>
-	        </div>
-	        <div class="viewer" id="price-box-viewer">
-	            <div id="box1">
-					<% fb_incrementer = 0 %>
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @cust_box_count_1_months_3_disc, :inventory_discount => @cust_inventorying_count_1_months_3_disc, :fb_incrementer => fb_incrementer += 1 } %>
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @cust_box_count_2_months_3_disc, :inventory_discount => @cust_inventorying_count_2_months_3_disc, :fb_incrementer => fb_incrementer += 1 } %>
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @cust_box_count_3_months_3_disc, :inventory_discount => @cust_inventorying_count_3_months_3_disc, :fb_incrementer => fb_incrementer += 1 } %>
-	            </div>
-	            <div id="box2" style="display:none">
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @cust_box_count_1_months_2_disc, :inventory_discount => @cust_inventorying_count_1_months_2_disc, :fb_incrementer => fb_incrementer += 1 } %>
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @cust_box_count_2_months_2_disc, :inventory_discount => @cust_inventorying_count_2_months_2_disc, :fb_incrementer => fb_incrementer += 1 } %>
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @cust_box_count_3_months_2_disc, :inventory_discount => @cust_inventorying_count_3_months_2_disc, :fb_incrementer => fb_incrementer += 1 } %>
-	            </div>
-	            <div id="box3" style="display:none">
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field1", :storage_discount => @cust_box_count_1_months_1_disc, :inventory_discount => @cust_inventorying_count_1_months_1_disc, :fb_incrementer => fb_incrementer += 1 } %>
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @cust_box_count_2_months_1_disc, :inventory_discount => @cust_inventorying_count_2_months_1_disc, :fb_incrementer => fb_incrementer += 1 } %>
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field3", :storage_discount => @cust_box_count_3_months_1_disc, :inventory_discount => @cust_inventorying_count_3_months_1_disc, :fb_incrementer => fb_incrementer += 1 } %>
-	            </div>
-	            <div id="box4" style="display:none">
-					<%= render :partial => "pricing_field", :locals => { :field_name => "field2", :storage_discount => @cust_box_no_discount_disc, :inventory_discount => @cust_inv_no_discount_disc, :fb_incrementer => fb_incrementer += 1  } %>
-	            </div>
-	        </div>
-	    </div>
-	<div style="padding-left: 150px"></div>
-	<div style="display: none">
-	<div id="cf_explainer" style="text-align: center">You pay by the cubic foot for your boxes, or by the box for Visible Closet boxes.</div>
-	</div>
+<div style="display: none">
+</div>

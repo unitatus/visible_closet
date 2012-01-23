@@ -26,6 +26,16 @@ class CartItem < ActiveRecord::Base
   
   validates_presence_of :product_id
   
+  def CartItem.delete(id)
+    cart_item = CartItem.find(id)
+    if cart_item.product.box?
+      stocking_fee_item = cart_item.cart.stocking_fee_line
+      stocking_fee_item.destroy
+    end
+    
+    cart_item.destroy
+  end
+  
   def get_or_pull_address
     if self.address.nil?
       update_attribute(:address_id, cart.user.default_shipping_address_id)
@@ -45,6 +55,10 @@ class CartItem < ActiveRecord::Base
   
   def shippable?
     return self.product.shippable?
+  end
+  
+  def deletable?
+    return self.product_id != Rails.application.config.stocking_fee_product_id
   end
   
   def customer_pays_shipping_up_front?
