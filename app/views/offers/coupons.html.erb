@@ -1,11 +1,16 @@
+<STYLE TYPE="text/css">
+     P.breakhere {page-break-before: always}
+</STYLE>
 <%= render "admin/admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
 	<h1>Coupons Print Page for Offer <a href="/offers/<%= @offer.id %>"><%= @offer.id %></a></h1>
 	<br>
 	<table class="prices_table">
-		<% @offer.coupons.each do |coupon| %>
+		<% @offer.coupons.each_with_index do |coupon, index| %>
 		<tr>
 			<td style="width: 600px; text-align: center">
+				<P CLASS="breakhere">
+				
 				<img src="/images/vcLogo_noUnderline.jpg" width="350" height="106">
 				<br><br>
 				<div style="font-size: 25px">
@@ -32,7 +37,6 @@
 				<div style="font-size: 75%">
 					Offer valid from <%= @offer.start_date.strftime "%B %-d, %Y" %> until <%= @offer.expiration_date.strftime "%B %-d, %Y" %>
 				</div>
-
 			</td>
 		</tr>
 		<% end %>
