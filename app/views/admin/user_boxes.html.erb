@@ -22,7 +22,8 @@
 			<% end %>
 			<th><a href="<%= request.fullpath.split("?")[0] %>?sort_by=box_type<%= type_desc_string %>">Type</a></th>
 			<th>Box Num</th>
-			<th>Subscriptions</th>
+			<!--<th>Subscriptions</th>-->
+			<th>Cubic Feet</th>
 			<th>Receive</th>
 			<% if current_user.admin? %>
 				<th>Destroy?</th>
@@ -49,6 +50,7 @@
 				</td>
 				<td><%= box.box_type %></td>
 				<td><%= box.box_num %></td>
+				<!--
 				<td>
 					<% if box.subscriptions.empty? %>
 						NA
@@ -60,7 +62,8 @@
 							<a href="/admin/user/<%= @user.id %>/subscriptions/<%= subscription.id %>"><%= subscription.id %></a>
 						<% end %>
 					<% end %>
-				</td>
+				</td>-->
+				<td><%= box.cubic_feet.round(2) %></td>
 				<td>
 					<a href="/boxes/receive_box?box_id=<%= box.id %>">Receive</a>
 				</td>
