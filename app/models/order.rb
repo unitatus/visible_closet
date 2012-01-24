@@ -93,8 +93,7 @@ class Order < ActiveRecord::Base
   end
   
   def ordered_box_lines
-    self.order_lines.select { |order_line| order_line.product.id == Rails.application.config.your_box_product_id \
-      || order_line.product.id == Rails.application.config.our_box_product_id }
+    self.order_lines.select { |order_line| order_line.product.box? }
   end
   
   # at this time there is no way for a customer to order a shippable item other than by walking through the website, so there will always be a cart for this
@@ -527,10 +526,10 @@ class Order < ActiveRecord::Base
   
   def process_box_orders
     box_order_lines.each do |order_line|
-      if order_line.product_id == Rails.application.config.our_box_product_id
+      if order_line.product.vc_box?
         type = Box::VC_BOX_TYPE
         status = Box::NEW_STATUS
-      elsif order_line.product_id == Rails.application.config.your_box_product_id
+      elsif order_line.product.cust_box?
         type = Box::CUST_BOX_TYPE
         status = Box::BEING_PREPARED_STATUS
         order_line.update_attribute(:status, OrderLine::PROCESSED_STATUS) # no further work by us is necessary

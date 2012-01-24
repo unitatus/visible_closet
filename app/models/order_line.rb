@@ -105,15 +105,15 @@ class OrderLine < ActiveRecord::Base
   end
   
   def cust_box?
-    product_id == Rails.application.config.your_box_product_id
+    product.cust_box?
   end
   
   def vc_box?
-    product_id == Rails.application.config.our_box_product_id
+    product.vc_box?
   end
   
   def new_box_line?
-    cust_box? || vc_box?
+    product.box?
   end
   
   def return_box?
@@ -202,7 +202,7 @@ class OrderLine < ActiveRecord::Base
   end
   
   def box_order_line?
-    product_id == Rails.application.config.our_box_product_id || product_id == Rails.application.config.your_box_product_id
+    product.box?
   end
   
   def box_return?

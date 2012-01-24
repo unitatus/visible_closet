@@ -115,13 +115,13 @@ class Discount
   end
   
   def free_shipping_materials?
-    return @product.id == Rails.application.config.our_box_product_id
+    return @product.vc_box?
   end
   
   private 
   
   def determine_thresholds
-    if @product.id == Rails.application.config.our_box_product_id || @product.id == Rails.application.config.our_box_inventorying_product_id
+    if @product.vc_box? || @product.vc_inventorying?
       [BOX_COUNT_DISCOUNT_THRESHOLD_1, BOX_COUNT_DISCOUNT_THRESHOLD_2, BOX_COUNT_DISCOUNT_THRESHOLD_3]
     else
       [CF_DISCOUNT_THRESHOLD_1, CF_DISCOUNT_THRESHOLD_2, CF_DISCOUNT_THRESHOLD_3]

@@ -25,8 +25,16 @@ class Product < ActiveRecord::Base
     id == Rails.application.config.our_box_product_id || id == Rails.application.config.our_box_product_id_gf
   end
   
+  def vc_inventorying?
+    id == Rails.application.config.our_box_inventorying_product_id || id == Rails.application.config.our_box_inventorying_product_id_gf
+  end
+  
   def cust_box?
     id == Rails.application.config.your_box_product_id || id == Rails.application.config.your_box_product_id_gf
+  end
+  
+  def cust_inventorying?
+    id == Rails.application.config.your_box_inventorying_product_id || id == Rails.application.config.your_box_inventorying_product_id_gf
   end
   
   def shippable?

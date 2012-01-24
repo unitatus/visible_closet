@@ -164,16 +164,13 @@ class Box < ActiveRecord::Base
     boxes.each do |box|
       start_date.upto(end_date) do |day|
         if box.in_storage_on(day) && !box.charged_already_on(day)
-if box.id == 639
-  debugger
-end
           subscription = box.subscription_on(day)
           subscription_months = subscription.nil? ? 0 : subscription.duration_in_months
         
           existing_product_count = box.vc_box? ? total_vc_boxes_in_storage_by_day[day] : total_cust_cf_in_storage_by_day[day]
-          
+
           storage_discount_calc = Discount.new(Box.get_product(box), 0, subscription_months, existing_product_count)
-          
+
           units = box.vc_box? ? 1 : box.cubic_feet
           box_charges[box] += Rational(storage_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
 

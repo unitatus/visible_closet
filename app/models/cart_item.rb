@@ -46,7 +46,7 @@ class CartItem < ActiveRecord::Base
   end
   
   def new_box_line?
-    product_id == Rails.application.config.your_box_product_id || product_id == Rails.application.config.our_box_product_id
+    product.box?
   end
   
   def discount?
@@ -71,11 +71,11 @@ class CartItem < ActiveRecord::Base
   end
   
   def cust_box?
-    product_id == Rails.application.config.your_box_product_id
+    product.cust_box?
   end
   
   def vc_box?
-    product_id == Rails.application.config.our_box_product_id
+    product.vc_box?
   end
   
   def item_service?
@@ -105,9 +105,9 @@ class CartItem < ActiveRecord::Base
   end
   
   def box_type
-    if product_id == Rails.application.config.your_box_product_id
+    if product.cust_box?
       Box::CUST_BOX_TYPE
-    elsif product_id == Rails.application.config.our_box_product_id
+    elsif product.vc_box?
       Box::VC_BOX_TYPE
     else
       nil

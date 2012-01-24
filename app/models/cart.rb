@@ -219,12 +219,12 @@ class Cart < ActiveRecord::Base
   end
   
   def contains_new_boxes
-    new_box_cart_items = cart_items.select { |c| c.product_id == Rails.application.config.your_box_product_id || c.product_id == Rails.application.config.our_box_product_id }
+    new_box_cart_items = cart_items.select { |c| c.product.box? }
     return !new_box_cart_items.empty?
   end
   
   def contains_new_cust_boxes
-    new_cust_boxes = cart_items.select { |c| c.product_id == Rails.application.config.your_box_product_id }
+    new_cust_boxes = cart_items.select { |c| c.product.cust_box? }
     return !new_cust_boxes.empty?
   end
   
@@ -249,8 +249,7 @@ class Cart < ActiveRecord::Base
   end
   
   def ordered_box_lines
-    cart_items.select { |cart_item| cart_item.product.id == Rails.application.config.your_box_product_id \
-      || cart_item.product.id == Rails.application.config.our_box_product_id }
+    cart_items.select { |cart_item| cart_item.product.box? }
   end
   
   def quote_shipping
