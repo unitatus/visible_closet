@@ -49,13 +49,13 @@ VisibleCloset::Application.configure do
 
   # Customizations for The Visible Closet
   config.our_box_product_id = 10
-  config.our_box_product_id_gf = 'tbd'
+  config.our_box_product_id_gf = 3
   config.your_box_product_id = 11
-  config.your_box_product_id_gf = 'tbd'
+  config.your_box_product_id_gf = 1
   config.our_box_inventorying_product_id = 12
-  config.our_box_inventorying_product_id_gf = 'tbd'
+  config.our_box_inventorying_product_id_gf = 5
   config.your_box_inventorying_product_id = 13
-  config.your_box_inventorying_product_id_gf = 'tbd'
+  config.your_box_inventorying_product_id_gf = 6
   config.return_box_product_id = 7
   config.item_donation_product_id = 8
   config.item_mailing_product_id = 9
