@@ -1,7 +1,21 @@
 <% @stored_items.each_with_index do |stored_item, index| %>
     <div class="browse-item">
-		<a href="#" onclick="return false;" class="browse-item-menu-link"><%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150, :style => "border-style: solid; border-width: 1px; border-color: black") %></a>
-		<!-- use this when offline image_tag("/images/electronic-musical-toy.jpg", :height => 150, :width => 150) -->
+		<a href="#" onclick="return false;" class="browse-item-menu-link">
+		<% if index == 1 %>
+			<%= image_tag("/images/calk gun.jpg", :height => 150, :width => 150) %>
+		<% elsif index == 2 %>
+					<%= image_tag("/images/flashlight.jpg", :height => 150, :width => 150) %>
+		<% elsif index == 3 %>
+			<%= image_tag("/images/drill.jpg", :height => 150, :width => 150) %>
+		<% elsif index == 4 %>
+			<%= image_tag("/images/crowbar2.jpg", :height => 150, :width => 150) %>
+		<% elsif index == 5 %>
+			<%= image_tag("/images/1308887528-40.jpg", :height => 150, :width => 150) %>
+		<% else %>
+			<%= image_tag("/images/hammer.jpg", :height => 150, :width => 150) %>
+		<% end %>
+		<!-- <%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150, :style => "border-style: solid; border-width: 1px; border-color: black") %> --></a>
+		
 		<% if stored_item.box_id %>
 			<p>(Box: <%= stored_item.box.box_num %>)</p>
 		<% elsif stored_item.is_a? FurnitureItem %>

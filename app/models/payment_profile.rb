@@ -76,7 +76,7 @@ class PaymentProfile < ActiveRecord::Base
     end
 
     def number=(value)
-      if value.nil?
+      if value.blank?
         self.last_four_digits = nil
       else
         self.last_four_digits = value[-4,4]
