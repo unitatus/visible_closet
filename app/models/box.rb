@@ -606,15 +606,6 @@ class Box < ActiveRecord::Base
     end
   end
   
-  # def cubic_feet
-  #   if self.length.nil? || self.width.nil? || self.height.nil?
-  #     return nil
-  #   else
-  #     divisor = Rails.application.config.box_dimension_divisor
-  #     return (self.length/divisor) * (self.width/divisor) * (self.height/divisor)
-  #   end
-  # end
-  
   def Box.count_boxes(user, status=nil, type=nil)
     conditions = {:conditions => "assigned_to_user_id = #{user.id}"}
     
