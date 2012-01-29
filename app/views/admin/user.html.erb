@@ -47,6 +47,55 @@
 			<% end %>
 		</td>
 	</tr>
+	<tr>
+		<td colspan="2"><b>Offers:</b></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<table class="prices_table">
+				<tr>
+					<th>Identifier</th>
+					<th>Description</th>
+					<th>Start Date</th>
+					<th>Expiration Date</th>
+					<th>Offer Used</th>
+					<th>Offer Remaining</th>
+					<th>Dissociate?</th>
+				</tr>
+				<% @user.all_offers_and_coupons.each do |offer_or_coupon| %>
+					<tr>
+						<td><%= offer_or_coupon.unique_identifier %></td>
+						<td><%= offer_or_coupon.benefits_description %></td>
+						<td><%= offer_or_coupon.start_date.strftime '%m/%d/%Y' %></td>
+						<td><%= offer_or_coupon.expiration_date.strftime '%m/%d/%Y' %></td>
+						<td>
+							<% offer_or_coupon.benefit_used_messages.each_with_index do |msg, index| %>
+								<% if index > 0 %>
+								, 
+								<% end %>
+								<%= msg %>
+							<% end %>
+						</td>
+						<td>
+							<% offer_or_coupon.benefit_used_messages.each_with_index do |msg, index| %>
+								<% if index > 0 %>
+								, 
+								<% end %>
+								<%= msg %>
+							<% end %>
+						</td>
+						<td>
+							<% if offer_or_coupon.used? %>
+								NA - already applied
+							<% else %>
+								<a href="/admin/<%= offer_or_coupon.id %>/dissociate_offer_from_user">Dissociate</a>
+							<% end %>
+						</td>
+					</tr>
+				<% end %>
+			</table>
+		</td>
+	</tr>
 	<tr><td colspan="2"><br></td></tr>
 	<tr>
 		<td colspan="2">

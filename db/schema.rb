@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120122173933) do
+ActiveRecord::Schema.define(:version => 20120129020438) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -129,6 +129,14 @@ ActiveRecord::Schema.define(:version => 20120122173933) do
     t.integer "free_storage_offer_benefit_id"
     t.integer "num_boxes"
     t.integer "num_months"
+  end
+
+  create_table "free_storage_user_offer_benefit_boxes", :force => true do |t|
+    t.integer  "user_offer_benefit_id"
+    t.integer  "box_id"
+    t.float    "months_consumed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "interested_people", :force => true do |t|
@@ -373,6 +381,22 @@ ActiveRecord::Schema.define(:version => 20120122173933) do
   end
 
   add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"
+
+  create_table "user_offer_benefits", :force => true do |t|
+    t.integer  "user_offer_id"
+    t.integer  "offer_benefit_id"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_offers", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "offer_id"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                                      :default => "",   :null => false

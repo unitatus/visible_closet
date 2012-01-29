@@ -20,6 +20,7 @@ class Offer < ActiveRecord::Base
   
   belongs_to :creator, :class_name => "User", :foreign_key => :created_by_user_id
   has_many :benefits, :dependent => :destroy, :autosave => true, :class_name => "OfferBenefit"
+  has_many :user_offers, :dependent => :destroy
   
   validates_presence_of :start_date, :message => "can't be blank"
   validates_presence_of :expiration_date, :message => "can't be blank"
@@ -39,7 +40,30 @@ class Offer < ActiveRecord::Base
   end
   
   def has_users?
-    return false
+    return user_offers.any?
+  end
+  
+  def benefits_description
+    return_str = ""
+    
+    benefits.each do |benefit|
+      return_str += benefit.description
+    end
+    
+    return return_str
+  end
+  
+  def associate_with(user)
+    user_offer = UserOffer.new
+    
+    user_offer.user = user
+    user_offer.offer = self
+    
+    benefits.each do |benefit|
+      user_offer.user_offer_benefits << benefit.build_user_offer_benefit
+    end
+    
+    user_offer.save
   end
   
   protected

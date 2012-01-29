@@ -43,6 +43,22 @@
 		<% end %>
 		<a href="/account/history">Account History &gt;&gt;</a>
 	</div>
+	<div class="simple_header">Your Offers / Coupons</div>
+	<div class="indent-div">
+		<% if current_user.active_offers_and_coupons.empty? %>
+			None. <a href="/view_offers">Apply coupon or offer code &gt;&gt;</a>
+		<% else %>
+			<% current_user.active_offers_and_coupons.each_with_index do |offer_or_coupon, index| %>
+				<% if index > 2 %>
+					<% break %>
+				<% elsif index > 0 %>
+				, 
+				<% end %>
+				&quot;<%= offer_or_coupon.unique_identifier %>&quot;
+			<% end %>
+			 | <a href="/view_offers">See all &gt;&gt;</a>
+		<% end %>
+	</div>
 </div>
 <div class="clearer"></div>
 

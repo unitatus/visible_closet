@@ -50,7 +50,18 @@
 	</tr>
 	<tr>
 		<td>Users who have used:</td>
-		<td>TBD</td>
+		<td>
+			<% if @offer.user_offers.empty? %>
+				None
+			<% else %>
+				<% @offer.user_offers.each_with_index do |user_offer, index| %>
+					<% if index > 0 %>
+						, 
+					<% end %>
+					<a href="/admin/user/<%= user_offer.user_id %>"><%= @user_offer.user.name %></a>
+				<% end %>
+			<% end %>
+		</td>
 	</tr>
 	<% if @offer.respond_to?(:coupons) %>
 	<tr>

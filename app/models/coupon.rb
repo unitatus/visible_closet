@@ -19,9 +19,16 @@ class Coupon < ActiveRecord::Base
   validates_presence_of :unique_identifier
   validates_uniqueness_of :unique_identifier
   
+  # Want to show the offer information in its entirety
+  def method_missing(meth, *args, &blk)
+    meth.to_s == 'id' ? super : offer.send(meth, *args, &blk)
+  rescue NoMethodError
+    super
+  end
+  
   protected
     def before_validation
       # self.unique_identifier = rand(36**8).to_s(36) if self.new_record? and self.unique_identifier.nil?
-      self.unique_identifier = Rufus::Mnemo::from_integer rand(36**8)
+      self.unique_identifier = Rufus::Mnemo::from_integer rand(36**8) if self.unique_identifer.nil?
     end
 end

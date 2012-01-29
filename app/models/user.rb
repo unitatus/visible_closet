@@ -75,6 +75,8 @@ class User < ActiveRecord::Base
   has_many :furniture_items, :dependent => :destroy
   has_and_belongs_to_many :rental_agreement_versions
   belongs_to :acting_as, :foreign_key => :acting_as_user_id, :class_name => "User"
+  has_many :coupons, :foreign_key => :assigned_to_user_id
+  has_many :user_offers, :dependent => :destroy
 
   validates :first_name, :presence => true
   validates :last_name, :presence => true
@@ -616,6 +618,45 @@ class User < ActiveRecord::Base
     else
       return first_time
     end
+  end
+  
+  def all_offers_and_coupons
+    coupons | user_offers
+  end
+  
+  def active_offers_and_coupons
+    all_offers_and_coupons.select {|offer_or_coupon| offer_or_coupon.current? && offer_or_coupon.active? }
+  end
+  
+  # Right now this only works for offers, but it needs to work for coupons as well
+  def apply_offer_code(identifier)
+    offer = Offer.find_by_unique_identifier(identifier)
+    
+    if offer.nil?
+      errors.add(:offer_code, "Unknown offer code &quot;#{identifier}&quot;") and return false
+    end
+    
+    if !offer.active?
+      errors.add(:offer_code, "This offer is not yet active.")
+    end
+    
+    if !offer.current?
+      errors.add(:offer_code, "This offer is not current -- start date is #{offer.start_date.strftime '%m/%d/%Y'} and expiration date is #{offer.end_date.strftime '%/m%d/%Y'}")
+    end
+    
+    if user_offers_contains(offer)
+      errors.add(:offer_code, "You have already applied this offer!")
+    end
+    
+    if errors.any?
+      return false
+    else
+      offer.associate_with(self)
+    end
+  end
+  
+  def user_offers_contains(offer)
+    user_offers.select {|user_offer| user_offer.offer == offer }.any?
   end
   
   private 

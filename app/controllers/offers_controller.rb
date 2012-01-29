@@ -114,4 +114,29 @@ class OffersController < ApplicationController
   def coupons
     @offer = Offer.find(params[:id])
   end
+  
+  def user_offers_coupons
+    @user = current_user
+  end
+  
+  def apply_offer_code
+    @user = current_user
+    
+    if @user.apply_offer_code(params[:offer_code])
+      redirect_to "/view_offers"
+    else
+      render :user_offers_coupons
+    end
+  end
+  
+  def dissociate_offer_from_user
+    user_offer = UserOffer.find(params[:id])
+    user = user_offer.user
+    
+    if !user_offer.used?
+      user_offer.destroy
+    end
+    
+    redirect_to "/admin/user/#{user.id}"
+  end
 end

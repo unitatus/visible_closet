@@ -1,14 +1,16 @@
 # == Schema Information
-# Schema version: 20120122055753
+# Schema version: 20120129012225
 #
-# Table name: offer_benefits
+# Table name: user_offers
 #
 #  id         :integer         not null, primary key
+#  user_id    :integer
+#  offer_id   :integer
 #  type       :string(255)
 #  created_at :datetime
 #  updated_at :datetime
-#  offer_id   :integer
 #
 
-class OfferBenefit < ActiveRecord::Base
+class FreeStorageUserOffer < UserOffer
+
 end

@@ -21,7 +21,13 @@ class FreeStorageOfferBenefit < OfferBenefit
     define_free_storage_benefit_properties_accessors
     return return_this
   end
-
+  
+  def description
+    box_str = num_boxes == 1 ? "box" : "boxes"
+    month_str = num_months == 1 ? "month" : "months"
+    "Free storage for " + num_boxes.to_s + " #{box_str} for " + num_months.to_s + " #{month_str}"
+  end
+  
   def free_storage_benefit_properties_with_autobuild
     free_storage_benefit_properties_without_autobuild || build_free_storage_benefit_properties
   end
@@ -38,6 +44,19 @@ class FreeStorageOfferBenefit < OfferBenefit
     meth.to_s == 'id' ? super : free_storage_benefit_properties.send(meth, *args, &blk)
   rescue NoMethodError
     super
+  end
+  
+  # this is a little silly, but the way Rails loads up classes, if this class is loaded up as a related entity, the method_missing method is not called for some reason.
+  def num_months
+    free_storage_benefit_properties.num_months
+  end
+  
+  def num_boxes
+    free_storage_benefit_properties.num_boxes
+  end
+  
+  def build_user_offer_benefit
+    FreeStorageUserOfferBenefit.new(:offer_benefit_id => self.id)
   end
 
 

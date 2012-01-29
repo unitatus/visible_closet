@@ -1,0 +1,68 @@
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div class="simple_header">Your Coupons and Discounts</div>
+<div id="internal-right">
+	<% if @user.errors.any? %>
+	<div class="error_label">
+		Could not add offer because of the following issues:<br><br>
+		<ul>
+			<% @user.errors.each do |key, msg| %>
+			<li><%= raw msg %></li>
+			<% end %>
+		</ul>
+		<br>
+	</div>
+	<% end %>
+	<table class="prices_table">
+		<tr>
+			<th>Code</th>
+			<th>Expiration Date</th>
+			<th>Description</th>
+			<th>Benefit Used</th>
+			<th>Benefit remaining</th>
+		</tr>
+		<% if @user.coupons.empty? && @user.user_offers.empty? %>
+			<tr>
+				<td colspan="5">None</td>
+			</tr>
+		<% else %>
+			<% @user.active_offers_and_coupons.each do |user_offer_or_coupon| %>
+				<tr>
+					<td>
+						<%= user_offer_or_coupon.unique_identifier %>
+					</td>
+					<td>
+						<%= user_offer_or_coupon.expiration_date.strftime "%m/%d/%Y" %>
+					</td>
+					<td>
+						<%= user_offer_or_coupon.benefits_description %>
+					</td>
+					<td>
+						<% user_offer_or_coupon.benefit_used_messages.each_with_index do |msg, index| %>
+							<% if index > 0 %>
+							, 
+							<% end %>
+							<%= msg %>
+						<% end %>
+					</td>
+					<td>
+						<% user_offer_or_coupon.benefit_remaining_messages.each_with_index do |msg, index| %>
+							<% if index > 0 %>
+							, 
+							<% end %>
+							<%= msg %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		<% end %>
+	</table>
+	<br>
+	<div style="text-align: right">
+	<%= form_tag "/apply_offer_code", :class => :standard, :onsubmit => "coupon_apply_submit.disabled=true;" do %>
+		<%= text_field_tag :offer_code, params[:offer_code], :placeholder => "Enter coupon or offer code here", :class => "textbox", :style => "width: 200px;" %>
+		<%= submit_tag "Apply Offer Code", :class => "button", :id => "coupon_apply_submit" %>
+	<% end %>
+	</div>
+</div>
+<div class="clearer"></div>
