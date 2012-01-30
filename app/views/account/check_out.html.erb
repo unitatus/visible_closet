@@ -119,12 +119,7 @@ function openMemberAgreement() {
 <hr>
 <div style="text-align:right; position:relative; padding: 0 20px 10px 0;">
 	<% if @cart.contains_ordered_boxes %>
-		New Box Shipping Cost: 
-		<% if @cart.contains_only_ordered_boxes && @cart.free_shipping? %>
-			$0.00
-		<% else %>
-			TBD (calculated when you ship a full box)
-		<% end %>
+		New Box Shipping Cost: FREE
 		<br>
 	<% end %>
 	

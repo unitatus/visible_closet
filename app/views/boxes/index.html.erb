@@ -34,7 +34,7 @@
 			<% elsif box.status == Box::IN_TRANSIT_TO_TVC_STATUS %>
 				<% image_file = "status-inventory-to-us" %>
 				<% alt = "In Transit" %>			
-			<% elsif box.status == Box::IN_STORAGE_STATUS && box.inventorying_status == Box::NO_INVENTORYING_REQUESTED %>
+			<% elsif box.status == Box::IN_STORAGE_STATUS && (box.inventorying_status == Box::NO_INVENTORYING_REQUESTED || box.inventorying_status.nil?) %>
 				<% image_file = "status-inventory-storage" %>
 				<% alt = "In Storage" %>
 			<% elsif box.status == Box::IN_STORAGE_STATUS && box.inventorying_status == Box::INVENTORYING_REQUESTED %>

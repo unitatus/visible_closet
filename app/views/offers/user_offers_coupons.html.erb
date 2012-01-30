@@ -1,6 +1,7 @@
 <% @menu_page = :account %>
 <%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
 <div class="simple_header">Your Coupons and Discounts</div>
+<% user_box_count = @user.box_count %>
 <div id="internal-right">
 	<% if @user.errors.any? %>
 	<div class="error_label">
@@ -13,6 +14,9 @@
 		<br>
 	</div>
 	<% end %>
+	<% if @user.coupons.empty? && @user.user_offers.empty? %>
+		None
+	<% else %>
 	<table class="prices_table">
 		<tr>
 			<th>Code</th>
@@ -20,43 +24,61 @@
 			<th>Description</th>
 			<th>Benefit Used</th>
 			<th>Benefit remaining</th>
-		</tr>
-		<% if @user.coupons.empty? && @user.user_offers.empty? %>
-			<tr>
-				<td colspan="5">None</td>
-			</tr>
-		<% else %>
-			<% @user.active_offers_and_coupons.each do |user_offer_or_coupon| %>
-				<tr>
-					<td>
-						<%= user_offer_or_coupon.unique_identifier %>
-					</td>
-					<td>
-						<%= user_offer_or_coupon.expiration_date.strftime "%m/%d/%Y" %>
-					</td>
-					<td>
-						<%= user_offer_or_coupon.benefits_description %>
-					</td>
-					<td>
-						<% user_offer_or_coupon.benefit_used_messages.each_with_index do |msg, index| %>
-							<% if index > 0 %>
-							, 
-							<% end %>
-							<%= msg %>
-						<% end %>
-					</td>
-					<td>
-						<% user_offer_or_coupon.benefit_remaining_messages.each_with_index do |msg, index| %>
-							<% if index > 0 %>
-							, 
-							<% end %>
-							<%= msg %>
-						<% end %>
-					</td>
-				</tr>
+			<% if user_box_count > 0 %>
+				<th style="width: 50px">Boxes</th>
 			<% end %>
+		</tr>
+		<% @user.active_offers_and_coupons.each do |user_offer_or_coupon| %>
+			<tr>
+				<td>
+					<%= user_offer_or_coupon.unique_identifier %>
+				</td>
+				<td>
+					<%= user_offer_or_coupon.expiration_date.strftime "%m/%d/%Y" %>
+				</td>
+				<td>
+					<%= user_offer_or_coupon.benefits_description %>
+				</td>
+				<td>
+					<% user_offer_or_coupon.benefit_used_messages.each_with_index do |msg, index| %>
+						<% if index > 0 %>
+						, 
+						<% end %>
+						<%= msg %>
+					<% end %>
+				</td>
+				<td>
+					<% user_offer_or_coupon.benefit_remaining_messages.each_with_index do |msg, index| %>
+						<% if index > 0 %>
+						, 
+						<% end %>
+						<%= msg %>
+					<% end %>
+				</td>
+				<% if user_box_count > 0 %>
+					<td>
+					<% if user_offer_or_coupon.applies_to_boxes? %>
+						<% user_offer_or_coupon.applied_boxes.each_with_index do |box, index | %>
+							<% if index > 0 %>
+							,<br>
+							<% end %>
+							Box #<%= box.box_num %>
+							<% if index == 0 %>
+							<br>
+							<% end %>
+						<% end %>
+						<% if user_offer_or_coupon.can_modify_boxes? %>
+							<a href="/user_<%= user_offer_or_coupon.is_a?(UserOffer) ? "offer" : "coupon" %>s/<%= user_offer_or_coupon.id %>/apply_boxes">Apply to boxes</a>
+						<% end %>
+					<% else %>
+						NA
+					<% end %>
+					</td>
+				<% end %>
+			</tr>
 		<% end %>
 	</table>
+	<% end %>
 	<br>
 	<div style="text-align: right">
 	<%= form_tag "/apply_offer_code", :class => :standard, :onsubmit => "coupon_apply_submit.disabled=true;" do %>

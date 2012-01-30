@@ -122,7 +122,7 @@ class OffersController < ApplicationController
   def apply_offer_code
     @user = current_user
     
-    if @user.apply_offer_code(params[:offer_code])
+    if @user.apply_offer_or_coupon_code(params[:offer_code])
       redirect_to "/view_offers"
     else
       render :user_offers_coupons
@@ -138,5 +138,37 @@ class OffersController < ApplicationController
     end
     
     redirect_to "/admin/user/#{user.id}"
+  end
+  
+  def user_offer_apply_boxes
+    @offer_or_coupon = UserOffer.find(params[:id])
+    
+    render :user_apply_boxes
+  end
+  
+  def user_coupon_apply_boxes
+    @offer_or_coupon = Coupon.find(params[:id])
+    
+    render :user_apply_boxes
+  end
+  
+  def assign_boxes_to_offer
+    @offer_or_coupon = UserOffer.find(params[:id])
+    
+    if @offer_or_coupon.assign_boxes(params[:boxes])
+      redirect_to "/view_offers"
+    else
+      render :user_apply_boxes
+    end
+  end
+  
+  def assign_boxes_to_coupon
+    @offer_or_coupon = Coupon.find(params[:id])
+    
+    if @offer_or_coupon.assign_boxes(params[:boxes])
+      redirect_to "/view_offers"
+    else
+      render :user_apply_boxes
+    end
   end
 end

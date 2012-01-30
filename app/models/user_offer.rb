@@ -36,4 +36,48 @@ class UserOffer < ActiveRecord::Base
   def used?
     user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.used? }.any?
   end
+  
+  def applies_to_boxes?
+    user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.applies_to_boxes? }.any?
+  end
+  
+  def applied_boxes
+    user_offer_benefits.collect {|user_offer_benefit| user_offer_benefit.applies_to_boxes? ? user_offer_benefit.applied_boxes : nil}.flatten.compact
+  end
+  
+  def applied_to_box?(box)
+    user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.applied_to_box?(box) }.any?
+  end
+  
+  def discounted_for_box?(box)
+    user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.discounted_for_box?(box) }.any?
+  end
+  
+  def assign_boxes(box_ids)
+    # For now we make the assumption that an offer only has one benefit that applies to boxes
+    box_benefit = user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.applies_to_boxes? }.last
+    if box_benefit.nil?
+      return true
+    end
+    
+    total_box_potential = offer.total_box_potential
+    
+    if box_ids.size > total_box_potential
+      errors.add(:user_offer, "Cannot add more than #{total_box_potential} #{total_box_potential > 1 ? 'boxes' : 'box' }.") and return false
+    end
+    boxes = Box.find(box_ids)
+    
+    box_benefit.remove_modifiable_boxes
+    box_benefit.reload
+    
+    boxes.each do |box|
+      box_benefit.associate_with(box)
+    end
+    
+    return true
+  end
+  
+  def can_modify_boxes?
+    user_offer_benefits.select {|box_benefit| box_benefit.respond_to?(:can_modify_boxes) && box_benefit.can_modify_boxes? }.any?
+  end
 end

@@ -18,4 +18,12 @@ class FreeStorageUserOfferBenefitBox < ActiveRecord::Base
   def used?
     months_consumed > 0
   end
+  
+  def months_consumed
+    if read_attribute(:months_consumed).nil?
+      0
+    else
+      read_attribute(:months_consumed)
+    end
+  end
 end

@@ -158,6 +158,10 @@ VisibleCloset::Application.routes.draw do
   match "view_offers" => "offers#user_offers_coupons"
   match "apply_offer_code" => "offers#apply_offer_code"
   match "admin/:id/dissociate_offer_from_user" => "offers#dissociate_offer_from_user"
+  match "user_offers/:id/apply_boxes" => "offers#user_offer_apply_boxes"
+  match "user_coupons/:id/apply_boxes" => "offers#user_coupon_apply_boxes"
+  match "user_offers/:id/assign_to_boxes" => "offers#assign_boxes_to_offer"
+  match "user_coupons/:id/assign_to_boxes" => "offers#assign_boxes_to_coupon"
 
   # Furniture
   match "admin/furniture_items/:id/photos" => "furniture_items#admin_manage_photos"

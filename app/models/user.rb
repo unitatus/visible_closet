@@ -628,30 +628,34 @@ class User < ActiveRecord::Base
     all_offers_and_coupons.select {|offer_or_coupon| offer_or_coupon.current? && offer_or_coupon.active? }
   end
   
-  # Right now this only works for offers, but it needs to work for coupons as well
-  def apply_offer_code(identifier)
-    offer = Offer.find_by_unique_identifier(identifier)
+  def apply_offer_or_coupon_code(identifier)
+    offer_or_coupon = Offer.find_by_unique_identifier(identifier)
     
-    if offer.nil?
+    if offer_or_coupon.nil?
+      offer_or_coupon = Coupon.find_by_unique_identifier(identifier)
+    end
+    
+    if offer_or_coupon.nil?
       errors.add(:offer_code, "Unknown offer code &quot;#{identifier}&quot;") and return false
     end
     
-    if !offer.active?
+    if !offer_or_coupon.active?
       errors.add(:offer_code, "This offer is not yet active.")
     end
     
-    if !offer.current?
-      errors.add(:offer_code, "This offer is not current -- start date is #{offer.start_date.strftime '%m/%d/%Y'} and expiration date is #{offer.end_date.strftime '%/m%d/%Y'}")
+    if !offer_or_coupon.current?
+      errors.add(:offer_code, "This offer is not current -- start date is #{offer_or_coupon.start_date.strftime '%m/%d/%Y'} and expiration date is #{offer_or_coupon.end_date.strftime '%/m%d/%Y'}")
     end
     
-    if user_offers_contains(offer)
+    # this works because coupons allow multiple selections but offers do not
+    if user_offers_contains(offer_or_coupon)
       errors.add(:offer_code, "You have already applied this offer!")
     end
     
     if errors.any?
       return false
     else
-      offer.associate_with(self)
+      offer_or_coupon.associate_with(self)
     end
   end
   

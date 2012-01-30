@@ -53,6 +53,10 @@ class Offer < ActiveRecord::Base
     return return_str
   end
   
+  def total_box_potential
+    benefits.collect {|benefit| benefit.respond_to?(:num_boxes) ? benefit.num_boxes : 0 }.sum
+  end
+  
   def associate_with(user)
     user_offer = UserOffer.new
     

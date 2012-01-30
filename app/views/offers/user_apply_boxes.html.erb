@@ -1,0 +1,33 @@
+<% @menu_page = :account %>
+<%= render 'account/account_nav', :locals => { :menu_page => @menu_page } %>
+<div class="simple_header">Manage Boxes for <%= @offer_or_coupon.is_a?(UserOffer) ? "Offer" : "Coupon" %> &quot;<%= @offer_or_coupon.unique_identifier %>&quot;</div>
+<div id="internal-right">
+	<% if @offer_or_coupon.errors.any? %>
+	<div class="error_label">
+		Could not save changes because of the following issues:<br><br>
+		<ul>
+			<% @offer_or_coupon.errors.each do |key, msg| %>
+			<li><%= raw msg %></li>
+			<% end %>
+		</ul>
+		<br>
+	</div>
+	<% end %>
+	You may select boxes before end-of-month charges are applied. Once charges have been applied and your offer or coupon has been used for savings you cannot apply it to other boxes.
+	<% if current_user.box_count < @offer_or_coupon.total_box_potential %>
+		Since this discount is for more boxes than you have in storage, you can apply it to all your boxes now, and add more boxes in the future to finish taking advantage of the discount; or you an refrain from applying it to your current boxes and only apply it to future boxes.
+	<% end %>
+	<br><br>
+	Please select <%= @offer_or_coupon.total_box_potential > 1 ? "up to " + @offer_or_coupon.total_box_potential.to_s + " boxes" : pluralize(@offer_or_coupon.total_box_potential.to_s, "box") %> from the list below:
+	<br><br>
+	<%= form_tag "/user_#{@offer_or_coupon.is_a?(UserOffer) ? "offer" : "coupon" }s/#{@offer_or_coupon.id}/assign_to_boxes", :class => "standard" do %>
+		<% current_user.boxes.each do |box| %>
+			<%= check_box_tag "boxes[]", box.id, @offer_or_coupon.applied_to_box?(box), :disabled => @offer_or_coupon.discounted_for_box?(box) %> Box # <%= box.box_num %> (<%= box.description.nil? ? "" : "Description: #{box.description}, " %>cubic feet: <%= box.cubic_feet.round(2) %><%= box.received_at.nil? ? "" : ", received on #{box.received_at.strftime '%m/%d/%Y'}" %>)<br>
+		<% end %>
+		<div style="width: 200px; text-align: right">
+			<br>
+			<%= submit_tag "Submit", :class => "button" %>
+		</div>
+	<% end %>
+</div>
+<div class="clearer"></div>

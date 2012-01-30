@@ -22,4 +22,16 @@ class UserOfferBenefit < ActiveRecord::Base
   def benefit_remaining_messages
     raise "This method must be overridden."
   end
+  
+  def applies_to_boxes?
+    false
+  end
+  
+  def applied_to_box?(box)
+    false
+  end
+  
+  def discounted_for_box?(box)
+    false
+  end
 end

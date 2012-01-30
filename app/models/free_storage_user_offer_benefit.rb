@@ -18,10 +18,14 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
   belongs_to :offer_benefit, :class_name => "FreeStorageOfferBenefit"
   before_destroy :confirm_no_use_before_destroy
   
+  def applies_to_boxes?
+    true
+  end
+  
   def benefit_used_messages    
     free_storage_user_offer_benefit_boxes.collect {|box_benefit| box_benefit.months_consumed.nil? \
       ? nil \
-      : "#{box_benefit.months_consumed} #{months_consumed == 1 ? 'month' : 'months'} storage for box #{box_benefit.box.box_num}" }.compact
+      : "#{box_benefit.months_consumed} #{box_benefit.months_consumed == 1 ? 'month' : 'months'} storage for box #{box_benefit.box.box_num}" }.compact
   end
   
   def benefit_remaining_messages
@@ -48,5 +52,41 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
     if free_storage_user_offer_benefit_boxes.select {|offer_benefit| offer_benefit.used? }.any?
       raise "Cannot delete a benefit object if it has been used!"
     end
+  end
+  
+  def applied_boxes
+    free_storage_user_offer_benefit_boxes.collect {|offer_benefit_box| offer_benefit_box.box }
+  end
+  
+  def applied_to_box?(box)
+    !relationship_for(box).nil?
+  end
+  
+  def relationship_for(box)
+    free_storage_user_offer_benefit_boxes.select {|offer_benefit_box| offer_benefit_box.box == box }.first
+  end
+  
+  def discounted_for_box?(box)
+    relationship = relationship_for(box)
+    
+    relationship.nil? ? false : relationship.used?
+  end
+  
+  def associate_with(box)
+    if !applied_to_box?(box)
+      free_storage_user_offer_benefit_boxes.create!(:box_id => box.id)
+    end
+  end
+  
+  def remove_modifiable_boxes
+    free_storage_user_offer_benefit_boxes.each do |benefit_box|
+      if !benefit_box.used?
+        benefit_box.destroy
+      end
+    end
+  end
+  
+  def can_modify_boxes?
+    free_storage_user_offer_benefit_boxes.select {|benefit_box| !benefit_box.used? }
   end
 end
