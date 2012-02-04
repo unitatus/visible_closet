@@ -45,18 +45,24 @@
 	</div>
 	<div class="simple_header">Your Offers / Coupons</div>
 	<div class="indent-div">
-		<% if current_user.active_offers_and_coupons.empty? %>
+		<% if current_user.active_offers.empty? %>
 			None. <a href="/view_offers">Apply coupon or offer code &gt;&gt;</a>
 		<% else %>
-			<% current_user.active_offers_and_coupons.each_with_index do |offer_or_coupon, index| %>
+			<% current_user.active_offers.each_with_index do |offer, index| %>
 				<% if index > 2 %>
+					...
 					<% break %>
 				<% elsif index > 0 %>
 				, 
 				<% end %>
-				&quot;<%= offer_or_coupon.unique_identifier %>&quot;
+				&quot;<%= offer.unique_identifier %>&quot;
 			<% end %>
-			 | <a href="/view_offers">See all &gt;&gt;</a>
+			 | 
+			<% if current_user.active_offers.any? %>
+				<a href="/view_offers">Details &gt;&gt;</a>
+			<% else %>
+				<a href="/view_offers">Add &gt;&gt;</a>
+			<% end %>
 		<% end %>
 	</div>
 </div>

@@ -68,6 +68,8 @@ class Offer < ActiveRecord::Base
     end
     
     user_offer.save
+    
+    return user_offer
   end
   
   protected

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120129020438) do
+ActiveRecord::Schema.define(:version => 20120204201152) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -108,7 +108,6 @@ ActiveRecord::Schema.define(:version => 20120129020438) do
   add_index "charges", ["user_id"], :name => "index_charges_on_user_id"
 
   create_table "coupons", :force => true do |t|
-    t.integer "assigned_to_user_id"
     t.string  "unique_identifier"
     t.integer "offer_id"
     t.string  "offer_type"
@@ -396,6 +395,7 @@ ActiveRecord::Schema.define(:version => 20120129020438) do
     t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "coupon_id"
   end
 
   create_table "users", :force => true do |t|

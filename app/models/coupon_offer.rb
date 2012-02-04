@@ -29,4 +29,8 @@ class CouponOffer < Offer
       end
     end
   end
+  
+  def coupon_for_user(user)
+    coupons.select {|coupon| coupon.user == user }.last
+  end
 end

@@ -72,6 +72,8 @@
 			<table>
 			<% @offer.coupons.each do |coupon| %>
 				<tr>
+					<td>ID</td>
+					<td><%= coupon.id %></td>
 					<td>Unique Identifier:</td>
 					<td><%= coupon.unique_identifier %></td>
 					<td>User:</td>

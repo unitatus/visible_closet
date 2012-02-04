@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
   has_many :furniture_items, :dependent => :destroy
   has_and_belongs_to_many :rental_agreement_versions
   belongs_to :acting_as, :foreign_key => :acting_as_user_id, :class_name => "User"
-  has_many :coupons, :foreign_key => :assigned_to_user_id
+  has_many :coupons, :through => :user_offers
   has_many :user_offers, :dependent => :destroy
 
   validates :first_name, :presence => true
@@ -620,12 +620,8 @@ class User < ActiveRecord::Base
     end
   end
   
-  def all_offers_and_coupons
-    coupons | user_offers
-  end
-  
-  def active_offers_and_coupons
-    all_offers_and_coupons.select {|offer_or_coupon| offer_or_coupon.current? && offer_or_coupon.active? }
+  def active_offers
+    user_offers.select {|user_offer| user_offer.active? }
   end
   
   def apply_offer_or_coupon_code(identifier)
@@ -635,21 +631,31 @@ class User < ActiveRecord::Base
       offer_or_coupon = Coupon.find_by_unique_identifier(identifier)
     end
     
+    if offer_or_coupon.is_a?(Offer)
+      type = "offer"
+    else
+      type = "coupon"
+    end
+    
     if offer_or_coupon.nil?
-      errors.add(:offer_code, "Unknown offer code &quot;#{identifier}&quot;") and return false
+      errors.add(:offer_code, "Unknown #{type} code &quot;#{identifier}&quot;") and return false
     end
     
     if !offer_or_coupon.active?
-      errors.add(:offer_code, "This offer is not yet active.")
+      errors.add(:offer_code, "This #{type} is not yet active.")
     end
     
     if !offer_or_coupon.current?
-      errors.add(:offer_code, "This offer is not current -- start date is #{offer_or_coupon.start_date.strftime '%m/%d/%Y'} and expiration date is #{offer_or_coupon.end_date.strftime '%/m%d/%Y'}")
+      errors.add(:offer_code, "This #{type} is not current -- start date is #{offer_or_coupon.start_date.strftime '%m/%d/%Y'} and expiration date is #{offer_or_coupon.expiration_date.strftime '%m/%d/%Y'}")
     end
     
     # this works because coupons allow multiple selections but offers do not
     if user_offers_contains(offer_or_coupon)
-      errors.add(:offer_code, "You have already applied this offer!")
+      errors.add(:offer_code, "This offer is only usable once per user.")
+    end
+      
+    if offer_or_coupon.is_a?(Coupon) && user_offers_contains(offer_or_coupon.offer)
+      errors.add(:offer_code, "This type of #{type} is only usable once per user; you have already used coupon '#{offer_or_coupon.offer.coupon_for_user(self).unique_identifier}'.")
     end
     
     if errors.any?

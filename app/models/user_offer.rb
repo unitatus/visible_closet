@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120129010630
+# Schema version: 20120204200541
 #
 # Table name: user_offers
 #
@@ -9,18 +9,28 @@
 #  type       :string(255)
 #  created_at :datetime
 #  updated_at :datetime
+#  coupon_id  :integer
 #
 
 class UserOffer < ActiveRecord::Base
   belongs_to :user
   belongs_to :offer
   has_many :user_offer_benefits, :dependent => :destroy
+  belongs_to :coupon
 
   # Want to show the offer information in its entirety
   def method_missing(meth, *args, &blk)
     meth.to_s == 'id' ? super : offer.send(meth, *args, &blk)
   rescue NoMethodError
     super
+  end
+  
+  def unique_identifier
+    if coupon
+      coupon.unique_identifier
+    else
+      offer.unique_identifier
+    end
   end
   
   def benefit_used_messages
@@ -54,6 +64,8 @@ class UserOffer < ActiveRecord::Base
   end
   
   def assign_boxes(box_ids)
+    box_ids = Array.new if box_ids.nil?
+    
     # For now we make the assumption that an offer only has one benefit that applies to boxes
     box_benefit = user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.applies_to_boxes? }.last
     if box_benefit.nil?
@@ -78,6 +90,10 @@ class UserOffer < ActiveRecord::Base
   end
   
   def can_modify_boxes?
-    user_offer_benefits.select {|box_benefit| box_benefit.respond_to?(:can_modify_boxes) && box_benefit.can_modify_boxes? }.any?
+    user_offer_benefits.select {|box_benefit| box_benefit.respond_to?(:can_modify_boxes?) && box_benefit.can_modify_boxes? }.any?
+  end
+  
+  def applied_to_boxes?
+    user_offer_benefits.select {|box_benefit| box_benefit.respond_to?(:applied_to_boxes?) && box_benefit.applied_to_boxes? }.any?
   end
 end

@@ -37,8 +37,8 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
     
     return_arr = free_storage_user_offer_benefit_boxes.collect {|box_benefit| box_benefit.months_consumed < num_months ? "#{num_months  - box_benefit.months_consumed} #{months_str} storage for box #{box_benefit.box.box_num}" : nil }.compact
     
-    for i in (free_storage_user_offer_benefit_boxes.size+1)..num_boxes
-      return_arr << "#{num_months} #{months_str} for #{num_boxes - free_storage_user_offer_benefit_boxes.size} new #{boxes_str}"
+    if free_storage_user_offer_benefit_boxes.size < num_boxes
+      return_arr << "#{num_months} #{months_str} for #{num_boxes - free_storage_user_offer_benefit_boxes.size} #{boxes_str}"
     end
     
     return return_arr
@@ -87,6 +87,10 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
   end
   
   def can_modify_boxes?
-    free_storage_user_offer_benefit_boxes.select {|benefit_box| !benefit_box.used? }
+    free_storage_user_offer_benefit_boxes.select {|benefit_box| !benefit_box.used? }.any? || free_storage_user_offer_benefit_boxes.size < offer_benefit.num_boxes
+  end
+  
+  def applied_to_boxes?
+    free_storage_user_offer_benefit_boxes.any?
   end
 end

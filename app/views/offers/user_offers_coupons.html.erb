@@ -14,7 +14,7 @@
 		<br>
 	</div>
 	<% end %>
-	<% if @user.coupons.empty? && @user.user_offers.empty? %>
+	<% if @user.user_offers.empty? %>
 		None
 	<% else %>
 	<table class="prices_table">
@@ -28,19 +28,19 @@
 				<th style="width: 50px">Boxes</th>
 			<% end %>
 		</tr>
-		<% @user.active_offers_and_coupons.each do |user_offer_or_coupon| %>
+		<% @user.active_offers.each do |user_offer| %>
 			<tr>
 				<td>
-					<%= user_offer_or_coupon.unique_identifier %>
+					<%= user_offer.unique_identifier %>
 				</td>
 				<td>
-					<%= user_offer_or_coupon.expiration_date.strftime "%m/%d/%Y" %>
+					<%= user_offer.expiration_date.strftime "%m/%d/%Y" %>
 				</td>
 				<td>
-					<%= user_offer_or_coupon.benefits_description %>
+					<%= user_offer.benefits_description %>
 				</td>
 				<td>
-					<% user_offer_or_coupon.benefit_used_messages.each_with_index do |msg, index| %>
+					<% user_offer.benefit_used_messages.each_with_index do |msg, index| %>
 						<% if index > 0 %>
 						, 
 						<% end %>
@@ -48,7 +48,7 @@
 					<% end %>
 				</td>
 				<td>
-					<% user_offer_or_coupon.benefit_remaining_messages.each_with_index do |msg, index| %>
+					<% user_offer.benefit_remaining_messages.each_with_index do |msg, index| %>
 						<% if index > 0 %>
 						, 
 						<% end %>
@@ -57,18 +57,13 @@
 				</td>
 				<% if user_box_count > 0 %>
 					<td>
-					<% if user_offer_or_coupon.applies_to_boxes? %>
-						<% user_offer_or_coupon.applied_boxes.each_with_index do |box, index | %>
-							<% if index > 0 %>
-							,<br>
-							<% end %>
-							Box #<%= box.box_num %>
-							<% if index == 0 %>
-							<br>
-							<% end %>
-						<% end %>
-						<% if user_offer_or_coupon.can_modify_boxes? %>
-							<a href="/user_<%= user_offer_or_coupon.is_a?(UserOffer) ? "offer" : "coupon" %>s/<%= user_offer_or_coupon.id %>/apply_boxes">Apply to boxes</a>
+					<% if user_offer.applies_to_boxes? %>
+						<% if user_offer.applied_to_boxes? && user_offer.can_modify_boxes? %>
+							<a href="/user_<%= user_offer.is_a?(UserOffer) ? "offer" : "coupon" %>s/<%= user_offer.id %>/apply_boxes">Edit</a>
+						<% elsif user_offer.can_modify_boxes? %>
+							<a href="/user_<%= user_offer.is_a?(UserOffer) ? "offer" : "coupon" %>s/<%= user_offer.id %>/apply_boxes">Apply to boxes</a>
+						<% else %>
+							Cannot edit
 						<% end %>
 					<% else %>
 						NA
