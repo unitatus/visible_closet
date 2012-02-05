@@ -431,6 +431,14 @@ class User < ActiveRecord::Base
       charge.destroy
     end
     
+    credits.each do |credit|
+      credit.destroy
+    end
+    
+    user_offers.each do |user_offer|
+      user_offer.destroy
+    end
+    
     payment_profiles.each do |profile|
       if profile != default_payment_profile
         profile.destroy
@@ -450,6 +458,8 @@ class User < ActiveRecord::Base
     subscriptions.each do |subscription|
       subscription.destroy
     end
+    
+    
   end
 
   def current_account_balance(include_news=false)

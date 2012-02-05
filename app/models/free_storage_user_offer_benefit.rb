@@ -16,7 +16,6 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
   belongs_to :user_offer
   # this is necessary because the parent won't instantiate the right class
   belongs_to :offer_benefit, :class_name => "FreeStorageOfferBenefit"
-  before_destroy :confirm_no_use_before_destroy
   
   def applies_to_boxes?
     true
@@ -46,12 +45,6 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
   
   def used?
     free_storage_user_offer_benefit_boxes.select {|offer_benefit| offer_benefit.used? }.any?
-  end
-  
-  def confirm_no_use_before_destroy
-    if free_storage_user_offer_benefit_boxes.select {|offer_benefit| offer_benefit.used? }.any?
-      raise "Cannot delete a benefit object if it has been used!"
-    end
   end
   
   def applied_boxes

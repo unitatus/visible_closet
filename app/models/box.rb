@@ -198,13 +198,18 @@ class Box < ActiveRecord::Base
       new_charge.associate_with(box, start_date, end_date)
 
       if box.free_storage_credits_available?
-        comments, percent_consumed = box.consume_free_storage(start_date, end_date)
-        new_credit = user.credits.build(:description => comments, :amount => new_charge.amount * (percent_consumed * Date.months_between(start_date, end_date)), :created_at => Date.today)
+        comments, percent_consumed, benefits_to_update = box.consume_free_storage(start_date, end_date)
+        puts("The percent consumed was #{percent_consumed}*****************")
+        
+        new_credit = user.credits.build(:description => comments, :amount => (new_charge.amount * percent_consumed), :created_at => Date.today)
       end
       
       if (save)
         new_charge.save
         new_credit.save if new_credit
+        benefits_to_update.each do |benefit|
+          benefit.save
+        end
         box.save
       end
       
@@ -216,7 +221,7 @@ class Box < ActiveRecord::Base
     free_storage_user_offer_benefits.select {|benefit| benefit.benefit_remaining? }.any?
   end
   
-  def consume_free_storage(start_date, end_date, percent_remaining = 1.0, avail_benefits = free_storage_user_offer_benefits)
+  def consume_free_storage(start_date, end_date, percent_remaining = Rational(1,1), avail_benefits = free_storage_user_offer_benefits)
     
     avail_benefits.select! {|benefit| benefit.benefit_remaining? }
     applicable_benefit = avail_benefits[0]
@@ -228,18 +233,20 @@ class Box < ActiveRecord::Base
       start_date = received_at
     end
     
-    percent_consumed = applicable_benefit.consume_free_storage(start_date, end_date, percent_remaining) if applicable_benefit
-    num_days_consumed = ((end_date.to_date - start_date.to_date).to_i * percent_consumed).to_i
-    real_end_date = start_date + num_days_consumed.days
-    return_msg = "Credit for offer '#{applicable_benefit.user_offer_benefit.user_offer.unique_identifier}' for box #{self.box_num} (storage from #{start_date.strftime '%m/%d/%Y'} to #{real_end_date.strftime '%m/%d/%Y'})."
+    percent_consumed = applicable_benefit.consume_free_storage(start_date, end_date, percent_remaining)
+    num_days_consumed = ((end_date.to_date - start_date.to_date) * percent_consumed).to_i
+    num_days_previously_consumed = (end_date.to_date - start_date.to_date).to_i * (1.0 - percent_remaining)
+    real_start_date = start_date + num_days_previously_consumed.days
+    real_end_date = real_start_date + num_days_consumed.days
+    return_msg = "offer '#{applicable_benefit.user_offer_benefit.user_offer.unique_identifier}' for box #{self.box_num} (storage from #{real_start_date.strftime '%m/%d/%Y'} to #{real_end_date.strftime '%m/%d/%Y'})"
     
     if percent_consumed < percent_remaining
-      added_message, added_consumed = consume_free_storage(start_date, end_date, percent_remaining - percent_consumed, avail_benefits)
+      added_message, added_consumed, avail_benefits = consume_free_storage(start_date, end_date, percent_remaining - percent_consumed, avail_benefits)
       return_msg += "; " + added_message
       percent_consumed += added_consumed
     end
     
-    return return_msg, percent_consumed
+    return return_msg, percent_consumed, avail_benefits
   end
   
   def Box.print_out_box_charges(box_charges)

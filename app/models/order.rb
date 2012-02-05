@@ -542,11 +542,19 @@ class Order < ActiveRecord::Base
           raise "Standard box creation failed."
         end
 
-        if order_line.committed_months && order_line.committed_months > 0
+        if order_line.committed_months && order_line.committed_months > 1
           new_box.subscriptions.create!(:duration_in_months => order_line.committed_months, :user_id => self.user_id)
         end
       end # inner for loop
     end
+    
+    stocking_fee_lines.each do |stocking_fee_line|
+      stocking_fee_line.update_attribute(:status, OrderLine::PROCESSED_STATUS)
+    end
+  end
+  
+  def stocking_fee_lines
+    order_lines.select {|order_line| order_line.product.stocking_fee? }
   end
   
   def destroy_associated_shipments

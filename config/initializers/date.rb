@@ -9,16 +9,16 @@ class Date
     end_date = end_date.to_date
     
     years, months, days = (end_date.year - start_date.year), (end_date.month - start_date.month), (end_date.day - start_date.day)
+
+    # days should be inclusive
+    days += 1
     
     months = months - 1 if days < 0
     years, months = (years - 1), (months + 12) if months < 0
         
     if days < 0
       days = days_in_month(start_date.month, start_date.year) - start_date.day + end_date.day
-    end
-    
-    # days should be inclusive
-    days += 1
+    end    
     
     if start_date + 1.months > end_date
       months_remainder = ((start_date + 1.month) - start_date).to_i
