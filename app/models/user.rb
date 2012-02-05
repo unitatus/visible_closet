@@ -474,7 +474,7 @@ class User < ActiveRecord::Base
     payments = include_rectify ? non_failed_payment_transactions : successful_payment_transactions
 
     the_credits = payments.collect {|payment| payment.credit }
-    the_credits = the_credits | Credit.find_all_by_user_id(self.id).select {|credit| credit.payment_transaction.nil? }
+    the_credits = the_credits | credits.select {|credit| credit.payment_transaction.nil? }
     
     the_credits.compact! # removes nils
     
@@ -530,6 +530,15 @@ class User < ActiveRecord::Base
       calculate_subscription_charges
     end
   end
+  
+  def anticipated_credits
+    if @recently_calculated_anticipated.nil?
+      calculate_subscription_charges
+    end
+    
+    credits.select {|credit| credit.id.nil? }
+  end
+
   
   def will_have_charges_at_end_of_month?
     boxes.each do |box|

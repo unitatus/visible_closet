@@ -14,7 +14,7 @@
 			<td colspan="2"><b>Account Balance as of <%= @start_of_month.strftime "%m/%d/%Y" %>:</b></td>
 			<td><%= number_to_currency (@user.account_balance_as_of(@start_of_month-1)) %></td>
 		</tr>
-		<% credits_during_month = @user.credits_during_month %>
+		<% credits_during_month = @user.credits_during_month.select {|credit| !credit.new_record? } %>
 		<% if credits_during_month.size > 0 %>
 			<tr>
 				<td colspan="2"><br><b>Credits Made this Month</td>
@@ -46,19 +46,32 @@
 		<% if anticipated_charges.size == 0 %>
 			<tr><td colspan="2">None</td><td></td></tr>
 		<% else %>
-		<% anticipated_charges.each do |charge| %>
+			<% anticipated_charges.each do |charge| %>
+				<tr>
+					<td style="padding-left: 10px; width: 400px;"><%= charge.comments %></td>
+					<td><%= number_to_currency charge.amount %></td>
+					<td></td>
+				</tr>
+			<% end %>
 			<tr>
-				<td style="padding-left: 10px; width: 400px;"><%= charge.comments %></td>
-				<td><%= number_to_currency charge.amount %></td>
-				<td></td>
+				<td colspan="2"><b>Total anticipated charges:</b></td>
+				<td><%= number_to_currency MiscHelper.aggregate_transactions(anticipated_charges) %></td>
 			</tr>
 		<% end %>
-		<tr>
-			<td colspan="2"><b>Total anticipated charges:</b></td>
-			<td><%= number_to_currency MiscHelper.aggregate_transactions(anticipated_charges) %></td>
-		</tr>
-		<% end %>
 		<tr><td colspan="3">&nbsp;</td></tr>
+		<% anticipated_credits = @user.anticipated_credits %>
+		<% if anticipated_credits.size > 0 %>
+			<tr>
+				<td colspan="2"><br><b>Anticipated Credits</td>
+				<td></td>
+			</tr>
+<%= render :partial => "payments_list", :locals => { :credits => anticipated_credits }%>
+			<tr>
+				<td colspan="2"><b>Total anticipated credits:</b></td>
+				<td><b><%= number_to_currency MiscHelper.aggregate_transactions(anticipated_credits)%></b></td>
+			</tr>
+		<% end %>
+			<tr><td colspan="3">&nbsp;</td></tr>
 		<tr>
 			<% end_month_balance = @user.account_balance_as_of(@end_of_month, true) %>
 			<td colspan="2" style="text-align: right"><b>Net Anticipated Account Balance on <%= DateHelper.end_of_month.strftime "%m/%d/%Y"%>:</b></td>

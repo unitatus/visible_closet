@@ -50,6 +50,7 @@ class Box < ActiveRecord::Base
   belongs_to :user, :foreign_key => :assigned_to_user_id
   belongs_to :created_by, :class_name => "User"
   before_destroy :destroy_certain_parents
+  has_many :free_storage_user_offer_benefits, :class_name => "FreeStorageUserOfferBenefitBox", :autosave => true
   
   # TODO: Figure out internationalization
   def status_en
@@ -172,11 +173,11 @@ class Box < ActiveRecord::Base
           storage_discount_calc = Discount.new(Box.get_product(box), 0, subscription_months, existing_product_count)
 
           units = box.vc_box? ? 1 : box.cubic_feet
-          box_charges[box] += Rational(storage_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
+          box_charges[box] += Rational(storage_discount_calc.unit_price_after_discount*units, Date.days_in_month(day.month, day.year))
 
           if box.inventoried_on(day)
             inventory_discount_calc = Discount.new(Box.get_product(box, true), 0, subscription_months, existing_product_count)
-            box_charges[box] += Rational(inventory_discount_calc.unit_price_after_discount*units, days_in_month(day.month, day.year))
+            box_charges[box] += Rational(inventory_discount_calc.unit_price_after_discount*units, Date.days_in_month(day.month, day.year))
           end
         end
       end
@@ -195,13 +196,50 @@ class Box < ActiveRecord::Base
       new_charge.total_in_cents = (box_charges[box].to_f*100.0).round
             
       new_charge.associate_with(box, start_date, end_date)
+
+      if box.free_storage_credits_available?
+        comments, percent_consumed = box.consume_free_storage(start_date, end_date)
+        new_credit = user.credits.build(:description => comments, :amount => new_charge.amount * (percent_consumed * Date.months_between(start_date, end_date)), :created_at => Date.today)
+      end
       
       if (save)
         new_charge.save
+        new_credit.save if new_credit
+        box.save
       end
       
       new_charge
     }
+  end
+  
+  def free_storage_credits_available?
+    free_storage_user_offer_benefits.select {|benefit| benefit.benefit_remaining? }.any?
+  end
+  
+  def consume_free_storage(start_date, end_date, percent_remaining = 1.0, avail_benefits = free_storage_user_offer_benefits)
+    
+    avail_benefits.select! {|benefit| benefit.benefit_remaining? }
+    applicable_benefit = avail_benefits[0]
+    if applicable_benefit.nil?
+      return "", 0.0
+    end
+    
+    if received_at > start_date
+      start_date = received_at
+    end
+    
+    percent_consumed = applicable_benefit.consume_free_storage(start_date, end_date, percent_remaining) if applicable_benefit
+    num_days_consumed = ((end_date.to_date - start_date.to_date).to_i * percent_consumed).to_i
+    real_end_date = start_date + num_days_consumed.days
+    return_msg = "Credit for offer '#{applicable_benefit.user_offer_benefit.user_offer.unique_identifier}' for box #{self.box_num} (storage from #{start_date.strftime '%m/%d/%Y'} to #{real_end_date.strftime '%m/%d/%Y'})."
+    
+    if percent_consumed < percent_remaining
+      added_message, added_consumed = consume_free_storage(start_date, end_date, percent_remaining - percent_consumed, avail_benefits)
+      return_msg += "; " + added_message
+      percent_consumed += added_consumed
+    end
+    
+    return return_msg, percent_consumed
   end
   
   def Box.print_out_box_charges(box_charges)
@@ -727,10 +765,5 @@ class Box < ActiveRecord::Base
   
   def set_box_num
     update_attribute(:box_num, self.user.next_box_num)
-  end
-  
-  def Box.days_in_month(month, year)
-    this_month = Date.parse(year.to_s + "-" + month.to_s + "-01")
-    ((this_month >> 1) - 1).day
   end
 end
