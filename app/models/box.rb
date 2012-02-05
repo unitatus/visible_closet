@@ -198,9 +198,7 @@ class Box < ActiveRecord::Base
       new_charge.associate_with(box, start_date, end_date)
 
       if box.free_storage_credits_available?
-        comments, percent_consumed, benefits_to_update = box.consume_free_storage(start_date, end_date)
-        puts("The percent consumed was #{percent_consumed}*****************")
-        
+        comments, percent_consumed, benefits_to_update = box.consume_free_storage(start_date, end_date)        
         new_credit = user.credits.build(:description => comments, :amount => (new_charge.amount * percent_consumed), :created_at => Date.today)
       end
       
@@ -232,12 +230,12 @@ class Box < ActiveRecord::Base
     if received_at > start_date
       start_date = received_at
     end
-    
+
     percent_consumed = applicable_benefit.consume_free_storage(start_date, end_date, percent_remaining)
-    num_days_consumed = ((end_date.to_date - start_date.to_date) * percent_consumed).to_i
-    num_days_previously_consumed = (end_date.to_date - start_date.to_date).to_i * (1.0 - percent_remaining)
-    real_start_date = start_date + num_days_previously_consumed.days
-    real_end_date = real_start_date + num_days_consumed.days
+    num_months_consumed = (Date.months_between(start_date, end_date) * percent_consumed).to_i
+    num_months_previously_consumed = (Date.months_between(start_date, end_date) * (1.0.to_r - percent_remaining)).to_i
+    real_start_date = start_date + num_months_previously_consumed.months
+    real_end_date = real_start_date + num_months_consumed.months
     return_msg = "offer '#{applicable_benefit.user_offer_benefit.user_offer.unique_identifier}' for box #{self.box_num} (storage from #{real_start_date.strftime '%m/%d/%Y'} to #{real_end_date.strftime '%m/%d/%Y'})"
     
     if percent_consumed < percent_remaining
