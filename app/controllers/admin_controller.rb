@@ -230,7 +230,6 @@ class AdminController < ApplicationController
     record.generated_by = current_user
     
     User.all.each do |user|
-debugger
       charges, credits = user.calculate_subscription_charges(as_of_date, false, true)
       if charges.any?
         record.storage_charges << charges.collect {|charge| charge.storage_charge}

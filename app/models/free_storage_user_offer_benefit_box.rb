@@ -15,6 +15,7 @@
 class FreeStorageUserOfferBenefitBox < ActiveRecord::Base
   belongs_to :box
   belongs_to :user_offer_benefit
+  has_many :free_storage_user_offer_benefit_box_credits
   
   def used?
     days_consumed > 0
@@ -40,11 +41,22 @@ class FreeStorageUserOfferBenefitBox < ActiveRecord::Base
     end
   end
   
+  def subtract_days_consumed(days_to_subtract)
+    self.days_consumed = self.days_consumed - days_to_subtract
+    if self.days_consumed < 0
+      self.days_consumed = 0
+    end
+    
+    if self.days_consumed == 0
+      self.start_date = nil
+    end
+  end
+  
   def days_consumable
     if start_date.nil?
       nil
     else
-      (start_date + user_offer_benefit.offer_benefit.num_months.months) - start_date
+      (start_date.to_date + user_offer_benefit.offer_benefit.num_months.months) - start_date.to_date
     end
   end
   
@@ -56,25 +68,33 @@ class FreeStorageUserOfferBenefitBox < ActiveRecord::Base
     start_date.nil? || days_consumable > days_consumed
   end
   
-  # Returns the percentage of the period between the two dates that actually applies
-  # def consume_free_storage(start_date, end_date, percent_remaining)
-  #   months_between_total = Date.months_between(start_date, end_date)
-  #   months_remaining = months_between_total * percent_remaining
-  #   if (months_remaining + self.months_consumed) > user_offer_benefit.offer_benefit.num_months
-  #     months_to_consume = user_offer_benefit.offer_benefit.num_months - months_consumed
-  #   else
-  #     months_to_consume = months_remaining
-  #   end
-  #   
-  #   self.months_consumed = (self.months_consumed.nil? ? 0 : self.months_consumed) + months_to_consume
-  # 
-  #   return Rational(months_to_consume, months_between_total)
-  # end
-  
-  def consume_day(date_if_nil=nil)
+  def consume_day(as_of_day=nil)
     self.days_consumed = self.days_consumed + 1
+    if @days_recently_consumed.nil?
+      @days_recently_consumed = 1
+    else
+      @days_recently_consumed += 1
+    end
+    
     if self.start_date.nil?
-      self.start_date = date_if_nil
+      self.start_date = as_of_day
+      begin_date = self.start_date.to_date
+    else
+      if as_of_day <= self.start_date.to_date + 1.months
+        begin_date = self.start_date.to_date
+      else
+        begin_date = Date.new(as_of_day.year, as_of_day.month, start_date.day)
+      end
+    end
+    
+    return (begin_date + 1.months) - begin_date
+  end
+  
+  def days_recently_consumed
+    if @days_recently_consumed.nil?
+      0
+    else
+      @days_recently_consumed
     end
   end
 end

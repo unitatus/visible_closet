@@ -107,14 +107,6 @@ class AccountController < ApplicationController
     else
       raise "Illegal box type selected."
     end    
-
-    # # This is a numeric check. Why doesn't this exist in Ruby?
-    # if params[:num_months][:num_months].to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) != nil
-    #   committed_months = params[:num_months][:num_months]
-    # else
-    #   committed_months = 1
-    # end
-    # 
     
     # We no longer have discounts, so committed months is set to zero. Leaving it in in case we change back to discounts.
     committed_months = 1

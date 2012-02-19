@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120218233547) do
+ActiveRecord::Schema.define(:version => 20120219180254) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -129,6 +129,14 @@ ActiveRecord::Schema.define(:version => 20120218233547) do
     t.integer "free_storage_offer_benefit_id"
     t.integer "num_boxes"
     t.integer "num_months"
+  end
+
+  create_table "free_storage_user_offer_benefit_box_credits", :force => true do |t|
+    t.integer  "free_storage_user_offer_benefit_box_id"
+    t.integer  "credit_id"
+    t.integer  "days_consumed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "free_storage_user_offer_benefit_boxes", :force => true do |t|
