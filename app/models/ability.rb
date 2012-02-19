@@ -109,6 +109,7 @@ class Ability
       can :destroy_coupon, Offer
       can :add_coupons, Offer
       can :show, Offer
+      can :dissociate_offer_from_user, Offer
     end
     
     if role == User::NORMAL || role == User::ADMIN || role == User::MANAGER      
