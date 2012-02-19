@@ -14,6 +14,7 @@
 class StorageChargeProcessingRecord < ActiveRecord::Base
   belongs_to :generated_by, :class_name => "User", :foreign_key => :generated_by_user_id
   has_many :storage_charges # can't use dependent destroy, because need to kill the charge
+  has_many :credits, :dependent => :destroy
   before_destroy :delete_storage_charges
   
   def delete_storage_charges

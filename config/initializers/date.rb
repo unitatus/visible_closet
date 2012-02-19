@@ -11,7 +11,7 @@ class Date
     years, months, days = (end_date.year - start_date.year), (end_date.month - start_date.month), (end_date.day - start_date.day)
 
     # days should be inclusive
-    days += 1
+    # days += 1
     
     months = months - 1 if days < 0
     years, months = (years - 1), (months + 12) if months < 0

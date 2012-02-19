@@ -22,9 +22,9 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
   end
   
   def benefit_used_messages    
-    free_storage_user_offer_benefit_boxes.collect {|box_benefit| box_benefit.months_consumed.nil? \
+    free_storage_user_offer_benefit_boxes.collect {|box_benefit| box_benefit.start_date.nil? \
       ? nil \
-      : "#{box_benefit.months_consumed} #{box_benefit.months_consumed == 1 ? 'month' : 'months'} storage for box #{box_benefit.box.box_num}" }.compact
+      : "#{box_benefit.days_consumed} days consumed of #{box_benefit.days_consumable} day potential for box #{box_benefit.box.box_num}" }.compact
   end
   
   def benefit_remaining_messages
@@ -34,7 +34,17 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
     months_str = num_months == 1 ? "month" : "months"
     boxes_str = num_boxes == 1 ? "box" : "boxes"
     
-    return_arr = free_storage_user_offer_benefit_boxes.collect {|box_benefit| box_benefit.months_consumed < num_months ? "#{num_months  - box_benefit.months_consumed} #{months_str} storage for box #{box_benefit.box.box_num}" : nil }.compact
+    return_arr = free_storage_user_offer_benefit_boxes.collect {|box_benefit| 
+      if box_benefit.benefit_remaining?
+        if box_benefit.started? 
+          "#{box_benefit.days_remaining} days of storage for box #{box_benefit.box.box_num}"
+        else
+          "#{num_months} #{months_str} storage for box #{box_benefit.box.box_num}"
+        end
+      else
+        nil
+      end
+    }.compact
     
     if free_storage_user_offer_benefit_boxes.size < num_boxes
       return_arr << "#{num_months} #{months_str} for #{num_boxes - free_storage_user_offer_benefit_boxes.size} #{boxes_str}"

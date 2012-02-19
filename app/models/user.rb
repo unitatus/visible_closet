@@ -525,11 +525,11 @@ class User < ActiveRecord::Base
       if last_charged_date && last_charged_date > DateHelper.start_of_month(as_of_date)
         last_charged_date = DateHelper.start_of_month(as_of_date)
       end
-      return_charges = Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date, save)
+      return_charges, return_credits = Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date, save)
       @recently_calculated_anticipated = true
-      return_charges
+      return [return_charges, return_credits]
     else
-      anticipated_charges
+      return [anticipated_charges, anticipated_credits]
     end
   end
   

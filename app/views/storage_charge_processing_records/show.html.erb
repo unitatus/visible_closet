@@ -9,7 +9,8 @@
 	<br><br>
 	<table class="lightly_padded_table centered_td">
 		<tr>
-			<th>Charge Id</th>
+			<th>Charge / Credit</th>
+			<th>Id</th>
 			<th>User Id</th>
 			<th>User Name</th>
 			<th>Box</th>
@@ -19,6 +20,7 @@
 		</tr>
 	<% @record.storage_charges.each do |storage_charge| %>
 		<tr>
+			<td>Charge</td>
 			<td><%= storage_charge.id %></td>
 			<td><a href="/admin/user/<%= storage_charge.chargeable_unit.user.id %>"><%= storage_charge.chargeable_unit.user.id %></a></td>
 			<td><%= storage_charge.chargeable_unit.user.name %></td>
@@ -32,6 +34,18 @@
 					Locked
 				<% end %>
 			</td>
+		</tr>
+	<% end %>
+	<% @record.credits.each do |credit| %>
+		<tr>
+			<td>Credit</td>
+			<td><%= credit.id %></td>
+			<td><a href="/admin/user/<%= credit.user.id %>"><%= credit.user.id %></a></td>
+			<td><%= credit.user.name %></td>
+			<td>NA</td>
+			<td><%= number_to_currency credit.amount %></td>
+			<td><%= credit.description %></td>
+			<td>NA</td>
 		</tr>
 	<% end %>
 	</table>
