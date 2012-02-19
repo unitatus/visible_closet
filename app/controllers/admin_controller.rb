@@ -38,6 +38,11 @@ class AdminController < ApplicationController
     @admin_page = :users
     order_by = params[:sort_by]
     
+    if order_by.blank?
+      order_by = "id"
+      params[:desc] = "DESC"
+    end
+    
     if order_by && order_by != "id"
       order_by = "LOWER(" + order_by + ")"
     end
