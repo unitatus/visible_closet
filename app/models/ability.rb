@@ -204,6 +204,14 @@ class Ability
       # rental agreements
       can :latest_agreement_ajax, :rental_agreement_version
       
+      # offers
+      can :user_offers_coupons, Offer
+      can :apply_offer_code, Offer
+      can :user_offer_apply_boxes, Offer
+      can :user_coupon_apply_boxes, Offer
+      can :assign_boxes_to_offer, Offer
+      can :assign_boxes_to_coupon, Offer
+      
       # In case this is really a manager
       can :stop_impersonating, :admin
     end

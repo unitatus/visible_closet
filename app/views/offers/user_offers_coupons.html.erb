@@ -17,6 +17,9 @@
 	<% if @user.user_offers.empty? %>
 		None
 	<% else %>
+	<% if user_box_count == 0 %>
+	You must order boxes before you can apply coupons to boxes. <a href="/account/store_more_boxes">Click here to get started!</a><br><br>
+	<% end %>
 	<table class="prices_table">
 		<tr>
 			<th>Code</th>

@@ -282,6 +282,18 @@ class AdminController < ApplicationController
     end
   end
   
+  def delete_credit
+    credit = Credit.find(params[:id])
+    
+    credit.destroy
+    
+    if credit.storage_charge_processing_record
+      redirect_to "/storage_charge_processing_records/#{credit.storage_charge_processing_record_id}"
+    else
+      redirect_to "/admin/home"
+    end
+  end
+  
   def impersonate_user
     redirect_to access_denied_url and return unless current_user.manager?
     new_user = User.find(params[:id])

@@ -45,7 +45,13 @@
 			<td>NA</td>
 			<td><%= number_to_currency credit.amount %></td>
 			<td><%= credit.description %></td>
-			<td>NA</td>
+			<td>
+				<% if !@record.locked_for_editing? %>
+					<a href="/admin/credits/<%= credit.id %>/delete">X</a>
+				<% else %>
+					Locked
+				<% end %>
+			</td>
 		</tr>
 	<% end %>
 	</table>

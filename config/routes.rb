@@ -140,6 +140,7 @@ VisibleCloset::Application.routes.draw do
   match "admin/invoices/:id" => "orders#show_invoice"
   match "admin/user/:user_id/subscriptions/:subscription_id" => "admin#user_subscription"
   match "admin/charges/:id/delete" => "admin#delete_charge"
+  match "admin/credits/:id/delete" => "admin#delete_credit"
   match "admin/generate_payments" => "admin#generate_payments"
   match "admin/user_account_balances" => "admin#user_account_balances"
   match "admin/impersonate_user/:id" => "admin#impersonate_user"
