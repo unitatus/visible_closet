@@ -12,12 +12,12 @@ function openMemberAgreement() {
 	<% end %>
 	<% if flash[:notice] %>
 		<% if flash[:notice].size == 1 %>
-		<div class="error_label"><b>Notice:</b> <%= flash[:notice].first %></div><br>
+		<div class="error_label"><b>Notice:</b> <%= raw flash[:notice].first %></div><br>
 		<% elsif flash[:notice].respond_to?(:each) %>
 			<b>Notice</b>: Could not apply due to the following issues:
 			<ul>
 				<% flash[:notice].each do |notice| %>
-					<li><%= notice %></li>
+					<li><%= raw notice %></li>
 				<% end %>
 			</ul>
 		<% end %>
