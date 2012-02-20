@@ -48,7 +48,7 @@ function openMemberAgreement() {
 		</th>
 		<th>Shipping Address</th>
 		<th>Remove?</th>
-	</tr><% @cart.cart_items.each do |cart_item| %>
+	</tr><% @cart.cart_items_for_checkout.each do |cart_item| %>
 	<tr>
 		<td align="left">
 			<%= cart_item.description %>
@@ -143,6 +143,7 @@ function openMemberAgreement() {
 <% end %>
 <div class="clearer"></div>
 <div style="text-align: right; padding: 20px 0 0 0">
+	<%= hidden_field_tag "cart_id", @cart.id %>
 	<%= submit_tag("Complete Order", :class => "button", :id => "cf_submit", :onclick => "return formMonitor();") %>
 </div>
 <br>

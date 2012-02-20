@@ -38,7 +38,7 @@ class Product < ActiveRecord::Base
   end
   
   def shippable?
-    id != Rails.application.config.item_donation_product_id && id != Rails.application.config.stocking_fee_product_id
+    !id.nil? && id != Rails.application.config.item_donation_product_id && id != Rails.application.config.stocking_fee_product_id
   end
   
   def item_service?

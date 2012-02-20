@@ -72,6 +72,14 @@ class Offer < ActiveRecord::Base
     return user_offer
   end
   
+  def free_storage_benefits
+    benefits.select { |benefit| benefit.is_a? FreeStorageOfferBenefit }
+  end
+  
+  def free_signup_benefits
+    benefits.select { |benefit| benefit.is_a? FreeSignupOfferBenefit }
+  end
+  
   protected
   
   def start_date_lte_exp_date

@@ -229,16 +229,22 @@ class AccountController < ApplicationController
     @address = Address.new
     @address.user_id = current_user.id
   end
+  
+  def double_checkout
+    
+  end
 
   def finalize_check_out
     @cart = current_user.cart
-
+    check_cart = params[:cart_id].blank? ? nil : Cart.find(params[:cart_id])
+    puts "******************************"
+puts("The passed cart is #{params[:cart_id]} and the check cart is #{check_cart.to_s}")
     # The most likely reason why a cart would not be found is because the submit button was clicked twice, and the order previously committed.
     # That means we should render nicely as though it did.
-    if @cart.nil?
-      @order = Order.find_all_by_user_id(current_user.id, :first, :order => 'created_at DESC').first
-      prep_pricing_explainer(@order)
-      return
+    if @cart.nil? || check_cart != @cart
+      # @order = Order.find_all_by_user_id(current_user.id, :first, :order => 'created_at DESC').first
+      # prep_pricing_explainer(@order)
+      render :double_checkout and return
     elsif @cart.order # this means we failed the last time through, after the payment was created; be nice about it
       @order = @cart.order
     else

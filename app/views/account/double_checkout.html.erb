@@ -1,0 +1,13 @@
+<%= render 'account_nav', :locals => {:menu_page => @menu_page} %>
+<div id="internal-right">
+	<h1>Double Submit?</h1>
+Oops! It looks like you submitted your order twice. This can happen if you have multiple browsers open, if you click the submit button more than once, or if you click the "refresh" button after submitting your order. Please use the navigation at the left to take your next action. <br><br>Below are some helpful links:<br><br>
+<ul>
+	<li><a href="/account/history">Your account history</a></li>
+	<% if current_user.orders.any? %>
+		<li><a href="/orders/<%= current_user.orders.last.id %>">Your last order</a></li>
+		<li><a href="/orders/<%= current_user.orders.last.id %>/print_invoice">Your last invoice</a></li>
+	<% end %> 
+</ul>
+</div>
+<div class="clearer"></div>

@@ -9,7 +9,6 @@ class OffersController < ApplicationController
   def new
     @admin_page = :marketing
     @offer = Offer.new
-    @offer.benefits << FreeStorageOfferBenefit.new
   end
   
   def create
@@ -25,11 +24,18 @@ class OffersController < ApplicationController
     end
     @offer.creator = current_user
     
-    # for now we only have one potential benefit
-    benefit = FreeStorageOfferBenefit.new
-    benefit.num_months = params[:benefit_num_months]
-    benefit.num_boxes = params[:benefit_num_boxes]
-    @offer.benefits << benefit
+    if !params[:benefit_num_months].blank? || !params[:benefit_num_boxes].blank?
+      free_storage_benefit = FreeStorageOfferBenefit.new
+      free_storage_benefit.num_months = params[:benefit_num_months]
+      free_storage_benefit.num_boxes = params[:benefit_num_boxes]
+      @offer.benefits << free_storage_benefit
+    end
+    
+    if !params[:benefit_num_boxes_signup].blank?
+      free_signup_benefit = FreeSignupOfferBenefit.new
+      free_signup_benefit.num_boxes = params[:benefit_num_boxes_signup]
+      @offer.benefits << free_signup_benefit
+    end
     
     # need to validate separately to sneak our extra message in there
     @offer.valid?
@@ -47,7 +53,7 @@ class OffersController < ApplicationController
       end
       
       redirect_to offers_url
-    else
+    else    
       render :new
     end
   end
@@ -67,10 +73,27 @@ class OffersController < ApplicationController
     @offer = Offer.find(params[:id])
     
     @offer.update_attributes(params[:offer])
+
+    free_storage_benefit = @offer.free_storage_benefits[0]    
+    if !params[:benefit_num_months].blank? || !params[:benefit_num_months].blank?
+      free_storage_benefit ||= FreeStorageOfferBenefit.new
+      free_storage_benefit.num_months = params[:benefit_num_months]
+      free_storage_benefit.num_boxes = params[:benefit_num_boxes]
+      @offer.benefits << free_storage_benefit
+    elsif free_storage_benefit
+      @offer.benefits.delete(free_storage_benefit)
+      free_storage_benefit.destroy
+    end
     
-    benefit = @offer.benefits[0]
-    benefit.num_months = params[:benefit_num_months]
-    benefit.num_boxes = params[:benefit_num_boxes]
+    free_signup_benefit = @offer.free_signup_benefits[0]
+    if !params[:benefit_num_boxes_signup].blank?
+      free_signup_benefit ||= FreeSignupOfferBenefit.new
+      free_signup_benefit.num_boxes = params[:benefit_num_boxes_signup]
+      @offer.benefits << free_signup_benefit
+    elsif free_signup_benefit
+      @offer.benefits.delete(free_signup_benefit)
+      free_signup_benefit.destroy
+    end
     
     if @offer.save
       redirect_to offers_url

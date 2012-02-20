@@ -1,23 +1,24 @@
 # == Schema Information
-# Schema version: 20120116141356
+# Schema version: 20120220035008
 #
 # Table name: boxes
 #
-#  id                         :integer         not null, primary key
-#  assigned_to_user_id        :integer
-#  created_at                 :datetime
-#  updated_at                 :datetime
-#  ordering_order_line_id     :integer
-#  status                     :string(255)
-#  box_type                   :string(255)
-#  inventorying_status        :string(255)
-#  inventorying_order_line_id :integer
-#  received_at                :datetime
-#  weight                     :float
-#  box_num                    :integer
-#  return_requested_at        :datetime
-#  inventoried_at             :datetime
-#  created_by_id              :integer
+#  id                                :integer         not null, primary key
+#  assigned_to_user_id               :integer
+#  created_at                        :datetime
+#  updated_at                        :datetime
+#  ordering_order_line_id            :integer
+#  status                            :string(255)
+#  box_type                          :string(255)
+#  inventorying_status               :string(255)
+#  inventorying_order_line_id        :integer
+#  received_at                       :datetime
+#  weight                            :float
+#  box_num                           :integer
+#  return_requested_at               :datetime
+#  inventoried_at                    :datetime
+#  created_by_id                     :integer
+#  free_signup_user_offer_benefit_id :integer
 #
 
 class Box < ActiveRecord::Base
@@ -51,6 +52,7 @@ class Box < ActiveRecord::Base
   belongs_to :created_by, :class_name => "User"
   before_destroy :destroy_certain_parents
   has_many :free_storage_user_offer_benefits, :class_name => "FreeStorageUserOfferBenefitBox", :autosave => true
+  has_one :free_signup_user_offer_benefit, :class_name => "FreeSignupUserOfferBenefit"
   
   # TODO: Figure out internationalization
   def status_en

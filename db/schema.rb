@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120219180254) do
+ActiveRecord::Schema.define(:version => 20120220035008) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(:version => 20120219180254) do
     t.datetime "return_requested_at"
     t.datetime "inventoried_at"
     t.integer  "created_by_id"
+    t.integer  "free_signup_user_offer_benefit_id"
   end
 
   add_index "boxes", ["assigned_to_user_id"], :name => "index_boxes_on_assigned_to_user_id"
@@ -123,6 +124,11 @@ ActiveRecord::Schema.define(:version => 20120219180254) do
     t.string   "description"
     t.integer  "created_by_admin_id"
     t.integer  "storage_charge_processing_record_id"
+  end
+
+  create_table "free_signup_benefit_properties", :force => true do |t|
+    t.integer "free_signup_offer_benefit_id"
+    t.integer "num_boxes"
   end
 
   create_table "free_storage_benefit_properties", :force => true do |t|

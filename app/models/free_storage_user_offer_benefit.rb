@@ -96,4 +96,8 @@ class FreeStorageUserOfferBenefit < UserOfferBenefit
   def applied_to_boxes?
     free_storage_user_offer_benefit_boxes.any?
   end
+  
+  def benefit_remaining?
+    free_storage_user_offer_benefit_boxes.select { |benefit_box| benefit_box.benefit_remaining? }.any?
+  end
 end

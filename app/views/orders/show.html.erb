@@ -20,13 +20,17 @@
 			<td><b>Total Paid:</b></td>
 			<td>
 				<% @order.payment_transactions.each do |payment| %>
-					<%= payment.created_at.strftime "%m/%d/%Y" %> <%= payment.credit.nil? ? "" : number_to_currency(payment.credit.amount) %>
+					<%= payment.credit.nil? ? "" : number_to_currency(payment.credit.amount) %>
 					<% if payment.credit && payment.credit.amount < 0 %>
 						 (refund)
 					<% end %>
 					<br>
 				<% end %>
 			</td>
+		</tr>
+		<tr>
+			<td><b>Invoice:</b></td>
+			<td><a href="/orders/<%= @order.id %>/print_invoice">Print Invoice</a></td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>Order Lines:</b></td>

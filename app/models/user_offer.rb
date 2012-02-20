@@ -96,4 +96,8 @@ class UserOffer < ActiveRecord::Base
   def applied_to_boxes?
     user_offer_benefits.select {|box_benefit| box_benefit.respond_to?(:applied_to_boxes?) && box_benefit.applied_to_boxes? }.any?
   end
+  
+  def unused_free_signup_benefits
+    user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.is_a?(FreeSignupUserOfferBenefit) && user_offer_benefit.benefit_remaining? }
+  end
 end

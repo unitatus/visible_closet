@@ -168,6 +168,30 @@ class Cart < ActiveRecord::Base
     end
   end
   
+  def cart_items_for_checkout
+    all_cart_items = self.cart_items
+    
+    stocking_fee_item = all_cart_items.select { |cart_item| cart_item.product.stocking_fee? }.first
+    
+    free_signup_credits = user.unused_free_signup_credits
+    if free_signup_credits > 0
+      free_signup_product = Product.new(:name => "free signup credit", :price => stocking_fee_item.product.price*-1)
+      # this is far too much power in the hands of a lowly developer!
+      def free_signup_product.incurs_charge_at_purchase?
+        true
+      end
+      free_credits_line = CartItem.new(:quantity => free_signup_credits >= stocking_fee_item.quantity ? stocking_fee_item.quantity : free_signup_credits)
+      free_credits_line.product = free_signup_product
+      def free_credits_line.deletable?
+        false
+      end
+      
+      all_cart_items << free_credits_line
+    end
+    
+    return all_cart_items
+  end
+  
   def stocking_fee_line
     cart_items.select {|cart_item| cart_item.product.stocking_fee? }.first
   end

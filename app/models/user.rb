@@ -381,6 +381,10 @@ class User < ActiveRecord::Base
     return false
   end
   
+  def unused_free_signup_credits
+    user_offers.collect { |user_offer| user_offer.unused_free_signup_benefits }.flatten.collect { |benefit| benefit.unused_box_count }.sum
+  end
+  
   def rectify_payments
     payment_transactions.select {|payment| payment.rectify? }
   end

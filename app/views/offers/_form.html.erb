@@ -6,11 +6,12 @@
 		Please correct the following errors:<br><br>
 		<ul>
 			<% @offer.errors.each do |key, msg| %>
-				<% if key.blank? %>
+				<% if key.blank? || key == :benefits %>
 				<li><%= msg %></li>
 				<% end %>
 			<% end %>
 		</ul>
+		<br>
 	</div>
 <% end %>
 	<% form_for(@offer, :as => :offer, :url => url, :html => { :class => "standard", :onsubmit => "offer_submit.disabled=true" }) do |f| %>
@@ -102,13 +103,15 @@
 	<tr>
 		<td>Num Months:</td>
 		<td>
-			<%= text_field_tag :benefit_num_months, @offer.benefits.first.num_months, :class => "textbox" + (@offer.benefits.first.errors[:num_months].blank? ? "" : " error")  %>
+			<%= text_field_tag :benefit_num_months, @offer.free_storage_benefits.any? ? @offer.free_storage_benefits.first.num_months : "", :class => "textbox" + (@offer.errors[:num_months].blank? ? "" : " error")  %>
 			<div class="error_label">
-				<% @offer.benefits.first.errors[:num_months].each_with_index do |msg, index| %>
-					<% if index > 0 %>
-						, 
+				<% if @offer.free_storage_benefits.any? %>
+					<% @offer.free_storage_benefits.first.errors[:num_months].each_with_index do |msg, index| %>
+						<% if index > 0 %>
+							, 
+						<% end %>
+						<%= msg %>
 					<% end %>
-					<%= msg %>
 				<% end %>
 			</div>
 		</td>
@@ -116,13 +119,37 @@
 	<tr>
 		<td>Num Boxes:</td>
 		<td>
-			<%= text_field_tag :benefit_num_boxes, @offer.benefits.first.num_boxes, :class => "textbox" + (@offer.benefits.first.errors[:num_boxes].blank? ? "" : " error")  %>
+			<%= text_field_tag :benefit_num_boxes, @offer.free_storage_benefits.any? ? @offer.free_storage_benefits.first.num_boxes : "", :class => "textbox" + (@offer.errors[:num_boxes].blank? ? "" : " error")  %>
 			<div class="error_label">
-				<% @offer.benefits.first.errors[:num_boxes].each_with_index do |msg, index| %>
-					<% if index > 0 %>
-						, 
+				<% if @offer.free_storage_benefits.any? %>
+					<% @offer.free_storage_benefits.first.errors[:num_boxes].each_with_index do |msg, index| %>
+						<% if index > 0 %>
+							, 
+						<% end %>
+						<%= msg %>
 					<% end %>
-					<%= msg %>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<hr>
+			Offer Benefits: &quot;Signup Fee Waived&quot;
+		</td>
+	</tr>
+	<tr>
+		<td>Num Boxes:</td>
+		<td>
+			<%= text_field_tag :benefit_num_boxes_signup, @offer.free_signup_benefits.any? ? @offer.free_signup_benefits.first.num_boxes : "", :class => "textbox" + (@offer.errors[:num_boxes].blank? ? "" : " error")  %>
+			<div class="error_label">
+				<% if @offer.free_signup_benefits.any? %>
+					<% @offer.free_signup_benefits.first.errors[:num_boxes].each_with_index do |msg, index| %>
+						<% if index > 0 %>
+							, 
+						<% end %>
+						<%= msg %>
+					<% end %>
 				<% end %>
 			</div>
 		</td>
