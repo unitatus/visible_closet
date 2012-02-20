@@ -18,7 +18,7 @@
             </tr>
           </thead>
           <tbody class="top-line bottom-line">
-			<% @cart.cart_items.each do |cart_item| %>
+			<% @cart.cart_items_for_checkout.each do |cart_item| %>
 		      <% product = Product.find(cart_item.product_id) %>
 			<%= form_tag "/account/update_cart_item", :class => "standard" do %>
             <tr>
@@ -31,7 +31,7 @@
 		                    <div class="increment-up"></div>
 		                    <div class="increment-down"></div>
 		                </div>
-					<% elsif cart_item.product.stocking_fee? %>
+					<% elsif cart_item.product.stocking_fee? || cart_item.product.stocking_fee_waiver? %>
 						<%= cart_item.quantity %>
 					<% else %>
 						NA

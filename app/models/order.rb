@@ -34,14 +34,14 @@ class Order < ActiveRecord::Base
         raise ActiveRecord::Rollback
       end
       
-      charges = do_pre_payment_processing
+      charges, credits = do_pre_payment_processing
       
       if total_in_cents > 0.0
-        payment_transaction = pay_for_order(charges)
+        payment_transaction = pay_for_order(charges, credits)
       end
       
       # If this gets a DB error an uncaught exception will be thrown, which should kill the transaction
-      do_post_payment_processing(charges, payment_transaction)
+      do_post_payment_processing(charges, credits, payment_transaction)
 
       transaction_successful = true 
     end # end transaction so we don't re-enter this section
@@ -170,9 +170,10 @@ class Order < ActiveRecord::Base
   
   # this method saves the charges
   # This generates all the charges -- but ignores any prepayments necessary (such as when ordering new boxes)
-  def generate_charges
+  def generate_charges_and_credits
     raise "Attempted to call generate charges on unsaved order" unless self.id
     charges = Array.new
+    credits = Array.new
 
     order_lines.each do | order_line |
       if order_line.associated_boxes.size > 0 # this is a box-related order
@@ -187,10 +188,12 @@ class Order < ActiveRecord::Base
           end
         end
       elsif order_line.discount.charged_at_purchase > 0 # this is a non-box related order with a charge
-        
         new_charge = Charge.create!(:user_id => user_id, :total_in_cents => (order_line.discount.charged_at_purchase*100).ceil, :product_id => order_line.product_id, :order_id => self.id, :comments => "Charge for " + order_line.product.name)
         charges << new_charge
         order_line.add_to_amount_paid_at_purchase(new_charge.amount)
+      elsif order_line.discount.charged_at_purchase < 0
+        credits << Credit.create!(:user_id => user_id, :amount => order_line.discount.charged_at_purchase * -1, :description => "Credit for order line #{order_line.id} for product ""#{order_line.product.name}"".")
+        user.consume_credits_for_product(order_line.product, order_line.quantity, box_order_lines.collect {|box_order_line| box_order_line.associated_boxes}.flatten)
       end
     end
     
@@ -199,7 +202,7 @@ class Order < ActiveRecord::Base
       charges << Charge.create!(:user_id => user_id, :total_in_cents => (self.initial_charged_shipping_cost*100).ceil, :order_id => self.id, :comments => "Shipping charge")
     end
     
-    charges
+    [charges, credits]
   end
 
   # This method can only be called on order lines with the same address.
@@ -445,7 +448,7 @@ class Order < ActiveRecord::Base
   
   # This method saves the transactions
   # We must pay for any charges plus any prepayments
-  def pay_for_order(charges)
+  def pay_for_order(charges, credits)
     amount = 0.0
     
     #calculate the prepayments
@@ -460,7 +463,12 @@ class Order < ActiveRecord::Base
       amount += charge.amount
     end
     
-    if amount == 0.0
+    # subtract the credits
+    credits.each do |credit|
+      amount -= credit.amount
+    end
+    
+    if amount <= 0.0
       return nil
     end
     
@@ -487,18 +495,18 @@ class Order < ActiveRecord::Base
     process_box_returns
     process_item_services
         
-    generate_charges # if any
+    generate_charges_and_credits # if any
   end
 
   # this method throws a RuntimeError b/c the only way that save wouldn't work is if something went really wrong
   # and we don't want to miss that.
-  def do_post_payment_processing(charges, payment_transaction)
-    invoice = create_invoice(charges, payment_transaction)
+  def do_post_payment_processing(charges, credits, payment_transaction)
+    invoice = create_invoice(charges, credits, payment_transaction)
 
     UserMailer.deliver_invoice_email(user, invoice, true)
   end # end function
   
-  def create_invoice(charges, payment_transaction)
+  def create_invoice(charges, credits, payment_transaction)
     invoice = Invoice.new()
     
     invoice.user = user

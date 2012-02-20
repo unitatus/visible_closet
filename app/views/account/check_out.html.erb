@@ -8,10 +8,21 @@ function openMemberAgreement() {
 	<% end %>
 	<h1>Confirm Order</h1>
 	<% @order.errors.each do |attr, message| %>
-	  <div class="error_label"><%= message %></div><br>
+	  <div class="error_label"><b>Notice:</b><%= message %></div><br>
+	<% end %>
+	<% if flash[:notice] %>
+		<% if flash[:notice].size == 1 %>
+		<div class="error_label"><b>Notice:</b> <%= flash[:notice].first %></div><br>
+		<% else %>
+			<b>Notice</b>: Could not apply due to the following issues:
+			<ul>
+				<% flash[:notice].each do |notice| %>
+					<li><%= notice %></li>
+				<% end %>
+			</ul>
+		<% end %>
 	<% end %>
 	
-<%= form_for @order, :url => "/account/finalize_check_out", :html => { :class => "standard", :onsubmit => "cf_submit.disabled=true;" } do |f| %>
 <div id="upper" style="padding-left: 20px">
 		<br>
 		<div class="simple_header" style="padding: 0 0 0 0">
@@ -134,9 +145,15 @@ function openMemberAgreement() {
 		<br>Item Shipping Charges: TBD (will be emailed)
 		<% end %>
 	<% end %>
-	<br><br>
+	<br>
+	<%= form_tag "/account/checkout_add_offer_code", :class => "standard", :onsubmit => "offer_submit.disabled=true" do %>
+		Offer Code (optional): <%= text_field_tag :offer_code, "", :class => "textbox", :style => "width: 85px" %> <%= submit_tag "Add Offer Code", :class => "button" %>
+	<% end %>
+	<br>
+	<br>
 	<b>Total Due Now: <%= number_to_currency(@cart.estimated_total) %></b>
 </div><br>
+<%= form_for @order, :url => "/account/finalize_check_out", :html => { :class => "standard", :onsubmit => "cf_submit.disabled=true;" } do |f| %>
 <% if @cart.contains_new_boxes %> 
 	<div style="margin: auto; float:left; width: 15px; margin-left: 20px; margin-top: 1px"><%= check_box_tag :agreed, 1, params[:agreed].nil? ? false : params[:agreed] == "1" %></div>
 	<div style="float: right; width: 680px; margin-right: 215px"><b>Accept the Rental Agreement:</b> I certify that I have read and agree to the <a id="member_agreement_link" href="/member_agreement_ajax">Member Agreement</a> associated with this service. I understand that I will be responsible for paying all shipping and storage charges billed to my account by thevisiblecloset.com</div>

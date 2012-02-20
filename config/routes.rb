@@ -184,6 +184,7 @@ VisibleCloset::Application.routes.draw do
   get "account/remove_cart_item"
   get "account/check_out"
   post "account/check_out" # for overriding fedex address suggestions when changing shipping address during checkout
+  post "account/checkout_add_offer_code"
   get "account/check_out_remove_cart_item"
   post "account/finalize_check_out"
   post "account/update_checkout_address"

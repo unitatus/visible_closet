@@ -66,8 +66,7 @@ class UserOffer < ActiveRecord::Base
   def assign_boxes(box_ids)
     box_ids = Array.new if box_ids.nil?
     
-    # For now we make the assumption that an offer only has one benefit that applies to boxes
-    box_benefit = user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.applies_to_boxes? }.last
+    box_benefit = user_offer_benefits.select {|user_offer_benefit| user_offer_benefit.is_a?(FreeStorageUserOfferBenefit) }.last
     if box_benefit.nil?
       return true
     end

@@ -44,4 +44,29 @@ class FreeSignupUserOfferBenefit < UserOfferBenefit
   def unused_box_count
     offer_benefit.num_boxes - applied_to_boxes.size
   end
+  
+  def consume_benefit(quantity, boxes_to_which_to_apply, save_ind=false)
+    boxes_to_which_to_apply.select {|box| box.free_signup_user_offer_benefit.nil? }.each do |box|
+      box.free_signup_user_offer_benefit = self
+      if save_ind
+        box.save
+      end
+      quantity -= 1
+      break if quantity == 0
+    end
+    
+    self.save if save_ind
+  end
+  
+  def consume_benefit!(quantity, boxes_to_which_to_apply)
+    consume_benefit(quantity, boxes_to_which_to_apply, true)
+  end
+  
+  def consume_remaining_benefit(boxes_to_which_to_apply)
+    consume_benefit(unused_box_count, boxes_to_which_to_apply)
+  end
+  
+  def consume_remaining_benefit!(boxes_to_which_to_apply)
+    consume_benefit!(unused_box_count, boxes_to_which_to_apply)
+  end
 end

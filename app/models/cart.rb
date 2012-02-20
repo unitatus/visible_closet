@@ -78,7 +78,7 @@ class Cart < ActiveRecord::Base
     order.cart = self
     order.user = self.user
     
-    cart_items.each do |cart_item|
+    cart_items_for_checkout.each do |cart_item|
       order.order_lines << order.build_order_line( { :product_id => cart_item.product_id, :quantity => cart_item.quantity, \
         :committed_months => cart_item.committed_months, :shipping_address_id => cart_item.address_id, :service_box_id => cart_item.box_id, \
         :service_item_id => cart_item.stored_item_id } )
@@ -173,20 +173,19 @@ class Cart < ActiveRecord::Base
     
     stocking_fee_item = all_cart_items.select { |cart_item| cart_item.product.stocking_fee? }.first
     
+    if stocking_fee_item.nil?
+      return all_cart_items
+    end
+    
     free_signup_credits = user.unused_free_signup_credits
     if free_signup_credits > 0
-      free_signup_product = Product.new(:name => "free signup credit", :price => stocking_fee_item.product.price*-1)
-      # this is far too much power in the hands of a lowly developer!
-      def free_signup_product.incurs_charge_at_purchase?
-        true
-      end
-      free_credits_line = CartItem.new(:quantity => free_signup_credits >= stocking_fee_item.quantity ? stocking_fee_item.quantity : free_signup_credits)
-      free_credits_line.product = free_signup_product
-      def free_credits_line.deletable?
-        false
+      free_credits_line = all_cart_items.select {|cart_item| cart_item.product.stocking_fee_waiver? }.first
+      if free_credits_line.nil?
+        free_credits_line = CartItem.new(:product_id => Rails.application.config.stocking_fee_waiver_product_id)
+        all_cart_items << free_credits_line
       end
       
-      all_cart_items << free_credits_line
+      free_credits_line.quantity = free_signup_credits >= stocking_fee_item.quantity ? stocking_fee_item.quantity : free_signup_credits
     end
     
     return all_cart_items

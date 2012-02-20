@@ -121,6 +121,7 @@ class Ability
       can :update_cart_item, :account
       can :remove_cart_item, :account
       can :check_out, :account
+      can :checkout_add_offer_code, :account
       can :add_new_billing_address, :account
       can :add_new_shipping_address, :account
       can :create_new_billing_address, :account

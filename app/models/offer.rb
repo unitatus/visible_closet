@@ -46,7 +46,10 @@ class Offer < ActiveRecord::Base
   def benefits_description
     return_str = ""
     
-    benefits.each do |benefit|
+    benefits.each_with_index do |benefit, index|
+      if index > 0
+        return_str += ", "
+      end
       return_str += benefit.description
     end
     
@@ -54,7 +57,7 @@ class Offer < ActiveRecord::Base
   end
   
   def total_box_potential
-    benefits.collect {|benefit| benefit.respond_to?(:num_boxes) ? benefit.num_boxes : 0 }.sum
+    benefits.collect {|benefit| benefit.is_a?(FreeStorageOfferBenefit) ? benefit.num_boxes : 0 }.sum
   end
   
   def associate_with(user)

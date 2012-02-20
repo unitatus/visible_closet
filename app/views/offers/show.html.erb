@@ -40,7 +40,7 @@
 						<td>Benefit Type:</td>
 						<td><%= benefit.class.name %></td>
 						<td>Num Months:</td>
-						<td><%= benefit.num_months %></td>
+						<td><%= benefit.respond_to?(:num_months) ? benefit.num_months : "NA" %></td>
 						<td>Num Boxes:</td>
 						<td><%= benefit.num_boxes %></td>
 					</tr>

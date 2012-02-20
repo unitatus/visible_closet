@@ -58,7 +58,7 @@ class CartItem < ActiveRecord::Base
   end
   
   def deletable?
-    return self.product_id != Rails.application.config.stocking_fee_product_id
+    return self.product_id != Rails.application.config.stocking_fee_product_id && self.product_id != Rails.application.config.stocking_fee_waiver_product_id
   end
   
   def customer_pays_shipping_up_front?

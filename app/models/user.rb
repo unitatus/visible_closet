@@ -382,7 +382,11 @@ class User < ActiveRecord::Base
   end
   
   def unused_free_signup_credits
-    user_offers.collect { |user_offer| user_offer.unused_free_signup_benefits }.flatten.collect { |benefit| benefit.unused_box_count }.sum
+    unused_free_signup_benefits.collect { |benefit| benefit.unused_box_count }.sum
+  end
+  
+  def unused_free_signup_benefits
+    user_offers.collect { |user_offer| user_offer.unused_free_signup_benefits }.flatten
   end
   
   def rectify_payments
@@ -412,6 +416,23 @@ class User < ActiveRecord::Base
     end # end transaction
     
     return true
+  end
+  
+  def consume_credits_for_product(product, quantity, boxes_to_which_to_apply)
+    raise "Unknown credit product." unless product.stocking_fee_waiver?
+    consumed_benefits = Array.new
+    
+    unused_free_signup_benefits.each do |benefit|
+      consumed_benefits << benefit
+      if benefit.unused_box_count > quantity
+        benefit.consume_benefit!(quantity, boxes_to_which_to_apply) and break
+      else
+        quantity -= benefit.unused_box_count
+        benefit.consume_remaining_benefit!(boxes_to_which_to_apply)
+      end
+    end
+    
+    return consumed_benefits
   end
   
   def last_successful_payment_transaction

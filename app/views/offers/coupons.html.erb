@@ -24,6 +24,8 @@
 					<% end %>
 						<% if benefit.is_a?(FreeStorageOfferBenefit) %>
 							Free storage at The Visible Closet for <%= pluralize benefit.num_boxes, "box" %> for <%= pluralize benefit.num_months, "month" %>.
+						<% elsif benefit.is_a?(FreeSignupOfferBenefit) %>
+							Signup fee waiver at The Visible Closet for <%= pluralize benefit.num_boxes, "box" %>.
 						<% end %>
  					<% if @offer.benefits.size > 1 %>
 						</li>

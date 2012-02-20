@@ -52,7 +52,7 @@ class Box < ActiveRecord::Base
   belongs_to :created_by, :class_name => "User"
   before_destroy :destroy_certain_parents
   has_many :free_storage_user_offer_benefits, :class_name => "FreeStorageUserOfferBenefitBox", :autosave => true
-  has_one :free_signup_user_offer_benefit, :class_name => "FreeSignupUserOfferBenefit"
+  belongs_to :free_signup_user_offer_benefit, :class_name => "FreeSignupUserOfferBenefit"
   
   # TODO: Figure out internationalization
   def status_en

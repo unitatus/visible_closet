@@ -38,7 +38,7 @@ class Product < ActiveRecord::Base
   end
   
   def shippable?
-    !id.nil? && id != Rails.application.config.item_donation_product_id && id != Rails.application.config.stocking_fee_product_id
+    !id.nil? && id != Rails.application.config.item_donation_product_id && id != Rails.application.config.stocking_fee_product_id && id != Rails.application.config.stocking_fee_waiver_product_id
   end
   
   def item_service?
@@ -72,7 +72,15 @@ class Product < ActiveRecord::Base
     return id == Rails.application.config.stocking_fee_product_id
   end
   
+  def stocking_fee_waiver?
+    return id == Rails.application.config.stocking_fee_waiver_product_id
+  end
+  
   def incurs_charge_at_purchase?
-    id == Rails.application.config.return_box_product_id || id == Rails.application.config.item_donation_product_id || id == Rails.application.config.item_mailing_product_id || id == Rails.application.config.stocking_fee_product_id
+    id == Rails.application.config.return_box_product_id \
+    || id == Rails.application.config.item_donation_product_id \
+    || id == Rails.application.config.item_mailing_product_id \
+    || id == Rails.application.config.stocking_fee_product_id \
+    || id == Rails.application.config.stocking_fee_waiver_product_id
   end
 end

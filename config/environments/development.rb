@@ -35,6 +35,7 @@ VisibleCloset::Application.configure do
   config.item_donation_product_id = 6
   config.item_mailing_product_id = 7
   config.stocking_fee_product_id = 12
+  config.stocking_fee_waiver_product_id = 18
   # if more products are added, be sure to update the constants and functions in the Product object
 
   config.fedex_vc_address_id = 7
