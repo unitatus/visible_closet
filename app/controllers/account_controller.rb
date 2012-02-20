@@ -241,7 +241,7 @@ class AccountController < ApplicationController
       @user = current_user
       
       if @user.apply_offer_or_coupon_code(params[:offer_code])
-        flash[:notice] = ["Offer #{params[:offer_code]} applied and reflected in totals."]
+        flash[:notice] = ["Offer '#{params[:offer_code]}' applied and reflected in totals."]
       else
         flash[:notice] = @user.errors[:offer_code]
       end 

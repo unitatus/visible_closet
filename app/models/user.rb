@@ -682,7 +682,7 @@ class User < ActiveRecord::Base
     end
     
     if offer_or_coupon.nil?
-      errors.add(:offer_code, "Unknown #{type} code &quot;#{identifier}&quot;") and return false
+      errors.add(:offer_code, "Unknown #{type} code '#{identifier}'") and return false
     end
     
     if !offer_or_coupon.active?
