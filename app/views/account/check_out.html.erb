@@ -147,7 +147,7 @@ function openMemberAgreement() {
 	<% end %>
 	<br>
 	<%= form_tag "/account/checkout_add_offer_code", :class => "standard", :onsubmit => "offer_submit.disabled=true" do %>
-		Offer Code (optional): <%= text_field_tag :offer_code, "", :class => "textbox", :style => "width: 85px" %> <%= submit_tag "Add Offer Code", :class => "button" %>
+		Offer Code (optional): <%= text_field_tag :offer_code, "", :class => "textbox", :style => "width: 85px" %> <%= submit_tag "Add Offer Code", :class => "button", :id => "offer_submit" %>
 	<% end %>
 	<br>
 	<br>
