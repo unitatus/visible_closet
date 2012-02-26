@@ -1,6 +1,7 @@
 <% @stored_items.each_with_index do |stored_item, index| %>
     <div class="browse-item">
 		<a href="#" onclick="return false;" class="browse-item-menu-link">
+		<% # This code exists for if we need to work offline %>
 		<% if index == 1 %>
 			<% image_tag("/images/calk gun.jpg", :height => 150, :width => 150) %>
 		<% elsif index == 2 %>
@@ -14,7 +15,7 @@
 		<% else %>
 			<% image_tag("/images/hammer.jpg", :height => 150, :width => 150) %>
 		<% end %>
-		<%= image_tag(stored_item.photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150, :style => "border-style: solid; border-width: 1px; border-color: black") %> </a>
+		<%= image_tag(stored_item.default_photo(StoredItemPhoto::CUSTOMER_VISIBILITY).photo.url(:medium), :name => "medium_" + stored_item.id.to_s, :height => 150, :width => 150, :style => "border-style: solid; border-width: 1px; border-color: black") %> </a>
 		
 		<% if stored_item.box_id %>
 			<p>(Box: <%= stored_item.box.box_num %>)</p>
@@ -54,6 +55,8 @@
 						Donation<br>Requested
 					<% elsif stored_item.status == StoredItem::DONATION_REQUESTED_STATUS %>
 						Donation<br>Requested
+					<% elsif stored_item.status == FurnitureItem::RETRIEVAL_REQUESTED %>
+						Retrieval<br>Requested
 					<% elsif stored_item.status == StoredItem::DONATED_STATUS %>
 						DONATED<br><div style="font-size: 50%">to <%= stored_item.donated_to %></div>
 					<% elsif current_user.cart && current_user.cart.contains_mailing_request_for(stored_item) %>

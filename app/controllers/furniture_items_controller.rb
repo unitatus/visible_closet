@@ -136,7 +136,7 @@ class FurnitureItemsController < ApplicationController
       @stored_items = Array.new # makes this behave nicely with StoredItem code
       @stored_items << @selected_item
     elsif params[:tags].blank? # Someone hit the page from a link -- no search necessary
-        @stored_items = FurnitureItem.find_all_by_user_id_and_status(current_user.id, StoredItem::IN_STORAGE_STATUS)
+        @stored_items = FurnitureItem.find_all_by_user_id_and_status(current_user.id, [StoredItem::IN_STORAGE_STATUS, FurnitureItem::RETRIEVAL_REQUESTED])
     else # someone hit enter while typing in the stored item search field -- show the results of what they selected
       @stored_items = FurnitureItem.tags_search(params[:tags].split, current_user, false)
       if @stored_items.size == 1 # the user probably thought they were selecting a single item, so act like they did

@@ -125,6 +125,10 @@ class FurnitureItem < StoredItem
       + "WHERE " + sanitize_sql_array(conditions))
   end
   
+  def service_status?
+    super || status == RETRIEVAL_REQUESTED
+  end
+  
   private 
   
   def destroy_certain_relationships
