@@ -48,6 +48,7 @@ class FurnitureItem < StoredItem
   
   def publish
     update_attribute(:status, StoredItem::IN_STORAGE_STATUS)
+    self.charging_start_date = Date.today and save
     if subscriptions.last
       subscriptions.last.start_subscription
     end

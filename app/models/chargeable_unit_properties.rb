@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120116141356
+# Schema version: 20120226173914
 #
 # Table name: chargeable_unit_properties
 #
@@ -11,6 +11,7 @@
 #  chargeable_unit_id   :integer
 #  chargeable_unit_type :string(255)
 #  description          :string(255)
+#  charging_start_date  :datetime
 #
 
 class ChargeableUnitProperties < ActiveRecord::Base

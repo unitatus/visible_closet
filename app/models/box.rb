@@ -102,6 +102,11 @@ class Box < ActiveRecord::Base
     end
   end
   
+  def received_at=(new_date)
+    write_attribute(:received_at, new_date)
+    self.charging_start_date = new_date
+  end
+  
   # Sometimes object-oriented programming is really inefficient. This is one of those cases -- if we asked each box to calculate its cost, it would have to
   # figure out how many boxes were in storage on each day, and which ones were under a subscription at that time. Highly inefficient. This is a good case
   # to use array-based calculations, which is what we are doing here: we lay the boxes against the days in question to form a matrix, calculate and save things
@@ -113,7 +118,7 @@ class Box < ActiveRecord::Base
     boxes = user.boxes
 
     # In case where user has never had storage charge
-    start_date ||= earliest_receipt_date(boxes)
+    start_date ||= earliest_charging_start_date(boxes)
     
     if start_date.nil? || start_date > end_date
       return [[],[]]
@@ -264,19 +269,19 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def Box.earliest_receipt_date(boxes)
-    earliest_receipt_date = nil
+  def Box.earliest_charging_start_date(boxes)
+    earliest_charging_start_date = nil
     
     boxes.each do |box|
-      if box.received_at
-        earliest_receipt_date ||= box.received_at
-        if earliest_receipt_date < box.received_at
-          earliest_receipt_date = box.received_at
+      if box.charging_start_date
+        earliest_charging_start_date ||= box.charging_start_date
+        if earliest_charging_start_date > box.charging_start_date
+          earliest_charging_start_date = box.charging_start_date
         end
       end
     end
     
-    earliest_receipt_date
+    earliest_charging_start_date
   end
   
   def Box.batch_create_boxes(user, box_type, submitted_info, creator)
