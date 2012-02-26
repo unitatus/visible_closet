@@ -106,7 +106,7 @@ class FurnitureItemsController < ApplicationController
   
   def admin_unpublish_furniture_item
     furniture_item = FurnitureItem.find(params[:id])
-    furniture_item.update_attribute(:status, FurnitureItem::INCOMPLETE_STATUS)
+    furniture_item.unpublish!
     redirect_to "/admin/users/#{furniture_item.user_id}/furniture"
   end
   

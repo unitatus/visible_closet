@@ -46,7 +46,7 @@
 					<%= item.status %><br>
 					<% if item.incomplete? %>
 						<a href="/admin/furniture_items/<%=item.id%>/publish" data-confirm="Are you sure? The user will be able to see the furniture item and all public photos. Only administrators can unpublish.">Publish?</a>
-					<% elsif current_user.admin? %>
+					<% elsif current_user.admin? && !item.has_charges? %>
 						<a href="/admin/furniture_items/<%=item.id%>/unpublish" data-confirm="Are you sure? The item will disappear from the user's inventory.">Unpublish?</a>
 					<% end %>
 				</td>

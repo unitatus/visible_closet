@@ -61,6 +61,7 @@ VisibleCloset::Application.configure do
   config.item_mailing_product_id = 9
   config.stocking_fee_product_id = 14
   config.stocking_fee_waiver_product_id = 15
+  config.furniture_storage_product_id = 16
 
   config.fedex_vc_address_id = 6
 

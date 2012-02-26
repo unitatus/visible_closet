@@ -85,23 +85,6 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def chargable?
-    if never_received?
-      return false
-    else
-      return never_requested_return? || storage_charges.size == 0 || storage_charges.last.end_date.nil? || return_requested_at > storage_charges.last.end_date
-    end
-  end
-  
-  # the idea behind this is to return the day before when we should start charging
-  def latest_charge_end_date
-    if storage_charges.size == 0 || storage_charges.last.end_date.nil?
-      return received_at.to_date - 1
-    else
-      return storage_charges.last.end_date.to_date
-    end
-  end
-  
   def received_at=(new_date)
     write_attribute(:received_at, new_date)
     self.charging_start_date = new_date
@@ -361,33 +344,6 @@ class Box < ActiveRecord::Base
     end
   end
   
-  def charged_already_on(day)
-    # Hash is for performance
-    @days_already_charged ||= Hash.new
-    
-    if @days_already_charged[day]
-      return true
-    elsif !@days_already_charged[day].nil?
-      return false
-    end
-    
-    storage_charges.each do |storage_charge|
-      if storage_charge.start_date && storage_charge.start_date <= day && storage_charge.end_date >= day
-        @days_already_charged[day] = true and return true
-      end
-    end
-    
-    @days_already_charged[day] = false and return false
-  end
-  
-  def in_storage_on(a_date)
-    if never_received?
-      return false
-    else
-      return received_at.to_date <= a_date && (never_requested_return? || return_requested_at.to_date >= a_date)
-    end
-  end
-  
   def inventoried_on(a_date)
     if never_inventoried?
       return false
@@ -402,10 +358,6 @@ class Box < ActiveRecord::Base
   
   def inventory_requested?
     inventorying_status == INVENTORYING_REQUESTED
-  end
-  
-  def has_charges?
-    self.storage_charges.size > 0
   end
   
   def never_received?
@@ -495,8 +447,10 @@ class Box < ActiveRecord::Base
   
   # this is only called when the user submits the order for a return; when they mark a box for a return, it just goes in the cart!
   def mark_for_return
-    update_attribute(:status, RETURN_REQUESTED_STATUS)
-    update_attribute(:return_requested_at, Time.now)
+    self.status = RETURN_REQUESTED_STATUS
+    self.return_requested_at = Time.now
+    self.charging_end_date = Time.now
+    self.save
     if !subscription_on(Date.today).nil?
       # TODO: This is wrong. you should not be able to do this.
     end

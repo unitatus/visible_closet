@@ -550,10 +550,13 @@ class User < ActiveRecord::Base
       if last_charged_date && last_charged_date > DateHelper.start_of_month(as_of_date)
         last_charged_date = DateHelper.start_of_month(as_of_date)
       end
-      return_box_charges, return_box_credits = Box.calculate_charges_for_user_box_set(self, last_charged_date.nil? ? nil : last_charged_date.to_date+1, as_of_date, save)
+      last_charged_date = last_charged_date.nil? ? nil : last_charged_date.to_date+1
+      
+      return_charges, return_credits = Box.calculate_charges_for_user_box_set(self, last_charged_date, as_of_date, save)
+      return_charges << FurnitureItem.calculate_charges_for_user_furniture_set(self, last_charged_date, as_of_date, save)
       
       @recently_calculated_anticipated = true
-      return [return_box_charges, return_box_credits]
+      return [return_charges, return_credits]
     else
       return [anticipated_charges, anticipated_credits]
     end
@@ -598,16 +601,16 @@ class User < ActiveRecord::Base
     payment_transactions.select {|payment_transaction| payment_transaction.success? }
   end
   
-  # This needs to account for boxes that don't have charges yet but need to be included. If any box has been received but never charged, return the receive date.
-  # If any received box's charge end date is nil, return the receive date. Otherwise, return the earliest actual charge date. 
   def earliest_effective_charge_date
     the_earliest_effective_charge_date = nil
     
-    self.boxes.each do |box|
-      if box.chargable?
-        the_earliest_effective_charge_date ||= box.latest_charge_end_date
-        if the_earliest_effective_charge_date && the_earliest_effective_charge_date > box.latest_charge_end_date
-          the_earliest_effective_charge_date = box.latest_charge_end_date
+    chargable_items = self.boxes | self.furniture_items
+    
+    chargable_items.each do |chargable_item|
+      if chargable_item.chargable?
+        the_earliest_effective_charge_date ||= chargable_item.latest_charge_end_date
+        if the_earliest_effective_charge_date && the_earliest_effective_charge_date > chargable_item.latest_charge_end_date
+          the_earliest_effective_charge_date = chargable_item.latest_charge_end_date
         end
       end
     end

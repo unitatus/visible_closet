@@ -54,6 +54,18 @@ class FurnitureItem < StoredItem
     end
   end
   
+  def unpublish
+    self.status = FurnitureItem::INCOMPLETE_STATUS
+    self.charging_start_date = nil
+    self.charging_end_date = nil
+    return true
+  end
+  
+  def unpublish!
+    self.unpublish
+    self.save
+  end
+  
   def add_subscription(duration)
     subscription = subscriptions.create!(:duration_in_months => duration, :user_id => user_id)
     subscription.start_subscription
@@ -128,6 +140,59 @@ class FurnitureItem < StoredItem
   
   def service_status?
     super || status == RETRIEVAL_REQUESTED
+  end
+  
+  def FurnitureItem.calculate_charges_for_user_furniture_set(user, start_date, end_date, save=false)
+    furniture_items = user.furniture_items
+    furniture_product = Product.find(Rails.application.config.furniture_storage_product_id)
+
+    furniture_charges = Hash[*furniture_items.collect { |furniture_item| [furniture_item, Rational(0)] }.flatten]
+    furniture_events = Hash[*furniture_items.collect { |furniture_item| [furniture_item, []]}.flatten(1) ]
+    furniture_items.each do |furniture_item|
+      start_date.upto(end_date) do |day|
+        if day != start_date
+          if furniture_item.in_storage_on(day) && !furniture_item.in_storage_on(day - 1) && !furniture_item.charged_already_on(day)
+            furniture_events[furniture_item] << "storage started on " + day.strftime("%m/%d/%Y")
+          end
+        end
+          
+        if day != end_date
+          if furniture_item.in_storage_on(day) && !furniture_item.in_storage_on(day + 1) && !furniture_item.charged_already_on(day)
+            furniture_events[furniture_item] << "storage ended on " + day.strftime("%m/%d/%Y")
+          end
+        end
+
+        if furniture_item.in_storage_on(day) && !furniture_item.charged_already_on(day)
+          furniture_charges[furniture_item] += Rational(furniture_product.price*furniture_item.cubic_feet, Date.days_in_month(day.month, day.year))
+        end
+      end
+    end
+
+    furniture_items.select { |furniture_item| furniture_charges[furniture_item] > 0.0 }.collect { |furniture_item|
+      comments = "Storage charges for furniture item ##{furniture_item.id}"
+      if furniture_item.description
+        desc_to_add = furniture_item.description.length > 10 ? furniture_item.description[0..10] + "..." : furniture_item.description
+        comments += " ('#{desc_to_add}')"
+      end
+      if !furniture_events[furniture_item].empty?
+        comments += (" (prorated for " + furniture_events[furniture_item].join(", ") + ")")
+      end
+      
+      # This is a bit asinine. If we were to build the charge on the furniture item's user object, then any other references to user won't get the update until we save.
+      # Thus, in the case where we want to calculate the charges for a customer without saving them, we must pass in that customer's object (user) and associate
+      # the charges with that object here. Thus, if we said user.charges we'd get this charge, but if said user.furniture_items[0].charges we would not! Bizarre.
+      new_charge = user.charges.build(:comments => comments)
+      new_charge.total_in_cents = (furniture_charges[furniture_item].to_f*100.0).round
+            
+      new_charge.associate_with(furniture_item, start_date, end_date)
+      
+      if (save)
+        new_charge.save
+        furniture_item.save
+      end
+      
+      new_charge
+    }
   end
   
   private 

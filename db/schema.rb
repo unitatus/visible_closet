@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120226181452) do
+ActiveRecord::Schema.define(:version => 20120226214729) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20120226181452) do
     t.string   "chargeable_unit_type"
     t.string   "description"
     t.datetime "charging_start_date"
+    t.datetime "charging_end_date"
   end
 
   create_table "charges", :force => true do |t|
