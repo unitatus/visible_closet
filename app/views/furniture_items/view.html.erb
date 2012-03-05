@@ -1,7 +1,7 @@
 <!-- This page is loaded via ajax, so we must do all the partial work manually. -->
 <body>
 	<div class="item_summary">
-		<% if @stored_item.stored_item_photo.real_photo? %>
+		<% if @stored_item.default_photo(StoredItemPhoto::CUSTOMER_VISIBILITY).real_photo? %>
 			<%= image_tag(@stored_item.photo.url(:normal), :name => "normal_" + @stored_item.id.to_s) %>
 		<% else %>
 			<br><br><br><br>(no photo -- not indexed)<br><br><br><br>
