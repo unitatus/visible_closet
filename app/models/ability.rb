@@ -99,6 +99,7 @@ class Ability
       can :admin_publish_furniture_item, FurnitureItem
       can :save_photo, FurnitureItem
       can :admin_view, FurnitureItem
+      can :mark_returned, FurnitureItem
       can :index, Offer
       can :new, Offer
       can :create, Offer

@@ -13,7 +13,7 @@
 			<th>Id</th>
 			<th>User Id</th>
 			<th>User Name</th>
-			<th>Box</th>
+			<th>Box / Furniture</th>
 			<th>Amount</th>
 			<th>Comment</th>
 			<th>Delete?</th>
@@ -24,7 +24,13 @@
 			<td><%= storage_charge.id %></td>
 			<td><a href="/admin/user/<%= storage_charge.chargeable_unit.user.id %>"><%= storage_charge.chargeable_unit.user.id %></a></td>
 			<td><%= storage_charge.chargeable_unit.user.name %></td>
-			<td><a href="/admin/user/<%= storage_charge.chargeable_unit.user.id %>/<%= no_num_pluralize 2, storage_charge.chargeable_unit_properties.chargeable_unit_type.downcase %>/<%= storage_charge.chargeable_unit.id %>"><%= storage_charge.chargeable_unit.id %></a></td>
+			<td>
+				<% if storage_charge.chargeable_unit.is_a?(Box) %>
+					<a href="/admin/user/<%= storage_charge.chargeable_unit.user.id %>/boxes/<%= storage_charge.chargeable_unit.id %>">
+				<% else %>
+					<a href="/admin/furniture_items/<%= storage_charge.chargeable_unit.id %>">
+				<% end %>
+				<%= storage_charge.chargeable_unit.id %></a></td>
 			<td><%= number_to_currency storage_charge.charge.amount %></td>
 			<td><%= storage_charge.charge.comments %></td>
 			<td>

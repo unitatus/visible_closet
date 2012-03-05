@@ -45,6 +45,10 @@ class ChargeableUnitProperties < ActiveRecord::Base
     end
   end
   
+  def in_storage?
+    in_storage_on(Date.today)
+  end
+  
   def chargable?
     if self.charging_start_date.nil?
       return false
@@ -53,14 +57,6 @@ class ChargeableUnitProperties < ActiveRecord::Base
         || self.storage_charges.size == 0 \
         || self.storage_charges.last.end_date.nil? \
         || self.charging_end_date > self.storage_charges.last.end_date
-    end
-  end
-  
-  def in_storage_on(a_date)
-    if self.charging_start_date.nil?
-      return false
-    else
-      return self.charging_start_date.to_date <= a_date && (self.charging_end_date.nil? || self.charging_end_date.to_date >= a_date)
     end
   end
   

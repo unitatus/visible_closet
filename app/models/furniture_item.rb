@@ -39,6 +39,7 @@ class FurnitureItem < StoredItem
   
   INCOMPLETE_STATUS = :incomplete
   RETRIEVAL_REQUESTED = :retrieval_requested
+  RETURNED = :returned
   
   def FurnitureItem.new(attrs=nil)
     furniture_item = super(attrs)
@@ -139,7 +140,19 @@ class FurnitureItem < StoredItem
   end
   
   def service_status?
-    super || status == RETRIEVAL_REQUESTED
+    super || self.status == RETRIEVAL_REQUESTED || self.status == RETURNED
+  end
+  
+  def in_storage?
+    chargeable_unit_properties.in_storage? && (status == IN_STORAGE_STATUS || status == RETRIEVAL_REQUESTED)
+  end
+  
+  def returned?
+    self.status == RETURNED
+  end
+  
+  def return_requested?
+    self.status == RETRIEVAL_REQUESTED
   end
   
   def FurnitureItem.calculate_charges_for_user_furniture_set(user, start_date, end_date, save=false)
@@ -193,6 +206,16 @@ class FurnitureItem < StoredItem
       
       new_charge
     }
+  end
+  
+  def mark_returned
+    self.status = RETURNED
+    self.charging_end_date = Date.today
+  end
+  
+  def mark_returned!
+    mark_returned
+    save
   end
   
   private 

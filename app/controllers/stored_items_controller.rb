@@ -134,8 +134,8 @@ class StoredItemsController < ApplicationController
       @stored_item.cancel_service_request
     else
       @cart.remove_service_request_for(@stored_item)
+      @cart.save
     end
-    @cart.save
   end
   
   def construct_json_label(item, tags = [])

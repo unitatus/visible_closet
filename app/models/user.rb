@@ -547,13 +547,13 @@ class User < ActiveRecord::Base
   def calculate_subscription_charges(as_of_date = self.end_of_month, force=false, save=false)
     if !@recently_calculated_anticipated || force
       last_charged_date = self.earliest_effective_charge_date
-      if last_charged_date && last_charged_date > DateHelper.start_of_month(as_of_date)
+      if last_charged_date.nil? || last_charged_date > DateHelper.start_of_month(as_of_date)
         last_charged_date = DateHelper.start_of_month(as_of_date)
       end
       last_charged_date = last_charged_date.nil? ? nil : last_charged_date.to_date+1
       
       return_charges, return_credits = Box.calculate_charges_for_user_box_set(self, last_charged_date, as_of_date, save)
-      return_charges << FurnitureItem.calculate_charges_for_user_furniture_set(self, last_charged_date, as_of_date, save)
+      return_charges = return_charges + FurnitureItem.calculate_charges_for_user_furniture_set(self, last_charged_date, as_of_date, save)
       
       @recently_calculated_anticipated = true
       return [return_charges, return_credits]
@@ -578,15 +578,18 @@ class User < ActiveRecord::Base
     credits.select {|credit| credit.id.nil? }
   end
 
+  def chargeable_items
+    boxes | furniture_items
+  end
   
   def will_have_charges_at_end_of_month?
-    boxes.each do |box|
-      if box.chargable?
+    chargeable_items.each do |chargeable_item|
+      if chargeable_item.chargable?
         return true
       end
     end
     
-    return account_balance_as_of(DateHelper.end_of_month) < 0
+    return account_balance_as_of(DateHelper.end_of_month, true) < 0
   end
   
   def non_failed_payment_transactions

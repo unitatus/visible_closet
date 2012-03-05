@@ -13,6 +13,7 @@
 		<th>Subscription</th>
 		<th>Photos</th>
 		<th>Edit?</th>
+		<th>Return?</th>
 		<% if current_user.admin? %>
 			<th>Delete?</th>
 		<% end %>
@@ -46,8 +47,10 @@
 					<%= item.status %><br>
 					<% if item.incomplete? %>
 						<a href="/admin/furniture_items/<%=item.id%>/publish" data-confirm="Are you sure? The user will be able to see the furniture item and all public photos. Only administrators can unpublish.">Publish?</a>
-					<% elsif current_user.admin? && !item.has_charges? %>
+					<% elsif current_user.admin? && !item.has_charges? && !item.returned? && !item.return_requested? %>
 						<a href="/admin/furniture_items/<%=item.id%>/unpublish" data-confirm="Are you sure? The item will disappear from the user's inventory.">Unpublish?</a>
+					<% elsif item.return_requested? %>
+						<a href="/admin/furniture_items/<%= item.id %>/cancel_retrieval_request">(cancel retrieval)</a>
 					<% end %>
 				</td>
 				<td style="text-align: center; vertical-align: middle">
@@ -68,6 +71,13 @@
 				<td style="text-align: center; vertical-align: middle">
 					<% if item.incomplete? %>
 						<a href="/admin/furniture_items/<%=item.id%>/edit">Edit</a>
+					<% else %>
+						NA
+					<% end %>
+				</td>
+				<td style="text-align: center; vertical-align: middle">
+					<% if item.in_storage? %>
+						<a href="/admin/furniture_items/<%= item.id %>/mark_returned" data-confirm="Are you sure? This cannot be undone without an administrator's assistance, and will stop all charges for this furniture.">Mark Returned</a>
 					<% else %>
 						NA
 					<% end %>

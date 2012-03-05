@@ -6,6 +6,7 @@ var <%=svc_name%>_link_element = document.getElementById('stored_item_<%= @store
 <%=svc_name%>_link_element.href = '/stored_items/<%=@stored_item.id%>/cancel_<%=svc_name%>_request';
 
 var container = document.getElementById("stored_item_<%=@stored_item.id%>_menu_list");
+var menu_div = document.getElementById("stored_item_<%=@stored_item.id%>_menu_contents")
 
 // remove other options -- those are no longer available if you've chosen to donate
 <% if svc_name != "mailing" && !@stored_item.is_a?(FurnitureItem) %>
@@ -50,11 +51,17 @@ wider_container.insertBefore(new_div, wider_container.lastChild)
 	cart_display.style.display = 'block';
 <% end %>
 
-<% if first_item %> 
+<% if first_item && !@stored_item.is_a?(FurnitureItem) %> 
 	$("#first_item_processing_link").trigger('click');
 <% end %>
 
 <% if svc_name == "retrieval" %>
-	alert('Your request has been received! You will be contacted soon via email to schedule a pick-up time for your item.')
+	alert('Your request has been received! You will be contacted soon via email to schedule a pick-up time for your item.');
+	if (menu_div.style.display == 'none')
+	{
+		new_div.style.display = 'block';
+	} else {
+		new_div.style.display = 'none';
+	}
 <% end %>
 

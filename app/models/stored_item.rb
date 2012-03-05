@@ -57,8 +57,12 @@ class StoredItem < ActiveRecord::Base
   
   def default_photo(visibility)
     if visibility == StoredItemPhoto::CUSTOMER_VISIBILITY
-      if default_customer_photo.nil?
-        stored_item_photos_visibility(visibility).first
+      if default_customer_photo.nil? # then get the first photo
+        if stored_item_photos_visibility(visibility).empty? # then show the empty photo
+          StoredItemPhoto.find(Rails.application.config.furniture_stock_photo_id)
+        else
+          stored_item_photos_visibility(visibility).first
+        end
       else
         default_customer_photo
       end

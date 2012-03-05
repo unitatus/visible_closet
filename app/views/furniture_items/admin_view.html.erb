@@ -53,6 +53,20 @@
 			<%= @furniture_item.description %>
 		</td>
 	</tr>
+	<tr>
+		<td>Storage Charges:</td>
+		<td>
+			<% if @furniture_item.storage_charges.empty? %>
+				None.
+			<% else %>
+				<% @furniture_item.storage_charges.each_with_index do |storage_charge, index| %>
+					<% if index > 0 %>
+					, 
+					<% end %>
+					<%= number_to_currency storage_charge.amount %> (<%= storage_charge.created_at.strftime '%m/%d/%Y' %>)
+				<% end %>
+			<% end %>
+		</td>
 	</table><table style="lightly_padded_table">
 	<tr>
 		<td><br>Images:</td>

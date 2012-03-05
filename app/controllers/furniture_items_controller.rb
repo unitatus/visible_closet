@@ -110,6 +110,18 @@ class FurnitureItemsController < ApplicationController
     redirect_to "/admin/users/#{furniture_item.user_id}/furniture"
   end
   
+  def mark_returned
+    furniture_item = FurnitureItem.find(params[:id])
+    furniture_item.mark_returned!
+    redirect_to "/admin/users/#{furniture_item.user_id}/furniture"
+  end
+  
+  def cancel_retrieval_request
+    furniture_item = FurnitureItem.find(params[:id])
+    furniture_item.cancel_service_request
+    redirect_to "/admin/users/#{furniture_item.user_id}/furniture"
+  end
+  
   def save_photo
     furniture_item = FurnitureItem.find(params[:furniture_item_id])
     photo = StoredItemPhoto.find(params[:photo_id])
@@ -136,7 +148,7 @@ class FurnitureItemsController < ApplicationController
       @stored_items = Array.new # makes this behave nicely with StoredItem code
       @stored_items << @selected_item
     elsif params[:tags].blank? # Someone hit the page from a link -- no search necessary
-        @stored_items = FurnitureItem.find_all_by_user_id_and_status(current_user.id, [StoredItem::IN_STORAGE_STATUS, FurnitureItem::RETRIEVAL_REQUESTED])
+        @stored_items = FurnitureItem.find_all_by_user_id_and_status(current_user.id, [StoredItem::IN_STORAGE_STATUS, FurnitureItem::RETRIEVAL_REQUESTED, FurnitureItem::RETURNED])
     else # someone hit enter while typing in the stored item search field -- show the results of what they selected
       @stored_items = FurnitureItem.tags_search(params[:tags].split, current_user, false)
       if @stored_items.size == 1 # the user probably thought they were selecting a single item, so act like they did

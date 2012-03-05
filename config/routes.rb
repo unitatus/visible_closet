@@ -175,6 +175,8 @@ VisibleCloset::Application.routes.draw do
   match "admin/furniture_items/:id/unpublish" => "furniture_items#admin_unpublish_furniture_item"
   match "admin/furniture_items/:furniture_item_id/photos/:photo_id/save" => "furniture_items#save_photo"
   match "admin/furniture_items/:id" => "furniture_items#admin_view"
+  match "admin/furniture_items/:id/mark_returned" => "furniture_items#mark_returned"
+  match "admin/furniture_items/:id/cancel_retrieval_request" => "furniture_items#cancel_retrieval_request"
   
   # Account
   get "account/store_more_boxes"

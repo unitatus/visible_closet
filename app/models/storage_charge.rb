@@ -29,4 +29,12 @@ class StorageCharge < ActiveRecord::Base
   def end_date
     read_attribute(:end_date).nil? ? nil : read_attribute(:end_date).to_date
   end
+  
+  def amount
+    charge.total_in_cents / 100
+  end
+  
+  def created_at
+    charge.created_at
+  end
 end

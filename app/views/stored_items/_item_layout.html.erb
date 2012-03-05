@@ -46,6 +46,8 @@
 					<% elsif !current_user.cart.nil? && current_user.cart.contains_mailing_request_for(stored_item) %>
 						<li id="stored_item_<%= stored_item.id%>_mailing_li"><%= link_to "cancel mailing", "/stored_items/#{stored_item.id}/cancel_mailing_request", :remote => true, :id => "stored_item_#{stored_item.id}_mailing_link" %></li>
 						<li id="stored_item_<%= stored_item.id %>_checkout_li"><a href="/account/check_out">checkout</a></li>
+					<% elsif stored_item.status == FurnitureItem::RETRIEVAL_REQUESTED %>
+						<li id="stored_item_<%= stored_item.id%>_mailing_li"><%= link_to "cancel retrieval", "/stored_items/#{stored_item.id}/cancel_retrieval_request", :remote => true, :id => "stored_item_#{stored_item.id}_retrieval_link" %></li>
 					<% end %>
 				</ul>
 			</div>
@@ -57,6 +59,8 @@
 						Donation<br>Requested
 					<% elsif stored_item.status == FurnitureItem::RETRIEVAL_REQUESTED %>
 						Retrieval<br>Requested
+					<% elsif stored_item.status == FurnitureItem::RETURNED %>
+						Returned
 					<% elsif stored_item.status == StoredItem::DONATED_STATUS %>
 						DONATED<br><div style="font-size: 50%">to <%= stored_item.donated_to %></div>
 					<% elsif current_user.cart && current_user.cart.contains_mailing_request_for(stored_item) %>

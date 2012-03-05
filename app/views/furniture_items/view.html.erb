@@ -13,6 +13,9 @@
 		<% elsif @stored_item.current_subscription %>
 			This item is on a storage commitment through <%= @stored_item.current_subscription.end_date.strftime('%m/%d/%Y') %>.
 		<br><br>
+		<% elsif @stored_item.returned? %>
+			NOTE: Item no longer in storage; returned on <%= @stored_item.charging_end_date.strftime '%m/%d/%Y' %>.
+			<br><br>
 		<% end %>
 		Tags: <br>
 <%= render :partial => "stored_item_tags/tags_editor" %>
