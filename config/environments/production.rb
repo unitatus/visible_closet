@@ -64,6 +64,8 @@ VisibleCloset::Application.configure do
   config.furniture_storage_product_id = 16
 
   config.fedex_vc_address_id = 6
+  
+  config.furniture_stock_photo_id = 80
 
   config.after_initialize do    
     ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
