@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120226214729) do
+ActiveRecord::Schema.define(:version => 20120520232229) do
 
   create_table "addresses", :force => true do |t|
     t.string   "first_name"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20120226214729) do
     t.string   "status"
     t.string   "comment"
     t.string   "fedex_validation_status"
+    t.integer  "snapshot_user_id"
   end
 
   add_index "addresses", ["user_id"], :name => "index_addresses_on_user_id"

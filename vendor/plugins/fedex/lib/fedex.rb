@@ -302,120 +302,9 @@ module Fedex #:nodoc:
     #                          :phone_number => '4805551212'},
     #             :address => address} # See "Address" for under price.
     def label(options = {})
-      # Check overall options
-      check_required_options(:label, options)
-      
-      # Check Address Options
-      check_required_options(:contact, options[:shipper][:contact])
-      check_required_options(:address, options[:shipper][:address])
-      
-      # Check Contact Options
-      check_required_options(:contact, options[:recipient][:contact])
-      check_required_options(:address, options[:recipient][:address])
-      
-      # Prepare variables
-      shipper             = options[:shipper]
-      recipient           = options[:recipient]
-      
-      shipper_contact     = shipper[:contact]
-      shipper_address     = shipper[:address]
-      
-      recipient_contact   = recipient[:contact]
-      recipient_address   = recipient[:address]
-      
-      service_type        = options[:service_type]
-      count               = options[:count] || 1
-      weight              = options[:weight]
-      
-      time                = options[:time] || Time.now
-      time                = time.to_time.iso8601 if time.is_a?(Time)
-      
-      residential         = !!recipient_address[:residential]
-      
-      service_type        = resolve_service_type(service_type, residential)
-      
-      customer_reference  = options[:customer_reference]
-      po_reference         = options[:po_reference]
-      
-      update_emails       = options[:update_emails]
-      
-      # Create the driver
+      options = create_basic_label_request_options(options)
       driver = create_driver(:ship)
-      options = common_options(SHIP_VERSION).merge(
-        :RequestedShipment => {
-          :ShipTimestamp => time,
-          :DropoffType => @dropoff_type,
-          :ServiceType => service_type,
-          :PackagingType => @packaging_type,
-          :TotalWeight => { :Units => @units, :Value => weight },
-          :PreferredCurrency => @currency,
-          :Shipper => {
-            :Contact => {
-              :PersonName => shipper_contact[:name],
-              :PhoneNumber => shipper_contact[:phone_number]
-            },
-            :Address => {
-              :CountryCode => shipper_address[:country],
-              :StreetLines => shipper_address[:street_lines],
-              :City => shipper_address[:city],
-              :StateOrProvinceCode => shipper_address[:state],
-              :PostalCode => shipper_address[:zip]
-            }
-          },
-          :Recipient => {
-            :Contact => {
-              :PersonName => recipient_contact[:name],
-              :PhoneNumber => recipient_contact[:phone_number]
-            },
-            :Address => {
-              :CountryCode => recipient_address[:country],
-              :StreetLines => recipient_address[:street_lines],
-              :City => recipient_address[:city],
-              :StateOrProvinceCode => recipient_address[:state],
-              :PostalCode => recipient_address[:zip],
-              :Residential => residential
-            }
-          },
-          :ShippingChargesPayment => {
-            :PaymentType => @payment_type,
-            :Payor => {
-              :AccountNumber => @account_number,
-              :CountryCode => shipper_address[:country]
-            }
-          },
-          :RateRequestTypes => @rate_request_type,
-          :LabelSpecification => {
-            :LabelFormatType => @label_type,
-            :ImageType => @label_image_type
-          },
-          :PackageCount => count,
-          :RequestedPackageLineItems => {
-            :SequenceNumber => 1,
-            :Weight => { :Units => @units, :Value => weight }
-          }
-        }
-      )
       
-      if customer_reference
-        options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] = [
-            {:CustomerReferenceType => CustomerReferenceTypes::CUSTOMER_REFERENCE,
-            :Value => customer_reference}
-        ]
-      end
-      
-      if po_reference
-        options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] << {:CustomerReferenceType => CustomerReferenceTypes::P_O_NUMBER,
-        :Value => po_reference}
-      end
-      
-      if @label_stock_type
-        options[:RequestedShipment][:LabelSpecification][:LabelStockType] = @label_stock_type
-      end
-      
-      if !update_emails.nil?
-        options[:RequestedShipment][:SpecialServicesRequested] = create_update_email_services(update_emails)
-      end
-            
       result = driver.processShipment(options)
       
       successful = successful?(result)
@@ -428,6 +317,55 @@ module Fedex #:nodoc:
         label = Base64.decode64(result.completedShipmentDetail.completedPackageDetails.label.parts.image)
         tracking_number = result.completedShipmentDetail.completedPackageDetails.trackingIds.trackingNumber
          [label, tracking_number]
+      else
+        raise FedexError.new("Unable to get label from Fedex: #{msg}")
+      end
+    end
+    
+    def email_label(options = {})
+      label_recipient_email = options [:label_recipient_email]
+      label_expiration = options[:label_expiration]
+      label_hold_at_location_phone = options[:label_hold_at_location_phone]
+      label_hold_at_location_contact_name = options[:label_hold_at_location_contact_name]
+      label_contact_company = options[:label_contact_company]
+      label_contact_email =  options[:label_contact_email]
+      item_description = options[:label_description]
+      
+      options = create_basic_label_request_options(options)
+      driver = create_driver(:ship)
+      
+      special_services = options[:RequestedShipment][:SpecialServicesRequested].nil? ? {} : options[:RequestedShipment][:SpecialServicesRequested]
+      special_services[:SpecialServiceTypes] ||= []
+      special_services[:SpecialServiceTypes] += [ShipmentSpecialServiceTypes::PENDING_SHIPMENT, ShipmentSpecialServiceTypes::HOLD_AT_LOCATION]
+      special_services[:PendingShipmentDetail] ||= {}
+      special_services[:PendingShipmentDetail][:Type] = PendingShipmentTypes::EMAIL
+      special_services[:PendingShipmentDetail][:EmailLabelDetail] ||= {}
+      special_services[:PendingShipmentDetail][:EmailLabelDetail][:NotificationEMailAddress] = label_recipient_email
+      special_services[:PendingShipmentDetail][:ExpirationDate] = label_expiration.to_date
+      
+      special_services[:HoldAtLocationDetail] ||= {}
+      special_services[:HoldAtLocationDetail][:PhoneNumber] = label_hold_at_location_phone
+      special_services[:HoldAtLocationDetail][:LocationContactAndAddress] ||= {}
+      special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Contact] ||= {}
+      special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Contact][:PersonName] = label_hold_at_location_contact_name
+      special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Contact][:CompanyName] = label_contact_company
+      special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Contact][:PhoneNumber] = label_hold_at_location_phone
+      special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Contact][:EMailAddress] = label_contact_email
+            
+      options[:RequestedShipment][:SpecialServicesRequested] ||= special_services
+      options[:RequestedShipment][:RequestedPackageLineItems][:ItemDescription] = item_description
+            
+      result = driver.createPendingShipment(options)
+      
+      successful = successful?(result)
+      
+      msg = error_msg(result, false)
+      if successful && msg !~ /There are no valid services available/
+        # pre = result.completedShipmentDetail.shipmentRating.shipmentRateDetails
+        # charge didn't work at one point, haven't fixed it yet
+        # charge = ((pre.class == Array ? pre[0].totalNetCharge.amount.to_f : pre.totalNetCharge.amount.to_f) * 100).to_i
+        #label = Base64.decode64(result.completedShipmentDetail.completedPackageDetails.label.parts.image)
+        result.completedShipmentDetail.completedPackageDetails.trackingIds.trackingNumber
       else
         raise FedexError.new("Unable to get label from Fedex: #{msg}")
       end
@@ -531,6 +469,122 @@ module Fedex #:nodoc:
     end
     
   private
+    def create_basic_label_request_options(options)
+      # Check overall options
+      check_required_options(:label, options)
+      
+      # Check Address Options
+      check_required_options(:contact, options[:shipper][:contact])
+      check_required_options(:address, options[:shipper][:address])
+      
+      # Check Contact Options
+      check_required_options(:contact, options[:recipient][:contact])
+      check_required_options(:address, options[:recipient][:address])
+      
+      # Prepare variables
+      shipper             = options[:shipper]
+      recipient           = options[:recipient]
+      
+      shipper_contact     = shipper[:contact]
+      shipper_address     = shipper[:address]
+      
+      recipient_contact   = recipient[:contact]
+      recipient_address   = recipient[:address]
+      
+      service_type        = options[:service_type]
+      count               = options[:count] || 1
+      weight              = options[:weight]
+      
+      time                = options[:time] || Time.now
+      time                = time.to_time.iso8601 if time.is_a?(Time)
+      
+      residential         = !!recipient_address[:residential]
+      
+      service_type        = resolve_service_type(service_type, residential)
+      
+      customer_reference  = options[:customer_reference]
+      po_reference         = options[:po_reference]
+      
+      update_emails       = options[:update_emails]
+      
+      options = common_options(SHIP_VERSION).merge(
+        :RequestedShipment => {
+          :ShipTimestamp => time,
+          :DropoffType => @dropoff_type,
+          :ServiceType => service_type,
+          :PackagingType => @packaging_type,
+          :TotalWeight => { :Units => @units, :Value => weight },
+          :PreferredCurrency => @currency,
+          :Shipper => {
+            :Contact => {
+              :PersonName => shipper_contact[:name],
+              :PhoneNumber => shipper_contact[:phone_number]
+            },
+            :Address => {
+              :CountryCode => shipper_address[:country],
+              :StreetLines => shipper_address[:street_lines],
+              :City => shipper_address[:city],
+              :StateOrProvinceCode => shipper_address[:state],
+              :PostalCode => shipper_address[:zip]
+            }
+          },
+          :Recipient => {
+            :Contact => {
+              :PersonName => recipient_contact[:name],
+              :PhoneNumber => recipient_contact[:phone_number]
+            },
+            :Address => {
+              :CountryCode => recipient_address[:country],
+              :StreetLines => recipient_address[:street_lines],
+              :City => recipient_address[:city],
+              :StateOrProvinceCode => recipient_address[:state],
+              :PostalCode => recipient_address[:zip],
+              :Residential => residential
+            }
+          },
+          :ShippingChargesPayment => {
+            :PaymentType => @payment_type,
+            :Payor => {
+              :AccountNumber => @account_number,
+              :CountryCode => shipper_address[:country]
+            }
+          },
+          :RateRequestTypes => @rate_request_type,
+          :LabelSpecification => {
+            :LabelFormatType => @label_type,
+            :ImageType => @label_image_type
+          },
+          :PackageCount => count,
+          :RequestedPackageLineItems => {
+            :SequenceNumber => 1,
+            :Weight => { :Units => @units, :Value => weight }
+          }
+        }
+      )
+      
+      if customer_reference
+        options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] = [
+            {:CustomerReferenceType => CustomerReferenceTypes::CUSTOMER_REFERENCE,
+            :Value => customer_reference}
+        ]
+      end
+      
+      if po_reference
+        options[:RequestedShipment][:RequestedPackageLineItems][:CustomerReferences] << {:CustomerReferenceType => CustomerReferenceTypes::P_O_NUMBER,
+        :Value => po_reference}
+      end
+      
+      if @label_stock_type
+        options[:RequestedShipment][:LabelSpecification][:LabelStockType] = @label_stock_type
+      end
+      
+      if !update_emails.nil?
+        options[:RequestedShipment][:SpecialServicesRequested] = create_update_email_services(update_emails)
+      end
+      
+      return options
+    end
+  
     # Options that go along with each request
     def common_options(version=SHIP_VERSION)
       {
@@ -543,7 +597,7 @@ module Fedex #:nodoc:
     def create_update_email_services(emails_array)
       return_hash = Hash.new
       
-      return_hash[:SpecialServiceTypes] = ShipmentSpecialServiceTypes::EMAIL_NOTIFICATION
+      return_hash[:SpecialServiceTypes] = [ShipmentSpecialServiceTypes::EMAIL_NOTIFICATION]
       return_hash[:EMailNotificationDetail] = {
         :Recipients => create_email_service_recipients(emails_array)
       }

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110824175202
+# Schema version: 20120520232229
 #
 # Table name: addresses
 #
@@ -21,6 +21,7 @@
 #  status                  :string(255)
 #  comment                 :string(255)
 #  fedex_validation_status :string(255)
+#  snapshot_user_id        :integer
 #
 
 class Address < ActiveRecord::Base
@@ -36,6 +37,7 @@ class Address < ActiveRecord::Base
   INACTIVE = "inactive"
 
   belongs_to :user
+  belongs_to :snapshot_user, :class_name => "User" # The idea here is: every time you set user you set snapshot, but you can set snapshot separately if you want
   has_many :payment_profiles, :foreign_key => :billing_address_id
   has_many :cart_items
   has_many :to_shipments, :class_name => "Shipment", :foreign_key => :to_address_id
@@ -91,6 +93,18 @@ class Address < ActiveRecord::Base
     new_address.fedex_validation_status = NOT_CHECKED
     
     new_address
+  end
+  
+  def user_with_extension=(value)
+    self.user_without_extension=value
+    self.snapshot_user=value
+  end
+  
+  alias_method_chain :user=, :extension
+  
+  def user_id=(value)
+    write_attribute(:user_id, value)
+    self.snapshot_user_id=value
   end
   
   def Address.find_by_user_id(user_id=nil)
@@ -246,12 +260,20 @@ class Address < ActiveRecord::Base
      self.fedex_validation_status = @address_report[:success] ? VALID : NOT_VALID
      
      return @suggested_address.errors.empty?
-   end
+  end
+  
+  def innocuous_save
+    @save_innocuously = true
+    save
+    @save_innocuously = false
+  end
   
   def before_update
-    payment_profiles.each do |profile|
-      if !profile.save_initiator? && profile.active? && !profile.calling_inactivate?
-        profile.update_active_merchant
+    if !@save_innocuously
+      payment_profiles.each do |profile|
+        if !profile.save_initiator? && profile.active? && !profile.calling_inactivate?
+          profile.update_active_merchant
+        end
       end
     end
     

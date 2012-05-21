@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120129012225
+# Schema version: 20120520232229
 #
 # Table name: user_offers
 #
@@ -9,6 +9,7 @@
 #  type       :string(255)
 #  created_at :datetime
 #  updated_at :datetime
+#  coupon_id  :integer
 #
 
 class FreeStorageUserOffer < UserOffer

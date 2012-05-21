@@ -3191,9 +3191,9 @@
               <xs:documentation>Identifies the type of FedEx pending shipment</xs:documentation>
             </xs:annotation>
           </xs:element>
-          <xs:element name="ExpirationDate" type="xs:date" minOccurs="0">
+          <xs:element name="ExpirationDate" type="xs:string" minOccurs="0">
             <xs:annotation>
-              <xs:documentation>Date after which the pending shipment will no longer be available for completion.</xs:documentation>
+              <xs:documentation>Date after which the pending shipment will no longer be available for completion. DZ Note: changed from date because package was forcing time zone and FedEx didn't like that.</xs:documentation>
             </xs:annotation>
           </xs:element>
           <xs:element name="EmailLabelDetail" type="ns:EMailLabelDetail" minOccurs="0">
@@ -4381,7 +4381,7 @@
           <xs:documentation>These special services are available at the shipment level for some or all service types. If the shipper is requesting a special service which requires additional data (such as the COD amount), the shipment special service type must be present in the specialServiceTypes collection, and the supporting detail must be provided in the appropriate sub-object below.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-          <xs:element name="SpecialServiceTypes" type="ns:ShipmentSpecialServiceType" minOccurs="0">
+          <xs:element name="SpecialServiceTypes" type="ns:ShipmentSpecialServiceType" minOccurs="0" maxOccurs="unbounded">
             <xs:annotation>
               <xs:documentation>The types of all special services requested for the enclosing shipment (or other shipment-level transaction).</xs:documentation>
             </xs:annotation>

@@ -72,6 +72,12 @@ module VisibleCloset
     config.s3_labels_bucket = 'shipment_labels'
     
     config.admin_email = "admin@thevisiblecloset.com"
+    config.shipping_email = "shipping@thevisiblecloset.com"
+    config.label_expiration_days = 29
+    config.label_hold_at_location_phone = "8473349547"
+    config.fedex_contact_name = "Brian Van Heck"
+    config.fedex_contact_company = "The Visible Closet"
+    config.fedex_label_description = "Visible Closet Shipment"
     
     config.shipping_up_percent = 0.0
     

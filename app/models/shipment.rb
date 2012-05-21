@@ -98,6 +98,9 @@ class Shipment < ActiveRecord::Base
   def to_address_with_extension=(value)
     target_attributes = value.attributes
     
+    # We must break the standard association with users so that the user's changing of a shipping address after creating the shipment does not cause
+    # data errors down the line.
+    passed_user_id = target_attributes["user_id"]
     target_attributes["user_id"] = nil
     target_attributes.delete("created_at")
     target_attributes.delete("updated_at")
@@ -108,6 +111,8 @@ class Shipment < ActiveRecord::Base
     else
       self.to_address.attributes = target_attributes
     end
+    
+    self.to_address.snapshot_user_id = passed_user_id
   end
   
   alias_method_chain :to_address=, :extension
@@ -126,6 +131,7 @@ class Shipment < ActiveRecord::Base
   def from_address_with_extension=(value)
     target_attributes = value.attributes
     
+    passed_user_id = target_attributes["user_id"]
     target_attributes["user_id"] = nil
     target_attributes.delete("created_at")
     target_attributes.delete("updated_at")
@@ -136,84 +142,38 @@ class Shipment < ActiveRecord::Base
     else
       self.from_address.attributes = target_attributes
     end
+    
+    self.from_address.snapshot_user_id = passed_user_id
   end
   
   alias_method_chain :from_address=, :extension
   
-  def generate_fedex_label(box = nil)
-    if epl_label?
-      label_stock_type = Fedex::LabelStockTypes::STOCK_4X6 # Fedex::LabelStockTypes::PAPER_4X6
-      label_image_type = Fedex::LabelSpecificationImageTypes::EPL2
-    else
-      label_image_type = Rails.application.config.fedex_customer_label_image_type
-    end
-        
-     fedex = Fedex::Base.new(Shipment.basic_fedex_options.merge(
-       :label_image_type => label_image_type,
-       :label_stock_type => label_stock_type
-     ))
-
-     shipper = {
-       :name => from_address.first_name + " " + from_address.last_name,
-       :phone_number => from_address.day_phone
-     }
-     recipient = {
-       :name => to_address.first_name + " " + to_address.last_name,
-       :phone_number => to_address.day_phone
-     }
-     origin = {
-       :street_lines => (from_address.address_line_2.blank? ? [from_address.address_line_1] : [from_address.address_line_1, from_address.address_line_2]),
-       :city => from_address.city,
-       :state => from_address.state,
-       :zip => from_address.zip,
-       :country => from_address.country
-     }
-    destination = {
-      :street_lines => (to_address.address_line_2.blank? ? [to_address.address_line_1] : [to_address.address_line_1, to_address.address_line_2]),
-      :city => to_address.city,
-      :state => to_address.state,
-     :zip => to_address.zip,
-     :country => to_address.country,
-     :residential => false
-    }
-    email_recipients = [{
-      :email_address => from_address.user.nil? ? Rails.application.config.admin_email : from_address.user.email, 
-      :type => Fedex::EMailNotificationRecipientTypes::SHIPPER
-    },
-    {
-      :email_address => to_address.user.nil? ? Rails.application.config.admin_email : to_address.user.email, 
-      :type => Fedex::EMailNotificationRecipientTypes::RECIPIENT
-    }]
-     
+  def email_fedex_label
+    if self.tracking_number
+      cancel_pending_fedex_shipment
+    end 
     
-    pkg_count = 1
-    weight = Rails.application.config.fedex_default_shipping_weight_lbs
-    service_type = Fedex::ServiceTypes::FEDEX_GROUND
-    if box # this is for a box
-      customer_reference = "Box ##{self.box_id}"
-      
-      if box.box_type == Box::CUST_BOX_TYPE
-        po_reference = "Check for inventorying: [  ]"
-      else
-        po_reference = nil
-      end
-    else
-      customer_reference = nil
-      po_reference = nil
-    end
+    fedex, options = prep_shipment_fedex
 
-    self.shipment_label, self.tracking_number = fedex.label(
-      :shipper => { :contact => shipper, :address => origin },
-      :recipient => { :contact => recipient, :address => destination },
-      :count => pkg_count,
-      :weight => weight,
-      :service_type => service_type,
-      :customer_reference => customer_reference,
-      :po_reference => po_reference,
-      :update_emails => email_recipients
-     )
+    self.tracking_number = fedex.email_label(options)
 
      return save
+  end
+  
+  def generate_fedex_label(box = nil)
+    fedex, options = prep_shipment_fedex
+
+    self.shipment_label, self.tracking_number = fedex.label(options)
+
+    return save
+  end
+    
+  def cancel_pending_fedex_shipment
+    
+  end
+  
+  def to_tvc?
+    to_address.id == Rails.application.config.fedex_vc_address_id
   end
   
   def shipment_label=(file)
@@ -343,6 +303,91 @@ class Shipment < ActiveRecord::Base
   end
     
   private
+  
+  def prep_shipment_fedex
+    if epl_label?
+      label_stock_type = Fedex::LabelStockTypes::STOCK_4X6 # Fedex::LabelStockTypes::PAPER_4X6
+      label_image_type = Fedex::LabelSpecificationImageTypes::EPL2
+    else
+      label_image_type = Rails.application.config.fedex_customer_label_image_type
+    end
+
+     fedex = Fedex::Base.new(Shipment.basic_fedex_options.merge(
+       :label_image_type => label_image_type,
+       :label_stock_type => label_stock_type
+     ))
+
+     shipper = {
+       :name => from_address.first_name + " " + from_address.last_name,
+       :phone_number => from_address.day_phone
+     }
+     recipient = {
+       :name => to_address.first_name + " " + to_address.last_name,
+       :phone_number => to_address.day_phone
+     }
+     origin = {
+       :street_lines => (from_address.address_line_2.blank? ? [from_address.address_line_1] : [from_address.address_line_1, from_address.address_line_2]),
+       :city => from_address.city,
+       :state => from_address.state,
+       :zip => from_address.zip,
+       :country => from_address.country
+     }
+    destination = {
+      :street_lines => (to_address.address_line_2.blank? ? [to_address.address_line_1] : [to_address.address_line_1, to_address.address_line_2]),
+      :city => to_address.city,
+      :state => to_address.state,
+     :zip => to_address.zip,
+     :country => to_address.country,
+     :residential => false
+    }
+    # Note on from address: we want to decouple shipping addresses from users so that users can't change addresses for shipments after the fact.
+    email_recipients = [{
+      :email_address => from_address.snapshot_user.nil? ? Rails.application.config.admin_email : from_address.snapshot_user.email, 
+      :type => Fedex::EMailNotificationRecipientTypes::SHIPPER
+    },
+    {
+      :email_address => to_address.snapshot_user.nil? ? Rails.application.config.admin_email : to_address.snapshot_user.email, 
+      :type => Fedex::EMailNotificationRecipientTypes::RECIPIENT
+    }]
+     
+    pkg_count = 1
+    weight = Rails.application.config.fedex_default_shipping_weight_lbs
+    service_type = Fedex::ServiceTypes::FEDEX_GROUND
+    if box # this is for a box
+      customer_reference = "Box ##{self.box_id}"
+      
+      if box.box_type == Box::CUST_BOX_TYPE && to_tvc?
+        po_reference = "Check for inventorying: [  ]"
+        label_recipient = from_address.snapshot_user.email
+      else
+        po_reference = nil
+        label_recipient = Rails.application.config.shipping_email
+      end
+    else
+      customer_reference = nil
+      po_reference = nil
+    end
+    
+    options = {
+    :shipper => { :contact => shipper, :address => origin },
+    :recipient => { :contact => recipient, :address => destination },
+    :count => pkg_count,
+    :weight => weight,
+    :service_type => service_type,
+    :customer_reference => customer_reference,
+    :po_reference => po_reference,
+    :update_emails => email_recipients,
+    :label_recipient_email => from_address.snapshot_user.nil? ? Rails.application.config.admin_email : from_address.snapshot_user.email,
+    :label_expiration => Time.now + Rails.application.config.label_expiration_days.days,
+    :label_hold_at_location_phone => Rails.application.config.label_hold_at_location_phone,
+    :label_hold_at_location_contact_name => Rails.application.config.fedex_contact_name,
+    :label_contact_company => Rails.application.config.fedex_contact_company,
+    :label_contact_email => Rails.application.config.admin_email,
+    :label_description => Rails.application.config.fedex_label_description
+    }
+    
+    return [fedex, options]
+  end
   
   def cancel_fedex_shipment
     if tracking_number.blank?
