@@ -582,7 +582,9 @@ class Box < ActiveRecord::Base
   def ship
     if (self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE) || (self.status == RETURN_REQUESTED_STATUS)
       shipment = create_shipment
-      shipment.email_fedex_label(Rails.application.config.admin_email)
+      if self.status != RETURN_REQUESTED_STATUS
+        shipment.email_fedex_label(Rails.application.config.admin_email)
+      end
       self.update_attribute(:status, Box::IN_TRANSIT_TO_YOU_STATUS)
       return shipment
     else
