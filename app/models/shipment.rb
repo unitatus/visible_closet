@@ -187,7 +187,7 @@ class Shipment < ActiveRecord::Base
   end
   
   def to_tvc?
-    to_address.id == Rails.application.config.fedex_vc_address_id
+    self.to_address.id == Rails.application.config.fedex_vc_address_id
   end
   
   def shipment_label=(file)
