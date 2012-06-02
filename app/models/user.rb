@@ -582,6 +582,10 @@ class User < ActiveRecord::Base
     boxes | furniture_items
   end
   
+  def gets_labels_emailed?
+    test_user?
+  end
+  
   def will_have_charges_at_end_of_month?
     chargeable_items.each do |chargeable_item|
       if chargeable_item.chargable?
@@ -590,6 +594,10 @@ class User < ActiveRecord::Base
     end
     
     return account_balance_as_of(DateHelper.end_of_month, true) < 0
+  end
+  
+  def email_shipment_label_user?
+    return false
   end
   
   def non_failed_payment_transactions

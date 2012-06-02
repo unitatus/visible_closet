@@ -78,6 +78,10 @@ module VisibleCloset
     config.fedex_contact_name = "Brian Van Heck"
     config.fedex_contact_company = "The Visible Closet"
     config.fedex_label_description = "Visible Closet Shipment"
+    config.fedex_hold_location_address = "2518 Green Bay Rd"
+    config.fedex_hold_location_city = "Evanston"
+    config.fedex_hold_location_state = "IL"
+    config.fedex_hold_location_zip = "60201"
     
     config.shipping_up_percent = 0.0
     

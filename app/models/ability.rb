@@ -85,6 +85,7 @@ class Ability
       can :add_user_charge, :admin
       can :add_user_credit, :admin
       can :destroy_billing_credit, :admin
+      can :resend_email, :admin
       can :add_customer_boxes, Box
       can :create_customer_boxes, Box
       can :admin_index, FurnitureItem
@@ -167,6 +168,7 @@ class Ability
       can :edit, Box
       can :update, Box
       can :get_label, Box
+      can :email_shipping_label, Box
       can :request_box_return, Box
       can :cancel_box_return_request, Box
       can :request_inventory, Box

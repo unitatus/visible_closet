@@ -406,8 +406,22 @@ class BoxesController < ApplicationController
     end
     
     shipment = @box.first_or_create_shipment
+    
+    if !shipment.has_shipment_label?
+      shipment.generate_fedex_label
+    end
 
     send_data(shipment.shipment_label, :filename => shipment.shipment_label_file_name_short, :type => "application/pdf")
+  end
+  
+  def email_shipping_label
+    @box = Box.find_by_id_and_assigned_to_user_id(params[:id], current_user.id)
+    @box.email_customer_shipping_label
+    @box.save
+    
+    respond_to do |format|
+      format.js
+    end
   end
   
   private

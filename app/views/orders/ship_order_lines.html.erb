@@ -10,13 +10,7 @@
 			Next steps: shipping materials
 			<ol>
 				<li>Gather <%= pluralize(@ordered_boxes.size, 'box') %>.</li>
-				<li>Click each of the links below to download the labels for each of these boxes. Print them out on the label printer and affix to each empty box.
-					<ul class="simple_body">
-						<% @ordered_boxes.each do |box| %>
-							<li><a href="/shipment/<%= box.active_shipment.id %>/get_label">Box <%= box.id %></a></li> 
-						<% end %>
-					</ul>
-				</li>
+				<li>A Fedex email label has been sent for each of these boxes to the administrator account. Log into that account and click the links to print the labels. Put those in pouches and affix each to each box.</li>
 				<li>Get a shipping bag, and put the boxes in the bag.</li>
 				<li>Cut 12 feet of bubble wrap and put it in the bag</li>
 				<li>Get a roll of tape and put it in the bag</li>

@@ -87,7 +87,17 @@
                         <li><a href="/boxes/<%= box.id %>/stored_items">view inventory</a></li>
 						<% end %>
 						<% if box.box_type == Box::CUST_BOX_TYPE && box.status == Box::BEING_PREPARED_STATUS %>
-							<li><a href="/box/<%=box.id%>/get_label" onclick="alert('This will download a PDF of a FedEx label for you to print. Call 1-800-GO-FEDEX to have FedEx pick up your package. Be sure to mark the \'inventorying\' checkbox on the label if you would like us to inventory your box!')">shipping label</a></li>
+							<li>
+								<% if !current_user.gets_labels_emailed? %>
+									<a href="/box/<%=box.id%>/get_label" onclick="alert('This will download a PDF of a FedEx label for you to print. Call 1-800-GO-FEDEX to have FedEx pick up your package. Be sure to mark the \'inventorying\' checkbox on the label if you would like us to inventory your box!')">shipping label</a>
+								<% else %>
+									<% if box.last_shipment_to_tvc && box.last_shipment_to_tvc.last_label_emailed %>
+										<%= link_to "shipping label", "/boxes/#{box.id}/email_shipping_label", :remote => true, :id => "box_#{box.id}_label_link", :confirm => "This box's label was emailed to you on #{box.last_shipment_to_tvc.last_label_emailed.strftime '%m/%d/%Y'}; click ok to cancel this label and issue another one, or cancel to do nothing." %>
+									<% else %>
+										<%= link_to "shipping label", "/boxes/#{box.id}/email_shipping_label", :remote => true, :id => "box_#{box.id}_label_link" %>
+									<% end %>
+								<% end %>
+								</li>
 						<% end %>                        
                     </ul>
                 </div>

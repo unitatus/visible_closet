@@ -330,6 +330,7 @@ module Fedex #:nodoc:
       label_contact_company = options[:label_contact_company]
       label_contact_email =  options[:label_contact_email]
       item_description = options[:label_description]
+      hold_at_location_address = options[:hold_at_location_address]
       
       options = create_basic_label_request_options(options)
       driver = create_driver(:ship)
@@ -351,6 +352,7 @@ module Fedex #:nodoc:
       special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Contact][:CompanyName] = label_contact_company
       special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Contact][:PhoneNumber] = label_hold_at_location_phone
       special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Contact][:EMailAddress] = label_contact_email
+      special_services[:HoldAtLocationDetail][:LocationContactAndAddress][:Address] = hold_at_location_address
             
       options[:RequestedShipment][:SpecialServicesRequested] ||= special_services
       options[:RequestedShipment][:RequestedPackageLineItems][:ItemDescription] = item_description
@@ -361,10 +363,6 @@ module Fedex #:nodoc:
       
       msg = error_msg(result, false)
       if successful && msg !~ /There are no valid services available/
-        # pre = result.completedShipmentDetail.shipmentRating.shipmentRateDetails
-        # charge didn't work at one point, haven't fixed it yet
-        # charge = ((pre.class == Array ? pre[0].totalNetCharge.amount.to_f : pre.totalNetCharge.amount.to_f) * 100).to_i
-        #label = Base64.decode64(result.completedShipmentDetail.completedPackageDetails.label.parts.image)
         result.completedShipmentDetail.completedPackageDetails.trackingIds.trackingNumber
       else
         raise FedexError.new("Unable to get label from Fedex: #{msg}")
@@ -393,6 +391,23 @@ module Fedex #:nodoc:
           :TrackingNumber => tracking_number
         },
         :DeletionControl => DeletionControlTypes::DELETE_ONE_PACKAGE
+      ))
+
+      return successful?(result)
+    end
+    
+    def cancelPendingShipment(options = {})
+      check_required_options(:ship_cancel, options)
+      
+      tracking_number = options[:tracking_number]
+      
+      driver = create_driver(:ship)
+      
+      result = driver.cancelPendingShipment(common_options.merge(
+        :TrackingId => {
+          :TrackingIdType => "GROUND",
+          :TrackingNumber => tracking_number
+        }
       ))
 
       return successful?(result)

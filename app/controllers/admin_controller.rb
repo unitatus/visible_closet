@@ -249,6 +249,16 @@ class AdminController < ApplicationController
     redirect_to "/storage_charge_processing_records/#{record.id}"
   end
   
+  def resend_label
+    @shipment = Shipment.find(params[:id])
+    
+    @shipment.email_fedex_label(Rails.application.config.admin_email)
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
   def generate_payments
     user = current_user
     

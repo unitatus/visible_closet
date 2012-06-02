@@ -532,6 +532,18 @@ class Box < ActiveRecord::Base
     self.inventorying_status = Box::INVENTORYING_REQUESTED
   end
   
+  def last_shipment_to_tvc
+    self.shipments.select { |shipment| shipment.to_tvc? }.sort {|x,y| x.created_at <=> y.created_at }.last
+  end
+  
+  def email_customer_shipping_label
+    if shipments.empty?
+      create_shipment
+    end
+    
+    shipments.last.email_fedex_label
+  end
+  
   def create_shipment
     if self.id.nil?
       raise "Cannot create a shipment on a brand new box"
@@ -552,15 +564,17 @@ class Box < ActiveRecord::Base
       raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
     end
     
-    begin
-      if !shipment.generate_fedex_label(self)
-        shipment.destroy
-        raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
-      end
-    rescue Exception => e
-      shipment.destroy
-      raise e
-    end
+    # if !shipment.to_tvc? || !user.email_shipment_label_user?
+    #   begin
+    #     if !shipment.generate_fedex_label(self)
+    #       shipment.destroy
+    #       raise "Malformed data: cannot save shipment; error: " << shipment.errors.inspect
+    #     end
+    #   rescue Exception => e
+    #     shipment.destroy
+    #     raise e
+    #   end
+    # end
     
     shipment
   end
@@ -568,6 +582,7 @@ class Box < ActiveRecord::Base
   def ship
     if (self.status == NEW_STATUS && self.box_type == VC_BOX_TYPE) || (self.status == RETURN_REQUESTED_STATUS)
       shipment = create_shipment
+      shipment.email_fedex_label(Rails.application.config.admin_email)
       self.update_attribute(:status, Box::IN_TRANSIT_TO_YOU_STATUS)
       return shipment
     else

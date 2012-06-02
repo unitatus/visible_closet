@@ -17,7 +17,7 @@
 		<tr>
 			<td><a href="/admin/shipment/<%= shipment.id %>"><%= shipment.id %></a></td>
 			<td><%= shipment.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
-			<td><%= raw tracking_url shipment.tracking_number, shipment.tracking_number %></td>
+			<td><div id="shipment_<%=shipment.id %>_tracking_number"><%= raw tracking_url shipment.tracking_number, shipment.tracking_number %></div></td>
 			<td>
 				<% if shipment.user %>
 					<a href="/admin/user/<%= shipment.user.id %>"><%= shipment.user.first_name %> <%= shipment.user.last_name %></a>
@@ -38,8 +38,18 @@
 					Not charged yet
 				<% end %>
 			</td>
-			<td><a href="/shipment/<%=shipment.id%>/get_label">Label</a></td>
 			<% if current_user.admin? %>
+			<td>
+				<% if shipment.box && !shipment.box.user.gets_labels_emailed? %>
+					<a href="/shipment/<%=shipment.id%>/get_label">Label</a>
+				<% elsif shipment.box && shipment.box.vc_box? %>
+					<% if shipment.last_label_emailed %>
+						<%= link_to "Resend Label", "/admin/shipment/#{shipment.id}/resend_label", :remote => true, :id => "shipment_#{shipment.id}_label_link", :confirm => "This shipment's label was emailed on #{shipment.last_label_emailed.strftime '%m/%d/%Y'}; click ok to cancel this label and issue another one, or cancel to do nothing." %>
+					<% else %>
+						<%= link_to "Send Label", "/admin/shipment/#{shipment.id}/resend_label", :remote => true, :id => "shipment_#{shipment.id}_label_link" %>
+					<% end %>
+				<% end %>
+			</td>
 			<td><a href="<%= delete_pre_url %><%= shipment.id %>/destroy" data-confirm="This will delete the shipment and cancel it with FedEx. Are you SURE?" data-method="delete" rel="nofollow">Delete</a></td>
 			<% end %>
 		</tr>

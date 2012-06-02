@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110914023402
+# Schema version: 20120526005553
 #
 # Table name: shipments
 #
@@ -15,6 +15,7 @@
 #  state                     :string(255)
 #  payor                     :string(255)
 #  charge_requested          :boolean
+#  last_label_emailed        :datetime
 #
 
 # Note: at this time there is no need for a shipment line, because we don't have the need to track shipment line items.
@@ -148,14 +149,17 @@ class Shipment < ActiveRecord::Base
   
   alias_method_chain :from_address=, :extension
   
-  def email_fedex_label
+  def email_fedex_label(email_recipient=nil)
     if self.tracking_number
-      cancel_pending_fedex_shipment
+      # cancel_pending_fedex_shipment
+      # turning this off - the risk of people printing out lots of labels and using them is lower than the risk of them accidentally printing out one after
+      # their shipment has already been sent and getting things messed up as a result
     end 
     
-    fedex, options = prep_shipment_fedex
+    fedex, options = prep_shipment_fedex(email_recipient)
 
     self.tracking_number = fedex.email_label(options)
+    self.last_label_emailed = DateTime.now
 
      return save
   end
@@ -164,12 +168,22 @@ class Shipment < ActiveRecord::Base
     fedex, options = prep_shipment_fedex
 
     self.shipment_label, self.tracking_number = fedex.label(options)
-
+    
     return save
   end
     
   def cancel_pending_fedex_shipment
+    if tracking_number.blank?
+      return true
+    end
     
+    fedex = Fedex::Base.new(Shipment.basic_fedex_options)
+       
+    # It's possible for each shipment that it's actually been shipped, in which case this code will cancel it.
+    # If it has not been shipped then the FedEx system will return an error, which at most we want to log.
+     if !fedex.cancelPendingShipment(:tracking_number => tracking_number)
+       puts "Unable to cancel FedEx package identified by tracking number " + tracking_number
+     end
   end
   
   def to_tvc?
@@ -208,6 +222,14 @@ class Shipment < ActiveRecord::Base
     else
       s3object = AWS::S3::S3Object.value(shipment_label_file_name, Rails.application.config.s3_labels_bucket)
     end
+  end
+  
+  def has_shipment_label?
+    !self.shipment_label_file_name.nil?
+  end
+  
+  def label_ever_emailed?
+    !self.label_last_emailed.nil?
   end
   
   def set_charge(amount)
@@ -301,10 +323,14 @@ class Shipment < ActiveRecord::Base
     
     return address_package_mappings
   end
+  
+  def to_tvc?
+    self.to_address_id = Rails.application.config.fedex_vc_address_id
+  end
     
   private
   
-  def prep_shipment_fedex
+  def prep_shipment_fedex(email_recipient=nil)
     if epl_label?
       label_stock_type = Fedex::LabelStockTypes::STOCK_4X6 # Fedex::LabelStockTypes::PAPER_4X6
       label_image_type = Fedex::LabelSpecificationImageTypes::EPL2
@@ -368,6 +394,15 @@ class Shipment < ActiveRecord::Base
       po_reference = nil
     end
     
+    hold_at_location_address = {
+      :CountryCode => "US",
+      :StreetLines => [Rails.application.config.fedex_hold_location_address],
+      :City => Rails.application.config.fedex_hold_location_city,
+      :StateOrProvinceCode => Rails.application.config.fedex_hold_location_state,
+      :PostalCode => Rails.application.config.fedex_hold_location_zip,
+      :Residential => false
+    }
+    
     options = {
     :shipper => { :contact => shipper, :address => origin },
     :recipient => { :contact => recipient, :address => destination },
@@ -377,13 +412,14 @@ class Shipment < ActiveRecord::Base
     :customer_reference => customer_reference,
     :po_reference => po_reference,
     :update_emails => email_recipients,
-    :label_recipient_email => from_address.snapshot_user.nil? ? Rails.application.config.admin_email : from_address.snapshot_user.email,
+    :label_recipient_email => email_recipient.nil? ? (from_address.snapshot_user.nil? ? Rails.application.config.admin_email : from_address.snapshot_user.email) : email_recipient,
     :label_expiration => Time.now + Rails.application.config.label_expiration_days.days,
     :label_hold_at_location_phone => Rails.application.config.label_hold_at_location_phone,
     :label_hold_at_location_contact_name => Rails.application.config.fedex_contact_name,
     :label_contact_company => Rails.application.config.fedex_contact_company,
     :label_contact_email => Rails.application.config.admin_email,
-    :label_description => Rails.application.config.fedex_label_description
+    :label_description => Rails.application.config.fedex_label_description,
+    :hold_at_location_address => hold_at_location_address
     }
     
     return [fedex, options]
