@@ -324,10 +324,6 @@ class Shipment < ActiveRecord::Base
     return address_package_mappings
   end
   
-  def to_tvc?
-    self.to_address_id = Rails.application.config.fedex_vc_address_id
-  end
-    
   private
   
   def prep_shipment_fedex(email_recipient=nil)
