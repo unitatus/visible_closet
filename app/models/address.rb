@@ -95,6 +95,11 @@ class Address < ActiveRecord::Base
     new_address
   end
   
+  # bit of a hack, but it allows us to transition to the new address system for shipments
+  def tvc_address?
+    self.id == Rails.application.config.fedex_vc_address_id || (self.first_name == "The Visible" && self.last_name == "Closet")
+  end
+  
   def user_with_extension=(value)
     self.user_without_extension=value
     self.snapshot_user=value

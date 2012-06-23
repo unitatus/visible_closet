@@ -583,7 +583,7 @@ class User < ActiveRecord::Base
   end
   
   def gets_labels_emailed?
-    test_user?
+    return true
   end
   
   def will_have_charges_at_end_of_month?
