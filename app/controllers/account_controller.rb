@@ -256,7 +256,7 @@ class AccountController < ApplicationController
 
     if @cart.nil? || check_cart != @cart
       render :double_checkout and return
-    elsif @cart.order # this means we failed the last time through, after the payment was created; be nice about it
+    elsif @cart.order # this means we failed the last time through, after the payment was created; be nice about it!
       @order = @cart.order
     else
       @order = @cart.build_order(params[:order])
