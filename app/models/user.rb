@@ -436,7 +436,7 @@ class User < ActiveRecord::Base
   end
   
   def last_successful_payment_transaction
-    successful_payment_transactions.last
+    successful_payment_transactions.sort {|x,y| x.created_at <=> y.created_at }.last
   end
   
   def active_payment_profiles
