@@ -130,10 +130,13 @@ class PaymentProfilesController < ApplicationController
     # FYI, it seems that what happens above is if the user selected a billing address then it gets set, then all the empty attributes get set
     # on top of it.
     if params[:payment_profile][:billing_address_id] == "on" # user entered an address
+      puts "The billing address id was on"
       @profile.billing_address = current_user.addresses.build(params[:payment_profile][:billing_address_attributes])
     elsif params[:payment_profile][:billing_address_id].blank? # user did not enter an address
+      puts "There was no selected billing address"
       @profile.billing_address = nil
     else # user selected an address
+      puts "The billing address #{params[:payment_profile][:billing_address_id]} was found"
       @profile.billing_address = Address.find(params[:payment_profile][:billing_address_id])
     end
     
