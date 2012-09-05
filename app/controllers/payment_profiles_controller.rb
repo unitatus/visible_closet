@@ -54,10 +54,9 @@ class PaymentProfilesController < ApplicationController
     @user = current_user
     @addresses = current_user.addresses
     save_default_profile = @user.default_payment_profile
-    puts "Current user default payment profile is #{@user.default_payment_profile.id} with identifier #{@user.default_payment_profile.identifier}."
+
     if @user.has_rectify_payments?
       if do_create_or_update
-        puts "Now the user's default payment profile is #{@user.default_payment_profile.id} with identifier #{@user.default_payment_profile.identifier}."
         if @user.resolve_rectify_payments
           redirect_to "/account/home"
         else
@@ -140,8 +139,8 @@ class PaymentProfilesController < ApplicationController
     
     if @profile.save
       if params[:default] == "1" || current_user.payment_profile_count == 1
-        @profile.user.default_payment_profile = @profile
-        @profile.user.save
+        @user.default_payment_profile = @profile
+        @user.save
       end
       
       if not (session[:source_c].blank?) # we came from somewhere; return there        
