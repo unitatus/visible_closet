@@ -57,7 +57,6 @@ class PaymentProfilesController < ApplicationController
     
     if @user.has_rectify_payments?
       if do_create_or_update
-        puts "The payment profile was created with id #{@profile.id} and with customer profile id #{@profile.identifier}."
         if @user.resolve_rectify_payments
           redirect_to "/account/home"
         else

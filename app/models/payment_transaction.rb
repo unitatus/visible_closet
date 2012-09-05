@@ -101,7 +101,7 @@ class PaymentTransaction < ActiveRecord::Base
       new_payment.save
       return [new_payment, nil]
     end
-    
+    puts "Making payment with payment profile #{payment_profile.id} and payment profile identifier #{payment_profile.identifier}"
     response = CIM_GATEWAY.create_customer_profile_transaction({:transaction => {:type => type,
                                                                   :amount => amount.round(2), # rounding takes care of decimal conversion error
                                                                   :customer_profile_id => payment_profile.user.cim_id,
