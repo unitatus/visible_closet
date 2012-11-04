@@ -1,0 +1,76 @@
+<div style="width: 100%; text-align: center">
+<img src="/images/breadcrumb1.jpg">
+<br><br>
+<% if @user.errors.empty? %>
+	<h1>Welcome to your organized life!</h1>
+
+	<p>We're glad you're joining us. Fill out the form below to get started.</p>
+	<p>By the way, your email address is safe with us. We have a strict no-spam, no-sell policy.</p>
+<br>
+<% else %>
+	<h1>Whoops!</h1>
+	<p>There <%= @user.errors.size > 1 ? "were a few errors" : "was an error" %> with the information you entered ... see below:</p><br>
+	<div class="error_label">
+		<% @user.errors.each do |attr, msg| %>
+			<%= raw attr %> <%= raw msg %><br>
+		<% end %>
+	</div>
+<% end %>
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => "registration", :onsubmit => "cf_submit.disabled=true;" }) do |f| %>
+	<table class="registration_table">
+		<tr>
+			<td>
+				First Name:
+			</td>
+			<td>
+				Last Name:
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<% class_name = @user.errors[:first_name].nil? ? "error" : "textbox" %>
+		   		<%= f.text_field :first_name, :placeholder => "First Name", :class => "textbox" + (@user.errors[:first_name].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@user, :first_name) %>
+			</td>
+			<td>
+				<%= f.text_field :last_name, :placeholder => "Last Name", :class => "textbox" + (@user.errors[:last_name].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@user, :last_name) %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Email (username):
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<%= f.email_field :email, :placeholder => "your@email.com", :class => "textbox" + (@user.errors[:email].empty? ? "": " error"), :style => "width: 428px;" %>
+				<%= error_messages_for_attribute(@user, :email) %>	
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Password:
+			</td>
+			<td>
+				Password Confirmation:
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<%= f.password_field :password, :placeholder => "Password", :class => "textbox" + (@user.errors[:password].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@user, :password) %>
+			</td>
+			<td>
+				<%= f.password_field :password_confirmation, :placeholder => "Retype Password", :class => "textbox" + (@user.errors[:password_confirmation].empty? ? "": " error"), :style => "width: 200px;" %>
+				<%= error_messages_for_attribute(@user, :password_cofirmation) %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: right; padding-right: 20px">
+				<%= f.submit "Next", :class => 'button', :id => 'cf_submit', :onclick => "return formMonitor();" %>
+			</td>
+		</tr>
+	</table>
+		<% end %>
+</div>
