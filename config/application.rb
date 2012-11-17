@@ -83,7 +83,7 @@ module VisibleCloset
     config.fedex_hold_location_state = "IL"
     config.fedex_hold_location_zip = "60201"
     
-    config.shipping_up_percent = 20.0
+    config.shipping_up_percent = 0.2
     
     ::CIM_GATEWAY = ActiveMerchant::Billing::AuthorizeNetCimGateway.new(
       :login => "5Fe5e8GF6z7H", # "API Login ID"
