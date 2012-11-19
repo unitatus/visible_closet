@@ -82,7 +82,7 @@ module ApplicationHelper
     years
   end
   
-  def address_summary(address, show_name=true, line_breaks=true)
+  def address_summary(address, show_name=true, line_breaks=true, phone_number=false)
     return_str = ""
     line_breaker = (line_breaks ? "<br>" : " ")
     
@@ -102,6 +102,8 @@ module ApplicationHelper
     return_str << (address.state.blank? ? "" : address.state)
     return_str << " "
     return_str << (address.zip.blank? ? "" : address.zip)
+    return_str << line_breaker + number_to_phone(address.day_phone) + " (day)" if phone_number
+    return_str << line_breaker + number_to_phone(address.evening_phone) + " (evening)" if (phone_number and not address.evening_phone.blank?)
     
     return_str
   end
