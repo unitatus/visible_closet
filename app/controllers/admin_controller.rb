@@ -395,6 +395,16 @@ class AdminController < ApplicationController
     return_date_str = params[:return_date]
     @errors = []
     
+    box_index = @user.boxes.index(@box)
+    
+    if box_index + 1 < @user.boxes.size
+      @next_box_id = @user.boxes[box_index + 1].id
+    end
+    
+    if box_index > 0
+      @last_box_id = @user.boxes[box_index - 1].id
+    end
+    
     if return_date_str.blank?
       @errors << "Please enter a date."
       render :user_box and return

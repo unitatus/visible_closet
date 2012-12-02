@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
 
   symbolize :role
 
-  has_many :boxes, :foreign_key => :assigned_to_user_id, :dependent => :destroy
+  has_many :boxes, :foreign_key => :assigned_to_user_id, :dependent => :destroy, :order => :id
   has_many :payment_profiles, :dependent => :destroy
   has_many :addresses, :dependent => :destroy, :order => "first_name", :conditions => "status = '" + Address::ACTIVE + "'"
   has_many :orders, :dependent => :destroy
