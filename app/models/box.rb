@@ -31,6 +31,7 @@ class Box < ActiveRecord::Base
   BEING_PREPARED_STATUS = "being_prepared"
   RETURN_REQUESTED_STATUS = "return_requested"
   INACTIVE_STATUS = "inactive"
+  RETURNED_STATUS = "returned"
   
   NO_INVENTORYING_REQUESTED = "no_inventorying_requested"
   INVENTORYING_REQUESTED = "inventorying_requested"
@@ -69,8 +70,10 @@ class Box < ActiveRecord::Base
       return "Being prepared by you"
     when RETURN_REQUESTED_STATUS
       return "Return requested"
+    when RETURNED_STATUS
+      return "Returned on #{return_requested_at.strftime('%b %d, %Y')}"
     else
-      raise "Illegal status " << status
+      raise "Invalid status " << status
     end
   end
   
@@ -454,6 +457,14 @@ class Box < ActiveRecord::Base
     if !subscription_on(Date.today).nil?
       # TODO: This is wrong. you should not be able to do this.
     end
+  end
+  
+  def mark_returned(as_of_date = nil)
+    as_of_date ||= Time.now
+    self.status = RETURNED_STATUS
+    self.return_requested_at = as_of_date
+    self.charging_end_date = as_of_date
+    self.save
   end
   
   def inventorying_order

@@ -30,7 +30,10 @@
 				<% alt = "In Transit" %>
 			<% elsif box.status == Box::RETURN_REQUESTED_STATUS %>
 				<% image_file = "status-inventory-to-you" %>
-				<% alt = "In Transit" %>			
+				<% alt = "In Transit" %>	
+			<% elsif box.status == Box::RETURNED_STATUS %>
+				<% image_file = "returned_box" %>
+				<% alt = "Returned" %>
 			<% elsif box.status == Box::IN_TRANSIT_TO_TVC_STATUS %>
 				<% image_file = "status-inventory-to-us" %>
 				<% alt = "In Transit" %>			

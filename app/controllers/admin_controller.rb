@@ -379,6 +379,42 @@ class AdminController < ApplicationController
     end
   end
   
+  def manual_box_return
+    @admin_page = :users
+    @user = User.find(params[:user_id])
+    @box = Box.find_by_assigned_to_user_id_and_id(params[:user_id], params[:box_id])
+    return_date_str = params[:return_date]
+    @errors = []
+    
+    if return_date_str.blank?
+      @errors << "Please enter a date."
+      render :user_box and return
+    end
+    
+    begin
+      return_date = Date.strptime(return_date_str, "%B %d, %Y")
+    rescue ArgumentError
+      @errors << "Invalid date format. Please use Month Day, YYYY"
+      render :user_box and return
+    end
+    
+    if return_date < Date.today - 10.years
+      @errors << "Invalid date (#{return_date.strftime('%B %d, %Y')}) - please use something within the last 10 years"
+      render :user_box and return
+    end
+    
+    if return_date < @box.received_at.to_date
+      @errors << "Invalid date - you can't mark the return date for before the received at date."
+      render :user_box and return
+    end
+    
+    if not @errors.any?
+      @box.mark_returned return_date
+    end
+    
+    render :user_box
+  end
+  
 private
 
   def get_orders(order_lines)

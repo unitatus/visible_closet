@@ -1,7 +1,7 @@
 <%= render "admin_menu", :locals => { :admin_page => @admin_page }%>
 <div id="internal-right">
 	<h1>Box #<%= @box.id %> (for user <%= @box.user.first_name %> <%= @box.user.last_name %>)</h1><br>
-<table class="lightly_padded_table">
+<table class="lightly_padded_table" border="1">
 	<tr>
 		<td><b>Created At: </b></td><td><%= @box.created_at.strftime('%m/%d/%Y %l:%M %p') %></td>
 	</tr>
@@ -75,6 +75,26 @@
 				<% end %>
 			<% end %>
 		</td>
+	</tr>
+	<tr>
+		<td><b>Manual Return:</b></td>
+		<% if @box.status == Box::IN_STORAGE_STATUS %>
+			<td>
+				<%= form_tag "/admin/user/#{@user.id}/boxes/#{@box.id}/manual_return" do %>
+				Return box as of <%= text_field_tag "return_date", params[:return_date].blank? ? Date.today.strftime("%B %d, %Y") : params[:return_date] %> <%= submit_tag "Submit", :confirm => "This will mark the box as returned with the indicated date. Are you SURE?" %>
+				<% end %>
+				<% if @errors and @errors.any? %>
+					<div class="error_label">
+					<br>There were errors:<br>
+					<% @errors.each do |error| %>
+						<%= error %> <br>
+					<% end %>
+					</div>
+				<% end %>
+			</td>
+		<% else %>
+			<td>NA</td>
+		<% end %>
 	</tr>
 </table>
 
