@@ -100,8 +100,7 @@ class AdminController < ApplicationController
   
   def user_boxes
     @admin_page = :users
-    @user = User.find(params[:id])
-    
+    @user = User.find(params[:id])    
     order_by = params[:sort_by]
         
     if params[:desc] && order_by
@@ -132,6 +131,16 @@ class AdminController < ApplicationController
     @admin_page = :users
     @user = User.find(params[:user_id])
     @box = Box.find_by_assigned_to_user_id_and_id(params[:user_id], params[:box_id])
+    
+    box_index = @user.boxes.index(@box)
+    
+    if box_index + 1 < @user.boxes.size
+      @next_box_id = @user.boxes[box_index + 1].id
+    end
+    
+    if box_index > 0
+      @last_box_id = @user.boxes[box_index - 1].id
+    end
   end
   
   def user_order

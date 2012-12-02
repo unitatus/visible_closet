@@ -96,6 +96,18 @@
 			<td>NA</td>
 		<% end %>
 	</tr>
+	<tr>
+		<td>
+			<% if @last_box_id %>
+				<a href="/admin/user/<%= @user.id %>/boxes/<%= @last_box_id %>">&lt;&lt;previous</a>
+			<% end %>
+		</td>
+		<td>
+			<% if @next_box_id %>
+				<a href="/admin/user/<%= @user.id %>/boxes/<%= @next_box_id %>">next&gt;&gt;</a>
+			<% end %>			
+		</td>
+	</tr>
 </table>
 
 <br><hr>
