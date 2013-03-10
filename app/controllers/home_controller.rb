@@ -6,6 +6,10 @@ class HomeController < ApplicationController
     
     render :action => "index_new", :layout => false
   end
+  
+  def index_old
+    render :action => "index", :layout => true
+  end
 
   def access_denied
     

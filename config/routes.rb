@@ -211,6 +211,8 @@ VisibleCloset::Application.routes.draw do
   get "fedex_test/test"
   
   match "account/home" => "account#index"
+  
+  match "index_old" => "home#index_old"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
